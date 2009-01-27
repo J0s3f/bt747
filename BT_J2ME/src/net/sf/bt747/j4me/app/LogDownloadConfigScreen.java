@@ -54,9 +54,8 @@ public final class LogDownloadConfigScreen extends BT747Dialog {
     }
 
     private final void updateButtons() {
-        tbChunkSize.setString(Convert.toString(m().getChunkSize()));
-        tbChunkAhead.setString(Convert.toString(m().getIntOpt(
-                AppSettings.LOGAHEAD)));
+        tbChunkSize.setString("" + m().getChunkSize());
+        tbChunkAhead.setString("" + m().getIntOpt(AppSettings.LOGAHEAD));
         rbDownloadMethod.setSelectedIndex(m().getDownloadMethod());
         repaint();
     }

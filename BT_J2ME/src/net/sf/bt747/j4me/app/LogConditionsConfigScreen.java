@@ -74,10 +74,10 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
     public final void updateButtons() {
         tbTime.setString(Convert.toString(
                 ((float) m().getLogTimeInterval()) / 10, 1));
-        tbSpeed.setString(Convert.toString(m().getLogSpeedInterval()));
+        tbSpeed.setString("" + m().getLogSpeedInterval());
         tbDistance.setString(Convert.toString((float) m()
                 .getLogDistanceInterval() / 10, 1));
-        tbFix.setString(Convert.toString(m().getLogFixPeriod()));
+        tbFix.setString("" + m().getLogFixPeriod());
         repaint();
     }
 

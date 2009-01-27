@@ -249,7 +249,7 @@ public class TextBox extends Component {
      * @return <code>true</code> if this text box contains a password;
      *         <code>false</code> otherwise.
      */
-    public boolean isPassword() {
+    public final boolean isPassword() {
         final boolean password = ((constraints & TextField.PASSWORD) != 0);
         return password;
     }
@@ -264,7 +264,8 @@ public class TextBox extends Component {
      *                when <code>true</code> adds the modifier to the
      *                constraints and when <code>false</code> removes it.
      */
-    private void setModifierConstraint(int modifier, final boolean on) {
+    private final void setModifierConstraint(final int modifier,
+            final boolean on) {
         if (on) {
             constraints |= modifier;
         } else {
@@ -530,7 +531,7 @@ public class TextBox extends Component {
         // trick the optimizer.
         final DeviceScreen current = UIManager.getScreen();
         final String label = getLabel();
-        final String contents = getString();
+        final String theString = getString();
         final int maxSize = getMaxSize();
         // TextInput entry = new TextInput(current, this, label, contents,
         // maxSize, constraints);
@@ -538,7 +539,7 @@ public class TextBox extends Component {
                 maxSize, TextField.ANY);
 
         entry.setConstraints(constraints);
-        entry.setString(contents);
+        entry.setString(theString);
 
         // Display the text entry screen.
         final Display display = UIManager.getDisplay();
@@ -550,8 +551,27 @@ public class TextBox extends Component {
      * The native implementation for inputting text. This takes over the
      * entire screen and returns when the user is done entering text.
      */
-    private final class TextInput extends javax.microedition.lcdui.TextBox
-            implements CommandListener {
+    private final static class TextInput extends
+            javax.microedition.lcdui.TextBox implements CommandListener {
+
+        private static boolean commaOrDotKnown = false;
+        private static boolean commaOrDot;
+
+        private static boolean isComma() {
+            if (!commaOrDotKnown) {
+                commaOrDotKnown = true;
+                try {
+                    if ((new TextField("Test", "2,2", 15, TextField.DECIMAL))
+                            .getConstraints() != 0) {
+                        commaOrDot = true;
+                    }
+                } catch (Exception e) {
+                    commaOrDot = false;
+                }
+            }
+            return commaOrDot;
+        }
+
         /**
          * The Cancel button.
          */
@@ -595,6 +615,15 @@ public class TextBox extends Component {
                 final String label, final String contents, final int maxSize,
                 final int constraints) {
             super(label, contents, maxSize, constraints);
+            if ((constraints & TextField.DECIMAL) != 0) {
+                String input = contents;
+                if (isComma()) {
+                    input.replace('.', ',');
+                } else {
+                    input.replace(',', '.');
+                }
+                this.setString(input);
+            }
 
             // Record the owners.
             this.parent = parent;
@@ -620,11 +649,13 @@ public class TextBox extends Component {
         public void commandAction(final Command c, final Displayable d) {
             if (c == ok) {
                 // Update the contents of owning box.
-                final String input = component.getString();
+                final String input = this.getString();
                 if (getConstraints() == TextField.DECIMAL) {
                     input.replace(',', '.');
                 }
+                System.err.println("Input:"+input);
                 component.setString(input);
+                System.err.println("Actual set:"+component.getString());
             }
 
             // Return to the parent screen.
