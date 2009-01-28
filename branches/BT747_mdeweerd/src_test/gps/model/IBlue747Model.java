@@ -18,6 +18,8 @@ import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,13 +34,18 @@ import bt747.sys.Interface;
  */
 public class IBlue747Model {
 
-    private int logFormat = 0x3E;
+    private int logFormat = 0x000215FF;//0x3E;
+
     enum Model {
         ML7
     };
-    private Model model = Model.ML7; 
+
+    private Model model = Model.ML7;
 
     private GPSrxtx gpsRxTx = null;
+
+    private byte[] logData = null;
+    private final String logFile = "c:/bt747/Test.bin";
 
     /**
      * Set up system specific classes.
@@ -103,7 +110,7 @@ public class IBlue747Model {
 
     public void replyMTK_Ack(final String[] p_nmea) {
         try {
-            gpsRxTx.sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
+            sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
                     + p_nmea[0].substring(4) + ","
                     + BT747Constants.PMTK_ACK_SUCCEEDED);
         } catch (Exception e) {
@@ -113,13 +120,15 @@ public class IBlue747Model {
 
     public void replyMTK_Log_Ack(final String[] p_nmea) {
         try {
-            gpsRxTx.sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
+            sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
                     + BT747Constants.PMTK_CMD_LOG + "," + p_nmea[1] + ","
                     + BT747Constants.PMTK_ACK_SUCCEEDED);
         } catch (Exception e) {
             Generic.debug("Send failed ", e);
         }
     }
+    
+    // PMTK182,3,7,2 seems to interrupt the log transfer ...
 
     public int replyLogNmea(final String[] p_nmea) {
         try {
@@ -136,11 +145,11 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
                         // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
-                        gpsRxTx.sendPacket("PMTK"
+                        sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + p_nmea[2] + ","
-                                + Convert.unsigned2hex(logFormat, 2) // Address
+                                + Convert.unsigned2hex(logFormat, logFormat<=0xFF?2:3) // Address
                         );
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
@@ -152,36 +161,36 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2
-                                                                // =
-                        gpsRxTx.sendPacket("PMTK"
+                        // =
+                        sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_LOG_STATUS + ","
-                                + "9F");
+                                + "256"); //9F
                         // logging
                         // on/off
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
-                        gpsRxTx.sendPacket("PMTK"
+                        sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_MEM_USED + ","
-                                + "000323C2");
+                                + "000019D0");
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
-                        gpsRxTx.sendPacket("PMTK"
+                        sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_FLASH + ","
-                                + "C22015C2");
+                                + "C22015C2"); //PMTK182,3,9,C22015C2
 
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
-                        gpsRxTx.sendPacket("PMTK"
+                        sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_NBR_LOG_PTS + ","
-                                + "0000D014");
+                                + "00000072");
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
@@ -192,15 +201,47 @@ public class IBlue747Model {
             case BT747Constants.PMTK_LOG_Q_LOG:
                 // Send data from the log
                 // $PMTK182,7,START_ADDRESS,DATA
-                StringBuffer s = new StringBuffer(Conv.hex2Int(p_nmea[3]) * 2);
-                s.setLength(0);
-                for (int i = Conv.hex2Int(p_nmea[3]) * 2; i > 0; i--) {
-                    s.append('F');
+                if (logData == null) {
+                    File f = new File(logFile);
+                    FileInputStream fi = new FileInputStream(f);
+                    logData = new byte[fi.available()];
+                    fi.read(logData);
+                    fi.close();
                 }
-                gpsRxTx.sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
-                        + "," + BT747Constants.PMTK_LOG_DT_LOG + ","
-                        + p_nmea[2] // Address
-                        + "," + s);
+                int address = Conv.hex2Int(p_nmea[2]);
+                StringBuffer s = new StringBuffer(Conv.hex2Int(p_nmea[3]) * 2);
+                for (int length = Conv.hex2Int(p_nmea[3]); length > 0;) {
+                    int payload;
+                    if (length <= 0x800) {
+                        payload = length;
+                    } else {
+                        payload = 0x800;
+                    }
+                    length -= payload;
+                    s.setLength(0);
+                    int cur_addr = address; 
+                    for(;cur_addr<logData.length&&cur_addr<address+payload;cur_addr++) {
+                        s.append(Convert.unsigned2hex(logData[cur_addr], 2));
+                    }
+                    while(cur_addr++<address+payload) {
+                        s.append("FF");
+                    }
+                    System.err.println("PMTK"
+                            + BT747Constants.PMTK_CMD_LOG_STR + ","
+                            + BT747Constants.PMTK_LOG_DT_LOG + ","
+                            + Convert.unsigned2hex(address, 8) // Address
+                            //+ "," + s
+                            );
+                    sendPacket("PMTK"
+                            + BT747Constants.PMTK_CMD_LOG_STR + ","
+                            + BT747Constants.PMTK_LOG_DT_LOG + ","
+                            + Convert.unsigned2hex(address, 8) // Address
+                            + "," + s);
+                    address += payload;
+                    if((length&1)!=0 && address>=logData.length) {
+                        break;
+                    }
+                }
                 break;
             default:
                 // Nothing - unexpected
@@ -259,7 +300,8 @@ public class IBlue747Model {
             case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
             case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
             case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
-                gpsRxTx.sendPacket("PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
+                gpsRxTx
+                        .sendPacket("PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
                 break;
             case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
             case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
@@ -271,30 +313,39 @@ public class IBlue747Model {
             // case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
             // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
             // case BT747_dev.PMTK_DT_SBAS: // CMD 513
-            // case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
+            case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
+                gpsRxTx
+                        .sendPacket("PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
+                break;
             // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
             // case BT747_dev.PMTK_DT_DATUM: // CMD 530
-            // case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+            case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+                gpsRxTx
+                        .sendPacket("PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,115200");
+                break;
             // break;
             case BT747Constants.PMTK_Q_RELEASE:
-                // m_GPSrxtx.sendPacket("PMTK" +
+                // m_sendPacket("PMTK" +
                 // BT747Constants.PMTK_DT_RELEASE
                 // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
                 // + "TSI_747A+" + "," + "1.0");
-                switch(model) {
+                switch (model) {
                 case ML7:
-                    gpsRxTx.sendPacket("PMTK705,M-core_2.02,231B,,1.0");
+                    sendPacket("PMTK705,M-core_2.02,231B,,1.0");
                     break;
-                   default:
-                gpsRxTx.sendPacket("PMTK" + BT747Constants.PMTK_DT_RELEASE
-                        + "," + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
-                        + "QST1300" + "," + "1.0");
+                default:
+                    sendPacket("PMTK"
+                            + BT747Constants.PMTK_DT_RELEASE + ","
+                            + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
+                            + "QST1300" + "," + "1.0");
 
-                // AXN_0.3-B_1.3_C01
-                break;
+                    // AXN_0.3-B_1.3_C01
+                    break;
                 }
             case BT747Constants.PMTK_Q_VERSION:
                 break;
+            default:
+                System.err.println("Not supported:" + z_Cmd);
             } // End switch
         } else if (p_nmea[0].startsWith("PTSI")) {
             z_Cmd = Convert.toInt(p_nmea[0].substring(4));
@@ -304,7 +355,7 @@ public class IBlue747Model {
             switch (z_Cmd) {
             case 999:
                 if (p_nmea[1].equals("IAMAP")) {
-                    gpsRxTx.sendPacket("PTSI999,IAMAP");
+                    sendPacket("PTSI999,IAMAP");
                 }
                 break;
 
@@ -315,6 +366,10 @@ public class IBlue747Model {
         return z_Result;
     } // End method
 
+    private final void sendPacket(final String p) {
+        System.out.println(p);
+        gpsRxTx.sendPacket(p);
+    }
     public String[] lastResponse;
 
     // public void onEvent(Event e) {

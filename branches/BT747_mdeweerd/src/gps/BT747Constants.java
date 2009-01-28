@@ -174,15 +174,18 @@ public final class BT747Constants { // dev as in device
     public static final int C_RCR_COUNT = 16;
 
     // PMTK182 commands/replies.
-    /** Set a parameter concerning the log */
+    /** Set a parameter concerning the log (2) */
     public static final int PMTK_LOG_SET = 1;
-    /** Get a query concerning the log */
+    /** Get a query concerning the log (2) */
     public static final int PMTK_LOG_Q = 2;
-    /** Received data concerning the log */
+    /** Received data concerning the log (3) */
     public static final int PMTK_LOG_DT = 3; // REPLY
     public static final int PMTK_LOG_ON = 4;
     public static final int PMTK_LOG_OFF = 5;
     public static final int PMTK_LOG_ERASE = 6;
+    /**
+     * (7)
+     */
     public static final int PMTK_LOG_Q_LOG = 7;
     public static final int PMTK_LOG_DT_LOG = 8; // REPLY.
     public static final int PMTK_LOG_INIT = 9;
