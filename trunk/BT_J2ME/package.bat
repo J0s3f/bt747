@@ -20,6 +20,7 @@ svnversion ../BT747 -n -c >> dist/SVNVERSION.txt
 SET FILES=
 
 SET FILES=%FILES% deployed/BT_J2ME.jar deployed/BT_J2ME.jad
+SET FILES=%FILES% deployed/BT_J2ME.cod
 SET FILES=%FILES% src_j4me/NOTICE doc/INSTALL.txt
 SET FILES=%FILES% COPYING LICENSE-2.0-APACHE.txt
 
