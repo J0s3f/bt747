@@ -16,6 +16,11 @@ than the SuperWaba or J2SE versions! Look in the discussion pages to find out mo
 about it.
 
 ===========================
+BLACKBERRY - BT_J2ME.cod
+===========================
+BT_J2ME.cod - This file is for blackberry only (if available).
+
+===========================
 INSTALLING the J2ME Version
 ===========================
 

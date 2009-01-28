@@ -196,8 +196,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
     protected final void acceptNotify() {
         // logScreen.show();
 
-        Menu menu = new Menu("Log menu", this) {
-            public void showNotify() {
+        final Menu menu = new Menu("Log menu", this) {
+            public final void showNotify() {
                 if (tb.getString().length() != 0) {
                     c
                             .setStringOpt(AppSettings.LOGFILERELPATH, tb
@@ -211,22 +211,22 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         };
 
         menu.appendMenuOption(new MenuItem() {
-            public String getText() {
+            public final String getText() {
                 return "Start download";
             }
 
-            public void onSelection() {
+            public final void onSelection() {
                 startDownload();
                 logDownload.show();
             }
         });
 
         menu.appendMenuOption(new MenuItem() {
-            public String getText() {
+            public final String getText() {
                 return "Binary filename";
             }
 
-            public void onSelection() {
+            public final void onSelection() {
                 tb.setForAnyText();
                 tb.setString(m().getStringOpt(AppSettings.LOGFILERELPATH));
                 // Simulate selection for entry
@@ -236,14 +236,14 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         });
 
         menu.appendMenuOption("Download Settings", new DelayedDialog(
-                LogDownloadConfigScreen.class, c, this, this));
+                ScreenFactory.LOGDOWNLOADSCREEN, c, this, this));
 
         menu.appendMenuOption(new MenuItem() {
-            public String getText() {
+            public final String getText() {
                 return "Cancel download";
             }
 
-            public void onSelection() {
+            public final void onSelection() {
                 c.cancelGetLog();
                 logDownload.show();
             }
@@ -251,18 +251,17 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
         menu.appendMenuOption("Application Log", logScreen);
         menu.appendMenuOption(new MenuItem() {
-            public String getText() {
+            public final String getText() {
                 return "To background";
             }
 
-            public void onSelection() {
+            public final void onSelection() {
                 previous.show();
             }
         });
         menu.appendMenuOption("Reconnect", new InitializingGPSAlert(c, this));
 
         menu.show();
-        menu = null;
     }
 
     /**

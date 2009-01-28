@@ -13,15 +13,21 @@ public final class BlueTheme extends Theme {
     private static Font MEDIUM_FONT;
     private static Font MEDIUM_FONT_BOLD;
 
-    public BlueTheme(final int width) {
+    public BlueTheme(final int height, final int width) {
+        int usedWidth;
+        if(width>height) {
+            usedWidth = width >> 1;
+        } else {
+            usedWidth = width;
+        }
         Log.debug("BlueTheme");
         if (BlueTheme.MEDIUM_FONT == null) {
             Font base;
             final int baseFace = Font.getDefaultFont().getFace();
             int maxsize;
             Log.debug("Default size " + Font.getDefaultFont().charWidth('0'));
-            Log.debug("Width " + width);
-            maxsize = width / 24;
+            Log.debug("Width " + usedWidth);
+            maxsize = usedWidth / 24;
             Log.debug("Target size " + maxsize);
             base = Font.getFont(baseFace, Font.STYLE_PLAIN, Font.SIZE_LARGE);
             if (base.charWidth('0') > maxsize) {

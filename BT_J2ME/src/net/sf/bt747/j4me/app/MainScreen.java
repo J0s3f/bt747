@@ -112,7 +112,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         // UIManager.init(midlet);
-        UIManager.setTheme(new BlueTheme(getScreenWidth()));
+        UIManager.setTheme(new BlueTheme(getScreenHeight(),getScreenWidth()));
 
         // Set the title.
         setTitle("MTK Logger Control V"
@@ -124,7 +124,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c,
+        loggerInfoScreen = new DelayedDialog(ScreenFactory.LOGGERSTATUSSCREEN, c,
                 this, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
@@ -139,7 +139,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new DelayedDialog(LogFieldSelectScreen.class,
+        logFieldSelectScreen = new DelayedDialog(ScreenFactory.LOGFIELDSELECTSCREEN,
                 c, this, this);
 
         // Call here for debug
@@ -174,21 +174,21 @@ public final class MainScreen extends Dialog implements ModelListener {
 
         rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
-                GpsPositionScreen.class, c, this, this));
+                ScreenFactory.GPSPOSITIONSCREEN, c, this, this));
 
         Menu subMenu;
         subMenu = new Menu("App Settings", rootMenu);
         subMenu.appendMenuOption("Working dir", baseDirScreen);
         subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
         subMenu.appendMenuOption("Download Settings", new DelayedDialog(
-                LogDownloadConfigScreen.class, c, this, this));
+                ScreenFactory.LOGDOWNLOADCONFIGSCREEN, c, this, this));
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Convert Menu", rootMenu);
         subMenu.appendMenuOption("Select File Fields", new DelayedDialog(
-                FileFieldSelectScreen.class, c, rootMenu, rootMenu));
+                ScreenFactory.FILEFIELDSELECTSCREEN, c, rootMenu, rootMenu));
         subMenu.appendMenuOption("Convert", new DelayedDialog(
-                ConvertToScreen.class, c, rootMenu, rootMenu));
+                ScreenFactory.CONVERTTOSCREEN, c, rootMenu, rootMenu));
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Connection", rootMenu);
@@ -200,7 +200,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         // private final LogConditionsConfigScreen logConditionsConfigScreen;
 
         subMenu.appendMenuOption("Log Conditions", new DelayedDialog(
-                LogConditionsConfigScreen.class, c, this, this));
+                ScreenFactory.LOGCONDITIONSCONFIGSCREEN, c, this, this));
         subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
         subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         subMenu.appendMenuOption(new MenuItem() {
