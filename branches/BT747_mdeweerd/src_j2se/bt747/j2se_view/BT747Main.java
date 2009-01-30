@@ -1125,7 +1125,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
             return;
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
             final J2SEAppModel m = new J2SEAppModel();
             final J2SEAppController c = new J2SEAppController(m);

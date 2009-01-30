@@ -35,9 +35,16 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
     private J2SEAppController c;
     private Model m;
 
+    private final static String getString(String s) {
+        return J2SEAppController.getString(s);
+    }
     /** Creates new form AdvancedFileSettingsPanel */
     public AdvancedFileSettingsPanel() {
         initComponents();
+        cbAltitudeMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                getString("KML_CLAMPGROUND"), getString("KML_RELATIVE"),
+                getString("KML_ABSOLUTE") }));
+
     }
 
     public void init(final J2SEAppController pC) {

@@ -66,6 +66,7 @@ public class FileTablePanel extends javax.swing.JPanel implements
             col.setPreferredWidth(fileTableModel.getPreferredWidth(fm, i) + 4);
         }
 
+        new TagFilePopupMenu(this,tbImageList);
         // dt = new DropTarget(tbImageList,this);
         // tbImageList.setDropTarget(dt);
 

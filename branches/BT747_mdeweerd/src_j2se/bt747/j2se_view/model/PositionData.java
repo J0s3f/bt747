@@ -227,6 +227,19 @@ public class PositionData extends AbstractBean {
             }
         }
 
+        public void remove(Object[] elements) {
+            int count = imageTable.size()-1;
+            for (Object element : elements) {
+                if (element instanceof ImageData) {
+                    final ImageData new_name = (ImageData) element;
+                    imageTable.remove(new_name.getPath());
+                }
+                userWayPoints.remove(element);
+            }
+            // TODO: may need to be more complex
+            userWpListModel.fireIntervalRemoved(this, 0, count);
+        }
+
         public void clear() {
             int org;
             org = userWayPoints.size();

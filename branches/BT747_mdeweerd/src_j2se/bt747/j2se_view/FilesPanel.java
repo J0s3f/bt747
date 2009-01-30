@@ -25,10 +25,11 @@ import bt747.model.ModelListener;
  *
  * @author Mario
  */
+@SuppressWarnings("serial")
 public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
-    private LogFileTableModel logFileModel = new LogFileTableModel();
-    private FileTablePanel fileTablePanel = new FileTablePanel();
+    private final LogFileTableModel logFileModel = new LogFileTableModel();
+    private final FileTablePanel fileTablePanel = new FileTablePanel();
     
     /** Creates new form FilesPanel */
     public FilesPanel() {
@@ -49,7 +50,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
             final TableColumn col = tbLogFile.getColumnModel().getColumn(i);
             col.setPreferredWidth(logFileModel.getPreferredWidth(fm, i) + 4);
         }
-
+        new LogFilePopupMenu(this,tbLogFile);
 
         m.addListener(this);
     }
@@ -87,7 +88,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
         jSplitPane1.setTopComponent(jScrollPane1);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)

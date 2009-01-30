@@ -1,6 +1,7 @@
-Version
+Version 1.67.22
 * Fix in MultiLogConvert
 * Table Column Widths adjusted.
+* Can delete files from the lists (right click).
 
 Version 1.67.21
 * Changed chunk size limit.
