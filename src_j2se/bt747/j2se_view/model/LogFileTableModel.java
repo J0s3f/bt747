@@ -4,6 +4,7 @@
 package bt747.j2se_view.model;
 
 import java.awt.FontMetrics;
+import java.util.HashSet;
 
 import gps.log.LogFileInfo;
 import gps.log.out.CommonOut;
@@ -35,6 +36,21 @@ public class LogFileTableModel extends AbstractTableModel {
     public final BT747Vector getLogfileInfos() {
         return Controller.logFiles;
     }
+    
+    public void removeRows(int[] indexes) {
+        final HashSet<Object> set = new HashSet<Object>(indexes.length);
+        final BT747Vector objects = getLogfileInfos();
+        for(int i=0;i<indexes.length;i++) {
+            set.add(objects.elementAt(indexes[i]));
+        }
+        for(int i=objects.size()-1;i>=0;i--) {
+            if(set.contains(objects.elementAt(i))) {
+                objects.removeElementAt(i);
+            }
+        }
+        notifyUpdate();
+    }
+
 
     public final void setLogfileInfos(
             bt747.sys.interfaces.BT747Vector logfileInfos) {

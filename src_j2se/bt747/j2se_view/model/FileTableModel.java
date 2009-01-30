@@ -23,13 +23,11 @@ public class FileTableModel extends AbstractTableModel {
     /**
      * The columns currently shown.
      */
-    private int[] columns = {
-            DataTypes.FILE_DATE,
+    private int[] columns = { DataTypes.FILE_DATE,
             DataTypes.FILE_TIME,
             DataTypes.GPS_TIME, // PositionData.TAG_TIME,
-            DataTypes.IMAGE_PATH, DataTypes.GEOMETRY,
-            DataTypes.LATITUDE, DataTypes.LONGITUDE,
-            DataTypes.HEIGHT_METERS };
+            DataTypes.IMAGE_PATH, DataTypes.GEOMETRY, DataTypes.LATITUDE,
+            DataTypes.LONGITUDE, DataTypes.HEIGHT_METERS };
 
     /**
      * 
@@ -37,6 +35,15 @@ public class FileTableModel extends AbstractTableModel {
     public FileTableModel(final UserWayPointListModel m) {
         wpListModel = m;
         wpListModel.addListDataListener(new WPListDataListener());
+    }
+
+    public void removeRows(int[] indexes) {
+        final Object[] elements = new Object[indexes.length];
+        for(int i=0;i<indexes.length;i++) {
+            elements[i] = wpListModel.getElementAt(indexes[i]);
+        }
+        wpListModel.remove(elements);
+        // Notification done by list model.
     }
 
     private final class WPListDataListener implements ListDataListener {
@@ -57,6 +64,7 @@ public class FileTableModel extends AbstractTableModel {
          */
         public void intervalAdded(final ListDataEvent e) {
             fireTableRowsInserted(e.getIndex0(), e.getIndex1());
+            fireTableDataChanged();
         }
 
         /*
@@ -88,8 +96,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(final int columnIndex) {
-        return DataTypes
-                .getDataDisplayClass(columnToDataType(columnIndex));
+        return DataTypes.getDataDisplayClass(columnToDataType(columnIndex));
     }
 
     /*
@@ -159,7 +166,8 @@ public class FileTableModel extends AbstractTableModel {
 
     }
 
-    public final int getPreferredWidth(final FontMetrics fm, final int columnIndex) {
+    public final int getPreferredWidth(final FontMetrics fm,
+            final int columnIndex) {
         return DataTypes.defaultDataWidth(columnToDataType(columnIndex), fm);
     }
 

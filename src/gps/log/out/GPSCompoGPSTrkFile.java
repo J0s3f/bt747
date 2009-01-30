@@ -167,7 +167,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
                                 + t.getDay()
                                 + "-"
                                 // Month calculation
-                                + CommonOut.MONTHS_AS_TEXT[t.getMonth() - 1]
+                                + CommonOut.idxToMonthStr(t.getMonth() - 1)
                                 + "-"
                                 + (((t.getYear() % 100) < 10) ? "0" : "")
                                 // Year calculation

@@ -22,9 +22,12 @@ import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Time;
 
 public final class CommonOut {
-    protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
+    private static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
+    protected static final String idxToMonthStr(final int i) {
+        return MONTHS_AS_TEXT[i];
+    }
     public final static String getRCRKey(final String r) {
         if ((r.length() > 0) && (r.charAt(0) == 'X')) {
             return (r.substring(1));
