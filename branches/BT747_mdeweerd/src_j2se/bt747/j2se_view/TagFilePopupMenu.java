@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +17,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
 import bt747.j2se_view.model.FileTableModel;
-import bt747.j2se_view.model.LogFileTableModel;
+import bt747.j2se_view.model.PositionData.UserWayPointListModel;
 
 /**
  * @author Mario
@@ -30,21 +32,22 @@ public class TagFilePopupMenu {
 
     private static final long serialVersionUID = 1L;
 
-    private JPanel pn;
+    private JComponent pn;
 
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    private JTable table;
+    private JTable table = null;
+    private JList list = null;
 
-    public static final String INSERT_CMD = "Insert Rows";
+    protected static final String INSERT_CMD = "Insert Rows";
 
-    public static final String DELETE_CMD = "DeleteSelectedRows";
+    protected static final String DELETE_CMD = "DeleteSelectedRows";
 
     public final static String getString(final String s) {
         return J2SEAppController.getString(s);
     }
 
-    public TagFilePopupMenu(final JPanel pn, final JTable tbl) {
+    public TagFilePopupMenu(final JComponent pn, final JTable tbl) {
         this.pn = pn;
         table = tbl;// new JTable(new FilesPanel());
         JMenuItem menuItem;
@@ -60,33 +63,27 @@ public class TagFilePopupMenu {
         MouseListener popupListener = new PopupListener();
         table.addMouseListener(popupListener);
         table.getTableHeader().addMouseListener(popupListener);
-        //table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        // table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     }
 
-    // private static void createAndShowGUI() {
-    // // Create and set up the window.
-    // JFrame frame = new JFrame("TableDemo");
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //
-    // // Create and set up the content pane.
-    // FilePopupMenu popUp = new FilePopupMenu();
-    // popUp.setOpaque(true); // content panes must be opaque
-    // frame.setContentPane(popUp);
-    //
-    // // Display the window.
-    // frame.pack();
-    // frame.setVisible(true);
-    // }
+    public TagFilePopupMenu(final JComponent pn, final JList list) {
+        this.pn = pn;
+        this.list = list;// new JTable(new FilesPanel());
+        JMenuItem menuItem;
 
-    // public static void main(String[] args) {
-    // // Schedule a job for the event-dispatching thread:
-    // // creating and showing this application's GUI.
-    // javax.swing.SwingUtilities.invokeLater(new Runnable() {
-    // public void run() {
-    // createAndShowGUI();
-    // }
-    // });
-    // }
+        // JMenuItem menuItem = new JMenuItem(getString(INSERT_CMD));
+        // menuItem.addActionListener(new ActionAdapter(this));
+        // popupMenu.add(menuItem);
+        menuItem = new JMenuItem(getString(DELETE_CMD));
+        menuItem.addActionListener(new ActionAdapter(this));
+        popupMenu.add(menuItem);
+
+        popupMenu.setOpaque(true);
+        MouseListener popupListener = new PopupListener();
+        list.addMouseListener(popupListener);
+        // list.getTableHeader().addMouseListener(popupListener);
+        // table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+    }
 
     public void insertColumn(ActionEvent e) {
         JOptionPane.showMessageDialog(pn, "Insert Column here.");
@@ -94,15 +91,19 @@ public class TagFilePopupMenu {
     }
 
     public void deleteSelectedRows(ActionEvent e) {
-        if (table.getModel() instanceof FileTableModel) {
-            FileTableModel new_name = (FileTableModel) table.getModel();
+        if (table != null && table.getModel() instanceof FileTableModel) {
+            final FileTableModel new_name = (FileTableModel) table.getModel();
             new_name.removeRows(table.getSelectedRows());
+        } else if (list != null
+                && list.getModel() instanceof UserWayPointListModel) {
+            final UserWayPointListModel wptList = (UserWayPointListModel) list
+                    .getModel();
+            wptList.remove(list.getSelectedValues());
         }
         // table.removeRowSelectionInterval(, index1)
         // JOptionPane.showMessageDialog(pn, "Delete Column here.");
         // delete column here
     }
-
 
     class PopupListener implements MouseListener {
         public void mousePressed(MouseEvent e) {

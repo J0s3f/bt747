@@ -124,20 +124,21 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         // waypointList.setPreferredSize(new Dimension(100,0));
         splitPane.setDividerLocation(100);
 
+        new TagFilePopupMenu(wayPointScrollPane,waypointList);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WAYPOINTSELECTED, wpSelectedListener);
     }
 
-    private PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
+    private final PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {
             map.repaint();
         }
     };
 
-    private PropertyChangeListener wpSelectedListener = new PropertyChangeListener() {
+    private final PropertyChangeListener wpSelectedListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {
             try {

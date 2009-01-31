@@ -58,6 +58,9 @@ public class FileDrop {
     private static java.awt.Color defaultBorderColor = new java.awt.Color(0f,
             0f, 1f, 0.25f);
 
+    /** Class used to check if DND is supported. (Presence is checked). */
+    private static final String DND_REFERENCE_CLASS = "java.awt.dnd.DnDConstants";
+
     /**
      * Constructs a {@link FileDrop} with a default light-blue border and, if
      * <var>c</var> is a {@link java.awt.Container}, recursively sets all
@@ -269,7 +272,7 @@ public class FileDrop {
 
         if (supportsDnD()) { // Make a drop listener
             dropListener = new java.awt.dnd.DropTargetListener() {
-                public void dragEnter(
+                public final void dragEnter(
                         final java.awt.dnd.DropTargetDragEvent evt) {
                     log(out, "FileDrop: dragEnter event.");
 
@@ -296,9 +299,9 @@ public class FileDrop {
                     } // end else: drag not ok
                 } // end dragEnter
 
-                public void dragOver(
+                public final void dragOver(
                         final java.awt.dnd.DropTargetDragEvent evt) { // This
-                                                                        // is
+                    // is
                     // called
                     // continually
                     // as long
@@ -308,7 +311,8 @@ public class FileDrop {
                     // over the drag target.
                 } // end dragOver
 
-                public void drop(final java.awt.dnd.DropTargetDropEvent evt) {
+                public final void drop(
+                        final java.awt.dnd.DropTargetDropEvent evt) {
                     log(out, "FileDrop: drop event.");
                     try { // Get whatever was dropped
                         final java.awt.datatransfer.Transferable tr = evt
@@ -326,20 +330,26 @@ public class FileDrop {
                             log(out, "FileDrop: file list accepted.");
 
                             // Get a useful list
-                            final java.util.List<File> fileList = (java.util.List<File>) tr
+                            final Object lst = tr
                                     .getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
-                            // java.util.Iterator iterator =
-                            // fileList.iterator();
+                            if (lst instanceof java.util.List) {
+                                final java.util.List<File> fileList = (java.util.List<File>) tr
+                                        .getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+                                // java.util.Iterator iterator =
+                                // fileList.iterator();
 
-                            // Convert list to array
-                            final java.io.File[] filesTemp = new java.io.File[fileList
-                                    .size()];
-                            fileList.toArray(filesTemp);
-                            final java.io.File[] files = filesTemp;
+                                // Convert list to array
+                                final java.io.File[] filesTemp = new java.io.File[fileList
+                                        .size()];
+                                fileList.toArray(filesTemp);
+                                final java.io.File[] files = filesTemp;
 
-                            // Alert listener to drop.
-                            if (listener != null) {
-                                listener.filesDropped(files);
+                                // Alert listener to drop.
+                                if (listener != null) {
+                                    listener.filesDropped(files);
+                                }
+                            } else {
+                                log(out, "FileDrop: not a list of files");
                             }
 
                             // Mark that drop is completed.
@@ -347,7 +357,7 @@ public class FileDrop {
                             log(out, "FileDrop: drop complete.");
                         } // end if: file list
                         else // this section will check for a reader
-                                // flavor.
+                        // flavor.
                         {
                             // Thanks, Nathan!
                             // BEGIN 2007-09-12 Nathan Blomquist -- Linux
@@ -417,7 +427,8 @@ public class FileDrop {
                     } // end finally
                 } // end drop
 
-                public void dragExit(final java.awt.dnd.DropTargetEvent evt) {
+                public final void dragExit(
+                        final java.awt.dnd.DropTargetEvent evt) {
                     log(out, "FileDrop: dragExit event.");
                     // If it's a Swing component, reset its border
                     if (c instanceof javax.swing.JComponent) {
@@ -452,13 +463,12 @@ public class FileDrop {
         } // end else: does not support DnD
     } // end constructor
 
-    private static boolean supportsDnD() { // Static Boolean
+    private final static boolean supportsDnD() { // Static Boolean
         if (supportsDnD == null) {
             boolean support = false;
             try {
-                final Class arbitraryDndClass = Class
-                        .forName("java.awt.dnd.DnDConstants");
-                support = true;
+                support = Class.forName(DND_REFERENCE_CLASS).getName()
+                        .equals(DND_REFERENCE_CLASS);
             } // end try
             catch (final Exception e) {
                 support = false;
@@ -469,9 +479,9 @@ public class FileDrop {
     } // end supportsDnD
 
     // BEGIN 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
-    private static String ZERO_CHAR_STRING = "" + (char) 0;
+    private final static String ZERO_CHAR_STRING = "" + (char) 0;
 
-    private static File[] createFileArray(final BufferedReader bReader,
+    private final static File[] createFileArray(final BufferedReader bReader,
             final PrintStream out) {
         try {
             final java.util.List<File> list = new java.util.ArrayList<File>();
@@ -500,7 +510,7 @@ public class FileDrop {
 
     // END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
 
-    private void makeDropTarget(final java.io.PrintStream out,
+    private final void makeDropTarget(final java.io.PrintStream out,
             final java.awt.Component c, final boolean recursive) {
         // Make drop target
         final java.awt.dnd.DropTarget dt = new java.awt.dnd.DropTarget();
@@ -551,7 +561,7 @@ public class FileDrop {
     } // end dropListener
 
     /** Determine if the dragged data is a file list. */
-    private boolean isDragOk(final java.io.PrintStream out,
+    private final boolean isDragOk(final java.io.PrintStream out,
             final java.awt.dnd.DropTargetDragEvent evt) {
         boolean ok = false;
 
@@ -592,9 +602,7 @@ public class FileDrop {
     /** Outputs <tt>message</tt> to <tt>out</tt> if it's not null. */
     private static void log(final java.io.PrintStream out,
             final String message) { // Log
-        // message
-        // if
-        // requested
+        // message if requested
         if (out != null) {
             out.println(message);
         }
@@ -631,9 +639,9 @@ public class FileDrop {
      */
     public static boolean remove(final java.io.PrintStream out,
             final java.awt.Component c, final boolean recursive) { // Make
-                                                                    // sure we
-                                                                    // support
-                                                                    // dnd.
+        // sure we
+        // support
+        // dnd.
         if (supportsDnD()) {
             log(out, "FileDrop: Removing drag-and-drop hooks.");
             c.setDropTarget(null);
@@ -655,7 +663,7 @@ public class FileDrop {
     } // end remove
 
     /** Runs a sample program that shows dropped files */
-    public static void main(final String[] args) {
+    public final static void main(final String[] args) {
         final javax.swing.JFrame frame = new javax.swing.JFrame("FileDrop");
         // javax.swing.border.TitledBorder dragBorder = new
         // javax.swing.border.TitledBorder( "Drop 'em" );
