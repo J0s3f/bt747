@@ -723,7 +723,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         });
 
         spTimeSplitHours.setModel(new javax.swing.SpinnerNumberModel(0, 0,
-                24, 1));
+                23, 1));
         spTimeSplitHours.setToolTipText(bundle
                 .getString("BT747Main.spTimeSplitHours.toolTipText")); // NOI18N
         spTimeSplitHours.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -733,7 +733,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         });
 
         spTimeSplitMinutes.setModel(new javax.swing.SpinnerNumberModel(0, 0,
-                24, 1));
+                59, 1));
         spTimeSplitMinutes.setToolTipText(bundle
                 .getString("BT747Main.spTimeSplitMinutes.toolTipText")); // NOI18N
         spTimeSplitMinutes
