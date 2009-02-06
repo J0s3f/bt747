@@ -22,6 +22,18 @@ public final class GPSConversionParameters {
     public final static String KML_TRACK_ALTITUDE_STRING = "kml-track-altitude";
     public final static String TRACK_SPLIT_IF_SMALL_BOOL = "trk-split-small";
     public final static String NMEA_OUTFIELDS = "nmea-out";
+    /**
+     * Defines the CSV field seperation character.
+     */
+    public final static String CSV_FIELD_SEP_STRING = "csv-fieldsep";
+    /**
+     * Defines the CSV field seperation character.
+     */
+    public final static String CSV_SAT_SEP_STRING = "csv-satsep";
+    /**
+     * Defines the CSV date format (to be implemented).
+     */
+    public final static String CSV_DATE_FORMAT_INT = "csv-datefmt";
 
     private final bt747.sys.interfaces.BT747Hashtable h = Interface
             .getHashtableInstance(5);

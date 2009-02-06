@@ -657,6 +657,8 @@ public final class BT747Constants { // dev as in device
             mdStr = "iBlue 821";
         } else if (device.equals("QST1000P")) {
             mdStr = "Qstarz BT-1000P";
+        } else if (device.equals("QST1000")) {
+            mdStr = "Qstarz BT-1000X";
         }
         return mdStr;
     }
