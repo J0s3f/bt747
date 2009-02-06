@@ -1,3 +1,7 @@
+Version 1.67.25
+* Changed date format in CSV file.
+* Trunking of GPS type in J2SE more severe +Q1000X model.
+
 Version 1.67.24
 * Can remove items from image list (right click).
 

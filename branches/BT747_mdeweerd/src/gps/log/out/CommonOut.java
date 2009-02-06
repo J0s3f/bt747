@@ -28,6 +28,7 @@ public final class CommonOut {
     protected static final String idxToMonthStr(final int i) {
         return MONTHS_AS_TEXT[i];
     }
+
     public final static String getRCRKey(final String r) {
         if ((r.length() > 0) && (r.charAt(0) == 'X')) {
             return (r.substring(1));
@@ -221,7 +222,7 @@ public final class CommonOut {
     public final static String getDateStr(final int utcTime) {
         final BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
-        return CommonOut.getDateStr(t);
+        return CommonOut.getDateTxtStr(t);
     }
 
     public final static String getTimeStr(final int utcTime) {
@@ -249,7 +250,7 @@ public final class CommonOut {
         ;
     }
 
-    public final static String getDateStr(final BT747Time time) {
+    public final static String getDateTxtStr(final BT747Time time) {
         return ((time.getDay() < 10) ? "0" : "") + time.getDay()
                 + "-"
                 // Month
@@ -258,8 +259,17 @@ public final class CommonOut {
                 % 100;
     }
 
+    public final static String getDateNumStr(final BT747Time time) {
+        return time.getYear() + "/"
+        // Month
+                + ((time.getMonth() < 10) ? "0" : "") + time.getMonth()
+                // Day
+                + ((time.getDay() < 10) ? "0" : "") + time.getDay();
+    }
+
     public final static String getDateTimeStr(final BT747Time time) {
-        return CommonOut.getDateStr(time) + " " + CommonOut.getTimeStr(time);
+        return CommonOut.getDateTxtStr(time) + " "
+                + CommonOut.getTimeStr(time);
     }
 
     public final static String getRCRstr(final GPSRecord s) {
