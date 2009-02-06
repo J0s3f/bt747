@@ -262,7 +262,7 @@ public final class CommonOut {
     public final static String getDateNumStr(final BT747Time time) {
         return time.getYear() + "/"
         // Month
-                + ((time.getMonth() < 10) ? "0" : "") + time.getMonth()
+                + ((time.getMonth() < 10) ? "0" : "") + time.getMonth() + "/"
                 // Day
                 + ((time.getDay() < 10) ? "0" : "") + time.getDay();
     }
