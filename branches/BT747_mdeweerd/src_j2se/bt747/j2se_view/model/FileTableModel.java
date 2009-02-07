@@ -26,7 +26,7 @@ public class FileTableModel extends AbstractTableModel {
     private int[] columns = { DataTypes.FILE_DATE,
             DataTypes.FILE_TIME,
             DataTypes.GPS_TIME, // PositionData.TAG_TIME,
-            DataTypes.IMAGE_PATH, DataTypes.GEOMETRY, DataTypes.LATITUDE,
+            DataTypes.FILE_PATH, DataTypes.GEOMETRY, DataTypes.LATITUDE,
             DataTypes.LONGITUDE, DataTypes.HEIGHT_METERS };
 
     /**
@@ -140,7 +140,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return PositionData.getData((ImageData) wpListModel
+        return PositionData.getData((FileWaypoint) wpListModel
                 .getElementAt(rowIndex), columnToDataType(columnIndex));
     }
 
