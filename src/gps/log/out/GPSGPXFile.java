@@ -316,7 +316,7 @@ public final class GPSGPXFile extends GPSFile {
                 if ((activeFields.hasHeading())
                         && (selectedFileFields.hasHeading())) {
                     rec.append("<course>");
-                    rec.append(Convert.toString(r.heading, 6));
+                    rec.append(Convert.toString(r.heading, 5));
                     rec.append("</course>\r\n");
                 }
 
