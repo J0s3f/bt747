@@ -75,7 +75,7 @@ public class J2SEController extends Controller {
      * @param w
      * @throws IOException
      */
-    public final static void convertImage(final TaggedFilePathFactory fpf,
+    public final static void tagImage(final TaggedFilePathFactory fpf,
             final ImageData img) throws IOException {
         final String p = img.getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);

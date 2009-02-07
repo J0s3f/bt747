@@ -24,6 +24,8 @@ public class BT747WaypointListCellRenderer implements
     private static final java.util.Vector<WaypointListCellComponent> renderers = new Vector<WaypointListCellComponent>();
 
     static {
+        // Last one added has priority.
+        renderers.add(new FileListCellRenderer());
         renderers.add(new ImageListCellRenderer());
     }
 

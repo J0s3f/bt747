@@ -79,8 +79,8 @@ public class AllWayPointStyles extends WayPointStyleSet {
              * document, pdf, ...). IN general anything that does not fall
              * under another specific type in this category.
              */
-            // { "0104", "Document",
-            // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            { "0104", "Document",
+                    "http://maps.google.com/mapfiles/kml/paddle/grn-stars.png" },
             /** 0x0105 Phone Call */
             { "0108", "Phone Call",
                     "http://maps.google.com/mapfiles/kml/shapes/phone.png" },
@@ -104,6 +104,8 @@ public class AllWayPointStyles extends WayPointStyleSet {
     // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
     };
 
+    public static final int GEOTAG_PICTURE_KEY = 0x0101;
+    public static final int GEOTAG_DOCUMENT_KEY = 0x0104;
     /**
      * 
      */

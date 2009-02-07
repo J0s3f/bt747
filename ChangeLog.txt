@@ -1,3 +1,6 @@
+Version 1.67.27
+* Changes to avoid renaming non-image files during tag-writeback.
+
 Version 1.67.26
 * CSV date '/' added.
 * GPX course output ',' -> '.'

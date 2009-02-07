@@ -199,19 +199,24 @@ public class PositionData extends AbstractBean {
     public class UserWayPointListModel extends AbstractListModel implements
             PropertyChangeListener {
 
-        private java.util.Hashtable<String, ImageData> imageTable = new Hashtable<String, ImageData>();
+        private java.util.Hashtable<String, FileWaypoint> imageTable = new Hashtable<String, FileWaypoint>();
 
         public void add(final String path) {
             synchronized (imageTable) {
                 if (!imageTable.contains(path)) {
                     final ImageData id = new ImageData();
-                    id.setPath(path);
+                    if(id.setPath(path)) {
                     add(id);
+                    } else {
+                        final FileWaypoint fw = new FileWaypoint();
+                        fw.setPath(path);
+                        add(fw);
+                    }
                 }
             }
         }
 
-        public void add(final ImageData id) {
+        public void add(final FileWaypoint id) {
             synchronized (imageTable) {
                 imageTable.put(id.getPath(), id);
                 add((BT747Waypoint) id);
