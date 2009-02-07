@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractListModel;
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
@@ -343,17 +344,22 @@ public class PositionData extends AbstractBean {
         Object result;
         result = getValue(w.getGpsRecord(), type);
         if (result == null) {
-            if (ImageData.class.isInstance(w)) {
-                final ImageData img = (ImageData) w;
+            if (w instanceof FileWaypoint) {
+                final FileWaypoint fw = (FileWaypoint) w;
                 switch (type) {
                 case DataTypes.FILE_DATE:
-                    return CommonOut.getDateStr(img.getUtc());
+                    return CommonOut.getDateStr(fw.getUtc());
                 case DataTypes.FILE_TIME:
-                    return CommonOut.getTimeStr(img.getUtc());
+                    return CommonOut.getTimeStr(fw.getUtc());
                 case DataTypes.FILE_DATETIME:
-                    return CommonOut.getDateTimeStr(img.getUtc());
-                case DataTypes.IMAGE_PATH:
-                    return img.getPath();
+                    return CommonOut.getDateTimeStr(fw.getUtc());
+                case DataTypes.FILE_PATH:
+                    return fw.getPath();
+                }
+            }
+            if (w instanceof ImageData) {
+                final ImageData img = (ImageData) w;
+                switch (type) {
                 case DataTypes.IMAGE_WIDTH:
                     return Integer.valueOf(img.getWidth());
                 case DataTypes.IMAGE_HEIGHT:

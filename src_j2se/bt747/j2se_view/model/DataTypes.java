@@ -49,7 +49,7 @@ public final class DataTypes {
     public static final int SPEED_MPH = 32;
     public static final int UTC_VALUE = 33;
     public static final int VOX = 34;
-    public static final int IMAGE_PATH = 35;
+    public static final int FILE_PATH = 35;
     public static final int IMAGE_WIDTH = 36;
     public static final int IMAGE_HEIGHT = 37;
     public static final int GEOMETRY = 38;
@@ -71,7 +71,7 @@ public final class DataTypes {
         switch (datatype) {
         case NONE:
             return null;
-        case IMAGE_PATH:
+        case FILE_PATH:
             return String.class;
         case IMAGE_WIDTH:
             return Integer.class;
@@ -174,7 +174,7 @@ public final class DataTypes {
         case NONE:
             sample = " ";
             break;
-        case IMAGE_PATH:
+        case FILE_PATH:
             sample = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
             break;
         case IMAGE_WIDTH:
@@ -296,7 +296,7 @@ public final class DataTypes {
         case NONE:
             label = "TAB_TITLE_None";
             break;
-        case IMAGE_PATH:
+        case FILE_PATH:
             label = "TAB_TITLE_Image_path";
             break;
         case IMAGE_WIDTH:
