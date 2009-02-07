@@ -16,6 +16,7 @@ package bt747.j2se_view.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
+import gps.log.out.AllWayPointStyles;
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
@@ -30,36 +31,20 @@ import bt747.sys.interfaces.BT747Time;
  * @author Mario De Weerd
  * 
  */
-public class ImageData extends BT747Waypoint {
+public class ImageData extends FileWaypoint {
     /**
      * @param r
      */
     public ImageData() {
-        super(GPSRecord.getLogFormatRecord(0));
-        // TODO Auto-generated constructor stub
+        super();
     }
-
-    // values.
-    private int utc;
 
     private int width;
     private int height;
 
-    private String path;
-    private int card;
-
-    public void setPath(final String path, final int card) {
-        setCard(card);
-        setPath(path);
-    }
-
-    public void setPath(final String path) {
-        this.path = path;
-        getImageInfo();
-    }
-
-    public String getPath() {
-        return path;
+    @Override
+    protected boolean getInfo() {
+        return getImageInfo();
     }
 
     private double getLatOrLon(final ExifAttribute atr) {
@@ -76,8 +61,11 @@ public class ImageData extends BT747Waypoint {
         return xtitude;
     }
 
-    private void getImageInfo() {
-        getGpsRecord().voxStr = path;
+    /**
+     * @return true if file can ge interpreted.
+     */
+    private boolean getImageInfo() {
+        getGpsRecord().voxStr = getPath();
         // TODO: change path setting.
         int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
         final int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
@@ -88,15 +76,17 @@ public class ImageData extends BT747Waypoint {
 
         // TODO Replace by constant to define in AllWayPointStyles
         // Default = document
-        getGpsRecord().rcr = 0x0104;
+        getGpsRecord().rcr = AllWayPointStyles.GEOTAG_DOCUMENT_KEY;
         if ((idx1 >= 0) && (idx1 < getGpsRecord().voxStr.length())) {
             getGpsRecord().voxStr = getGpsRecord().voxStr.substring(idx1 + 1);
         }
         final ExifJPG exifJpg = new ExifJPG();
-        if (exifJpg.setPath(getPath())) {
+        if (!exifJpg.setPath(getPath())) {
+            return false;
+        } else {
             // bt747.sys.Generic.debug(exifJpg.toString());
             // TODO Replace by constant to define in AllWayPointStyles
-            getGpsRecord().rcr = 0x0101;
+            getGpsRecord().rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;
             ExifAttribute atr;
             atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELXDIMENSION);
             if (atr != null) {
@@ -221,12 +211,13 @@ public class ImageData extends BT747Waypoint {
                 }
             } else {
                 // Get file date & time.
-                final File f = new File(path);
+                final File f = new File(getPath());
                 final int u = f.getModificationTime();
                 if (u != 0) {
                     setUtc(u);
                 }
             }
+            return true;
         }
     }
 
@@ -340,22 +331,6 @@ public class ImageData extends BT747Waypoint {
     }
 
     /**
-     * @param utc
-     *                the utc to set
-     */
-    private void setUtc(final int utc) {
-        getGpsRecord().tagutc = utc;
-        this.utc = utc;
-    }
-
-    /**
-     * @return the utc
-     */
-    public int getUtc() {
-        return utc;
-    }
-
-    /**
      * @param width
      *                the width to set
      */
@@ -385,18 +360,4 @@ public class ImageData extends BT747Waypoint {
         return height;
     }
 
-    /**
-     * @param card
-     *                the card to set
-     */
-    private void setCard(final int card) {
-        this.card = card;
-    }
-
-    /**
-     * @return the card
-     */
-    public int getCard() {
-        return card;
-    }
 }

@@ -21,18 +21,20 @@ import javax.swing.JList;
 
 import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
-import bt747.j2se_view.model.ImageData;
+import bt747.j2se_view.model.FileWaypoint;
 
 /**
  * @author Mario
  * 
+ * TODO MUST BE COMPLETELY REWRITTEN TO HANDLE NON-IMAGE FILES.
+ * 
  */
 @SuppressWarnings("serial")
-public final class ImageListCellRenderer implements WaypointListCellComponent {
+public final class FileListCellRenderer implements WaypointListCellComponent {
 
     private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();
 
-    private final static ExecutorService loader = Executors
+    private static ExecutorService loader = Executors
             .newCachedThreadPool(new ThreadFactory() {
                 private int count = 0;
 
@@ -48,7 +50,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         String path;
-        final ImageData v = (ImageData) value;
+        final FileWaypoint v = (FileWaypoint) value;
         path = v.getPath();
         SoftReference<ImageListPanel> s;
         synchronized (panels) {
@@ -135,7 +137,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#getText()
      */
     public final String getText(final Object wp) {
-        final String path = ((ImageData) wp).getPath();
+        final String path = ((FileWaypoint) wp).getPath();
         int li = 0;
         int n;
         n = path.lastIndexOf('/');
@@ -155,7 +157,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#getTooltip()
      */
     public final String getTooltip(final Object wp) {
-        final ImageData w = (ImageData) wp;
+        final FileWaypoint w = (FileWaypoint) wp;
         return "<html>" + CommonOut.getHtml(w.getGpsRecord());
     }
 
@@ -165,7 +167,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java.lang.Object)
      */
     public final boolean isRendererOf(final Object wp) {
-        return ImageData.class.isInstance(wp);
+        return wp instanceof FileWaypoint;
     }
 
 }

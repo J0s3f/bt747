@@ -67,9 +67,8 @@ public class ExifJPG {
                 sz = p.getBufferFill();
                 p.close();
                 p = null;
-                examineBuffer(buffer, sz);
+                success = examineBuffer(buffer, sz);
                 // bt747.sys.Generic.debug(this.toString());
-                success = true;
             }
         } catch (final Exception e) {
             // TODO: handle exception
@@ -84,7 +83,12 @@ public class ExifJPG {
 
     private ExifApp1 exifApp1;
 
-    private final void examineBuffer(final byte[] buffer, final int sz) {
+    /**
+     * @param buffer
+     * @param sz
+     * @return true if JPEG
+     */
+    private final boolean examineBuffer(final byte[] buffer, final int sz) {
         int currentIdxInBuffer = 0;
         if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
                 // header
@@ -144,13 +148,10 @@ public class ExifJPG {
                     currentIdxInBuffer = skipMarkerPosition;
                 }
             } while (skipMarkers);
+            return true;
+        } else {
+            return false;
         }
-        // byte[] test = getBuffer();
-        // for (int i = 0; i < test.length; i++) {
-        // if (test[i] != buffer[i + 2]) {
-        // Generic.debug("D:" + i + ":" + test[i] + ":" + buffer[i + 2]);
-        // }
-        // }
     }
 
     private final byte[] getBuffer() {

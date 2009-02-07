@@ -488,7 +488,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             for (BT747Waypoint wpt : waypointsToTag) {
                 try {
                     if (ImageData.class.isInstance(wpt)) {
-                        J2SEController.convertImage(fpf, (ImageData) wpt);
+                        J2SEController.tagImage(fpf, (ImageData) wpt);
                     }
                 } catch (Exception e) {
                     bt747.sys.Generic.debug("Problem converting", e);

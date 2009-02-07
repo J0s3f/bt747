@@ -20,6 +20,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
@@ -161,8 +162,9 @@ public class FileTablePanel extends javax.swing.JPanel implements
 
         for (final BT747Waypoint w : m.getPositionData().getUserWayPoints()) {
             try {
-                if (ImageData.class.isInstance(w)) {
-                    J2SEController.convertImage(fpf, (ImageData)w);
+                if (w instanceof ImageData) {
+                    final ImageData id = (ImageData) w;
+                    J2SEController.tagImage(fpf, id);
                 }
             } catch (Exception e) {
                 Generic.debug("Problem while converting", e);
