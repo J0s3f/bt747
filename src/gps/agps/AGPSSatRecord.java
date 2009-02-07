@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bt747.j2se_view.agps;
+package gps.agps;
 
 import bt747.sys.Interface;
 
