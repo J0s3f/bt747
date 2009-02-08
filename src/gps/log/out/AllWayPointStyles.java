@@ -1,5 +1,5 @@
 /**
- * 
+ * gps.log.out.WayPointStyleSet
  */
 package gps.log.out;
 
