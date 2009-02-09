@@ -21,6 +21,8 @@ public final class GPSConversionParameters {
     public final static String GOOGLEMAPKEY_STRING = "googlemapkey";
     public final static String KML_TRACK_ALTITUDE_STRING = "kml-track-altitude";
     public final static String TRACK_SPLIT_IF_SMALL_BOOL = "trk-split-small";
+    public final static String GPX_LINK_TEXT = "gpx-link";
+    public final static String GPX_1_1 = "gpx-1_1";
     public final static String NMEA_OUTFIELDS = "nmea-out";
     /**
      * Defines the CSV field seperation character.

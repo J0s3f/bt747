@@ -38,6 +38,14 @@ public final class GPSGPXFile extends GPSFile {
     private int currentFilter;
     private String trackName = "";
     private boolean isTrkSegSplitOnlyWhenSmall = false;
+    /**
+     * GPX1.1 or GPX1.0
+     */
+    private boolean isGPX1_0 = true;
+    /**
+     * If true, waypoints will have link to 'vox' when available.
+     */
+    private boolean addLinkData = true;
 
     /**
      * 
@@ -55,8 +63,20 @@ public final class GPSGPXFile extends GPSFile {
     public final void initialiseFile(final String basename, final String ext,
             final int Card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
-        isTrkSegSplitOnlyWhenSmall = getParamObject().getBoolParam(
-                GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL);
+        if (getParamObject().hasParam(
+                GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL)) {
+            isTrkSegSplitOnlyWhenSmall = getParamObject().getBoolParam(
+                    GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL);
+        }
+        if (getParamObject().hasParam(GPSConversionParameters.GPX_LINK_TEXT)) {
+            addLinkData = getParamObject().getBoolParam(
+                    GPSConversionParameters.GPX_LINK_TEXT);
+        }
+        if (getParamObject().hasParam(GPSConversionParameters.GPX_LINK_TEXT)) {
+            isGPX1_0 = !getParamObject().getBoolParam(
+                    GPSConversionParameters.GPX_1_1);
+        }
+
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
     }
@@ -80,19 +100,47 @@ public final class GPSGPXFile extends GPSFile {
         }
     }
 
+    private final String TOPO_1_0_SCHEMA = "http://www.topografix.com/GPX/1/0";
+    private final String TOPO_1_1_SCHEMA = "http://www.topografix.com/GPX/1/1";
+
     protected final void writeFileHeader(final String Name) {
         String header;
+        String schema;
+        String version;
+        if (isGPX1_0) {
+            schema = TOPO_1_0_SCHEMA;
+            version = "1.0";
+        } else {
+            schema = TOPO_1_1_SCHEMA;
+            version = "1.1";
+        }
+        String name="";
+        if(!isGPX1_0) {
+            name += "<metadata>";
+        }
+        name+= "<name>" + Name + "</name>";
+        if(!isGPX1_0) {
+            name += "</metadata>";
+        }
+
         header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\r\n"
-                + "<gpx xmlns=\"http://www.topografix.com/GPX/1/0\"\r\n"
+                + "<gpx xmlns=\""
+                + schema
+                +
+
+                "\"\r\n"
                 + " creator=\"BT747 V"
                 + Version.VERSION_NUMBER
                 + "\""
-                + " version=\"1.0\"\r\n" // GPX version
+                + " version=\""
+                + version
+                + "\"\r\n" // GPX version
                 + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + " xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0"
-                + " http://www.topografix.com/GPX/1/0/gpx.xsd\">\r\n"
+                + " xsi:schemaLocation=\"" + schema
+
+                + " " + schema + "/gpx.xsd\">\r\n"
                 // MS20080327 Filename element isn't understood by MapSource?!
-                + "<name>" + Name + "</name>";
+                + name;
         writeTxt(header);
     }
 
@@ -293,6 +341,13 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("\"");
                 }
                 rec.append(" >\r\n");
+//                if (!isGPX1_0 && !isWayType && (activeFields.hasHeading())
+//                        && (selectedFileFields.hasHeading())) {
+//                    rec.append("<degrees>");
+//                    rec.append(Convert.toString(r.heading, 5));
+//                    rec.append("</degrees>\r\n");
+//                }
+
                 //
                 // if(m_isWayType) {
                 // rec.append("<name>"+Convert.toString(m_recCount)+"</name>\r\n");
@@ -313,14 +368,14 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("</time>\r\n");
                 }
 
-                if ((activeFields.hasHeading())
+                if (isGPX1_0&& !isWayType && (activeFields.hasHeading())
                         && (selectedFileFields.hasHeading())) {
                     rec.append("<course>");
                     rec.append(Convert.toString(r.heading, 5));
                     rec.append("</course>\r\n");
                 }
 
-                if ((activeFields.hasSpeed())
+                if (isGPX1_0 && !isWayType && (activeFields.hasSpeed())
                         && (selectedFileFields.hasSpeed())) {
                     rec.append("<speed>");
                     rec.append(Convert.toString(r.speed / 3.6f, 4)); // must
@@ -377,6 +432,30 @@ public final class GPSGPXFile extends GPSFile {
                 // reliability and accuracy of data. "Garmin eTrex", "USGS
                 // quad
                 // Boston North", e.g
+
+                // <url> For waypt
+                // <urlname> For waypt
+                if (addLinkData) {
+                    if (r.hasVoxStr()
+                    // && selectedFileFields.hasVoxStr() //TODO
+                    ) {
+                        if (isGPX1_0) {
+                            rec.append("<url>");
+                            rec.append(r.getVoxStr());
+                            rec.append("</url><urlname>");
+                            rec.append(r.getVoxStr());
+                            rec.append("</urlname>\r\n");
+                        } else
+
+                        {
+                            rec.append("<link href=\"");
+                            rec.append(r.getVoxStr());
+                            rec.append("\"><text>");
+                            rec.append(r.getVoxStr());
+                            rec.append("</text></link>\r\n");
+                        }
+                    }
+                }
 
                 // <sym> xsd:string </sym> [0..1] ?
                 // Text of GPS symbol name. For interchange with other

@@ -62,6 +62,8 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         } catch (final Exception e) {
             // TODO: handle exception
         }
+        cbGPXAddLink.setSelected(m.getBooleanOpt(AppSettings.GPX_LINK_INFO));
+        cbGPX_1_1.setSelected(m.getBooleanOpt(AppSettings.IS_GPX_1_1));
         getNMEAOutFile();
     }
 
@@ -235,402 +237,274 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         pnGPXFileSettings = new javax.swing.JPanel();
         cbNotApplyUTCOffset = new javax.swing.JCheckBox();
         cbGPXTrkSegWhenSmall = new javax.swing.JCheckBox();
+        cbGPXAddLink = new javax.swing.JCheckBox();
+        cbGPX_1_1 = new javax.swing.JCheckBox();
         pnKMLFileSettings = new javax.swing.JPanel();
         lbAltitudeMode = new javax.swing.JLabel();
         cbAltitudeMode = new javax.swing.JComboBox();
 
-        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory
-                .createTitledBorder("NMEA File Settings"));
-        final java.util.ResourceBundle bundle = java.util.ResourceBundle
-                .getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        pnFileNMEAOutput.setToolTipText(bundle
-                .getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
+        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        pnFileNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
 
-        lbNMEAFileType9.setText(bundle
-                .getString("BT747Main.lbNMEAFileType9.text")); // NOI18N
+        lbNMEAFileType9.setText(bundle.getString("BT747Main.lbNMEAFileType9.text")); // NOI18N
 
-        lbNMEAFileGST.setText(bundle
-                .getString("BT747Main.lbNMEAFileGST.text")); // NOI18N
+        lbNMEAFileGST.setText(bundle.getString("BT747Main.lbNMEAFileGST.text")); // NOI18N
 
-        lbNMEAFileVTG.setText(bundle
-                .getString("BT747Main.lbNMEAFileVTG.text")); // NOI18N
+        lbNMEAFileVTG.setText(bundle.getString("BT747Main.lbNMEAFileVTG.text")); // NOI18N
 
-        lbNMEAFileGRS.setText(bundle
-                .getString("BT747Main.lbNMEAFileGRS.text")); // NOI18N
+        lbNMEAFileGRS.setText(bundle.getString("BT747Main.lbNMEAFileGRS.text")); // NOI18N
 
-        lbNMEAFileGSV.setText(bundle
-                .getString("BT747Main.lbNMEAFileGSV.text")); // NOI18N
+        lbNMEAFileGSV.setText(bundle.getString("BT747Main.lbNMEAFileGSV.text")); // NOI18N
 
-        lbNMEAFileGGA.setText(bundle
-                .getString("BT747Main.lbNMEAFileGGA.text")); // NOI18N
+        lbNMEAFileGGA.setText(bundle.getString("BT747Main.lbNMEAFileGGA.text")); // NOI18N
 
-        lbNMEAFileRMC.setText(bundle
-                .getString("BT747Main.lbNMEAFileRMC.text")); // NOI18N
+        lbNMEAFileRMC.setText(bundle.getString("BT747Main.lbNMEAFileRMC.text")); // NOI18N
 
-        lbNMEAFileGLL.setText(bundle
-                .getString("BT747Main.lbNMEAFileGLL.text")); // NOI18N
+        lbNMEAFileGLL.setText(bundle.getString("BT747Main.lbNMEAFileGLL.text")); // NOI18N
 
-        lbNMEAFileType8.setText(bundle
-                .getString("BT747Main.lbNMEAFileType8.text")); // NOI18N
+        lbNMEAFileType8.setText(bundle.getString("BT747Main.lbNMEAFileType8.text")); // NOI18N
 
-        lbNMEAFileGSA.setText(bundle
-                .getString("BT747Main.lbNMEAFileGSA.text")); // NOI18N
+        lbNMEAFileGSA.setText(bundle.getString("BT747Main.lbNMEAFileGSA.text")); // NOI18N
 
-        final org.jdesktop.layout.GroupLayout pnFileNMEAOutLeftLayout = new org.jdesktop.layout.GroupLayout(
-                pnFileNMEAOutLeft);
+        org.jdesktop.layout.GroupLayout pnFileNMEAOutLeftLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutLeft);
         pnFileNMEAOutLeft.setLayout(pnFileNMEAOutLeftLayout);
-        pnFileNMEAOutLeftLayout.setHorizontalGroup(pnFileNMEAOutLeftLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(lbNMEAFileGLL).add(lbNMEAFileRMC).add(lbNMEAFileVTG)
-                .add(lbNMEAFileGGA).add(lbNMEAFileGSA).add(lbNMEAFileGSV)
-                .add(lbNMEAFileGRS).add(lbNMEAFileGST).add(lbNMEAFileType8)
-                .add(lbNMEAFileType9));
-        pnFileNMEAOutLeftLayout.setVerticalGroup(pnFileNMEAOutLeftLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(
-                        pnFileNMEAOutLeftLayout.createSequentialGroup().add(
-                                lbNMEAFileGLL).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileRMC).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileVTG).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileGGA).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileGSA).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileGSV).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileGRS).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileGST).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileType8).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileType9)));
+        pnFileNMEAOutLeftLayout.setHorizontalGroup(
+            pnFileNMEAOutLeftLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(lbNMEAFileGLL)
+            .add(lbNMEAFileRMC)
+            .add(lbNMEAFileVTG)
+            .add(lbNMEAFileGGA)
+            .add(lbNMEAFileGSA)
+            .add(lbNMEAFileGSV)
+            .add(lbNMEAFileGRS)
+            .add(lbNMEAFileGST)
+            .add(lbNMEAFileType8)
+            .add(lbNMEAFileType9)
+        );
+        pnFileNMEAOutLeftLayout.setVerticalGroup(
+            pnFileNMEAOutLeftLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnFileNMEAOutLeftLayout.createSequentialGroup()
+                .add(lbNMEAFileGLL)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileRMC)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileVTG)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileGGA)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileGSA)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileGSV)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileGRS)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileGST)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileType8)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileType9))
+        );
 
-        lbNMEAFileMDGP.setText(bundle
-                .getString("BT747Main.lbNMEAFileMDGP.text")); // NOI18N
+        lbNMEAFileMDGP.setText(bundle.getString("BT747Main.lbNMEAFileMDGP.text")); // NOI18N
 
-        lbNMEAFileType11.setText(bundle
-                .getString("BT747Main.lbNMEAFileType11.text")); // NOI18N
+        lbNMEAFileType11.setText(bundle.getString("BT747Main.lbNMEAFileType11.text")); // NOI18N
 
-        lbNMEAFileMEPH.setText(bundle
-                .getString("BT747Main.lbNMEAFileMEPH.text")); // NOI18N
+        lbNMEAFileMEPH.setText(bundle.getString("BT747Main.lbNMEAFileMEPH.text")); // NOI18N
 
-        lbNMEAFileMALM.setText(bundle
-                .getString("BT747Main.lbNMEAFileMALM.text")); // NOI18N
+        lbNMEAFileMALM.setText(bundle.getString("BT747Main.lbNMEAFileMALM.text")); // NOI18N
 
-        lbNMEAFileType10.setText(bundle
-                .getString("BT747Main.lbNMEAFileType10.text")); // NOI18N
+        lbNMEAFileType10.setText(bundle.getString("BT747Main.lbNMEAFileType10.text")); // NOI18N
 
-        lbNMEAFileZDA.setText(bundle
-                .getString("BT747Main.lbNMEAFileZDA.text")); // NOI18N
+        lbNMEAFileZDA.setText(bundle.getString("BT747Main.lbNMEAFileZDA.text")); // NOI18N
 
-        lbNMEAFileType12.setText(bundle
-                .getString("BT747Main.lbNMEAFileType12.text")); // NOI18N
+        lbNMEAFileType12.setText(bundle.getString("BT747Main.lbNMEAFileType12.text")); // NOI18N
 
-        btSetNMEAFileOutput.setText(bundle
-                .getString("BT747Main.btSetNMEAFileOutput.text")); // NOI18N
-        btSetNMEAFileOutput
-                .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(
-                            final java.awt.event.ActionEvent evt) {
-                        btSetNMEAFileOutputActionPerformed(evt);
-                    }
-                });
+        btSetNMEAFileOutput.setText(bundle.getString("BT747Main.btSetNMEAFileOutput.text")); // NOI18N
+        btSetNMEAFileOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSetNMEAFileOutputActionPerformed(evt);
+            }
+        });
 
-        lbNMEAFileMDBG.setText(bundle
-                .getString("BT747Main.lbNMEAFileMDBG.text")); // NOI18N
+        lbNMEAFileMDBG.setText(bundle.getString("BT747Main.lbNMEAFileMDBG.text")); // NOI18N
 
-        lbNMEAFileMCHN.setText(bundle
-                .getString("BT747Main.lbNMEAFileMCHN.text")); // NOI18N
+        lbNMEAFileMCHN.setText(bundle.getString("BT747Main.lbNMEAFileMCHN.text")); // NOI18N
 
-        final org.jdesktop.layout.GroupLayout pnFileNMEAOutRightLayout = new org.jdesktop.layout.GroupLayout(
-                pnFileNMEAOutRight);
+        org.jdesktop.layout.GroupLayout pnFileNMEAOutRightLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutRight);
         pnFileNMEAOutRight.setLayout(pnFileNMEAOutRightLayout);
-        pnFileNMEAOutRightLayout
-                .setHorizontalGroup(pnFileNMEAOutRightLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnFileNMEAOutRightLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnFileNMEAOutRightLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(lbNMEAFileType10)
-                                                        .add(lbNMEAFileType11)
-                                                        .add(lbNMEAFileType12)
-                                                        .add(lbNMEAFileMALM)
-                                                        .add(lbNMEAFileMEPH)
-                                                        .add(lbNMEAFileMDGP)
-                                                        .add(lbNMEAFileMDBG)
-                                                        .add(lbNMEAFileZDA)
-                                                        .add(lbNMEAFileMCHN)
-                                                        .add(
-                                                                pnFileNMEAOutRightLayout
-                                                                        .createSequentialGroup()
-                                                                        .add(
-                                                                                21,
-                                                                                21,
-                                                                                21)
-                                                                        .add(
-                                                                                btSetNMEAFileOutput)))
-                                        .addContainerGap()));
-        pnFileNMEAOutRightLayout.setVerticalGroup(pnFileNMEAOutRightLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(
-                        pnFileNMEAOutRightLayout.createSequentialGroup().add(
-                                lbNMEAFileType10).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileType11).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileType12).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileMALM).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileMEPH).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileMDGP).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileMDBG).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileZDA).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                lbNMEAFileMCHN).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                btSetNMEAFileOutput).add(0, 0,
-                                Short.MAX_VALUE)));
+        pnFileNMEAOutRightLayout.setHorizontalGroup(
+            pnFileNMEAOutRightLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnFileNMEAOutRightLayout.createSequentialGroup()
+                .add(pnFileNMEAOutRightLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(lbNMEAFileType10)
+                    .add(lbNMEAFileType11)
+                    .add(lbNMEAFileType12)
+                    .add(lbNMEAFileMALM)
+                    .add(lbNMEAFileMEPH)
+                    .add(lbNMEAFileMDGP)
+                    .add(lbNMEAFileMDBG)
+                    .add(lbNMEAFileZDA)
+                    .add(lbNMEAFileMCHN)
+                    .add(pnFileNMEAOutRightLayout.createSequentialGroup()
+                        .add(21, 21, 21)
+                        .add(btSetNMEAFileOutput)))
+                .addContainerGap())
+        );
+        pnFileNMEAOutRightLayout.setVerticalGroup(
+            pnFileNMEAOutRightLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnFileNMEAOutRightLayout.createSequentialGroup()
+                .add(lbNMEAFileType10)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileType11)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileType12)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileMALM)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileMEPH)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileMDGP)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileMDBG)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileZDA)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbNMEAFileMCHN)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btSetNMEAFileOutput)
+                .add(0, 0, Short.MAX_VALUE))
+        );
 
-        final org.jdesktop.layout.GroupLayout pnFileNMEAOutputLayout = new org.jdesktop.layout.GroupLayout(
-                pnFileNMEAOutput);
+        org.jdesktop.layout.GroupLayout pnFileNMEAOutputLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutput);
         pnFileNMEAOutput.setLayout(pnFileNMEAOutputLayout);
-        pnFileNMEAOutputLayout
-                .setHorizontalGroup(pnFileNMEAOutputLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnFileNMEAOutputLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnFileNMEAOutLeft,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnFileNMEAOutRight,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
-        pnFileNMEAOutputLayout
-                .setVerticalGroup(pnFileNMEAOutputLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnFileNMEAOutputLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnFileNMEAOutputLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                pnFileNMEAOutLeft,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(
-                                                                pnFileNMEAOutRight,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
+        pnFileNMEAOutputLayout.setHorizontalGroup(
+            pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnFileNMEAOutputLayout.createSequentialGroup()
+                .add(pnFileNMEAOutLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnFileNMEAOutputLayout.setVerticalGroup(
+            pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnFileNMEAOutputLayout.createSequentialGroup()
+                .add(pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnFileNMEAOutLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        pnGPXFileSettings.setBorder(javax.swing.BorderFactory
-                .createTitledBorder("GPX File Settings"));
-        pnGPXFileSettings.setToolTipText(bundle
-                .getString("BT747Main.pnGPXFileSettings.toolTipText")); // NOI18N
+        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
+        pnGPXFileSettings.setToolTipText(bundle.getString("BT747Main.pnGPXFileSettings.toolTipText")); // NOI18N
 
-        cbNotApplyUTCOffset.setText(bundle
-                .getString("BT747Main.cbNotApplyUTCOffset.text")); // NOI18N
-        cbNotApplyUTCOffset
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        cbNotApplyUTCOffsetStateChanged(evt);
-                    }
-                });
+        cbNotApplyUTCOffset.setText(bundle.getString("BT747Main.cbNotApplyUTCOffset.text")); // NOI18N
+        cbNotApplyUTCOffset.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbNotApplyUTCOffsetStateChanged(evt);
+            }
+        });
 
-        cbGPXTrkSegWhenSmall.setText(bundle
-                .getString("BT747Main.cbGPXTrkSegWhenSmall.text")); // NOI18N
-        cbGPXTrkSegWhenSmall.setToolTipText(bundle
-                .getString("BT747Main.cbGPXTrkSegWhenSmall.toolTipText")); // NOI18N
-        cbGPXTrkSegWhenSmall
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        cbGPXTrkSegWhenSmallStateChanged(evt);
-                    }
-                });
+        cbGPXTrkSegWhenSmall.setText(bundle.getString("BT747Main.cbGPXTrkSegWhenSmall.text")); // NOI18N
+        cbGPXTrkSegWhenSmall.setToolTipText(bundle.getString("BT747Main.cbGPXTrkSegWhenSmall.toolTipText")); // NOI18N
+        cbGPXTrkSegWhenSmall.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbGPXTrkSegWhenSmallStateChanged(evt);
+            }
+        });
 
-        final org.jdesktop.layout.GroupLayout pnGPXFileSettingsLayout = new org.jdesktop.layout.GroupLayout(
-                pnGPXFileSettings);
+        cbGPXAddLink.setText(bundle.getString("AdvancedFileSettingsPanel.cbGPXAddLink.text")); // NOI18N
+        cbGPXAddLink.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.cbGPXAddLink.toolTipText")); // NOI18N
+        cbGPXAddLink.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbGPXAddLinkStateChanged(evt);
+            }
+        });
+
+        cbGPX_1_1.setText(bundle.getString("AdvancedFileSettingsPanel.cbGPX_1_1.text")); // NOI18N
+        cbGPX_1_1.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.cbGPX_1_1.toolTipText")); // NOI18N
+        cbGPX_1_1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbGPX_1_1StateChanged(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnGPXFileSettingsLayout = new org.jdesktop.layout.GroupLayout(pnGPXFileSettings);
         pnGPXFileSettings.setLayout(pnGPXFileSettingsLayout);
-        pnGPXFileSettingsLayout
-                .setHorizontalGroup(pnGPXFileSettingsLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnGPXFileSettingsLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnGPXFileSettingsLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                cbNotApplyUTCOffset)
-                                                        .add(
-                                                                cbGPXTrkSegWhenSmall))
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
-        pnGPXFileSettingsLayout.setVerticalGroup(pnGPXFileSettingsLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(
-                        pnGPXFileSettingsLayout.createSequentialGroup().add(
-                                cbNotApplyUTCOffset).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                cbGPXTrkSegWhenSmall).addContainerGap(
-                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                Short.MAX_VALUE)));
+        pnGPXFileSettingsLayout.setHorizontalGroup(
+            pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPXFileSettingsLayout.createSequentialGroup()
+                .add(pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(cbNotApplyUTCOffset)
+                    .add(cbGPXTrkSegWhenSmall)
+                    .add(cbGPXAddLink)
+                    .add(cbGPX_1_1))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        pnGPXFileSettingsLayout.setVerticalGroup(
+            pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPXFileSettingsLayout.createSequentialGroup()
+                .add(cbNotApplyUTCOffset)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbGPXTrkSegWhenSmall)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbGPXAddLink)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbGPX_1_1)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        pnKMLFileSettings
-                .setBorder(javax.swing.BorderFactory
-                        .createTitledBorder(bundle
-                                .getString("AdvancedFileSettingsPanel.pnKMLFileSettings.border.title"))); // NOI18N
-        pnKMLFileSettings
-                .setToolTipText(bundle
-                        .getString("AdvancedFileSettingsPanel.pnKMLFileSettings.toolTipText")); // NOI18N
+        pnKMLFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedFileSettingsPanel.pnKMLFileSettings.border.title"))); // NOI18N
+        pnKMLFileSettings.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.pnKMLFileSettings.toolTipText")); // NOI18N
 
-        lbAltitudeMode.setText(bundle
-                .getString("AdvancedFileSettingsPanel.lbAltitudeMode.text")); // NOI18N
+        lbAltitudeMode.setText(bundle.getString("AdvancedFileSettingsPanel.lbAltitudeMode.text")); // NOI18N
 
-        cbAltitudeMode.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { "Clamp To Ground", "Relative", "Absolute" }));
-        cbAltitudeMode
-                .setToolTipText(bundle
-                        .getString("AdvancedFileSettingsPanel.cbAltitudeMode.toolTipText")); // NOI18N
+        cbAltitudeMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Clamp To Ground", "Relative", "Absolute" }));
+        cbAltitudeMode.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.cbAltitudeMode.toolTipText")); // NOI18N
         cbAltitudeMode.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(final java.awt.event.ItemEvent evt) {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbAltitudeModeItemStateChanged(evt);
             }
         });
 
-        final org.jdesktop.layout.GroupLayout pnKMLFileSettingsLayout = new org.jdesktop.layout.GroupLayout(
-                pnKMLFileSettings);
+        org.jdesktop.layout.GroupLayout pnKMLFileSettingsLayout = new org.jdesktop.layout.GroupLayout(pnKMLFileSettings);
         pnKMLFileSettings.setLayout(pnKMLFileSettingsLayout);
-        pnKMLFileSettingsLayout
-                .setHorizontalGroup(pnKMLFileSettingsLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnKMLFileSettingsLayout
-                                        .createSequentialGroup()
-                                        .add(lbAltitudeMode)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                cbAltitudeMode,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
-        pnKMLFileSettingsLayout
-                .setVerticalGroup(pnKMLFileSettingsLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnKMLFileSettingsLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnKMLFileSettingsLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(lbAltitudeMode)
-                                                        .add(
-                                                                cbAltitudeMode,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
+        pnKMLFileSettingsLayout.setHorizontalGroup(
+            pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnKMLFileSettingsLayout.createSequentialGroup()
+                .add(lbAltitudeMode)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbAltitudeMode, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnKMLFileSettingsLayout.setVerticalGroup(
+            pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnKMLFileSettingsLayout.createSequentialGroup()
+                .add(pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbAltitudeMode)
+                    .add(cbAltitudeMode, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                this);
-        setLayout(layout);
-        layout
-                .setHorizontalGroup(layout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                layout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnFileNMEAOutput,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                layout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                pnKMLFileSettings,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(
-                                                                pnGPXFileSettings,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))));
-        layout
-                .setVerticalGroup(layout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                layout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnGPXFileSettings,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnKMLFileSettings,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(
-                                pnFileNMEAOutput,
-                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE));
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(pnFileNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnKMLFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnKMLFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(pnFileNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        );
     }//GEN-END:initComponents
 
     private void btSetNMEAFileOutputActionPerformed(
@@ -654,10 +528,20 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                 .getSelectedIndex());
     }//GEN-LAST:event_cbAltitudeModeItemStateChanged
 
+    private void cbGPXAddLinkStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbGPXAddLinkStateChanged
+        c.setBooleanOpt(AppSettings.GPX_LINK_INFO, cbGPXAddLink.isSelected());
+}//GEN-LAST:event_cbGPXAddLinkStateChanged
+
+    private void cbGPX_1_1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbGPX_1_1StateChanged
+        c.setBooleanOpt(AppSettings.IS_GPX_1_1, cbGPXAddLink.isSelected());
+}//GEN-LAST:event_cbGPX_1_1StateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSetNMEAFileOutput;
     private javax.swing.JComboBox cbAltitudeMode;
+    private javax.swing.JCheckBox cbGPXAddLink;
     private javax.swing.JCheckBox cbGPXTrkSegWhenSmall;
+    private javax.swing.JCheckBox cbGPX_1_1;
     private javax.swing.JCheckBox cbNotApplyUTCOffset;
     private javax.swing.JLabel lbAltitudeMode;
     private javax.swing.JCheckBox lbNMEAFileGGA;
