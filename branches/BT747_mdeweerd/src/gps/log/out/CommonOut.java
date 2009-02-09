@@ -60,6 +60,18 @@ public final class CommonOut {
         return r;
     }
 
+    public final static String getLink(final GPSRecord s) {
+        final String upperVox = s.voxStr.toUpperCase();
+        final boolean isPicture = upperVox.endsWith(".JPG")
+                || upperVox.endsWith("PNG");
+        String result;
+        result = s.voxStr;
+        if (s.voxStr.startsWith("VOX")) {
+            result += ".wav";
+        }
+        return result;
+    }
+
     public final static void getHtml(final StringBuffer rec,
             final GPSRecord s, final GPSRecord activeFields,
             final GPSRecord selectedFields, final BT747Time t,
@@ -93,17 +105,14 @@ public final class CommonOut {
                 }
             }
             rec.append("<a target='_new' href='");
-            rec.append(s.voxStr);
-            if (s.voxStr.startsWith("VOX")) {
-                rec.append(".wav");
-            }
+            rec.append(getLink(s));
             rec.append("'>");
             if (isPicture) {
                 rec.append("<img height=150 src='");
                 rec.append(s.voxStr);
                 rec.append("' >");
             } else {
-                rec.append("Click here");
+                rec.append("Click here (" + s.voxStr + ")");
             }
             rec.append("</a>");
 

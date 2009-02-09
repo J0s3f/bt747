@@ -87,7 +87,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
     }
 
     private enum infoType {
-        ELE, TIME, SPEED, HDOP, VDOP, PDOP, FIX, TYPE, SYM, COURSE, CMT, SAT, NAME, DGPSID, AGEOFDGPSDATA
+        ELE, TIME, SPEED, HDOP, VDOP, PDOP, FIX, TYPE, SYM, COURSE, CMT, SAT, NAME, DGPSID, AGEOFDGPSDATA, LINK
     };
 
     private boolean passToFindFieldsActivatedInLog;
@@ -333,6 +333,9 @@ public class GPXLogConvert extends GPSLogConvertInterface {
                             break;
                         case DGPSID:
                             r.dsta = Integer.valueOf(nodeText);
+                            break;
+                        case LINK:
+                            r.voxStr = valueNode.getAttributes().getNamedItem("href").getTextContent();
                             break;
                         default:
                             break;

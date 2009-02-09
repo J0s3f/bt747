@@ -247,7 +247,15 @@ public class AppSettings {
      *                Time in minutes for a track separation.
      */
     public final static int TRKSEP = 47;
+    /**
+     * Number of chunks to read ahead of time
+     */
     public final static int LOGAHEAD = 48;
+    /**
+     * Enable adding links to GPX data output.
+     */
+    public final static int GPX_LINK_INFO = 49;
+    public final static int IS_GPX_1_1 = 50;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -428,7 +436,11 @@ public class AppSettings {
             /* fall through */
         case 34:
             setIntOpt(AppSettings.KML_ALTITUDEMODE, 0);
-            setStringOpt(AppSettings.VERSION, "0.35");
+            /* fall through */
+        case 35:
+            setBooleanOpt(AppSettings.GPX_LINK_INFO, true);
+            setBooleanOpt(AppSettings.IS_GPX_1_1, false);
+            setStringOpt(AppSettings.VERSION, "0.36");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1417,8 +1429,14 @@ public class AppSettings {
     private static final int C_KML_ALTITUDEMODE_IDX = AppSettings.C_TAGGED_TEMPLATE_IDX
             + AppSettings.C_TAGGED_TEMPLATE_SIZE;
     private static final int C_KML_ALTITUDEMODE_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_KML_ALTITUDEMODE_IDX
+    private static final int C_GPX_LINK_INFO_IDX = AppSettings.C_KML_ALTITUDEMODE_IDX
             + AppSettings.C_KML_ALTITUDEMODE_SIZE;
+    private static final int C_GPX_LINK_INFO_SIZE = 1;
+    private static final int C_IS_GPX_1_1_IDX = AppSettings.C_GPX_LINK_INFO_IDX
+            + AppSettings.C_GPX_LINK_INFO_SIZE;
+    private static final int C_IS_GPX_1_1_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_IS_GPX_1_1_IDX
+            + AppSettings.C_IS_GPX_1_1_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1561,6 +1579,10 @@ public class AppSettings {
                     AppSettings.C_TRKSEP_SIZE },
             { AppSettings.INT, AppSettings.LOGAHEAD,
                     AppSettings.C_LOGAHEAD_IDX, AppSettings.C_LOGAHEAD_SIZE },
+                    { AppSettings.BOOL, AppSettings.GPX_LINK_INFO,
+                        AppSettings.C_GPX_LINK_INFO_IDX, AppSettings.C_GPX_LINK_INFO_SIZE },
+                        { AppSettings.BOOL, AppSettings.IS_GPX_1_1,
+                            AppSettings.C_IS_GPX_1_1_IDX, AppSettings.C_IS_GPX_1_1_SIZE },
     // End of list
     };
 

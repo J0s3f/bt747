@@ -1,3 +1,7 @@
+Version 1.67.28
+* fixes to GPX output (some fields were invalid for waypoints) 
+  + GPX1.0 or GPX1.1 selection.  Added links for waypoints with files.
+
 Version 1.67.27
 * Changes to avoid renaming non-image files during tag-writeback.
 

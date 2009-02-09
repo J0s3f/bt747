@@ -274,6 +274,12 @@ public class Controller {
             gpsFile.getParamObject().setBoolParam(
                     GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL,
                     m.getBooleanOpt(AppSettings.GPXTRKSEGBIG));
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.GPX_LINK_TEXT,
+                    m.getBooleanOpt(AppSettings.GPX_LINK_INFO));
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.GPX_1_1,
+                    m.getBooleanOpt(AppSettings.IS_GPX_1_1));
             gpsFile.getParamObject().setParam(
                     GPSConversionParameters.GOOGLEMAPKEY_STRING,
                     m.getStringOpt(AppSettings.GOOGLEMAPKEY));
