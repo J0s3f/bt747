@@ -281,6 +281,13 @@ public final class CommonOut {
                 + CommonOut.getTimeStr(time);
     }
 
+    public final static String getRCRtype(final GPSRecord s) {
+        if(s.rcr==AllWayPointStyles.GEOTAG_VOICE_KEY) {
+            return "Voice";
+        }
+        // For GPX.
+        return getRCRstr(s);
+    }
     public final static String getRCRstr(final GPSRecord s) {
         final StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
