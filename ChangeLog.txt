@@ -1,3 +1,6 @@
+Version 1.67.29
+* GPX output is writing 'Voice' type.
+
 Version 1.67.28
 * fixes to GPX output (some fields were invalid for waypoints) 
   + GPX1.0 or GPX1.1 selection.  Added links for waypoints with files.

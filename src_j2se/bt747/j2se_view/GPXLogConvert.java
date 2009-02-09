@@ -9,6 +9,7 @@ import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
 import gps.log.in.GPSFileConverterInterface;
 import gps.log.in.GPSLogConvertInterface;
+import gps.log.out.AllWayPointStyles;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -301,12 +302,12 @@ public class GPXLogConvert extends GPSLogConvertInterface {
                                 }
                                 if (nodeText.indexOf('V', 0) != -1) {
                                     // Voice record on VGPS-900
-                                    r.rcr = 0x0300; // TODO: change in better
+                                    r.rcr = AllWayPointStyles.GEOTAG_VOICE_KEY; // TODO: change in better
                                     // value
                                 }
                                 if (nodeText.indexOf('C', 0) != -1) {
                                     // Way Point on VGPS-900
-                                    r.rcr = 0x0500; // TODO: change in better
+                                    r.rcr = AllWayPointStyles.GEOTAG_WAYPOINT_KEY; // TODO: change in better
                                     // value
                                 }
                             } else {

@@ -265,7 +265,7 @@ public final class GPSGPXFile extends GPSFile {
                 if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                     // For ways = track type
                     rec.append("<type>");
-                    rcrStr = CommonOut.getRCRstr(r);
+                    rcrStr = CommonOut.getRCRtype(r);
                     rec.append("</type>\r\n");
                 }
 

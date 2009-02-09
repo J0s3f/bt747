@@ -104,6 +104,8 @@ public class AllWayPointStyles extends WayPointStyleSet {
     // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
     };
 
+    public static final int GEOTAG_VOICE_KEY = 0x0300;
+    public static final int GEOTAG_WAYPOINT_KEY = 0x0500;
     public static final int GEOTAG_PICTURE_KEY = 0x0101;
     public static final int GEOTAG_DOCUMENT_KEY = 0x0104;
     /**
