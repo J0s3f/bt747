@@ -24,7 +24,7 @@ public final class ConvertToProgressScreen extends ProgressAlert {
      */
     private final DeviceScreen previous;
 
-    private RadioButton rbFormats;
+    //private RadioButton rbFormats;
 
     private int convertType;
 

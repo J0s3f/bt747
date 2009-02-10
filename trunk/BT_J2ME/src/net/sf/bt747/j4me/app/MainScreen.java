@@ -83,9 +83,9 @@ public final class MainScreen extends Dialog implements ModelListener {
      * used for erase confirmation.
      */
     private int confirmScreenOption = 0;
-    private final int NO_CONFIRM = 0;
-    private final int ERASE_CONFIRM = 1;
-    private final int DOWNLOAD_OVERWRITE_CONFIRM = 2;
+    private final static int NO_CONFIRM = 0;
+    private final static int ERASE_CONFIRM = 1;
+    private final static int DOWNLOAD_OVERWRITE_CONFIRM = 2;
 
     /**
      * A reference to the confirmation screen.
@@ -241,8 +241,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                 dataShown = MainScreen.SHOWN_WAYPOINTS_DATA;
                 labels = null;
                 deleteAll();
-                Label[] tmpLabels = new Label[12];
-                tmpLabels = new Label[12];
+                final Label[] tmpLabels = new Label[12];
                 append(tmpLabels[0] = new Label("0. Took a picture"));
                 append(tmpLabels[1] = new Label("1. Gaz station"));
                 append(tmpLabels[2] = new Label("2. Phone booth"));

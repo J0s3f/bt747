@@ -29,7 +29,7 @@ public final class J2MEFile implements BT747File {
         this.path = path;
     }
 
-    Object fileObject;
+    private Object fileObject;
 
     public J2MEFile(final String path, final int mode, final int card) {
         this(path, mode);
@@ -37,7 +37,6 @@ public final class J2MEFile implements BT747File {
 
     public J2MEFile(final String path, final int mode) {
         try {
-            javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
             int lMode;
             this.path = path;
             switch (mode) {
@@ -63,7 +62,7 @@ public final class J2MEFile implements BT747File {
             if (mode != bt747.sys.File.DONT_OPEN) {
                 final String urlPath = "file://" + path;
                 Log.debug("Try to open " + path);
-                fileConnection = (javax.microedition.io.file.FileConnection) Connector
+                final javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) Connector
                         .open(urlPath, lMode);
                 fileObject = fileConnection;
                 isopen = true;

@@ -270,7 +270,7 @@ public final class GpsPositionScreen extends
             NSAT.setLabel((g.nsat / 256)
                     + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
             fvAltitude.setLabel(g.height, 1);
-            fvHdop.setLabel(g.hdop / 10., 1);
+            fvHdop.setLabel(g.hdop / 100., 2);
             fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
             updateValidColor(g.valid);
             repaint();
