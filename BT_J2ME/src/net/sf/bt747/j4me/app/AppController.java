@@ -190,7 +190,7 @@ public class AppController extends Controller {
         // | (1 << BT747Constants.FMT_HEIGHT_IDX));
     }
 
-    private final String RECORDSTORENAME = "BT747";
+    private final static String RECORDSTORENAME = "BT747";
     private final int appSettingsVersion = 2;
 
     /*

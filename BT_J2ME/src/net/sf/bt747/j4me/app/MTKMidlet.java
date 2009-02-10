@@ -33,6 +33,14 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     private static AppModel m;
     private static AppController c;
+    
+    private final static void setAppModel(final AppModel mm) {
+        m = mm;
+    }
+
+    private final static void setAppController(final AppController cc) {
+        c = cc;
+    }
 
     private volatile boolean ok = false;
 
@@ -77,8 +85,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         }
         // Initialize the J4ME UI manager.
         try {
-            MTKMidlet.m = new AppModel();
-            MTKMidlet.c = new AppController(MTKMidlet.m);
+            setAppModel(new AppModel());
+            setAppController(new AppController(MTKMidlet.m));
 
             final DeviceScreen main = new MainScreen(MTKMidlet.c, this);
             // Change the theme.
@@ -135,7 +143,6 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // javax.microedition.lcdui.DateField d;
             // d = new DateField("help",DateField.DATE);
             javax.microedition.lcdui.TextField tb;
-            tb = new TextField("", "", 250, TextField.ANY);
             String f = "";
             if (t != null) {
                 final String s = t.getMessage();

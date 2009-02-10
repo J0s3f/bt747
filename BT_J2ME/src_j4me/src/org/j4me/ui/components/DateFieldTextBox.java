@@ -79,7 +79,7 @@ public class DateFieldTextBox extends TextBox {
      * The native implementation for inputting date. This takes over the
      * entire screen and returns when the user is done entering date.
      */
-    private final class DateInput extends javax.microedition.lcdui.Form
+    private final static class DateInput extends javax.microedition.lcdui.Form
             implements CommandListener {
         /**
          * The Cancel button.

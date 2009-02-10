@@ -58,7 +58,18 @@ public class AppModel extends Model {
         gpsBluetoothName = name;
         gpsBluetoothURL = url;
 
-        Log.info("GPS set to Bluetooth " + name);
+        String s = null;
+        if (name != null) {
+            s = name;
+        }
+        if (s == null && url != null) {
+            s = url;
+        }
+        if (s != null) {
+            Log.info("GPS set to Bluetooth " + s);
+        } else {
+            Log.info("No BT address set");
+        }
     }
 
     /**

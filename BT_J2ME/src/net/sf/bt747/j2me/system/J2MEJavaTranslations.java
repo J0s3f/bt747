@@ -250,9 +250,12 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
      *                the appSettings to set
      */
     public final void setAppSettings(final String settings) {
-        J2MEJavaTranslations.appSettings = settings;
+        setSettings(settings);  // Avoids static warning
     }
 
+    private final static void setSettings(final String settings) {
+        J2MEJavaTranslations.appSettings = settings;
+    }
     public final BT747Semaphore getSemaphoreInstance(final int value) {
         return new J2MESemaphore(value);
     }

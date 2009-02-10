@@ -140,7 +140,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
     public synchronized void connect() throws ConnectionNotFoundException,
             IOException, SecurityException {
 
-        if (!isConnected()) {
+        if (!isConnected() && url != null) {
             // Connect to the GPS device.
             Log.info("Connecting to Bluetooth device at " + url);
 

@@ -15,8 +15,8 @@ public final class BlueTheme extends Theme {
 
     public BlueTheme(final int height, final int width) {
         int usedWidth;
-        if(width>height) {
-            usedWidth = width >> 1;
+        if (width > height) {
+            usedWidth = width / 2;
         } else {
             usedWidth = width;
         }
@@ -26,7 +26,7 @@ public final class BlueTheme extends Theme {
             final int baseFace = Font.getDefaultFont().getFace();
             int maxsize;
             Log.debug("Default size " + Font.getDefaultFont().charWidth('0'));
-            Log.debug("Width " + usedWidth);
+            Log.debug("Screen WxH " + width + "x" + height);
             maxsize = usedWidth / 24;
             Log.debug("Target size " + maxsize);
             base = Font.getFont(baseFace, Font.STYLE_PLAIN, Font.SIZE_LARGE);
