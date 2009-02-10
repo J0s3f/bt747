@@ -23,6 +23,7 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * Class to write a GPX file.
@@ -72,7 +73,7 @@ public final class GPSGPXFile extends GPSFile {
             addLinkData = getParamObject().getBoolParam(
                     GPSConversionParameters.GPX_LINK_TEXT);
         }
-        if (getParamObject().hasParam(GPSConversionParameters.GPX_LINK_TEXT)) {
+        if (getParamObject().hasParam(GPSConversionParameters.GPX_1_1)) {
             isGPX1_0 = !getParamObject().getBoolParam(
                     GPSConversionParameters.GPX_1_1);
         }
@@ -114,12 +115,12 @@ public final class GPSGPXFile extends GPSFile {
             schema = TOPO_1_1_SCHEMA;
             version = "1.1";
         }
-        String name="";
-        if(!isGPX1_0) {
+        String name = "";
+        if (!isGPX1_0) {
             name += "<metadata>";
         }
-        name+= "<name>" + Name + "</name>";
-        if(!isGPX1_0) {
+        name += "<name>" + Name + "</name>";
+        if (!isGPX1_0) {
             name += "</metadata>";
         }
 
@@ -341,12 +342,12 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("\"");
                 }
                 rec.append(" >\r\n");
-//                if (!isGPX1_0 && !isWayType && (activeFields.hasHeading())
-//                        && (selectedFileFields.hasHeading())) {
-//                    rec.append("<degrees>");
-//                    rec.append(Convert.toString(r.heading, 5));
-//                    rec.append("</degrees>\r\n");
-//                }
+                // if (!isGPX1_0 && !isWayType && (activeFields.hasHeading())
+                // && (selectedFileFields.hasHeading())) {
+                // rec.append("<degrees>");
+                // rec.append(Convert.toString(r.heading, 5));
+                // rec.append("</degrees>\r\n");
+                // }
 
                 //
                 // if(m_isWayType) {
@@ -368,7 +369,7 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("</time>\r\n");
                 }
 
-                if (isGPX1_0&& !isWayType && (activeFields.hasHeading())
+                if (isGPX1_0 && !isWayType && (activeFields.hasHeading())
                         && (selectedFileFields.hasHeading())) {
                     rec.append("<course>");
                     rec.append(Convert.toString(r.heading, 5));
@@ -441,7 +442,7 @@ public final class GPSGPXFile extends GPSFile {
                     ) {
                         if (isGPX1_0) {
                             rec.append("<url>");
-                            rec.append(r.getVoxStr());
+                            rec.append(CommonOut.getLink(r));
                             rec.append("</url><urlname>");
                             rec.append(r.getVoxStr());
                             rec.append("</urlname>\r\n");
@@ -449,7 +450,7 @@ public final class GPSGPXFile extends GPSFile {
 
                         {
                             rec.append("<link href=\"");
-                            rec.append(r.getVoxStr());
+                            rec.append(CommonOut.getLink(r));
                             rec.append("\"><text>");
                             rec.append(r.getVoxStr());
                             rec.append("</text></link>\r\n");

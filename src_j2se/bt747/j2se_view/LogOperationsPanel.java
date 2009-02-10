@@ -144,6 +144,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private final void updateConnected(final boolean connected) {
         final JPanel[] panels = { GPSDecodePanel };
 
+        if (!connected) {
+            resetGPSData();
+        }
         btDownloadFromNumerix.setEnabled(connected);
         btDownloadIBlue.setEnabled(connected);
         for (final JPanel panel : panels) {
@@ -160,9 +163,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         updateGPSData(gps);
     }
 
-    private void updateGPSData(final GPSRecord gps) {
+    private final void updateGPSData(final GPSRecord gps) {
 
-        if (gps.hasPosition()) {
+        if (m.isConnected() && gps.hasPosition()) {
             txtLatitude.setText(String.format((Locale) null, "%.8f",
                     gps.latitude)); // NOI18N
             // lbHeight.setText(String.valueOf(gps.height,3)+"m");
@@ -182,12 +185,26 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         }
     }
 
-    boolean btConnectFunctionIsConnect = true;
+    private final void resetGPSData() {
+        txtLatitude.setText(getString("BT747Main.txtLatitude.text")); // NOI18N
+        txtLongitude.setText(getString("BT747Main.txtLongitude.text")); // NOI18N
+        txtTime.setText(getString("BT747Main.txtTime.text")); // NOI18N
+        txtGeoid.setText(getString("BT747Main.txtGeoid.text")); // NOI18N
+        // txtFlashInfo.setText(getString("BT747Main.txtFlashInfo.text")); //
+        // NOI18N
+        // txtModel.setText(getString("BT747Main.txtModel.text")); // NOI18N
+        // txtFirmWare.setText(getString("BT747Main.txtFirmWare.text")); //
+        // NOI18N
+        // txtLoggerSWVersion.setText(getString("BT747Main.txtLoggerSWVersion.text"));
+        // // NOI18N
+        // txtMemoryUsed.setText(getString("BT747Main.txtMemoryUsed.text"));
+        // // NOI18N
+    }
 
     /**
      * 
      */
-    private void doLogConversion(final int selectedFormat) {
+    private final void doLogConversion(final int selectedFormat) {
         c.setChangeToMap(true);
         c.setLogConversionParameters();
         c.doLogConversion(selectedFormat);

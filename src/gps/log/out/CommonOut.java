@@ -60,16 +60,26 @@ public final class CommonOut {
         return r;
     }
 
-    public final static String getLink(final GPSRecord s) {
-        final String upperVox = s.voxStr.toUpperCase();
-        final boolean isPicture = upperVox.endsWith(".JPG")
-                || upperVox.endsWith("PNG");
-        String result;
-        result = s.voxStr;
-        if (s.voxStr.startsWith("VOX")) {
-            result += ".wav";
+    /**
+     * Does not add http:// or file://, but only './' and '.wav'.
+     * 
+     * @param r
+     * @return
+     */
+    public final static String getLink(final GPSRecord r) {
+        final String vox = r.getVoxStr();
+        if (vox == null || vox.length() == 0 || vox.charAt(0) == '/'
+                || vox.charAt(0) == '\\' || vox.charAt(0) == '.'
+                || vox.indexOf(':') >= 0) {
+            // This is a root path or already a URL
+            return vox;
+        } else {
+            String result = "./" + vox;
+            if (r.voxStr.startsWith("VOX")) {
+                result += ".wav";
+            }
+            return result;
         }
-        return result;
     }
 
     public final static void getHtml(final StringBuffer rec,
@@ -282,12 +292,13 @@ public final class CommonOut {
     }
 
     public final static String getRCRtype(final GPSRecord s) {
-        if(s.rcr==AllWayPointStyles.GEOTAG_VOICE_KEY) {
+        if (s.rcr == AllWayPointStyles.GEOTAG_VOICE_KEY) {
             return "Voice";
         }
         // For GPX.
         return getRCRstr(s);
     }
+
     public final static String getRCRstr(final GPSRecord s) {
         final StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
