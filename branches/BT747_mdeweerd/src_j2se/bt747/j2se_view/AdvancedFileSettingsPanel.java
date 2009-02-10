@@ -533,7 +533,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
 }//GEN-LAST:event_cbGPXAddLinkStateChanged
 
     private void cbGPX_1_1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbGPX_1_1StateChanged
-        c.setBooleanOpt(AppSettings.IS_GPX_1_1, cbGPXAddLink.isSelected());
+        c.setBooleanOpt(AppSettings.IS_GPX_1_1, cbGPX_1_1.isSelected());
 }//GEN-LAST:event_cbGPX_1_1StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

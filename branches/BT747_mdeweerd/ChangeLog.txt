@@ -1,3 +1,6 @@
+Version 1.67.30
+* Some issues with new GPX settings fixed and functionality finetuned.
+
 Version 1.67.29
 * GPX output is writing 'Voice' type.
 
