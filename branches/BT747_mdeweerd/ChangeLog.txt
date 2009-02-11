@@ -1,3 +1,7 @@
+Version 1.68.1
+* German translation update
+* Tab selection indication on toolbar.
+
 Version 1.67.31
 * Download button uniquified.  Some faulty translations removed.
 
