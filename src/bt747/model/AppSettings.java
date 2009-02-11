@@ -256,6 +256,8 @@ public class AppSettings {
      */
     public final static int GPX_LINK_INFO = 49;
     public final static int IS_GPX_1_1 = 50;
+    /** Type of device to download from - used in GUI */
+    public final static int DOWNLOAD_DEVICE = 51;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -440,7 +442,10 @@ public class AppSettings {
         case 35:
             setBooleanOpt(AppSettings.GPX_LINK_INFO, true);
             setBooleanOpt(AppSettings.IS_GPX_1_1, false);
-            setStringOpt(AppSettings.VERSION, "0.36");
+            /* fall through */
+        case 36:
+            setIntOpt(AppSettings.DOWNLOAD_DEVICE, 0);
+            setStringOpt(AppSettings.VERSION, "0.37");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1435,8 +1440,11 @@ public class AppSettings {
     private static final int C_IS_GPX_1_1_IDX = AppSettings.C_GPX_LINK_INFO_IDX
             + AppSettings.C_GPX_LINK_INFO_SIZE;
     private static final int C_IS_GPX_1_1_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_IS_GPX_1_1_IDX
+    private static final int C_DOWNLOAD_DEVICE_IDX = AppSettings.C_IS_GPX_1_1_IDX
             + AppSettings.C_IS_GPX_1_1_SIZE;
+    private static final int C_DOWNLOAD_DEVICE_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_DOWNLOAD_DEVICE_IDX
+            + AppSettings.C_DOWNLOAD_DEVICE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1583,6 +1591,8 @@ public class AppSettings {
                         AppSettings.C_GPX_LINK_INFO_IDX, AppSettings.C_GPX_LINK_INFO_SIZE },
                         { AppSettings.BOOL, AppSettings.IS_GPX_1_1,
                             AppSettings.C_IS_GPX_1_1_IDX, AppSettings.C_IS_GPX_1_1_SIZE },
+                        { AppSettings.INT, AppSettings.DOWNLOAD_DEVICE,
+                            AppSettings.C_DOWNLOAD_DEVICE_IDX, AppSettings.C_DOWNLOAD_DEVICE_SIZE },
     // End of list
     };
 
