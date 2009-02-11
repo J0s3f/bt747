@@ -23,7 +23,6 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
-import bt747.sys.Generic;
 
 /**
  * Class to write a GPX file.

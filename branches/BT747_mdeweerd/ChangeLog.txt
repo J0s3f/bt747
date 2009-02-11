@@ -1,3 +1,6 @@
+Version 1.67.31
+* Download button uniquified.  Some faulty translations removed.
+
 Version 1.67.30
 * Some issues with new GPX settings fixed and functionality finetuned.
 

@@ -270,6 +270,7 @@ public class BT747Main extends javax.swing.JFrame implements
         getDefaultPort();
         updateSerialSpeed();
         updateMapType();
+        updateDownloadType();
 
         //c.setDebug(true);
         btGPSDebug.setSelected(Model.isDebug());
@@ -396,6 +397,12 @@ public class BT747Main extends javax.swing.JFrame implements
 
     }
 
+    private final void updateDownloadType() {
+        final int type = m.getIntOpt(Model.DOWNLOAD_DEVICE);
+        miDownloadIBlue.setSelected(type == 0);
+        DownloadSirf.setSelected(type == 1);
+    }
+    
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
         final int type = e.getType();
@@ -407,6 +414,8 @@ public class BT747Main extends javax.swing.JFrame implements
             case Model.MAPTYPE:
                 updateMapType();
                 break;
+                case Model.DOWNLOAD_DEVICE:
+                    updateDownloadType();
             }
             break;
         case ModelEvent.ERASE_ONGOING_NEED_POPUP:
@@ -566,6 +575,9 @@ public class BT747Main extends javax.swing.JFrame implements
         miOsmarender = new javax.swing.JRadioButtonMenuItem();
         miCycle = new javax.swing.JRadioButtonMenuItem();
         mMap4 = new javax.swing.JRadioButtonMenuItem();
+        miDownloadDevice = new javax.swing.JMenu();
+        miDownloadIBlue = new javax.swing.JRadioButtonMenuItem();
+        DownloadSirf = new javax.swing.JRadioButtonMenuItem();
         InfoMenu = new javax.swing.JMenu();
         AboutBT747 = new javax.swing.JMenuItem();
         Info = new javax.swing.JMenuItem();
@@ -967,6 +979,30 @@ public class BT747Main extends javax.swing.JFrame implements
 
         SettingsMenu.add(miMap);
 
+        miDownloadDevice.setText(bundle.getString("BT747Main.miDownloadDevice.text")); // NOI18N
+        miDownloadDevice.setToolTipText(bundle.getString("BT747Main.miDownloadDevice.toolTipText")); // NOI18N
+
+        miDownloadIBlue.setText(bundle.getString("BT747Main.btDownloadIBlue.text")); // NOI18N
+        miDownloadIBlue.setToolTipText(bundle.getString("BT747Main.btDownloadIBlue.toolTipText")); // NOI18N
+        miDownloadIBlue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miDownloadIBlueActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miDownloadIBlue);
+        miDownloadIBlue.getAccessibleContext().setAccessibleName(bundle.getString("BT747Main.miMapnik1.AccessibleContext.accessibleName")); // NOI18N
+
+        DownloadSirf.setText(bundle.getString("BT747Main.btDownloadFromNumerix.text")); // NOI18N
+        DownloadSirf.setToolTipText(bundle.getString("BT747Main.btDownloadFromNumerix.toolTipText")); // NOI18N
+        DownloadSirf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DownloadSirfActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(DownloadSirf);
+
+        SettingsMenu.add(miDownloadDevice);
+
         jMenuBar.add(SettingsMenu);
 
         InfoMenu.setText(bundle.getString("BT747Main.InfoMenu.text")); // NOI18N
@@ -1275,6 +1311,14 @@ public class BT747Main extends javax.swing.JFrame implements
         }
 }//GEN-LAST:event_btToolInfoActionPerformed
 
+    private void miDownloadIBlueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDownloadIBlueActionPerformed
+                c.setIntOpt(Model.DOWNLOAD_DEVICE, 0);
+}//GEN-LAST:event_miDownloadIBlueActionPerformed
+
+    private void DownloadSirfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DownloadSirfActionPerformed
+        c.setIntOpt(Model.DOWNLOAD_DEVICE, 1);
+}//GEN-LAST:event_DownloadSirfActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -1283,6 +1327,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JMenuItem AboutBT747;
     private javax.swing.JProgressBar DownloadProgressBar;
     private javax.swing.JLabel DownloadProgressLabel;
+    private javax.swing.JRadioButtonMenuItem DownloadSirf;
     private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem Info;
     private javax.swing.JMenu InfoMenu;
@@ -1313,6 +1358,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JRadioButtonMenuItem mMap4;
     private javax.swing.JRadioButtonMenuItem miCycle;
+    private javax.swing.JMenu miDownloadDevice;
+    private javax.swing.JRadioButtonMenuItem miDownloadIBlue;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miFindSerialPorts;
     private javax.swing.JMenu miMap;
