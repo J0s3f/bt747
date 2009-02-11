@@ -28,6 +28,7 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.text.TabExpander;
 
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
@@ -138,7 +139,26 @@ public class BT747Main extends javax.swing.JFrame implements
     private final Icon getIcon(final String iconPath) {
         return J2SEAppController.getIcon(iconPath);
     }
-    
+
+    private final void updateToolBarButton() {
+        Component sel = tabbedPanelAll.getSelectedComponent();
+        if(sel instanceof JScrollPane) {
+            // tab inside scrollpane
+            final JScrollPane sp = (JScrollPane) sel;
+            sel = sp.getComponent(0);
+        }
+        btToolLogOps.setSelected(sel == pnLogOperationsPanel);
+        btToolFilesToTag.setSelected(sel == pnFilesToTagPanel);
+        btToolMap.setSelected(sel == pnMap);
+        btToolOutputSettings.setSelected(sel == pnOutputSettingsPanel);
+        btToolFilter.setSelected(sel == pnFiltersPanel);
+        btToolDeviceSettings.setSelected(sel == pnDeviceSettingsPanel);
+        btToolAdvancedDevSettings.setSelected(sel==pnAdvancedSettingsPanel);
+        btToolAdvFileSettings.setSelected(sel==pnAdvancedFileSettingsPanel);
+        btToolInfo.setSelected(sel == InfoPanel);
+        btToolWaypoints.setSelected(sel == waypointPanel);
+        btToolTrack.setSelected(sel == trackPanel);
+    }
     private final void completeGui() {
         pnLogOperationsPanel = new LogOperationsPanel();
         pnLogOperationsPanel.init(c);
@@ -642,7 +662,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE))
         );
         pnBottomInformationLayout.setVerticalGroup(
             pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -820,6 +840,11 @@ public class BT747Main extends javax.swing.JFrame implements
 
         tabbedPanelAll.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPanelAll.setPreferredSize(null);
+        tabbedPanelAll.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPanelAllStateChanged(evt);
+            }
+        });
 
         InfoPanel.setPreferredSize(null);
 
@@ -843,7 +868,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
@@ -863,7 +888,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel2Layout.createSequentialGroup()
                 .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
+                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -990,7 +1015,6 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
         miDownloadDevice.add(miDownloadIBlue);
-        miDownloadIBlue.getAccessibleContext().setAccessibleName(bundle.getString("BT747Main.miMapnik1.AccessibleContext.accessibleName")); // NOI18N
 
         DownloadSirf.setText(bundle.getString("BT747Main.btDownloadFromNumerix.text")); // NOI18N
         DownloadSirf.setToolTipText(bundle.getString("BT747Main.btDownloadFromNumerix.toolTipText")); // NOI18N
@@ -1318,6 +1342,10 @@ public class BT747Main extends javax.swing.JFrame implements
     private void DownloadSirfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DownloadSirfActionPerformed
         c.setIntOpt(Model.DOWNLOAD_DEVICE, 1);
 }//GEN-LAST:event_DownloadSirfActionPerformed
+
+    private void tabbedPanelAllStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelAllStateChanged
+        updateToolBarButton();
+    }//GEN-LAST:event_tabbedPanelAllStateChanged
 
     // public static void main(String args) {
     // main((String[])null);
