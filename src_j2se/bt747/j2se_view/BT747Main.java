@@ -145,7 +145,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if(sel instanceof JScrollPane) {
             // tab inside scrollpane
             final JScrollPane sp = (JScrollPane) sel;
-            sel = sp.getComponent(0);
+            sel = sp.getViewport().getView();
         }
         btToolLogOps.setSelected(sel == pnLogOperationsPanel);
         btToolFilesToTag.setSelected(sel == pnFilesToTagPanel);
