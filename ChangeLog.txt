@@ -1,3 +1,7 @@
+Version 1.68.2
+* Disable logging functionality during download was not implemented (always disabled).
+* Logging enable/disable functionality changed slightly.
+
 Version 1.68.1
 * German translation update
 * Tab selection indication on toolbar.

@@ -839,9 +839,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
         cbLoggingActive.setText(bundle.getString("BT747Main.cbLoggingActive.text")); // NOI18N
         cbLoggingActive.setToolTipText(bundle.getString("BT747Main.cbLoggingActive.toolTipText")); // NOI18N
-        cbLoggingActive.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbLoggingActiveFocusLost(evt);
+        cbLoggingActive.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbLoggingActiveItemStateChanged(evt);
             }
         });
 
@@ -947,10 +947,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
         getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
     }//GEN-END:initComponents
-
-    private void cbLoggingActiveFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbLoggingActiveFocusLost
-        c.setLoggingActive(cbLoggingActive.isSelected());
-    }//GEN-LAST:event_cbLoggingActiveFocusLost
 
     private void cbDisableLoggingDuringDownloadFocusLost(
             final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
@@ -1302,6 +1298,12 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         c.startDPL700Download();
     }
 }//GEN-LAST:event_btDownloadActionPerformed
+
+    private void cbLoggingActiveItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLoggingActiveItemStateChanged
+        if (m.isLoggingActive() != cbLoggingActive.isSelected()) {
+            c.setLoggingActive(cbLoggingActive.isSelected());
+        }
+    }//GEN-LAST:event_cbLoggingActiveItemStateChanged
 
     // public static void main(String args) {
     // main((String[])null);

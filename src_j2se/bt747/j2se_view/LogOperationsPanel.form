@@ -942,7 +942,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbLoggingActiveFocusLost"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbLoggingActiveItemStateChanged"/>
           </Events>
         </Component>
       </SubComponents>

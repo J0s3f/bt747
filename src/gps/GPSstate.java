@@ -249,7 +249,7 @@ public final class GPSstate implements BT747Thread {
         return false;
     }
 
-    private void setAvailable(final int dataType) {
+    private final void setAvailable(final int dataType) {
         dataAvailable[dataType] = true;
         switch (dataType) {
         case DATA_FLASH_TYPE:
@@ -268,7 +268,7 @@ public final class GPSstate implements BT747Thread {
         return dataAvailable[dataType];
     }
 
-    private void setChanged(final int dataType) {
+    private final void setChanged(final int dataType) {
         dataAvailable[dataType] = false;
         dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
         checkAvailable(dataType);
@@ -1635,10 +1635,11 @@ public final class GPSstate implements BT747Thread {
 
     public final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental // True if incremental read
+            final boolean isIncremental, // True if incremental read
+            final boolean disableLogging
     ) {
         mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
-                card, isIncremental);
+                card, isIncremental, disableLogging);
     }
 
     /**
