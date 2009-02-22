@@ -38,6 +38,7 @@ public class PositionTableModel extends AbstractTableModel {
             DataTypes.RCR, DataTypes.RCR_DESCRIPTION,
             DataTypes.FIX_VALID, DataTypes.LATITUDE,
             DataTypes.LONGITUDE, DataTypes.HEIGHT_METERS,
+            DataTypes.SPEED,
             DataTypes.HDOP, DataTypes.PDOP, DataTypes.VOX };
 
     private volatile List<List<GPSRecord>> gpsData;

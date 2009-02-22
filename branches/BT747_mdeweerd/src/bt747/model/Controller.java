@@ -627,7 +627,8 @@ public class Controller {
             m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
             m.getCard(), /* Card for file operations */
             /** Incremental download */
-            m.getDownloadMethod() == Model.DOWNLOAD_SMART);
+            m.getDownloadMethod() == Model.DOWNLOAD_SMART,
+            m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
         } catch (final Exception e) {
             Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception

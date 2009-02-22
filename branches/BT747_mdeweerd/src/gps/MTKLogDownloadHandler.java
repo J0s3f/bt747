@@ -99,16 +99,20 @@ final class MTKLogDownloadHandler {
      *                The filename to save to.
      * @param isIncremental
      *                When true, perform incremental read.
+     * @param disableLogging
+     *                Disable logging during download when true.
      */
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental) {
+            final boolean isIncremental, final boolean disableLogging) {
         if (logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             // Disable device logging while downloading to improve
             // performance.
             loggingIsActiveBeforeDownload = gpsState.isLoggingActive();
-            gpsState.stopLog();
-            gpsState.reqLogOnOffStatus();
+            if (disableLogging && loggingIsActiveBeforeDownload) {
+                gpsState.stopLog();
+                gpsState.reqLogOnOffStatus();
+            }
         }
         gpsState.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
 
