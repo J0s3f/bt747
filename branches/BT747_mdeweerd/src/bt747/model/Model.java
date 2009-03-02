@@ -118,6 +118,11 @@ public class Model extends AppSettings implements GPSListener {
     public static final int MULTI_LOGTYPE = 13;
 
     /**
+     * GPX for OSM log type (gpx format) [same as GPX but limited output).
+     */
+    public static final int OSM_LOGTYPE = 14;
+
+    /**
      * The number of seconds in a day.
      */
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;

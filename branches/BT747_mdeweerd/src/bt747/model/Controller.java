@@ -219,6 +219,7 @@ public class Controller {
             gpsFile = new GPSPLTFile();
             break;
         case Model.GPX_LOGTYPE:
+        case Model.OSM_LOGTYPE:
             gpsFile = new GPSGPXFile();
             break;
         case Model.NMEA_LOGTYPE:
@@ -322,6 +323,7 @@ public class Controller {
             ext = ".plt";
             break;
         case Model.GPX_LOGTYPE:
+        case Model.OSM_LOGTYPE:
             ext = ".gpx";
             break;
         case Model.NMEA_LOGTYPE:
@@ -477,6 +479,20 @@ public class Controller {
         GPSLogConvertInterface lc;
         result = 0;
         configureGpsFile(gpsFile);
+        
+        if(logType == Model.OSM_LOGTYPE) {
+            // For OSM output, we optimize the output file.
+            gpsFile.setIncludeTrkComment(false);
+            gpsFile.setIncludeTrkName(false);
+            gpsFile
+                    .setOutputFields(GPSRecord
+                            .getLogFormatRecord((1 << BT747Constants.FMT_LONGITUDE_IDX)
+                                    | (1 << BT747Constants.FMT_LATITUDE_IDX)
+                                    | (1 << BT747Constants.FMT_UTC_IDX)
+                                    | (1 << BT747Constants.FMT_MILLISECOND_IDX)
+                                    | (1 << BT747Constants.FMT_HEIGHT_IDX)));
+
+        }
 
         if (Generic.isDebug()) {
             Generic.debug("Converting with parameters:\n");

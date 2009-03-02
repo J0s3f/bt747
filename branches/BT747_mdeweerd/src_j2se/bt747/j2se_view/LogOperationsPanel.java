@@ -88,6 +88,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 "iTrackU-Nemerix", "PhotoTrackr", "iTrackU-SIRFIII" }));
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("TABLE_Description"), getString("GPX_Description"),
+                getString("GPX_ForOSMDescription"),
                 getString("GMAP_Description"), getString("CSV_Description"),
                 getString("KML_Description"), getString("KMZ_Description"),
                 getString("NMEA_Description"), getString("OZI_Description"),
@@ -136,7 +137,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         setTimeSplit();
         // endDate.setCalendar(cal);
         // TODO: Deactivate debug by default
-        c.setDebug(true);
+        // c.setDebug(true);
 
         updateConnected(m.isConnected());
     }
@@ -1138,6 +1139,8 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             selectedFormat = Model.GMAP_LOGTYPE;
         } else if (selected.equals(getString("GPX_Description"))) {
             selectedFormat = Model.GPX_LOGTYPE;
+        } else if (selected.equals(getString("GPX_ForOSMDescription"))) {
+            selectedFormat = Model.OSM_LOGTYPE;
         } else if (selected.equals(getString("KML_Description"))) {
             selectedFormat = Model.KML_LOGTYPE;
         } else if (selected.equals(getString("NMEA_Description"))) {
