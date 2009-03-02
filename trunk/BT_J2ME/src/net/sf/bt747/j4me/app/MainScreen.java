@@ -182,6 +182,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
         subMenu.appendMenuOption("Download Settings", new DelayedDialog(
                 ScreenFactory.LOGDOWNLOADCONFIGSCREEN, c, this, this));
+        subMenu.appendMenuOption("App log", logScreen);
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Convert Menu", rootMenu);
