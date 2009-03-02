@@ -659,6 +659,8 @@ public final class BT747Constants { // dev as in device
             mdStr = "Qstarz BT-1000P";
         } else if (device.equals("QST1000")) {
             mdStr = "Qstarz BT-1000X";
+        } else if (device.equals("GR-245")) {
+            mdStr = "Holux GPSport 245";
         }
         return mdStr;
     }
@@ -899,6 +901,7 @@ public final class BT747Constants { // dev as in device
             { Model.KML_LOGTYPE, BT747Constants.HEIGHT_MSL },
             { Model.PLT_LOGTYPE, BT747Constants.HEIGHT_MSL },
             { Model.GPX_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.OSM_LOGTYPE, BT747Constants.HEIGHT_MSL },
             { Model.NMEA_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
             { Model.GMAP_LOGTYPE, BT747Constants.HEIGHT_MSL },
             { Model.TRL_LOGTYPE, BT747Constants.HEIGHT_WGS84 },

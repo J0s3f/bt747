@@ -28,7 +28,6 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.text.TabExpander;
 
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
@@ -662,7 +661,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE))
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
         );
         pnBottomInformationLayout.setVerticalGroup(
             pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -839,7 +838,6 @@ public class BT747Main extends javax.swing.JFrame implements
         jToolBar1.add(btToolInfo);
 
         tabbedPanelAll.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        tabbedPanelAll.setPreferredSize(null);
         tabbedPanelAll.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPanelAllStateChanged(evt);
