@@ -45,7 +45,8 @@ public class AppController extends Controller {
     private void appInit() {
         GPSrxtx.setGpsPortInstance(new BluetoothGPS());
         initAppSettings();
-        // TODO: Should load settings for Model
+        setBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD, true);
+        // TODO: Should load settings for Model^
     }
 
     private void initAppSettings() {
@@ -89,6 +90,9 @@ public class AppController extends Controller {
                         is.readBoolean();
                         is.readBoolean();
                     }
+            setPersistentDebug(true);
+            setUseConsoleFile(true);
+            setDebug(true);
                     /** fall through */
                 case -1:
                     // No other parameters
