@@ -1151,22 +1151,26 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         master.keyReleased(translatedKey);
 
         // If this is a menu key stop highlighting it.
-        if (master.hasMenuBar()) {
-            if (translatedKey == DeviceScreen.MENU_LEFT) {
-                highlightLeftMenu = false;
+        if (translatedKey == DeviceScreen.MENU_LEFT) {
+            // Highlight the menu option immediately.
+            if (master.hasMenuBar()) {
+                highlightLeftMenu = true;
                 repaintMenuBar(false);
-
-                // Raise a menu event.
-                master.declineNotify();
-            } else if (translatedKey == DeviceScreen.MENU_RIGHT) {
-                highlightRightMenu = false;
-                repaintMenuBar(false);
-
-                // Raise a menu event.
-                master.acceptNotify();
-            } else if (translatedKey == DeviceScreen.KEY_RETURN) {
-                master.returnNotify();
             }
+
+            // Raise a menu event.
+            master.declineNotify();
+        } else if (translatedKey == DeviceScreen.MENU_RIGHT) {
+            // Highlight the menu option immediately.
+            if (master.hasMenuBar()) {
+                highlightRightMenu = true;
+                repaintMenuBar(false);
+            }
+
+            // Raise a menu event.
+            master.acceptNotify();
+        } else if (translatedKey == DeviceScreen.KEY_RETURN) {
+            master.returnNotify();
         }
 
         // Do not forward the key event!
