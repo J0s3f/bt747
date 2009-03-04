@@ -142,7 +142,7 @@ public class ExifTIFF {
 
     public final void setGpsPosition(final double lat, final double lon) {
         ExifAttribute atr;
-        atr = new ExifAttribute(ExifConstants.TAG_GPSLATITUDEREF,
+        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLATITUDEREF,
                 ExifConstants.ASCII, 2);
         if (lat < 0) {
             atr.setStringValue("S");
@@ -152,12 +152,12 @@ public class ExifTIFF {
 
         setGpsAttribute(atr);
 
-        atr = new ExifAttribute(ExifConstants.TAG_GPSLATITUDE,
+        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLATITUDE,
                 ExifConstants.RATIONAL, 3);
         atr.setGpsFloatValue(lat);
         setGpsAttribute(atr);
 
-        atr = new ExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
+        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
                 ExifConstants.ASCII, 2);
         if (lat < 0) {
             atr.setStringValue("W");
@@ -166,7 +166,7 @@ public class ExifTIFF {
         }
         setGpsAttribute(atr);
 
-        atr = new ExifAttribute(ExifConstants.TAG_GPSLONGITUDE,
+        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLONGITUDE,
                 ExifConstants.RATIONAL, 3);
         atr.setGpsFloatValue(lon);
         setGpsAttribute(atr);
@@ -186,7 +186,7 @@ public class ExifTIFF {
         }
         if (sw.indexOf(SW) < 0) {
             sw = SW + sw;
-            atr = new ExifAttribute(ExifConstants.TAG_SOFTWARE,
+            atr = exifApp1.ExifAttribute(ExifConstants.TAG_SOFTWARE,
                     ExifConstants.ASCII, sw.length() + 1);
             atr.setStringValue(sw);
             exifApp1.setIfd0Attribute(atr);

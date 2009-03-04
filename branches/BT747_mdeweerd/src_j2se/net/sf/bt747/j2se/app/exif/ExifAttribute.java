@@ -28,12 +28,14 @@ public class ExifAttribute {
     private int count;
     private byte[] value;
     private boolean bigEndian;
+    private int valueOrgIdx = 0; // Index where value was found in original file for potential reference.
 
     public ExifAttribute() {
 
     }
 
-    public ExifAttribute(final int tag, final int type, final int count) {
+    public ExifAttribute(final int tag, final int type, final int count, final boolean bigEndian) {
+        this.bigEndian = bigEndian;
         setTag(tag);
         setType(type);
         setCount(count);
@@ -78,6 +80,9 @@ public class ExifAttribute {
         }
     }
 
+    public final int getValueIdx() {
+        return valueOrgIdx;
+    }
     public final int read(final byte[] buffer, final int currentIdxInBuffer,
             final int tiffHeaderStart, final boolean bigEndian) {
         this.bigEndian = bigEndian;
@@ -110,6 +115,7 @@ public class ExifAttribute {
                 valueIdx = tiffHeaderStart
                         + ExifUtils.getLong4byte(buffer,
                                 currentIdxInBuffer + 8, bigEndian);
+                valueOrgIdx = valueIdx;
             }
             newValue(size);
             for (int i = 0; i < size; i++) {

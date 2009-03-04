@@ -38,7 +38,14 @@ public class ExifApp1 {
     private ExifIfdBlock gpsBlock;
     private ExifIfdBlock Ifd1;
     private ExifIfdBlock Interoperability;
+    private ExifIfdBlock makerNotes; // MakerNotes sometimes follow some
+    // kind of Exif template.
     private boolean bigEndian;
+
+    public ExifAttribute ExifAttribute(final int tag, final int type,
+            final int count) {
+        return new ExifAttribute(tag, type, count, bigEndian);
+    }
 
     public final int read(final byte[] buffer, final int initialIdxInBuffer) {
         int currentIdxInBuffer = initialIdxInBuffer;
@@ -133,10 +140,27 @@ public class ExifApp1 {
 
             }
         }
+        // MakerNotes
+        // Some maker notes have offsets relative to the TIFF header.
+        // IMHO this is not a good methodology, but it is what we have.
+        if (exifBlock != null) {
+            if (exifBlock.hasTag(ExifConstants.TAG_MAKERNOTE)) {
+                ExifAttribute atr;
+                atr = exifBlock.get(ExifConstants.TAG_MAKERNOTE);
+                byte[] value = atr.getValue();
+                if (value[0] == 'Q' && value[1] == 'V' && value[2] == 'C'
+                        && value[3] == 0 && value[4] == 0 && value[5] == 0) {
+                    makerNotes = new ExifIfdBlock();
+                    makerNotes.read(buffer, atr.getValueIdx() + 6,
+                            tiffHeaderStart, bigEndian);
+                }
+
+            }
+        }
         return 0;
     }
 
-    byte[] jpegInterchange = null;
+    private byte[] jpegInterchange = null;
 
     public final int getByteSize() {
         // TODO: Create Ifd0 block if needed
@@ -153,7 +177,7 @@ public class ExifApp1 {
             if (Interoperability != null) {
                 size += Interoperability.getByteSize();
                 ExifAttribute atr;
-                atr = new ExifAttribute(
+                atr = ExifAttribute(
                         ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
                         ExifConstants.LONG, 1);
                 atr.setIntValue(0, 0);
@@ -212,7 +236,7 @@ public class ExifApp1 {
             ExifAttribute atr;
             if (Interoperability != null) {
                 // Placeholder
-                atr = new ExifAttribute(
+                atr = ExifAttribute(
                         ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
                         ExifConstants.LONG, 1);
                 atr.setIntValue(0, interopOffset);
@@ -247,13 +271,12 @@ public class ExifApp1 {
 
         ExifAttribute atr;
         if (exifOffset != 0) {
-            atr = new ExifAttribute(ExifConstants.TAG_EXIF,
-                    ExifConstants.LONG, 1);
+            atr = ExifAttribute(ExifConstants.TAG_EXIF, ExifConstants.LONG, 1);
             atr.setIntValue(0, exifOffset);
             Ifd0.set(atr);
         }
         if (gpsOffset != 0) {
-            atr = new ExifAttribute(ExifConstants.TAG_GPSINFO,
+            atr = ExifAttribute(ExifConstants.TAG_GPSINFO,
                     ExifConstants.LONG, 1);
             atr.setIntValue(0, gpsOffset);
             Ifd0.set(atr);
@@ -274,7 +297,7 @@ public class ExifApp1 {
             int size;
             if (Interoperability != null) {
                 // Actual value
-                atr = new ExifAttribute(
+                atr = ExifAttribute(
                         ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
                         ExifConstants.LONG, 1);
                 atr.setIntValue(0, interopOffset);
@@ -285,6 +308,11 @@ public class ExifApp1 {
             nextBlock += currentIdx - tiffHeaderStart;
             if (exifOffset != currentIdx - tiffHeaderStart) {
                 Generic.debug("Problem in offset Exif");
+            }
+            // TODO Need to adjust MakerNotes.
+            if(makerNotes!=null) {
+                //byte[] makerValue;
+                //makerNotes.fillBuffer(makerValue, tiffHeaderStart, bigEndian, 6, 0);
             }
             exifBlock.fillBuffer(buffer, tiffHeaderStart, bigEndian,
                     currentIdx, 0);
@@ -318,12 +346,11 @@ public class ExifApp1 {
         if (Ifd1 != null) {
             int size;
             if (jpegInterchange != null) {
-                atr = new ExifAttribute(
-                        ExifConstants.TAG_JPEGINTERCHANGEFORMAT,
+                atr = ExifAttribute(ExifConstants.TAG_JPEGINTERCHANGEFORMAT,
                         ExifConstants.LONG, 1);
                 atr.setIntValue(0, jpgInterChangeOffset);
                 Ifd1.set(atr);
-                atr = new ExifAttribute(
+                atr = ExifAttribute(
                         ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH,
                         ExifConstants.LONG, 1);
                 atr.setIntValue(0, jpegInterchange.length);
@@ -384,17 +411,17 @@ public class ExifApp1 {
             Ifd0 = new ExifIfdBlock();
             ExifAttribute v;
             if (exifBlock != null) {
-                v = new ExifAttribute(ExifConstants.TAG_EXIF,
-                        ExifConstants.LONG, 1);
+                v = ExifAttribute(ExifConstants.TAG_EXIF, ExifConstants.LONG,
+                        1);
                 Ifd0.set(v);
             }
             if (gpsBlock != null) {
-                v = new ExifAttribute(ExifConstants.TAG_GPSINFO,
+                v = ExifAttribute(ExifConstants.TAG_GPSINFO,
                         ExifConstants.LONG, 1);
                 Ifd0.set(v);
             }
             if (Ifd1 != null) {
-                v = new ExifAttribute(
+                v = ExifAttribute(
                         ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
                         ExifConstants.LONG, 1);
                 Ifd0.set(v);
@@ -407,8 +434,7 @@ public class ExifApp1 {
         if (Ifd1 == null) {
             Ifd1 = new ExifIfdBlock();
             ExifAttribute v;
-            v = new ExifAttribute(
-                    ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
+            v = ExifAttribute(ExifConstants.TAG_INTEROPERABILITY_IFD_POINTER,
                     ExifConstants.LONG, 1);
             Ifd0.set(v);
         }
@@ -418,7 +444,7 @@ public class ExifApp1 {
         if (Ifd0 == null) {
             Ifd0 = new ExifIfdBlock();
             ExifAttribute v;
-            v = new ExifAttribute(ExifConstants.TAG_EXIFVERSION,
+            v = ExifAttribute(ExifConstants.TAG_EXIFVERSION,
                     ExifConstants.UNDEFINED, 4);
             v.setIntValue(0, '0');
             v.setIntValue(1, '2');
@@ -433,7 +459,7 @@ public class ExifApp1 {
         if (exifBlock == null) {
             exifBlock = new ExifIfdBlock();
             ExifAttribute v;
-            v = new ExifAttribute(ExifConstants.TAG_EXIFVERSION,
+            v = ExifAttribute(ExifConstants.TAG_EXIFVERSION,
                     ExifConstants.UNDEFINED, 4);
             v.setIntValue(0, '0');
             v.setIntValue(1, '2');
@@ -443,8 +469,7 @@ public class ExifApp1 {
             if (Ifd0 == null) {
                 initIfd0Block();
             }
-            v = new ExifAttribute(ExifConstants.TAG_EXIF, ExifConstants.LONG,
-                    1);
+            v = ExifAttribute(ExifConstants.TAG_EXIF, ExifConstants.LONG, 1);
             Ifd0.set(v);
         }
         exifBlock.set(atr);
@@ -454,7 +479,7 @@ public class ExifApp1 {
         if (gpsBlock == null) {
             gpsBlock = new ExifIfdBlock();
             ExifAttribute v;
-            v = new ExifAttribute(ExifConstants.TAG_GPSVERSIONID,
+            v = ExifAttribute(ExifConstants.TAG_GPSVERSIONID,
                     ExifConstants.BYTE, 4);
             v.setIntValue(0, 0x02);
             v.setIntValue(1, 0x02);
@@ -464,8 +489,8 @@ public class ExifApp1 {
             if (Ifd0 == null) {
                 initIfd0Block();
             }
-            v = new ExifAttribute(ExifConstants.TAG_GPSINFO,
-                    ExifConstants.LONG, 1);
+            v = ExifAttribute(ExifConstants.TAG_GPSINFO, ExifConstants.LONG,
+                    1);
             Ifd0.set(v);
         }
         gpsBlock.set(atr);
