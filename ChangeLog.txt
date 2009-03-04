@@ -1,5 +1,7 @@
 Version 1.68.3
 * Debug no longer active automatically.
+* Fixed problem in EXIF output - little endian issue fixed.
+  Still need to fix problem with Casio makernotes.
 
 Version 1.68.2
 * Disable logging functionality during download was not implemented (always disabled).
