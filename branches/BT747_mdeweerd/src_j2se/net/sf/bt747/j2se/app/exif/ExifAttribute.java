@@ -194,7 +194,7 @@ public class ExifAttribute {
         }
     }
 
-    public final int fillBuffer(final byte[] buffer, final int recordOffset,
+    public int fillBuffer(final byte[] buffer, final int recordOffset,
             final boolean bigEndian, final int payloadOffset,
             final int tiffHeaderOffset) {
         ExifUtils.addShort2byte(buffer, recordOffset, bigEndian, tag);
