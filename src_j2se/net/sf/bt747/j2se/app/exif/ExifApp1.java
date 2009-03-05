@@ -38,8 +38,6 @@ public class ExifApp1 {
     private ExifIfdBlock gpsBlock;
     private ExifIfdBlock Ifd1;
     private ExifIfdBlock Interoperability;
-    private ExifIfdBlock makerNotes; // MakerNotes sometimes follow some
-    // kind of Exif template.
     private boolean bigEndian;
 
     public ExifAttribute ExifAttribute(final int tag, final int type,
@@ -147,14 +145,7 @@ public class ExifApp1 {
             if (exifBlock.hasTag(ExifConstants.TAG_MAKERNOTE)) {
                 ExifAttribute atr;
                 atr = exifBlock.get(ExifConstants.TAG_MAKERNOTE);
-                byte[] value = atr.getValue();
-                if (value[0] == 'Q' && value[1] == 'V' && value[2] == 'C'
-                        && value[3] == 0 && value[4] == 0 && value[5] == 0) {
-                    makerNotes = new ExifIfdBlock();
-                    makerNotes.read(buffer, atr.getValueIdx() + 6,
-                            tiffHeaderStart, bigEndian);
-                }
-
+                exifBlock.set(CasioMakerNotesDecorator.decorate(atr, buffer, tiffHeaderStart, bigEndian));
             }
         }
         return 0;
@@ -310,10 +301,10 @@ public class ExifApp1 {
                 Generic.debug("Problem in offset Exif");
             }
             // TODO Need to adjust MakerNotes.
-            if(makerNotes!=null) {
+//            if(makerNotes!=null) {
                 //byte[] makerValue;
                 //makerNotes.fillBuffer(makerValue, tiffHeaderStart, bigEndian, 6, 0);
-            }
+//            }
             exifBlock.fillBuffer(buffer, tiffHeaderStart, bigEndian,
                     currentIdx, 0);
             currentIdx += size;

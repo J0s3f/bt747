@@ -1,3 +1,6 @@
+Version 1.68.4
+* Modification of Casio makernotes looks ok.
+
 Version 1.68.3
 * Debug no longer active automatically.
 * Fixed problem in EXIF output - little endian issue fixed.
