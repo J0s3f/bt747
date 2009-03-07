@@ -483,14 +483,15 @@ public final class GPSNMEAFile extends GPSFile {
 
     // FIX
     private void writeGSA(final GPSRecord s, final String timeStr) {
-
-        if (activeFields.hasSid()) {
-
+        if (activeFields.hasValid() || activeFields.hasSid()
+                || activeFields.hasPdop() || activeFields.hasHdop()
+                || activeFields.hasVdop()) {
             // $GPGSA
             // GPS DOP and active satellites
             //
             // eg1. $GPGSA,A,3,,,,,,16,18,,22,24,,,3.6,2.1,2.2*3C
             // eg2. $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*34
+            // $GPGSA,A,3,15, 9,22,28,18,26, , ,,,,,4.4,1.9,4.0*17
             //
             // 1 = Mode:
             // M=Manual, forced to operate in 2D or 3D
@@ -499,49 +500,56 @@ public final class GPSNMEAFile extends GPSFile {
             // 1=Fix not available
             // 2=2D
             // 3=3D
-            // 3-14 = PRN's of Satellite Vechicles (SV's) used in position
+            // 3-14 = PRN's of Satellite Vehicles (SV's) used in position
             // fix (null for unused fields)
             // 15 = Position Dilution of Precision (PDOP)
             // 16 = Horizontal Dilution of Precision (HDOP)
             // 17 = Vertical Dilution of Precision (VDOP)
-            if ((s.sid != null)) {
-                rec.setLength(0);
-                rec.append("GPGSA,A,");
-                if ((activeFields.hasValid())) {
-                    if (s.valid == 1) {
-                        rec.append("1,");
-                    } else {
-                        rec.append("3,");
-                    }
-                }
-                rec.append(",");
-                int i;
-                int n;
-                int j;
-                for (i = (s.sid.length - 1), n = 12, j = 0; n > 0; n--, i--, j++) {
-                    if (i > 0) {
-                        if (s.sidinuse[j]) {
-                            rec.append(s.sid[j]);
-                        }
-                    }
-                    rec.append(",");
-                }
 
-                if (activeFields.hasPdop()) {
-                    rec.append(Convert.toString(s.pdop / 100f, 2));
+            rec.setLength(0);
+            rec.append("GPGSA,A,");
+            // Mode
+            if ((activeFields.hasValid())) {
+                if (s.valid == 1) {
+                    rec.append("1");
+                } else {
+                    rec.append("3");
                 }
-                rec.append(",");
-                if (activeFields.hasHdop()) {
-                    rec.append(Convert.toString(s.hdop / 100f, 2));
-                }
-                rec.append(",");
-                if (activeFields.hasVdop()) {
-                    rec.append(Convert.toString(s.vdop / 100f, 2));
-                }
-                rec.append(",");
-                writeNMEA(rec.toString());
-                rec.setLength(0);
             }
+            rec.append(",");
+
+            int sid_len;
+            if ((s.sid != null)) {
+                sid_len = s.sid.length;
+            } else {
+                sid_len = 0;
+            }
+            int i;
+            int n;
+            int j;
+            for (i = (sid_len - 1), n = 12, j = 0; n > 0; n--, i--, j++) {
+                if (i > 0) {
+                    if (s.sidinuse[j]) {
+                        rec.append(s.sid[j]);
+                    }
+                }
+                rec.append(",");
+            }
+
+            if (activeFields.hasPdop()) {
+                rec.append(Convert.toString(s.pdop / 100f, 2));
+            }
+            rec.append(",");
+            if (activeFields.hasHdop()) {
+                rec.append(Convert.toString(s.hdop / 100f, 2));
+            }
+            rec.append(",");
+            if (activeFields.hasVdop()) {
+                rec.append(Convert.toString(s.vdop / 100f, 2));
+            }
+            // rec.append(",");
+            writeNMEA(rec.toString());
+            rec.setLength(0);
         }
 
     }
