@@ -1,5 +1,8 @@
+Version 1.68.5
+* Writing GSA sentence when one of the data types is available (not only when SID is).
+
 Version 1.68.4
-* Modification of Casio makernotes looks ok.
+* Modification of Casio makernotes is ok.
 
 Version 1.68.3
 * Debug no longer active automatically.
