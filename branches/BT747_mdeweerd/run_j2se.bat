@@ -1,8 +1,8 @@
-@echo off
+@echo on
 setlocal
-set       MYROOTPATH=%~dp0%
-set           MYDIST=%MYROOTPATH%\dist
-set            MYLIB=%MYROOTPATH%\lib
+set       MYROOTPATH=%~dp0
+set           MYDIST=%MYROOTPATH%dist
+set            MYLIB=%MYROOTPATH%lib
 set         RXTXPATH=%MYLIB%\rxtx-2.1-7-bins-r2
 set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
 set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
@@ -18,13 +18,13 @@ SET  MEM_HEAP_OPTION=-Xmx192m
 REM Change javaw to java in next line to see startup and debug messages
 if x"%*"==x"debug" goto debug:
 if NOT x"%*"==x"" goto cmdline:
-START javaw bt747.j2se_view.BT747Main %*
+START javaw %MEM_HEAP_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :cmdline
-java bt747.j2se_view.BT747Main %*
+java %MEM_HEAP_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :debug
-java $MEM_HEAP_OPTION -verbose bt747.j2se_view.BT747Main | more
+java %MEM_HEAP_OPTION% -verbose bt747.j2se_view.BT747Main | more
 pause
 :end
 endlocal
