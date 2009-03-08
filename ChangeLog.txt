@@ -1,5 +1,6 @@
 Version 1.68.5
 * Writing GSA sentence when one of the data types is available (not only when SID is).
+* Improvement to windows startup script.
 
 Version 1.68.4
 * Modification of Casio makernotes is ok.
