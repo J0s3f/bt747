@@ -308,8 +308,10 @@ public class GPSKMLFile extends GPSFile {
                                     + (t.getSecond() < 10 ? "0" : "")
                                     + t.getSecond());
                         } else {
-                            rec.append("IDX: ");
-                            rec.append(s.recCount);
+                            if (s.hasRecCount()) {
+                                rec.append("IDX: ");
+                                rec.append(s.getRecCount());
+                            }
                         }
                         rec.append("</name>\r\n");
                     }

@@ -35,6 +35,8 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  * @author Mario De Weerd
  */
 public final class CSVLogConvert extends GPSLogConvertInterface {
+    private static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
+            "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
     private static final int EOL = 0x0D;
     private static final int CR = 0x0A;
     private GPSRecord logFormatRecord;
@@ -361,6 +363,10 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
         }
         return BT747Constants.NO_ERROR;
     }
+    
+    
+    // Previous index in month list - to speed up.
+    private int previousIdx = 0;
 
     /**
      * @param fieldType
@@ -415,6 +421,27 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                             .getDateInstance(field, format))
                             .dateToUTCepoch1970();
                     r.utc += date;
+                } else if (field.length() == 9) {
+                    if (field.charAt(2) == '-' && field.charAt(6) == '-') {
+                        int day;
+                        int year;
+                        day = Convert.toInt(field.substring(0, 2));
+                        year = Convert.toInt(field.substring(7,9)) + 2000;
+                        String m = field.substring(3, 6);
+                        int idx = 0;
+                        if (m.equals(MONTHS_AS_TEXT[previousIdx])) {
+                            idx = previousIdx;
+                        } else {
+                            while (idx < MONTHS_AS_TEXT.length
+                                    && !m.equals(m)) {
+                                idx++;
+                            }
+                        }
+                        if (idx < MONTHS_AS_TEXT.length) {
+                            r.utc += Interface.getDateInstance(day, idx + 1,
+                                    year).dateToUTCepoch1970();
+                        }
+                    }
                 } else if (field.length() == 6) {
                     int day;
                     int month;

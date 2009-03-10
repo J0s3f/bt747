@@ -226,7 +226,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
                         case TIME:
                             // >2008-09-15T20:25:03.000Z<
                             // See NMEA???
-                            if (nodeText.length() > "2008-09-15T20:25:03Z"
+                            if (nodeText.length() >= "2008-09-15T20:25:03Z"
                                     .length()) {
                                 final int year = Integer.valueOf(nodeText
                                         .substring(0, 4));
@@ -324,7 +324,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
                         case CMT:
                             break;
                         case SAT:
-                            r.nsat = Integer.valueOf(nodeText);
+                            r.nsat = Integer.valueOf(nodeText) << 8;
                             activeFileFields.nsat = 10;
                             break;
                         case NAME:

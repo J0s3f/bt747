@@ -118,8 +118,11 @@ public class GPSPositionWaypoint extends Waypoint {
     }
 
     public String getDescription() {
-        return "#" + gpsRec.recCount + " "
+        if(gpsRec.hasRecCount()) {
+        return "#" + gpsRec.getRecCount() + " "
                 + CommonOut.getRcrSymbolText(gpsRec);
+        } else {
+            return CommonOut.getRcrSymbolText(gpsRec);
+        }
     }
-
 }

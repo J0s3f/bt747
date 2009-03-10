@@ -86,9 +86,9 @@ public final class CommonOut {
             final GPSRecord s, final GPSRecord activeFields,
             final GPSRecord selectedFields, final BT747Time t,
             final boolean recordNbrInLogs, final boolean imperial) {
-        if (recordNbrInLogs) {
+        if (recordNbrInLogs && s.hasRecCount()) {
             rec.append("IDX: ");
-            rec.append(s.recCount);
+            rec.append(s.getRecCount());
             rec.append("<br>");
         }
         if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
