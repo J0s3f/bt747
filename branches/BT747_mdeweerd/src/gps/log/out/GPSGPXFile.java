@@ -300,13 +300,15 @@ public final class GPSGPXFile extends GPSFile {
                 }
                 if (isNewTrack) {
                     final StringBuffer tx = new StringBuffer();
-                    final String tmp = "" + r.recCount;
-                    int nZeros = 5 - tmp.length();
-                    if (nZeros < 0) {
-                        nZeros = 0;
+                    if (r.hasRecCount()) {
+                        final String tmp = "" + r.getRecCount();
+                        int nZeros = 5 - tmp.length();
+                        if (nZeros < 0) {
+                            nZeros = 0;
+                        }
+                        tx.append(GPSGPXFile.zeros, 0, nZeros);
+                        trackName = "#" + tx.toString() + tmp + "#";
                     }
-                    tx.append(GPSGPXFile.zeros, 0, nZeros);
-                    trackName = "#" + tx.toString() + r.recCount + "#";
                     if ((activeFields.hasUtc())
                             && (selectedFileFields.hasUtc())) {
                         trackName += " " + timeStr;

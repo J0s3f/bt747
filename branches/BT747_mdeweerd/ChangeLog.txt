@@ -1,3 +1,7 @@
+Version 1.68.6
+* Due to format change, read back of BT747's own CSV did not work anymore.  Fixed.
+* GPX file format reading improved.  Write back of record number improved if not available.
+
 Version 1.68.5
 * Writing GSA sentence when one of the data types is available (not only when SID is).
 * Improvement to windows startup script.

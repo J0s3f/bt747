@@ -181,7 +181,9 @@ public final class GPSCSVFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#writeRecord(gps.log.GPSRecord)
      */
     public final void writeRecord(final GPSRecord r) {
@@ -189,7 +191,9 @@ public final class GPSCSVFile extends GPSFile {
 
         if ((activeFields != null) && cachedRecordIsNeeded(r)) {
             rec.setLength(0);
-            rec.append(r.recCount);
+            if (r.hasRecCount()) {
+                rec.append(r.getRecCount());
+            }
             if ((activeFileFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                 rec.append(fieldSep);
             }

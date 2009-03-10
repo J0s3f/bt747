@@ -197,7 +197,10 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             if (waypt) {
                 wrec.setLength(0);
                 wrec.append("W  ");
-                wrec.append("waypt-" + s.recCount); // name
+                wrec.append("waypt-"); // name
+                if (s.hasRecCount()) {
+                    wrec.append(s.getRecCount());
+                }
                 wrec.append(rec.toString().substring(2));
             }
             rec.append("s ");
