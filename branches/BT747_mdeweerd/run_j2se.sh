@@ -9,18 +9,16 @@ which javaw >/dev/null 2>&1 && JAVA=javaw
 
 # Start setting the class path.
 export CLASSPATH
+CLASSPATH=${ROOT_DIR}/lib/jopt-simple-2.4.1.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/jcalendar-1.3.2.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/swing-layout-1.0.3.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/swingx.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/swingx-ws.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/dist/libBT747.jar:$CLASSPATH
+CLASSPATH=${ROOT_DIR}/dist/BT747_j2se.jar:$CLASSPATH
 
-if [ -e /usr/share/java/RXTXcomm.jar ] ; then
- # if librxtx-java seems to be installed locally (e.g., on Ubuntu)
- RXTXPATH=/usr/lib
- RXTXLIBPATH=/usr/lib
- RXTXJAR=/usr/share/java/RXTXcomm.jar
-else
+ ########################
+ # Finding RXTX library
  RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  # ARCH=`arch`  # The old way
@@ -30,11 +28,20 @@ else
    ARCH=x86_64
  fi
  TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
+ RXTXJAR=${RXTXPATH}/RXTXcomm.jar
  if [ -r ${TMPRXTXPATH} ] ; then
    RXTXLIBPATH=${TMPRXTXPATH}
+ else
+  # Did not find binary - look on system.
+  if [ -e /usr/share/java/RXTXcomm.jar ] ; then
+    # if librxtx-java seems to be installed locally (e.g., on Ubuntu)
+    RXTXPATH=/usr/lib
+    RXTXLIBPATH=/usr/lib
+    RXTXJAR=/usr/share/java/RXTXcomm.jar
+  fi
  fi
- RXTXJAR=${RXTXPATH}/RXTXcomm.jar
-fi
+ # Ended determining RXTX library
+ ################################
 
 CLASSPATH=${RXTXJAR}:$CLASSPATH
 
@@ -48,4 +55,4 @@ CLASSPATH=${RXTXJAR}:$CLASSPATH
 
 #strace -e trace=file -f -o trace.log
 MEM_HEAP_OPTION=-Xmx192m
-$JAVA $MEM_HEAP_OPTION -Djava.library.path=${RXTXLIBPATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar $* &
+$JAVA $MEM_HEAP_OPTION -Djava.library.path=${RXTXLIBPATH} bt747.j2se_view.BT747Main $* &
