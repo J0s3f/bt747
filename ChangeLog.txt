@@ -1,3 +1,9 @@
+Version 1.68.7
+* Linux & MacOS startup script modified - the MANIFEST took precedence over the classpath
+
+Version 1.68.6.1
+* Same as 1.68.6, but with hacked distri of RXTX for better /dev/ACM0 support.
+
 Version 1.68.6
 * Due to format change, read back of BT747's own CSV did not work anymore.  Fixed.
 * GPX file format reading improved.  Write back of record number improved if not available.

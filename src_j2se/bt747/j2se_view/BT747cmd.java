@@ -24,9 +24,6 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
-import gps.log.in.GPSInputConversionFactory;
-import gps.log.in.GPSLogConvertInterface;
-import gps.log.in.MultiLogConvert;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -38,7 +35,6 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
-import net.sf.bt747.j2se.system.J2SEVector;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
