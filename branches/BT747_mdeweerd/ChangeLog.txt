@@ -1,3 +1,6 @@
+Version 1.68.7.1
+* Added first version of Catalan.
+
 Version 1.68.7
 * Linux & MacOS startup script modified - the MANIFEST took precedence over the classpath
 
