@@ -76,7 +76,7 @@
 	<!-- Warp/Exegen classpath -->
 	<path id="utils">
 		<pathelement location="${superwaba_root}/lib/SuperWabaTools.jar" />
-		<pathelement location="${superwaba.jar}" />
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
 	</path>
 
 
