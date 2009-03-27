@@ -1,3 +1,6 @@
+Version 1.68.8
+* Height conversion options added to PDA version.
+
 Version 1.68.7.1
 * Added first version of Catalan.
 

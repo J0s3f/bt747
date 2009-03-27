@@ -236,5 +236,10 @@ public final class Txt {
     public static final int LANG_NL = 186;
     public static final int LANG_ZH = 187;
     public static final int MI_LANGUAGE = 188;
+    public static final int HEIGHT_CONV_AUTOMATIC = 189;
+    public static final int HEIGHT_CONV_MSL_TO_WGS84 = 190;
+    public static final int HEIGHT_CONV_WGS84_TO_MSL = 191;
+    public static final int HEIGHT_CONV_NONE = 192;
+
 
 }
