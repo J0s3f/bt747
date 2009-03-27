@@ -427,6 +427,11 @@ public final class Txt_fr implements TxtInterface {
     private static final String DOWNLOAD_FULL = "Téléchmt cmplt";
     private static final String DOWNLOAD_NORMAL = "Téléchmt nrml";
 
+    private static final String HEIGHT_CONV_AUTOMATIC = "Alti Auto";
+    private static final String HEIGHT_CONV_MSL_TO_WGS84 = "-> WGS84";
+    private static final String HEIGHT_CONV_WGS84_TO_MSL = "-> MSL";
+    private static final String HEIGHT_CONV_NONE = "Alti orig";
+
     /* (non-Javadoc)
      * @see bt747.lang.NexTxtInterface#getRcrString(int)
      */
@@ -496,7 +501,12 @@ public final class Txt_fr implements TxtInterface {
             BAD_SUPERWABAVERSION_CONT2, S_DEVICE, S_DEFAULTDEVICE,
             S_GISTEQTYPE1, S_GISTEQTYPE2, S_GISTEQTYPE3, BT_MAC_ADDR,
             S_OUTPUT_LOGCONDITIONS, MEM_FREE, TRKPTCOMMENT, TRKPTNAME,
-            DOWNLOAD_INCREMENTAL, DOWNLOAD_FULL, DOWNLOAD_NORMAL, };
+            DOWNLOAD_INCREMENTAL, DOWNLOAD_FULL, DOWNLOAD_NORMAL,
+            null, null, null, null, null, null, null, null , null, 
+            null, /* MI_LANGUAGE */
+            HEIGHT_CONV_AUTOMATIC,
+            HEIGHT_CONV_MSL_TO_WGS84, HEIGHT_CONV_WGS84_TO_MSL,
+            HEIGHT_CONV_NONE,};
 
 }
 

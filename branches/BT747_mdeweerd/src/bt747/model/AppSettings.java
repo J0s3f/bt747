@@ -740,7 +740,8 @@ public class AppSettings {
      * 
      * @return height conversion mode.
      * @see #HEIGHT_AUTOMATIC<br>
-     * @see #HEIGHT_MSL<br>
+     * @see #HEIGHT_MSL_TO_WGS84<br>
+     * @see #HEIGHT_WGS84_TO_MSL<br>
      * @see #HEIGHT_NOCHANGE
      */
     public final int getHeightConversionMode() {

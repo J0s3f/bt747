@@ -1,24 +1,24 @@
 package bt747.waba_view;
 
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
+// *** The application was written using the SuperWaba toolset. ***
+// *** This is a proprietary development environment based in ***
+// *** part on the Waba development environment developed by ***
+// *** WabaSoft, Inc. ***
+// ********************************************************************
 import waba.fx.Color;
 import waba.sys.Settings;
 import waba.ui.Button;
@@ -54,7 +54,7 @@ public final class GPSLogGet extends Container implements ModelListener {
     private Button btStartDate;
     private Button btEndDate;
     private Button btGetLog;
-    private MyCheck chkConvertWGSToMSL;
+    private ComboBox cbHeightConversion;
     private Button btCancelGetLog;
     private Button btToCSV;
     private Button btToKML;
@@ -77,11 +77,18 @@ public final class GPSLogGet extends Container implements ModelListener {
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
     private ComboBox cbDownload;
-    private static final String[] downloadStr = { Txt.getString(Txt.DOWNLOAD_NORMAL),
-            Txt.getString(Txt.DOWNLOAD_INCREMENTAL), Txt.getString(Txt.DOWNLOAD_FULL) };
+    private static final String[] downloadStr = {
+            Txt.getString(Txt.DOWNLOAD_NORMAL),
+            Txt.getString(Txt.DOWNLOAD_INCREMENTAL),
+            Txt.getString(Txt.DOWNLOAD_FULL) };
     private ComboBox cbFileSplitType;
-    private static final String[] fileStr = { Txt.getString(Txt.ONE_FILE), Txt.getString(Txt.ONE_FILE_DAY),
-            Txt.getString(Txt.ONE_FILE_TRK) };
+    private static final String[] fileStr = { Txt.getString(Txt.ONE_FILE),
+            Txt.getString(Txt.ONE_FILE_DAY), Txt.getString(Txt.ONE_FILE_TRK) };
+    private static final String[] heightCorrectStr = {
+            Txt.getString(Txt.HEIGHT_CONV_AUTOMATIC),
+            Txt.getString(Txt.HEIGHT_CONV_MSL_TO_WGS84),
+            Txt.getString(Txt.HEIGHT_CONV_WGS84_TO_MSL),
+            Txt.getString(Txt.HEIGHT_CONV_NONE), };
     private Color savedBackColor;
     private Label lbUsedMem;
     private Label lbUsedRecords;
@@ -116,22 +123,25 @@ public final class GPSLogGet extends Container implements ModelListener {
      */
     protected final void onStart() {
         super.onStart();
-        add(chkLogOnOff = new MyCheck(Txt.getString(Txt.DEV_LOGONOFF)), LEFT, TOP); //$NON-NLS-1$
+        add(chkLogOnOff = new MyCheck(Txt.getString(Txt.DEV_LOGONOFF)), LEFT,
+                TOP); //$NON-NLS-1$
         cbDownload = new ComboBox(downloadStr);
         add(cbDownload, RIGHT, SAME);
         cbDownload.select(m.getDownloadMethod());
-        add(chkLogOverwriteStop = new MyCheck(Txt.getString(Txt.LOG_OVRWR_FULL)), LEFT, AFTER); //$NON-NLS-1$
+        add(chkLogOverwriteStop = new MyCheck(Txt
+                .getString(Txt.LOG_OVRWR_FULL)), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.getString(Txt.DATE_RANGE)), LEFT, AFTER); //$NON-NLS-1$
 
         add(btStartDate = new Button(convertUTCtoDateString(m
                 .getFilterStartTime())), AFTER, SAME); //$NON-NLS-1$
         // m_btStartDate.setMode(Edit.DATE);
-        add(
-                btEndDate = new Button(convertUTCtoDateString(m
-                        .getFilterEndTime())), RIGHT, SAME); //$NON-NLS-1$
+        add(btEndDate = new Button(convertUTCtoDateString(m
+                .getFilterEndTime())), RIGHT, SAME); //$NON-NLS-1$
         // m_btEndDate.setMode(Edit.DATE);
-        add(btGetLog = new Button(Txt.getString(Txt.GET_LOG)), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(btCancelGetLog = new Button(Txt.getString(Txt.CANCEL_GET)), AFTER + 5, SAME); //$NON-NLS-1$
+        add(btGetLog = new Button(Txt.getString(Txt.GET_LOG)), LEFT,
+                AFTER + 2); //$NON-NLS-1$
+        add(btCancelGetLog = new Button(Txt.getString(Txt.CANCEL_GET)),
+                AFTER + 5, SAME); //$NON-NLS-1$
 
         cbColors = new ComboBox(colors);
         add(cbColors, RIGHT, SAME);
@@ -157,10 +167,8 @@ public final class GPSLogGet extends Container implements ModelListener {
         // add(new Label("End"),BEFORE,SAME);
         add(cbFileSplitType = new ComboBox(fileStr), LEFT, AFTER + 2);
         cbFileSplitType.select(m.getOutputFileSplitType());
-        add(chkConvertWGSToMSL = new MyCheck(Txt.getString(Txt.HGHT_GEOID_DIFF)), AFTER + 5,
-                SAME); //$NON-NLS-1$
-        chkConvertWGSToMSL.setChecked(m.getHeightConversionMode() != 0);
-        updateHeightConversionModeFromControl();
+        add(cbHeightConversion = new ComboBox(heightCorrectStr), RIGHT, SAME);//$NON-NLS-1$
+        setHeightConversionModeFromSettings();
         add(btToCSV = new Button(Txt.getString(Txt.TO_CSV)), LEFT, AFTER + 5); //$NON-NLS-1$
         add(btToGPX = new Button(Txt.getString(Txt.TO_GPX)), AFTER + 5, SAME); //$NON-NLS-1$
         add(btToKML = new Button(Txt.getString(Txt.TO_KML)), RIGHT, SAME); //$NON-NLS-1$
@@ -186,12 +194,46 @@ public final class GPSLogGet extends Container implements ModelListener {
     }
 
     private final void updateHeightConversionModeFromControl() {
-        c
-                .setHeightConversionMode(chkConvertWGSToMSL.getChecked() ? Model.HEIGHT_WGS84_TO_MSL
-                        : Model.HEIGHT_NOCHANGE);
+        int mode;
+        switch (cbHeightConversion.getSelectedIndex()) {
+        default:
+        case 0:
+            mode = Model.HEIGHT_AUTOMATIC;
+            break;
+        case 1:
+            mode = Model.HEIGHT_WGS84_TO_MSL;
+            break;
+        case 2:
+            mode = Model.HEIGHT_MSL_TO_WGS84;
+            break;
+        case 3:
+            mode = Model.HEIGHT_NOCHANGE;
+            break;
+        }
+        c.setHeightConversionMode(mode);
     }
 
-    private void reqLogInfo() {
+    private final void setHeightConversionModeFromSettings() {
+        int idx;
+        switch (m.getHeightConversionMode()) {
+        default:
+        case Model.HEIGHT_AUTOMATIC:
+            idx = 0;
+            break;
+        case Model.HEIGHT_WGS84_TO_MSL:
+            idx = 1;
+            break;
+        case Model.HEIGHT_MSL_TO_WGS84:
+            idx = 2;
+            break;
+        case Model.HEIGHT_NOCHANGE:
+            idx = 3;
+            break;
+        }
+        cbHeightConversion.select(idx);
+    }
+
+    private final void reqLogInfo() {
         // Request device info for this control
         c.reqLogStatus();
         // Request log version from device
@@ -244,7 +286,8 @@ public final class GPSLogGet extends Container implements ModelListener {
             } else if (event.target == chkLogOnOff) {
                 c.setLoggingActive(chkLogOnOff.getChecked());
             } else if (event.target == cbColors) {
-                c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) cbColors.getSelectedItem()));
+                c.setStringOpt(AppSettings.COLOR_INVALIDTRACK,
+                        ((String) cbColors.getSelectedItem()));
             } else if (event.target == cbTimeOffsetHours) {
                 int index = 0;
                 // Work around superwaba bug
@@ -252,13 +295,13 @@ public final class GPSLogGet extends Container implements ModelListener {
                 if (tmp.charAt(0) == '+') {
                     index = 1;
                 }
-                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt((String) tmp
-                .substring(index)));
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert
+                        .toInt((String) tmp.substring(index)));
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
             } else if (event.target == cbFileSplitType) {
                 c.setOutputFileSplitType(cbFileSplitType.getSelectedIndex());
-            } else if (event.target == chkConvertWGSToMSL) {
+            } else if (event.target == cbHeightConversion) {
                 updateHeightConversionModeFromControl();
             } else if (event.target == btEndDate) {
                 if (cal == null) {
@@ -302,7 +345,8 @@ public final class GPSLogGet extends Container implements ModelListener {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == edTrkSep) {
-                c.setIntOpt(AppSettings.TRKSEP, Convert.toInt(edTrkSep.getText()));
+                c.setIntOpt(AppSettings.TRKSEP, Convert.toInt(edTrkSep
+                        .getText()));
                 edTrkSep.setText("" + m.getIntOpt(AppSettings.TRKSEP));
             }
             break;
@@ -321,10 +365,10 @@ public final class GPSLogGet extends Container implements ModelListener {
                 }
             }
             /*
-             * cal = null; Note: If your program uses the Calendar control only
-             * a few times, i suggest that you set cal to null so it can get
-             * garbage collected. Calendar objects waste memory and it is always
-             * a good idea to save memory when possible
+             * cal = null; Note: If your program uses the Calendar control
+             * only a few times, i suggest that you set cal to null so it can
+             * get garbage collected. Calendar objects waste memory and it is
+             * always a good idea to save memory when possible
              */
             break;
         default:
