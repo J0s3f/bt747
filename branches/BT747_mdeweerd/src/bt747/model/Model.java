@@ -23,7 +23,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * The model in the Model-Controller-View schematic. Information regarding the
@@ -172,9 +172,9 @@ public class Model extends AppSettings implements GPSListener {
             logFiltersAdv[i] = new GPSFilterAdvanced();
         }
         // Initialise times
-        filterStartTime = (Interface.getDateInstance(1, 1, 1983)
+        filterStartTime = (JavaLibBridge.getDateInstance(1, 1, 1983)
                 .dateToUTCepoch1970());
-        filterEndTime = (Interface.getDateInstance()).dateToUTCepoch1970()
+        filterEndTime = (JavaLibBridge.getDateInstance()).dateToUTCepoch1970()
                 + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);

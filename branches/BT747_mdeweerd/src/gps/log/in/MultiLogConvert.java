@@ -10,7 +10,7 @@ import gps.log.out.GPSFile;
 
 import bt747.model.Model;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -110,12 +110,12 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          * Table of {@link GPSLogConvertInterface} used to convert input
          * files.
          */
-        final BT747Hashtable converters = Interface
+        final BT747Hashtable converters = JavaLibBridge
                 .getHashtableInstance(logFiles.size() + 1);
         /**
          * Lookup list for LogFileInfo.
          */
-        final BT747Hashtable logFileInfoLookup = Interface
+        final BT747Hashtable logFileInfoLookup = JavaLibBridge
                 .getHashtableInstance(logFiles.size() + 1);
 
         /*
@@ -174,7 +174,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         /**
          * Not expecting a lot of logs, so very simple ordering.
          */
-        final BT747Vector orderedLogs = Interface.getVectorInstance();
+        final BT747Vector orderedLogs = JavaLibBridge.getVectorInstance();
         {
             final BT747Hashtable iter = logFileInfoLookup.iterator();
             while (iter.hasNext()) {

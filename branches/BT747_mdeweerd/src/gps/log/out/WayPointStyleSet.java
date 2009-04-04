@@ -4,7 +4,7 @@
 package gps.log.out;
 
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
@@ -12,7 +12,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  * 
  */
 public class WayPointStyleSet {
-    private final BT747Hashtable styles = Interface.getHashtableInstance(5);
+    private final BT747Hashtable styles = JavaLibBridge.getHashtableInstance(5);
     private BT747Hashtable iterator;
 
     public final void add(final WayPointStyle style) {

@@ -41,7 +41,7 @@ import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
 
@@ -179,8 +179,8 @@ public class BT747cmd implements bt747.model.ModelListener {
      */
     static {
         // Set up the low level functions interface.
-        Interface
-                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+        JavaLibBridge
+                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
         GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
 

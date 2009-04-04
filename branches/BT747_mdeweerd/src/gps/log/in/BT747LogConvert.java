@@ -18,10 +18,9 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 
 import bt747.model.Model;
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * This class is used to convert the binary log to a new format. Basically
@@ -71,7 +70,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
      */
     private static final int BUF_SIZE = 0x800;
 
-    private static final int minValidUtcTime = Interface.getDateInstance(1,
+    private static final int minValidUtcTime = JavaLibBridge.getDateInstance(1,
             1, 1995).dateToUTCepoch1970();
 
     /**
@@ -179,8 +178,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
                 isBlockStartOverwrite = (logMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
                 // Generic.debug("OVERWRITE? "
-                // + Convert.unsigned2hex(currentBlock, 8) + " "
-                // + Convert.unsigned2hex(logMode, 8) + " "
+                // + JavaLibBridge.unsigned2hex(currentBlock, 8) + " "
+                // + JavaLibBridge.unsigned2hex(logMode, 8) + " "
                 // + isBlockStartOverwrite);
                 if (isBlockStartOverwrite && !firstBlockDone) {
                     passToFindFirstBlockInLog = true;
@@ -357,7 +356,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                 // Only interpret fields if not looking for
                                 // logFormat changes only
 
-                                // Generic.debug(Convert.unsigned2hex(nextAddrToRead-sizeToRead+recIdx,
+                                // Generic.debug(JavaLibBridge.unsigned2hex(nextAddrToRead-sizeToRead+recIdx,
                                 // 8)); // record start position
                                 // Generic.debug("Offset:"+recIdx+"
                                 // "+offsetInBuffer);
@@ -384,7 +383,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                     Generic.debug("Bad record @"
                                             + r.recCount
                                             + "("
-                                            + Convert.unsigned2hex(
+                                            + JavaLibBridge.unsigned2hex(
                                                     nextAddrToRead
                                                             - sizeToRead
                                                             + recIdx, 8)
@@ -591,7 +590,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     updateLogFormat(gpsFile, newLogFormat);
                 }
                 // bt747.sys.Generic.debug("Log format set to
-                // :"+Convert.unsigned2hex(value, 8));
+                // :"+JavaLibBridge.unsigned2hex(value, 8));
                 break;
             case 0x03: // log Period change
                 logPeriod = value;
@@ -624,8 +623,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 // 0x104=??
                 logMode = value;
                 // Generic.debug("OVERWRITE? "
-                // + Convert.unsigned2hex(offsetInBuffer, 8) + " "
-                // + Convert.unsigned2hex(logMode, 8) + " "
+                // + JavaLibBridge.unsigned2hex(offsetInBuffer, 8) + " "
+                // + JavaLibBridge.unsigned2hex(logMode, 8) + " "
                 // + ((logMode &
                 // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0));
                 // // bt747.sys.Generic.debug("Logger off :"+value);
@@ -634,8 +633,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 // 0x104=??
                 logMode = value;
                 // Generic.debug("OVERWRITE? "
-                // + Convert.unsigned2hex(offsetInBuffer, 8) + " "
-                // + Convert.unsigned2hex(logMode, 8) + " "
+                // + JavaLibBridge.unsigned2hex(offsetInBuffer, 8) + " "
+                // + JavaLibBridge.unsigned2hex(logMode, 8) + " "
                 // + ((logMode &
                 // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0));
                 // // bt747.sys.Generic.debug("Logger off :"+value);
@@ -725,13 +724,13 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         | (0xFFL & bytes[recIdx++]) << 40
                         | (0xFFL & bytes[recIdx++]) << 48
                         | (0xFFL & bytes[recIdx++]) << 56;
-                r.latitude = Convert.longBitsToDouble(latitude);
+                r.latitude = JavaLibBridge.longBitsToDouble(latitude);
             } else {
                 final int latitude = (0xFF & bytes[recIdx++]) << 0
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.latitude = Convert.toFloatBitwise(latitude);
+                r.latitude = JavaLibBridge.toFloatBitwise(latitude);
             }
             if ((r.latitude > 90.00) || (r.latitude < -90.00)) {
                 Generic.debug("Invalid latitude:" + r.latitude);
@@ -748,13 +747,13 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         | (0xFFL & bytes[recIdx++]) << 40
                         | (0xFFL & bytes[recIdx++]) << 48
                         | (0xFFL & bytes[recIdx++]) << 56;
-                r.longitude = Convert.longBitsToDouble(longitude);
+                r.longitude = JavaLibBridge.longBitsToDouble(longitude);
             } else {
                 final int longitude = (0xFF & bytes[recIdx++]) << 0
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.longitude = Convert.toFloatBitwise(longitude);// *1.0;
+                r.longitude = JavaLibBridge.toFloatBitwise(longitude);// *1.0;
             }
             if ((r.longitude > 180.00) || (r.latitude < -180.00)) {
                 Generic.debug("Invalid longitude:" + r.height);
@@ -767,14 +766,14 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.height = Convert.toFloatBitwise(height);
+                r.height = JavaLibBridge.toFloatBitwise(height);
             } else {
                 final int height =
 
                 (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.height = Convert.toFloatBitwise(height);
+                r.height = JavaLibBridge.toFloatBitwise(height);
             }
             if (valid) {
                 CommonIn.convertHeight(r, factorConversionWGS84ToMSL,
@@ -791,7 +790,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            r.speed = Convert.toFloatBitwise(speed);
+            r.speed = JavaLibBridge.toFloatBitwise(speed);
             if (r.speed < -10.) {
                 Generic.debug("Invalid speed:" + r.speed);
                 valid = false;
@@ -802,7 +801,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            r.heading = Convert.toFloatBitwise(heading);
+            r.heading = JavaLibBridge.toFloatBitwise(heading);
         }
         if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
             r.dsta = (0xFF & bytes[recIdx++]) << 0
@@ -905,7 +904,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFFL & bytes[recIdx++]) << 40
                     | (0xFFL & bytes[recIdx++]) << 48
                     | (0xFFL & bytes[recIdx++]) << 56;
-            r.distance = Convert.longBitsToDouble(distance);
+            r.distance = JavaLibBridge.longBitsToDouble(distance);
         }
 
         return valid;

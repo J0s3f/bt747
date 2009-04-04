@@ -3,7 +3,7 @@
  */
 package gps.agps;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * @author Mario
@@ -36,7 +36,7 @@ public class AGPSSatRecord {
         return bufidx;
     }
 
-    private static final int SECONDS_FROM_1970_TO_1980 = Interface
+    private static final int SECONDS_FROM_1970_TO_1980 = JavaLibBridge
             .getDateInstance(1, 1, 1980).dateToUTCepoch1970();
 
     public int getUTCTime() {

@@ -19,7 +19,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.Version;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a KML file.
@@ -343,7 +343,7 @@ public class GPSKMLFile extends GPSFile {
                             if (activeFields.milisecond == 0) {
                                 rec.append(t.getSecond());
                             } else {
-                                rec.append(Convert.toString((float) t
+                                rec.append(JavaLibBridge.toString((float) t
                                         .getSecond()
                                         + s.milisecond / 1000.0, 3));
                             }
@@ -372,13 +372,13 @@ public class GPSKMLFile extends GPSFile {
                                     .hasLatitude()))) {
                         rec.append("<Point>\r\n");
                         rec.append("<coordinates>");
-                        rec.append(Convert.toString(s.longitude, 6));
+                        rec.append(JavaLibBridge.toString(s.longitude, 6));
                         rec.append(",");
-                        rec.append(Convert.toString(s.latitude, 6));
+                        rec.append(JavaLibBridge.toString(s.latitude, 6));
                         if ((activeFields.hasHeight())
                                 && (selectedFileFields.hasHeight())) {
                             rec.append(",");
-                            rec.append(Convert.toString(s.height, 3));
+                            rec.append(JavaLibBridge.toString(s.height, 3));
                         }
                         rec.append("</coordinates>");
                         rec.append("</Point>\r\n");
@@ -438,13 +438,13 @@ public class GPSKMLFile extends GPSFile {
                             rec.append("</altitudeMode><coordinates>\r\n");
                         }
                         rec.append("        ");
-                        rec.append(Convert.toString(s.longitude, 6));
+                        rec.append(JavaLibBridge.toString(s.longitude, 6));
                         rec.append(",");
-                        rec.append(Convert.toString(s.latitude, 6));
+                        rec.append(JavaLibBridge.toString(s.latitude, 6));
                         if ((activeFields.hasHeight())
                                 && (selectedFileFields.hasHeight())) {
                             rec.append(",");
-                            rec.append(Convert.toString(s.height, 3));
+                            rec.append(JavaLibBridge.toString(s.height, 3));
                         }
                         rec.append("\r\n");
                         writeTxt(rec.toString());

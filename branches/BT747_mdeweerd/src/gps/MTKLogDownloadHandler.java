@@ -14,12 +14,13 @@
 // *** *********************************************************** ***
 package gps;
 
+
 import gps.convert.Conv;
 import gps.log.in.WindowedFile;
 
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
 
 final class MTKLogDownloadHandler {
 
@@ -119,8 +120,8 @@ final class MTKLogDownloadHandler {
         if (Generic.isDebug()) {
             Generic.debug((isIncremental ? "Incremental d" : "D")
                     + "ownload request from "
-                    + Convert.unsigned2hex(startAddr, 8) + " to "
-                    + Convert.unsigned2hex(endAddr, 8));
+                    + JavaLibBridge.unsigned2hex(startAddr, 8) + " to "
+                    + JavaLibBridge.unsigned2hex(endAddr, 8));
         }
 
         // Start address
@@ -251,10 +252,10 @@ final class MTKLogDownloadHandler {
                         if (potentialEndAddress > logDownloadEndAddr) {
                             if (Generic.isDebug()) {
                                 Generic.debug("Adjusted end address from "
-                                        + Convert.unsigned2hex(
+                                        + JavaLibBridge.unsigned2hex(
                                                 logDownloadEndAddr, 8)
                                         + " to "
-                                        + Convert.unsigned2hex(
+                                        + JavaLibBridge.unsigned2hex(
                                                 potentialEndAddress, 8));
                             }
                             logDownloadEndAddr = potentialEndAddress;
@@ -280,9 +281,9 @@ final class MTKLogDownloadHandler {
                 openNewLog(logFileName, logFileCard);
                 if (Generic.isDebug()) {
                     Generic.debug("Starting download from "
-                            + Convert.unsigned2hex(logNextReadAddr, 8)
+                            + JavaLibBridge.unsigned2hex(logNextReadAddr, 8)
                             + " to "
-                            + Convert.unsigned2hex(logDownloadEndAddr, 8));
+                            + JavaLibBridge.unsigned2hex(logDownloadEndAddr, 8));
                 }
                 logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             }
@@ -419,8 +420,8 @@ final class MTKLogDownloadHandler {
         int dataLength;
         // Convert hex data to bytes
         dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2;
-        // debugMsg("Got "+startAddr+" "+Convert.toString(sData.length())+"):
-        // "+Convert.toString(dataLength));
+        // debugMsg("Got "+startAddr+" "+JavaLibBridge.toString(sData.length())+"):
+        // "+JavaLibBridge.toString(dataLength));
         switch (logState) {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
@@ -441,7 +442,7 @@ final class MTKLogDownloadHandler {
                     // Can happen on Palm over BT.
                     if (Generic.isDebug()) {
                         Generic.debug("Unexpected datalength: "
-                                + Convert.unsigned2hex(dataLength, 8));
+                                + JavaLibBridge.unsigned2hex(dataLength, 8));
                     }
                     logState = MTKLogDownloadHandler.C_LOG_RECOVER;
                 } else {
@@ -451,15 +452,15 @@ final class MTKLogDownloadHandler {
                         if (l > MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE) {
                             l = MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE;
                         }
-                        // debugMsg("Writing("+Convert.toString(p_StartAddr)+"):
-                        // "+Convert.toString(j)+" "+Convert.toString(l));
+                        // debugMsg("Writing("+JavaLibBridge.toString(p_StartAddr)+"):
+                        // "+JavaLibBridge.toString(j)+" "+JavaLibBridge.toString(l));
 
                         try {
                             if ((logFile.writeBytes(readDataBuffer, j, l)) != l) {
                                 // debugMsg("Problem during anaLog:
-                                // "+Convert.toString(m_logFile.lastError));
+                                // "+JavaLibBridge.toString(m_logFile.lastError));
                                 cancelGetLog();
-                                // debugMsg(Convert.toString(q));
+                                // debugMsg(JavaLibBridge.toString(q));
                             }
                         } catch (final Exception e) {
                             Generic.debug("analyzeLogPart", e);
@@ -495,9 +496,9 @@ final class MTKLogDownloadHandler {
                 }
             } else {
                 Generic.debug("Expected:"
-                        + Convert.unsigned2hex(logNextReadAddr, 8) + " Got:"
-                        + Convert.unsigned2hex(startAddr, 8) + " ("
-                        + Convert.unsigned2hex(dataLength, 8) + ")", null);
+                        + JavaLibBridge.unsigned2hex(logNextReadAddr, 8) + " Got:"
+                        + JavaLibBridge.unsigned2hex(startAddr, 8) + " ("
+                        + JavaLibBridge.unsigned2hex(dataLength, 8) + ")", null);
                 recoverFromLogError();
             }
             break;
@@ -529,10 +530,10 @@ final class MTKLogDownloadHandler {
                     if (Generic.isDebug()) {
                         Generic
                                 .debug("Starting incremental download from "
-                                        + Convert.unsigned2hex(
+                                        + JavaLibBridge.unsigned2hex(
                                                 logNextReadAddr, 8)
                                         + " to "
-                                        + Convert.unsigned2hex(
+                                        + JavaLibBridge.unsigned2hex(
                                                 logDownloadEndAddr, 8));
                     }
                     logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
@@ -551,15 +552,15 @@ final class MTKLogDownloadHandler {
                     Generic
                             .debug(
                                     "Expected:"
-                                            + Convert
+                                            + JavaLibBridge
                                                     .unsigned2hex(
                                                             MTKLogDownloadHandler.C_BLOCKVERIF_START,
                                                             8)
                                             + " Got:"
-                                            + Convert.unsigned2hex(startAddr,
+                                            + JavaLibBridge.unsigned2hex(startAddr,
                                                     8)
                                             + " ("
-                                            + Convert.unsigned2hex(
+                                            + JavaLibBridge.unsigned2hex(
                                                     dataLength, 8) + ")",
                                     null);
                 }
@@ -762,7 +763,7 @@ final class MTKLogDownloadHandler {
 
     protected final void handleLogFlashStatReply(final String s) {
         if (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
-            switch (Convert.toInt(s)) {
+            switch (JavaLibBridge.toInt(s)) {
             case 1:
                 if (gpsState.isEraseOngoing()) {
                     signalEraseDone();
@@ -792,8 +793,8 @@ final class MTKLogDownloadHandler {
     protected final void readLog(final int startAddr, final int size) {
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_Q_LOG + ","
-                + Convert.unsigned2hex(startAddr, 8) + ","
-                + Convert.unsigned2hex(size, 8));
+                + JavaLibBridge.unsigned2hex(startAddr, 8) + ","
+                + JavaLibBridge.unsigned2hex(size, 8));
     }
 
     protected final void setLogRequestAhead(final int logRequestAhead) {

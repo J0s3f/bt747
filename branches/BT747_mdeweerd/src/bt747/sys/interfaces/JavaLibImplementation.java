@@ -14,7 +14,7 @@
 // *** *********************************************************** ***
 package bt747.sys.interfaces;
 
-public interface JavaTranslationsInterface {
+public interface JavaLibImplementation {
 
     BT747Date getDateInstance();
 

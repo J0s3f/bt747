@@ -22,7 +22,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.Version;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a GPX file.
@@ -271,7 +271,7 @@ public final class GPSGPXFile extends GPSFile {
 
                 if ((activeFields.hasHdop())
                         && (selectedFileFields.hasHdop())) {
-                    hdopStr = Convert.toString(r.hdop / 100.0, 2);
+                    hdopStr = JavaLibBridge.toString(r.hdop / 100.0, 2);
                 }
                 if ((activeFields.hasNsat())
                         && (selectedFileFields.hasNsat())) {
@@ -333,33 +333,33 @@ public final class GPSGPXFile extends GPSFile {
                 if ((activeFields.hasLatitude())
                         && (selectedFileFields.hasLatitude())) {
                     rec.append("lat=\"");
-                    rec.append(Convert.toString(r.latitude, 8));
+                    rec.append(JavaLibBridge.toString(r.latitude, 8));
                     rec.append("\" ");
                 }
                 if ((activeFields.hasLongitude())
                         && (selectedFileFields.hasLongitude())) {
                     rec.append("lon=\"");
-                    rec.append(Convert.toString(r.longitude, 8));
+                    rec.append(JavaLibBridge.toString(r.longitude, 8));
                     rec.append("\"");
                 }
                 rec.append(" >\r\n");
                 // if (!isGPX1_0 && !isWayType && (activeFields.hasHeading())
                 // && (selectedFileFields.hasHeading())) {
                 // rec.append("<degrees>");
-                // rec.append(Convert.toString(r.heading, 5));
+                // rec.append(JavaLibBridge.toString(r.heading, 5));
                 // rec.append("</degrees>\r\n");
                 // }
 
                 //
                 // if(m_isWayType) {
-                // rec.append("<name>"+Convert.toString(m_recCount)+"</name>\r\n");
+                // rec.append("<name>"+JavaLibBridge.toString(m_recCount)+"</name>\r\n");
                 // }
                 // <ele> xsd:decimal </ele> [0..1] ? (elevation in meters)
 
                 if ((activeFields.hasHeight())
                         && (selectedFileFields.hasHeight())) {
                     rec.append("<ele>");
-                    rec.append(Convert.toString(r.height, 3));
+                    rec.append(JavaLibBridge.toString(r.height, 3));
                     rec.append("</ele>\r\n");
                 }
 
@@ -373,14 +373,14 @@ public final class GPSGPXFile extends GPSFile {
                 if (isGPX1_0 && !isWayType && (activeFields.hasHeading())
                         && (selectedFileFields.hasHeading())) {
                     rec.append("<course>");
-                    rec.append(Convert.toString(r.heading, 5));
+                    rec.append(JavaLibBridge.toString(r.heading, 5));
                     rec.append("</course>\r\n");
                 }
 
                 if (isGPX1_0 && !isWayType && (activeFields.hasSpeed())
                         && (selectedFileFields.hasSpeed())) {
                     rec.append("<speed>");
-                    rec.append(Convert.toString(r.speed / 3.6f, 4)); // must
+                    rec.append(JavaLibBridge.toString(r.speed / 3.6f, 4)); // must
                     // be
                     // meters/second
                     rec.append("</speed>\r\n");
@@ -493,7 +493,7 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append(nsatStr); // Sat used
                     rec.append("</sat>\r\n");
                     // nsatStr+="(";
-                    // nsatStr+=Convert.toString(s.nsat%256);
+                    // nsatStr+=JavaLibBridge.toString(s.nsat%256);
                     // nsatStr+=")";
                 }
 
@@ -508,7 +508,7 @@ public final class GPSGPXFile extends GPSFile {
                 if ((activeFields.hasVdop())
                         && (selectedFileFields.hasVdop())) {
                     rec.append("<vdop>");
-                    rec.append(Convert.toString(r.vdop / 100.0, 2));
+                    rec.append(JavaLibBridge.toString(r.vdop / 100.0, 2));
                     rec.append("</vdop>\r\n");
                 }
                 // <pdop> xsd:decimal </pdop> [0..1] ?
@@ -516,7 +516,7 @@ public final class GPSGPXFile extends GPSFile {
                 if ((activeFields.hasPdop())
                         && (selectedFileFields.hasPdop())) {
                     rec.append("<pdop>");
-                    rec.append(Convert.toString(r.pdop / 100.0, 2));
+                    rec.append(JavaLibBridge.toString(r.pdop / 100.0, 2));
                     rec.append("</pdop>\r\n");
                 }
 
@@ -551,7 +551,7 @@ public final class GPSGPXFile extends GPSFile {
                         if ((activeFields.hasDistance())
                                 && (selectedFileFields.hasDistance())) {
                             rec.append("<distance>");
-                            rec.append(Convert.toString(r.distance, 2)); // +"
+                            rec.append(JavaLibBridge.toString(r.distance, 2)); // +"
                             // m\r\n"
                             rec.append("</distance>\r\n");
                         }

@@ -3,7 +3,7 @@
  */
 package gps.agps;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -13,7 +13,7 @@ import bt747.sys.interfaces.BT747Vector;
 public class AGPSPeriodData {
     private int time = 0;
 
-    private final BT747Vector satData = Interface.getVectorInstance();
+    private final BT747Vector satData = JavaLibBridge.getVectorInstance();
 
     public boolean addIfBelongsTo(final AGPSSatRecord r) {
         final int rTime = r.getUTCTime();

@@ -17,7 +17,7 @@ package gps.log.out;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a PLT file (OZI).
@@ -118,13 +118,13 @@ public final class GPSPLTFile extends GPSFile {
             // Field 1 : Latitude - decimal degrees.
             if ((activeFields.hasLatitude())
                     && (selectedFileFields.hasLatitude())) {
-                rec += Convert.toString(s.latitude, 6);
+                rec += JavaLibBridge.toString(s.latitude, 6);
             }
             rec += ",";
             // Field 2 : Longitude - decimal degrees.
             if ((activeFields.hasLongitude())
                     && (selectedFileFields.hasLongitude())) {
-                rec += Convert.toString(s.longitude, 6);
+                rec += JavaLibBridge.toString(s.longitude, 6);
             }
             rec += ",";
             // Field 3 : Code - 0 if normal, 1 if break in track line
@@ -148,7 +148,7 @@ public final class GPSPLTFile extends GPSFile {
             // Field 6 : Date as a string
             // Field 7 : Time as a string
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
-                rec += Convert
+                rec += JavaLibBridge
                         .toString(
                                 (s.utc + ((activeFields.hasMillisecond())
                                         && (selectedFileFields

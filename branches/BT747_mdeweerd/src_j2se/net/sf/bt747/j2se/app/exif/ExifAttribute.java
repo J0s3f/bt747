@@ -14,7 +14,7 @@
 // *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
 
 /**
@@ -159,7 +159,7 @@ public class ExifAttribute {
             sb = new StringBuffer(3 * value.length + 40);
             sb.append(" UNKNOWN:");
             for (int i = 0; i < value.length; i++) {
-                sb.append(Convert.unsigned2hex(value[i], 2));
+                sb.append(JavaLibBridge.unsigned2hex(value[i], 2));
             }
             sb.append("  (");
             for (int i = 0; (i < value.length) && (value[i] != 0); i++) {
@@ -178,10 +178,10 @@ public class ExifAttribute {
             break;
         }
 
-        return "Tag:" + Convert.unsigned2hex(getTag(), 4) + " Type:"
-                + Convert.unsigned2hex(getType(), 4) + " Count:"
-                + Convert.unsigned2hex(getCount(), 8) + s
-        // + Convert.unsigned2hex(getValue(), 8)
+        return "Tag:" + JavaLibBridge.unsigned2hex(getTag(), 4) + " Type:"
+                + JavaLibBridge.unsigned2hex(getType(), 4) + " Count:"
+                + JavaLibBridge.unsigned2hex(getCount(), 8) + s
+        // + JavaLibBridge.unsigned2hex(getValue(), 8)
         ;
 
     }

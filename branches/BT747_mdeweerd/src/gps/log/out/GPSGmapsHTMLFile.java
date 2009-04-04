@@ -17,7 +17,7 @@ package gps.log.out;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a GPX file.
@@ -206,9 +206,9 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // }
                 if (activeFields.hasLatitude() && activeFields.hasLongitude()) {
                     rec.append("points.push(new GLatLng(");
-                    rec.append(Convert.toString(s.latitude, 6));
+                    rec.append(JavaLibBridge.toString(s.latitude, 6));
                     rec.append(',');
-                    rec.append(Convert.toString(s.longitude, 6));
+                    rec.append(JavaLibBridge.toString(s.longitude, 6));
                     rec.append("));");
 
                     if (s.latitude < minlat) {
@@ -227,7 +227,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // //
                 // // if(m_isWayType) {
                 // //
-                // rec.append("<name>"+Convert.toString(m_recCount)+"</name>\r\n");
+                // rec.append("<name>"+JavaLibBridge.toString(m_recCount)+"</name>\r\n");
                 // // }
                 // // <ele> xsd:decimal </ele> [0..1] ? (elevation in meters)
                 //                
@@ -236,18 +236,18 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // if((activeFields.utc!=0)) {
                 // rec.append("<time>");
                 // if(activeFields.utc!=0) {
-                // timeStr+=Convert.toString(t.year)+"-"
-                // +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
-                // +( t.day<10?"0":"")+Convert.toString(t.day)+"T"
-                // +( t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                // +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                // +(t.second<10?"0":"")+Convert.toString(t.second)
+                // timeStr+=JavaLibBridge.toString(t.year)+"-"
+                // +( t.month<10?"0":"")+JavaLibBridge.toString(t.month)+"-"
+                // +( t.day<10?"0":"")+JavaLibBridge.toString(t.day)+"T"
+                // +( t.hour<10?"0":"")+JavaLibBridge.toString(t.hour)+":"
+                // +(t.minute<10?"0":"")+JavaLibBridge.toString(t.minute)+":"
+                // +(t.second<10?"0":"")+JavaLibBridge.toString(t.second)
                 // ;
                 // if(activeFields.milisecond!=0) {
                 // timeStr+=".";
                 // timeStr+=(s.milisecond<100)?"0":"";
                 // timeStr+=(s.milisecond<10)?"0":"";
-                // timeStr+=Convert.toString(s.milisecond);
+                // timeStr+=JavaLibBridge.toString(s.milisecond);
                 // }
                 // timeStr+="Z";
                 // rec.append(timeStr);
@@ -257,13 +257,13 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // // <magvar> degreesType </magvar> [0..1] ?
                 // if((activeFields.heading!=0)) {
                 // rec.append("<magvar>");
-                // rec.append(Convert.toString(s.heading));
+                // rec.append(JavaLibBridge.toString(s.heading));
                 // rec.append("</magvar>\r\n");
                 // }
                 // // <geoidheight> xsd:decimal </geoidheight> [0..1] ?
                 // if((activeFields.height!=0)) {
                 // rec.append("<ele>");
-                // rec.append(Convert.toString(s.height,3));
+                // rec.append(JavaLibBridge.toString(s.height,3));
                 // rec.append("</ele>\r\n");
                 // }
                 //                
@@ -277,7 +277,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // if((activeFields.utc!=0)) {
                 // rec.append(timeStr);
                 // } else {
-                // rec.append(Convert.toString(m_recCount));
+                // rec.append(JavaLibBridge.toString(m_recCount));
                 // }
                 // rec.append("</name>\r\n");
                 //                
@@ -351,7 +351,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // // <sat> xsd:nonNegativeInteger </sat> [0..1] ?
                 // // <hdop> xsd:decimal </hdop> [0..1] ?
                 // if((activeFields.hdop!=0)) {
-                // hdopStr=Convert.toString(s.hdop/100.0,2);
+                // hdopStr=JavaLibBridge.toString(s.hdop/100.0,2);
                 // rec.append("<hdop>");
                 // rec.append(hdopStr);
                 // rec.append("</hdop>\r\n");
@@ -359,20 +359,20 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // // <vdop> xsd:decimal </vdop> [0..1] ?
                 // if((activeFields.vdop!=0)) {
                 // rec.append("<vdop>");
-                // rec.append(Convert.toString(s.vdop/100.0,2));
+                // rec.append(JavaLibBridge.toString(s.vdop/100.0,2));
                 // rec.append("</vdop>\r\n");
                 // }
                 // // <pdop> xsd:decimal </pdop> [0..1] ?
                 // if((activeFields.pdop!=0)) {
                 // rec.append("<pdop>");
-                // rec.append(Convert.toString(s.pdop/100.0,2));
+                // rec.append(JavaLibBridge.toString(s.pdop/100.0,2));
                 // rec.append("</pdop>\r\n");
                 // }
                 // // <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
                 // if((activeFields.nsat!=0)) {
-                // nsatStr+=Convert.toString(s.nsat/256);
+                // nsatStr+=JavaLibBridge.toString(s.nsat/256);
                 // nsatStr+="(";
-                // nsatStr+=Convert.toString(s.nsat%256);
+                // nsatStr+=JavaLibBridge.toString(s.nsat%256);
                 // nsatStr+=")";
                 // rec.append("<nsat>");
                 // rec.append(nsatStr);
@@ -380,27 +380,27 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // }
                 // if((activeFields.dage!=0)) {
                 // rec.append("<ageofdgpsdata>");
-                // rec.append(Convert.toString(s.dage));
+                // rec.append(JavaLibBridge.toString(s.dage));
                 // rec.append("</ageofdgpsdata>\r\n");
                 // }
                 //                
                 // // <dgpsid> dgpsStationType </dgpsid> [0..1] ?
                 // if((activeFields.dsta!=0)) {
                 // rec.append("<dgpsid>");
-                // rec.append(Convert.toString(s.dsta));
+                // rec.append(JavaLibBridge.toString(s.dsta));
                 // rec.append("</dgpsid>\r\n");
                 // }
                 // // <extensions> extensionsType </extensions> [0..1] ?
                 //                
                 // if((activeFields.speed!=0)) {
                 // rec.append("<speed>");
-                // rec.append(Convert.toString(s.speed,3));
+                // rec.append(JavaLibBridge.toString(s.speed,3));
                 // rec.append("</speed>\r\n");
                 // }
                 //                
                 // if((activeFields.distance!=0)) {
                 // rec.append("<distance>");
-                // rec.append(Convert.toString(s.distance,2)); //+" m\r\n"
+                // rec.append(JavaLibBridge.toString(s.distance,2)); //+" m\r\n"
                 // rec.append("</distance>\r\n");
                 // }
                 //                
@@ -434,9 +434,9 @@ public final class GPSGmapsHTMLFile extends GPSFile {
             String footer;
             writeDataFooter();
             footer = "map.setCenter(new GLatLng("
-                    + Convert.toString((maxlat + minlat) / 2)
+                    + JavaLibBridge.toString((maxlat + minlat) / 2)
                     + ","
-                    + Convert.toString((maxlon + minlon) / 2)
+                    + JavaLibBridge.toString((maxlon + minlon) / 2)
                     + "));"
                     + "map.setZoom(map.getBoundsZoomLevel(new GLatLngBounds(new GLatLng("
                     + minlat

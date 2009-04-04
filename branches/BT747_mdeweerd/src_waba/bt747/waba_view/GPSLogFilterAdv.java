@@ -32,7 +32,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * @author Mario De Weerd
@@ -126,16 +126,16 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
 
     private void setSettings() {
 
-        c.setFilterMinRecCount(Convert.toInt(minRecCount.getText()));
-        c.setFilterMaxRecCount(Convert.toInt(maxRecCount.getText()));
-        c.setFilterMinSpeed(Convert.toFloat(minSpeed.getText()));
-        c.setFilterMaxSpeed(Convert.toFloat(maxSpeed.getText()));
-        c.setFilterMinDist(Convert.toFloat(minDist.getText()));
-        c.setFilterMaxDist(Convert.toFloat(maxDist.getText()));
-        c.setFilterMaxPDOP((Convert.toFloat(maxPDOP.getText())));
-        c.setFilterMaxHDOP((Convert.toFloat(maxHDOP.getText())));
-        c.setFilterMaxVDOP((Convert.toFloat(maxVDOP.getText())));
-        c.setFilterMinNSAT(Convert.toInt(minNSAT.getText()));
+        c.setFilterMinRecCount(JavaLibBridge.toInt(minRecCount.getText()));
+        c.setFilterMaxRecCount(JavaLibBridge.toInt(maxRecCount.getText()));
+        c.setFilterMinSpeed(JavaLibBridge.toFloat(minSpeed.getText()));
+        c.setFilterMaxSpeed(JavaLibBridge.toFloat(maxSpeed.getText()));
+        c.setFilterMinDist(JavaLibBridge.toFloat(minDist.getText()));
+        c.setFilterMaxDist(JavaLibBridge.toFloat(maxDist.getText()));
+        c.setFilterMaxPDOP((JavaLibBridge.toFloat(maxPDOP.getText())));
+        c.setFilterMaxHDOP((JavaLibBridge.toFloat(maxHDOP.getText())));
+        c.setFilterMaxVDOP((JavaLibBridge.toFloat(maxVDOP.getText())));
+        c.setFilterMinNSAT(JavaLibBridge.toInt(minNSAT.getText()));
 
         c.saveSettings();
         c.setFilters();
@@ -144,13 +144,13 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
     private void getSettings() {
         minRecCount.setText("" + m.getFilterMinRecCount());
         maxRecCount.setText("" + m.getFilterMaxRecCount());
-        minSpeed.setText(Convert.toString(m.getFilterMinSpeed(), 2));
-        maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(), 2));
-        minDist.setText(Convert.toString(m.getFilterMinDist(), 2));
-        maxDist.setText(Convert.toString(m.getFilterMaxDist(), 2));
-        maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(), 2));
-        maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(), 2));
-        maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(), 2));
+        minSpeed.setText(JavaLibBridge.toString(m.getFilterMinSpeed(), 2));
+        maxSpeed.setText(JavaLibBridge.toString(m.getFilterMaxSpeed(), 2));
+        minDist.setText(JavaLibBridge.toString(m.getFilterMinDist(), 2));
+        maxDist.setText(JavaLibBridge.toString(m.getFilterMaxDist(), 2));
+        maxPDOP.setText(JavaLibBridge.toString(m.getFilterMaxPDOP(), 2));
+        maxHDOP.setText(JavaLibBridge.toString(m.getFilterMaxHDOP(), 2));
+        maxVDOP.setText(JavaLibBridge.toString(m.getFilterMaxVDOP(), 2));
         minNSAT.setText("" + m.getFilterMinNSAT());
         c.setFilters();
     }

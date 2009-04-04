@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
 
 /**
@@ -143,7 +143,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             // cbDatumMode.select(m.getDatum());
         case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
             ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-            txtLogTimeInterval.setText(Convert.toString(
+            txtLogTimeInterval.setText(JavaLibBridge.toString(
                     m.getLogTimeInterval() / 10., 1));
             break;
         case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
@@ -153,7 +153,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             break;
         case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
             ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
-            txtLogDistanceInterval.setText(Convert.toString(m
+            txtLogDistanceInterval.setText(JavaLibBridge.toString(m
                     .getLogDistanceInterval() / 10., 1));
             break;
         case ModelEvent.UPDATE_FIX_PERIOD:
@@ -1154,25 +1154,25 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
         try {
             int value;
             if (ckLogTimeActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogTimeInterval.getText()) * 10);
+                value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval.getText()) * 10);
             } else {
                 value = 0;
             }
             c.setLogTimeInterval(value);
             if (ckLogSpeedActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogSpeedInterval.getText()));
+                value = (int) (JavaLibBridge.toDouble(txtLogSpeedInterval.getText()));
             } else {
                 value = 0;
             }
             c.setLogSpeedInterval(value);
             if (ckLogDistanceActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogDistanceInterval
+                value = (int) (JavaLibBridge.toDouble(txtLogDistanceInterval
                         .getText()) * 10);
             } else {
                 value = 0;
             }
             c.setLogDistanceInterval(value);
-            c.setFixInterval(Convert.toInt(txtFixPeriod.getText()));
+            c.setFixInterval(JavaLibBridge.toInt(txtFixPeriod.getText()));
         } catch (Exception e) {
             Generic
                     .debug(

@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * @author Mario
@@ -240,7 +240,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
                                         .substring(14, 16));
                                 final int seconds = Integer.valueOf(nodeText
                                         .substring(17, 19));
-                                int utc = Interface.getDateInstance(day,
+                                int utc = JavaLibBridge.getDateInstance(day,
                                         month, year).dateToUTCepoch1970();
                                 utc += hour * 3600 + minutes * 60 + seconds;
                                 r.utc = utc;
@@ -352,7 +352,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
     }
 
     public static void main(final String[] args) {
-        Interface.setJavaTranslationInterface(new J2SEJavaTranslations());
+        JavaLibBridge.setJavaLibImplementation(new J2SEJavaTranslations());
         final GPXLogConvert x = new GPXLogConvert();
         x.toGPSFile("c:/BT747/20080915_2010.gpx", null, 0);
     }

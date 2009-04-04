@@ -16,6 +16,7 @@ package bt747.sys;
 
 import bt747.sys.interfaces.BT747Thread;
 
+
 /**
  * @author Mario De Weerd
  */
@@ -25,14 +26,13 @@ public final class Generic {
      */
     private static int debugLevel = 0;
 
+
     public static final void debug(final String s, final Throwable e) {
-        if (s != null) {
-            Interface.tr.debug(s, e);
-        }
+        JavaLibBridge.debug(s, e);
     }
 
     public static final void debug(final String s) {
-        Interface.tr.debug(Generic.getTimeStamp() + " - " + s);
+        JavaLibBridge.debug(JavaLibBridge.getTimeStamp() + " - " + s);
     }
 
     /**
@@ -63,29 +63,8 @@ public final class Generic {
         Generic.debugLevel = level;
     }
 
-    /**
-     * Calculate x^^y. (x to the power of y)
-     * 
-     * @param x
-     *                x.
-     * @param y
-     *                y.
-     * @return x^^y.
-     */
-    public final static double pow(final double x, final double y) {
-        return Interface.tr.pow(x, y);
-    }
-
-    /**
-     * Calculate inverse cosinus
-     * 
-     * @param x
-     *                x.
-     * 
-     * @return acos(x)
-     */
-    public final static double acos(final double x) {
-        return Interface.tr.acos(x);
+    public static final int getTimeStamp() {
+        return JavaLibBridge.getTimeStamp();
     }
 
     /**
@@ -98,7 +77,7 @@ public final class Generic {
      */
     public final static void addThread(final BT747Thread o,
             final boolean highPrio) {
-        Interface.tr.addThread(o, highPrio);
+        JavaLibBridge.addThread(o, highPrio);
     }
 
     /**
@@ -108,10 +87,31 @@ public final class Generic {
      *                Thread to remove.
      */
     public final static void removeThread(final BT747Thread o) {
-        Interface.tr.removeThread(o);
+        JavaLibBridge.removeThread(o);
     }
 
-    public static final int getTimeStamp() {
-        return Interface.tr.getTimeStamp();
+    /**
+     * Calculate inverse cosinus
+     * 
+     * @param x
+     *                x.
+     * 
+     * @return acos(x)
+     */
+    public final static double acos(final double x) {
+        return JavaLibBridge.acos(x);
+    }
+
+    /**
+     * Calculate x^^y. (x to the power of y)
+     * 
+     * @param x
+     *                x.
+     * @param y
+     *                y.
+     * @return x^^y.
+     */
+    public final static double pow(final double x, final double y) {
+        return JavaLibBridge.pow(x, y);
     }
 }

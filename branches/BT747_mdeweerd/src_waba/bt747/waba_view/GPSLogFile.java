@@ -37,7 +37,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.File;
 import bt747.waba_view.ui.FileSelect;
 
@@ -172,13 +172,13 @@ public final class GPSLogFile extends Container implements ModelListener {
                         .getText());
                 c.setOutputFileRelPath(edReportBaseName.getText());
                 updateFullPath();
-                c.setChunkSize(Convert.toInt(edChunkSize.getText()));
-                c.setDownloadTimeOut(Convert.toInt(edTimeout.getText()));
+                c.setChunkSize(JavaLibBridge.toInt(edChunkSize.getText()));
+                c.setDownloadTimeOut(JavaLibBridge.toInt(edTimeout.getText()));
                 if (Settings.platform.startsWith("Palm")) {
-                    c.setCard(Convert.toInt((String) cbVolumes
+                    c.setCard(JavaLibBridge.toInt((String) cbVolumes
                             .getSelectedItem()));
                 }
-                c.setLogRequestAhead(Convert.toInt((String) cblogReqAhead
+                c.setLogRequestAhead(JavaLibBridge.toInt((String) cblogReqAhead
                         .getSelectedItem()));
                 setting = false;
                 updateValues();
@@ -188,7 +188,7 @@ public final class GPSLogFile extends Container implements ModelListener {
                 fs.setDirOnly(true);
                 fs.setPath(edBaseDirName.getText());
                 if (Settings.platform.startsWith("Palm")) {
-                    fs.setCardSlot(Convert.toInt((String) cbVolumes
+                    fs.setCardSlot(JavaLibBridge.toInt((String) cbVolumes
                             .getSelectedItem()));
                 }
                 fs.popupBlockingModal();
@@ -201,7 +201,7 @@ public final class GPSLogFile extends Container implements ModelListener {
                 fs.setPath(edLogFileName.getText());
                 // fs.setDirOnly(false); //Default
                 if (Settings.platform.startsWith("Palm")) {
-                    fs.setCardSlot(Convert.toInt((String) cbVolumes
+                    fs.setCardSlot(JavaLibBridge.toInt((String) cbVolumes
                             .getSelectedItem()));
                 }
                 fs.popupBlockingModal();

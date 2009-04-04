@@ -21,8 +21,7 @@ import gps.tracks.Track;
 import gps.tracks.Trackpoint;
 
 import bt747.Version;
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -54,7 +53,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     // if
     // click.
     private final StringBuffer infoHtmls = new StringBuffer(1024);
-    private final BT747Vector iconList = Interface.getVectorInstance();
+    private final BT747Vector iconList = JavaLibBridge.getVectorInstance();
     private String trackStartInfo = "";
     private String trackDescription = "";
 
@@ -393,7 +392,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         resetTrack();
     }
 
-    private final BT747Hashtable icons = Interface.getHashtableInstance(10);
+    private final BT747Hashtable icons = JavaLibBridge.getHashtableInstance(10);
 
     /*
      * (non-Javadoc)
@@ -422,10 +421,10 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 rec.append("var markers;markers=[");
                 for (int i = 0; i < waypoints.size(); i++) {
                     rec.append("\n new GMarker(new GLatLng(");
-                    rec.append(Convert.toString(waypoints.get(i)
+                    rec.append(JavaLibBridge.toString(waypoints.get(i)
                             .getLatDouble(), 5));
                     rec.append(',');
-                    rec.append(Convert.toString(waypoints.get(i)
+                    rec.append(JavaLibBridge.toString(waypoints.get(i)
                             .getLonDouble(), 5));
                     rec.append(')');
                     if (((String) iconList.elementAt(i)).length() != 0) {
@@ -587,9 +586,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 if ((activeFields.hasLatitude())
                         && (activeFields.hasLongitude())) {
                     // rec.append("points.push(new GLatLng(");
-                    // rec.append(Convert.toString(s.latitude,6));
+                    // rec.append(JavaLibBridge.toString(s.latitude,6));
                     // rec.append(',');
-                    // rec.append(Convert.toString(s.longitude,6));
+                    // rec.append(JavaLibBridge.toString(s.longitude,6));
                     // rec.append("));");
                     final Trackpoint tp = new Trackpoint(s.latitude,
                             s.longitude);
@@ -661,9 +660,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
             footer = "clickString();\n"
                     + "GEvent.addListener(map,\'click\',latlonFunc());\n"
                     + "function initial() {" + "map.setCenter(new GLatLng("
-                    + Convert.toString((maxlat + minlat) / 2)
+                    + JavaLibBridge.toString((maxlat + minlat) / 2)
                     + ","
-                    + Convert.toString((maxlon + minlon) / 2)
+                    + JavaLibBridge.toString((maxlon + minlon) / 2)
                     + "));"
                     + "map.setZoom(map.getBoundsZoomLevel(new GLatLngBounds(new GLatLng("
                     + minlat

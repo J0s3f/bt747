@@ -16,7 +16,7 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.waba_view.ui.BT747MessageBox;
-// #if RXTX import bt747.sys.Convert;
+// #if RXTX import bt747.sys.JavaLibBridge;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
@@ -330,7 +330,7 @@ public final class AppController extends Controller {
             }
         }
 
-        // #if RXTX if(Convert.toInt(
+        // #if RXTX if(JavaLibBridge.toInt(
         // #if RXTX java.lang.System.getProperty("bt747_Mac_solvelag",
         // #if RXTX java.lang.System.getProperty("os.name")
         // #if RXTX .startsWith("Mac")?"1":"0"))==1) {

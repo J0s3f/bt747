@@ -22,7 +22,7 @@ import gps.log.in.GPSFileConverterInterface;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Time;
 
@@ -103,7 +103,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * The time of the current record as a Time object. This will avoid
      * creating multiple time objects.
      */
-    protected final BT747Time t = Interface.getTimeInstance();
+    protected final BT747Time t = JavaLibBridge.getTimeInstance();
 
     protected int previousDate = 0;
     protected int previousTime = 0;

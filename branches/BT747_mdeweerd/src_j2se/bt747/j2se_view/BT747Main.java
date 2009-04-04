@@ -42,7 +42,7 @@ import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * J2SE Implementation (GUI) of BT747.
@@ -56,8 +56,8 @@ public class BT747Main extends javax.swing.JFrame implements
      * Initialize the lower level interface class. Needed for BT747 to work.
      */
     static {
-        Interface
-                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+        JavaLibBridge
+                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
     }
 
     /**

@@ -21,7 +21,7 @@ import gps.log.GPSRecord;
 import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
@@ -156,7 +156,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
 
                         checkSum ^= Conv.hex2Int(checkStr);
 
-                        final BT747StringTokenizer fields = Interface
+                        final BT747StringTokenizer fields = JavaLibBridge
                                 .getStringTokenizerInstance(s.toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; (offsetInBuffer < sizeToRead)

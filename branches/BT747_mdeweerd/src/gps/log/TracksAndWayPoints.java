@@ -1,6 +1,6 @@
 package gps.log;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -14,11 +14,11 @@ final public class TracksAndWayPoints {
      * {@link BT747Vector} of tracks ({@link BT747Vector}) of trackpoints
      * {@link GPSRecord}.
      */
-    public BT747Vector tracks = Interface.getVectorInstance();
+    public BT747Vector tracks = JavaLibBridge.getVectorInstance();
     /**
      * {@link BT747Vector} of waypoints of type {@link GPSRecord} .
      */
-    public BT747Vector waypoints = Interface.getVectorInstance();
+    public BT747Vector waypoints = JavaLibBridge.getVectorInstance();
 
     public GPSRecord[] getTrackPoints() {
         GPSRecord[] t;

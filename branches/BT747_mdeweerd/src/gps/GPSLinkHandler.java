@@ -16,9 +16,8 @@ package gps;
 
 import gps.connection.GPSrxtx;
 
-import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -31,7 +30,7 @@ final class GPSLinkHandler {
      */
     private boolean eraseOngoing = false;
 
-    private final BT747Vector sentCmds = Interface.getVectorInstance(); // List
+    private final BT747Vector sentCmds = JavaLibBridge.getVectorInstance(); // List
     // of
     // sent
     // commands
@@ -39,7 +38,7 @@ final class GPSLinkHandler {
     private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
     // in list
 
-    private final BT747Vector toSendCmds = Interface.getVectorInstance(); // List
+    private final BT747Vector toSendCmds = JavaLibBridge.getVectorInstance(); // List
     // of
     // sent
     // commands
@@ -90,7 +89,7 @@ final class GPSLinkHandler {
 
     private int nextCmdSendTime = 0;
 
-    private final BT747Semaphore cmdBuffersAccess = Interface
+    private final BT747Semaphore cmdBuffersAccess = JavaLibBridge
             .getSemaphoreInstance(1);
 
     protected final void doSendNMEA(final String cmd) {
@@ -193,7 +192,7 @@ final class GPSLinkHandler {
 
         if (sNmea.length >= 3) {
             String sMatch;
-            flag = Convert.toInt(sNmea[sNmea.length - 1]); // Last
+            flag = JavaLibBridge.toInt(sNmea[sNmea.length - 1]); // Last
             // parameter
             sMatch = "PMTK" + sNmea[1];
             for (int i = 2; i < sNmea.length - 1; i++) {

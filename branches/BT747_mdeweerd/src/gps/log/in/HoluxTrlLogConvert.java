@@ -18,9 +18,9 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 
 import bt747.model.Model;
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
 
 /**
  * This class is used to convert the binary log to a new format. Basically
@@ -126,20 +126,20 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            r.latitude = Convert.toFloatBitwise(latitude);
+                            r.latitude = JavaLibBridge.toFloatBitwise(latitude);
 
                             final int longitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            r.longitude = Convert.toFloatBitwise(longitude);// *1.0;
+                            r.longitude = JavaLibBridge.toFloatBitwise(longitude);// *1.0;
 
                             final int height =
 
                             (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            r.height = Convert.toFloatBitwise(height);
+                            r.height = JavaLibBridge.toFloatBitwise(height);
                             CommonIn.convertHeight(r,
                                     factorConversionWGS84ToMSL,
                                     HoluxTrlLogConvert.logFormat);

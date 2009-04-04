@@ -42,7 +42,7 @@ import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -534,7 +534,7 @@ public class Controller {
     /**
      * Vector of LogFileInfo.
      */
-    public final static BT747Vector logFiles = Interface.getVectorInstance();
+    public final static BT747Vector logFiles = JavaLibBridge.getVectorInstance();
 
     /**
      * Convert the log into an array of trackpoints.

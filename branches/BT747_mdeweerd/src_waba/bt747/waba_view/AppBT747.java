@@ -42,7 +42,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.waba_view.ui.BT747MessageBox;
 
 /**
@@ -59,7 +59,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     static {
         // Set the low level interface.
-        Interface.setJavaTranslationInterface(new WabaJavaTranslations());
+        JavaLibBridge.setJavaLibImplementation(new WabaJavaTranslations());
 
         Sound.setEnabled(false);
 

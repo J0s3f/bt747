@@ -19,7 +19,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -49,7 +49,7 @@ public final class GPSArray extends GPSFile {
                 fileSeparationFreq);
         result = new TracksAndWayPoints();
         gpsWayPoints = result.waypoints;
-        track = Interface.getVectorInstance();
+        track = JavaLibBridge.getVectorInstance();
     }
 
     public final boolean needPassToFindFieldsActivatedInLog() {
@@ -88,7 +88,7 @@ public final class GPSArray extends GPSFile {
 
     private void endTrack() {
         result.tracks.addElement(track);
-        track = Interface.getVectorInstance();
+        track = JavaLibBridge.getVectorInstance();
     }
 
     boolean isNewTrack = true;

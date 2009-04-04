@@ -14,9 +14,8 @@
 // *** *********************************************************** ***
 package gps.connection;
 
-import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -30,7 +29,7 @@ import bt747.sys.interfaces.BT747Vector;
 public final class GPSrxtx {
     private static GPSPort gpsPort;
 
-    private final BT747Semaphore writeOngoing = Interface
+    private final BT747Semaphore writeOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
     private boolean ignoreNMEA = false;
@@ -150,7 +149,7 @@ public final class GPSrxtx {
     static final int ERR_INCOMPLETE = 2;
     static final int ERR_TOO_LONG = 3;
 
-    private final BT747Vector vCmd = Interface.getVectorInstance();
+    private final BT747Vector vCmd = JavaLibBridge.getVectorInstance();
     private static final char[] EOL_BYTES = { '\015', '\012' };
 
     private final StringBuffer rec = new StringBuffer(256);
@@ -174,7 +173,7 @@ public final class GPSrxtx {
                 rec.append('$');
                 rec.append(p_Packet);
                 rec.append('*');
-                rec.append(Convert.unsigned2hex(z_Checksum, 2));
+                rec.append(JavaLibBridge.unsigned2hex(z_Checksum, 2));
                 if (Generic.getDebugLevel() > 1) {
                     Generic.debug(">" + rec.toString());
                 }
@@ -223,7 +222,7 @@ public final class GPSrxtx {
                 current_state = GPSrxtx.C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
                 if (Generic.isDebug()) {
-                    Generic.debug(">0x" + Convert.unsigned2hex(cmd, 8)
+                    Generic.debug(">0x" + JavaLibBridge.unsigned2hex(cmd, 8)
                             + "000000");
                 }
                 sendbuffer[0] = (byte) ((cmd >> 24) & 0xFF);
@@ -296,7 +295,7 @@ public final class GPSrxtx {
         }
     }
 
-    private final BT747Semaphore getResponseOngoing = Interface
+    private final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
     public String[] getResponse() {
@@ -326,7 +325,7 @@ public final class GPSrxtx {
                 // buffer
                 // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
                 // {
-                // bt747.sys.Vm.debug(Convert.toString(c));
+                // bt747.sys.Vm.debug(JavaLibBridge.toString(c));
                 // System.err.print("["+c+"]");
                 // }
                 if (rxtxMode == GPSrxtx.DPL700_MODE) {
@@ -580,7 +579,7 @@ public final class GPSrxtx {
                                     // String sb = new String(read_buf, 0,
                                     // bytesRead);
                                     // System.out.println("RCVD:"
-                                    // + Convert.toString(bytesRead)
+                                    // + JavaLibBridge.toString(bytesRead)
                                     // + ":" + sb + ":");
                                     // }
                                 }
@@ -641,12 +640,12 @@ public final class GPSrxtx {
             // // return (String[])vCmd.toObjectArray();
             // // }
             // for (int i = 0; i < vCmd.getCount(); i++) {
-            // bt747.sys.Vm.debug("Rec:"+Convert.toString(
+            // bt747.sys.Vm.debug("Rec:"+JavaLibBridge.toString(
             // ((String[])vCmd.toObjectArray())[i].length()));
             // };
             // }
             getResponseOngoing.up();
-            return Interface.toStringArrayAndEmpty(vCmd);
+            return JavaLibBridge.toStringArrayAndEmpty(vCmd);
         } else if (current_state == GPSrxtx.C_DPL700_END_STATE) {
             current_state = GPSrxtx.C_FOUND_STATE;
             final String[] resp = new String[1];

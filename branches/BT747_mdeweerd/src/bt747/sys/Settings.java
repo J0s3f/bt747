@@ -20,7 +20,7 @@ public final class Settings {
      * @return the appSettings
      */
     public static final String getAppSettings() {
-        return Interface.tr.getAppSettings();
+        return JavaLibBridge.getAppSettings();
     }
 
     /**
@@ -28,6 +28,6 @@ public final class Settings {
      *                the appSettings to set
      */
     public static final void setAppSettings(final String appSettings) {
-        Interface.tr.setAppSettings(appSettings);
+        JavaLibBridge.setAppSettings(appSettings);
     }
 }

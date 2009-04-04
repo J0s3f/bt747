@@ -10,12 +10,12 @@
 
 package gps.tracks;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Vector;
 
 public final class Track {
 
-    private BT747Vector trackpoints = Interface.getVectorInstance();
+    private BT747Vector trackpoints = JavaLibBridge.getVectorInstance();
 
     public final BT747Vector getTrackpoints() {
         return trackpoints;
