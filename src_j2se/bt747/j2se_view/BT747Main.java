@@ -487,12 +487,6 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             progressBarUpdate();
             break;
-        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            c.replyToOkToOverwrite(c.getRequestToOverwriteFromDialog());
-            break;
-        case ModelEvent.COULD_NOT_OPEN_FILE:
-            c.couldNotOpenFileMessage((String) e.getArg());
-            break;
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
                 waypointPanel = new PositionTablePanel();
