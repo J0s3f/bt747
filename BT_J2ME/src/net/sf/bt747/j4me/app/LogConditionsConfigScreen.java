@@ -8,7 +8,7 @@ import org.j4me.ui.components.TextBox;
 
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 public final class LogConditionsConfigScreen extends BT747Dialog implements
         ModelListener {
@@ -72,10 +72,10 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
     }
 
     public final void updateButtons() {
-        tbTime.setString(Convert.toString(
+        tbTime.setString(JavaLibBridge.toString(
                 ((float) m().getLogTimeInterval()) / 10, 1));
         tbSpeed.setString("" + m().getLogSpeedInterval());
-        tbDistance.setString(Convert.toString((float) m()
+        tbDistance.setString(JavaLibBridge.toString((float) m()
                 .getLogDistanceInterval() / 10, 1));
         tbFix.setString("" + m().getLogFixPeriod());
         repaint();
@@ -83,14 +83,14 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
 
     public final void setSettings() {
         c
-                .setLogTimeInterval((int) (10 * Convert.toFloat(tbTime
+                .setLogTimeInterval((int) (10 * JavaLibBridge.toFloat(tbTime
                         .getString())));
-        c.setLogSpeedInterval(Convert.toInt(tbSpeed.getString()));
-        c.setLogDistanceInterval((int) (10 * Convert.toFloat(tbDistance
+        c.setLogSpeedInterval(JavaLibBridge.toInt(tbSpeed.getString()));
+        c.setLogDistanceInterval((int) (10 * JavaLibBridge.toFloat(tbDistance
                 .getString())));
-        c.setFixInterval((Convert.toInt(tbFix.getString())));
+        c.setFixInterval((JavaLibBridge.toInt(tbFix.getString())));
         Log.debug("Log condition settings updated");
-        // c.setFixInterval(Convert.toInt(edFix.getText()));
+        // c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
         c.reqLogReasonStatus();
         c.reqFixInterval();
     }

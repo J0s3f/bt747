@@ -24,9 +24,9 @@ import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
-import bt747.sys.interfaces.JavaTranslationsInterface;
+import bt747.sys.interfaces.JavaLibImplementation;;
 
-public final class J2MEJavaTranslations implements JavaTranslationsInterface {
+public final class J2MEJavaTranslations implements JavaLibImplementation {
     public final BT747Date getDateInstance() {
         return new J2MEDate();
     }

@@ -28,7 +28,7 @@ import org.j4me.ui.components.Label;
 
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 public final class GpsPositionScreen extends
         net.sf.bt747.j4me.app.screens.BT747Dialog implements ModelListener {
@@ -204,12 +204,12 @@ public final class GpsPositionScreen extends
         }
 
         public final void setLabel(final double d, final int i) {
-            final String s = Convert.toString(d, i);
+            final String s = JavaLibBridge.toString(d, i);
             setLabel(s);
         }
 
         public final void setLabel(final float f, final int i) {
-            final String s = Convert.toString(f, i);
+            final String s = JavaLibBridge.toString(f, i);
             setLabel(s);
         }
 

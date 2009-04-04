@@ -7,7 +7,7 @@ import org.j4me.ui.components.RadioButton;
 import org.j4me.ui.components.TextBox;
 
 import bt747.model.AppSettings;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 public final class LogDownloadConfigScreen extends BT747Dialog {
     private TextBox tbChunkSize;
@@ -61,11 +61,11 @@ public final class LogDownloadConfigScreen extends BT747Dialog {
     }
 
     private final void setSettings() {
-        c.setChunkSize(Convert.toInt(tbChunkSize.getString()));
-        c.setLogRequestAhead(Convert.toInt(tbChunkAhead.getString()));
+        c.setChunkSize(JavaLibBridge.toInt(tbChunkSize.getString()));
+        c.setLogRequestAhead(JavaLibBridge.toInt(tbChunkAhead.getString()));
         c.setDownloadMethod(rbDownloadMethod.getSelectedIndex());
         Log.debug("Log download settings updated");
-        // c.setFixInterval(Convert.toInt(edFix.getText()));
+        // c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
     }
 
     protected void acceptNotify() {

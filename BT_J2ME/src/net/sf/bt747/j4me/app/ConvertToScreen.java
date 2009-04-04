@@ -9,7 +9,7 @@ import org.j4me.ui.components.TextBox;
 
 import bt747.model.AppSettings;
 import bt747.model.Model;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the
@@ -65,7 +65,7 @@ public final class ConvertToScreen extends
         if (!screenIsSetup) {
             screenIsSetup = true;
             deleteAll();
-            setTitle("Convert Log");
+            setTitle("JavaLibBridge Log");
 
             Label l;
             l = new Label("'" + getRightMenuText()
@@ -222,7 +222,7 @@ public final class ConvertToScreen extends
         if (tmp.charAt(0) == '+') {
             index = 1;
         }
-        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt(tmp
+        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, JavaLibBridge.toInt(tmp
                 .substring(index)));
 
         progressScreen = new ConvertToProgressScreen(c, previous,
