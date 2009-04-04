@@ -21,9 +21,9 @@ import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.File;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
 
@@ -166,7 +166,7 @@ public class ImageData extends FileWaypoint {
                     }
                 }
                 if (hasData) {
-                    int t = Interface.getDateInstance(day, month, year)
+                    int t = JavaLibBridge.getDateInstance(day, month, year)
                             .dateToUTCepoch1970();
                     t += hour * 3600 + minutes * 60 + seconds;
                     getGpsRecord().utc = t;
@@ -198,14 +198,14 @@ public class ImageData extends FileWaypoint {
                     int day;
 
                     int seconds;
-                    year = Convert.toInt(DateTime.substring(0, 4));
-                    month = Convert.toInt(DateTime.substring(5, 7));
-                    day = Convert.toInt(DateTime.substring(8, 10));
-                    seconds = Convert.toInt(DateTime.substring(11, 13))
+                    year = JavaLibBridge.toInt(DateTime.substring(0, 4));
+                    month = JavaLibBridge.toInt(DateTime.substring(5, 7));
+                    day = JavaLibBridge.toInt(DateTime.substring(8, 10));
+                    seconds = JavaLibBridge.toInt(DateTime.substring(11, 13))
                             * 3600
-                            + Convert.toInt(DateTime.substring(14, 16)) * 60
-                            + Convert.toInt(DateTime.substring(17, 19));
-                    final BT747Date d = Interface.getDateInstance(day, month,
+                            + JavaLibBridge.toInt(DateTime.substring(14, 16)) * 60
+                            + JavaLibBridge.toInt(DateTime.substring(17, 19));
+                    final BT747Date d = JavaLibBridge.getDateInstance(day, month,
                             year);
                     setUtc(d.dateToUTCepoch1970() + seconds);
                 }
@@ -240,7 +240,7 @@ public class ImageData extends FileWaypoint {
                 exifJpg.setGpsHDOP(g.hdop);
             }
             if (g.hasUtc()) {
-                final BT747Time t = Interface.getTimeInstance();
+                final BT747Time t = JavaLibBridge.getTimeInstance();
                 t.setUTCTime(g.utc);
                 exifJpg.setGpsTime(t.getYear(), t.getMonth(), t.getDay(), t
                         .getHour(), t.getMinute(), t.getSecond());

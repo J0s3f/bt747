@@ -19,7 +19,7 @@ import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a NMEA file.
@@ -58,7 +58,7 @@ public final class GPSNMEAFile extends GPSFile {
         }
         writeTxt("$");
         writeTxt(s);
-        writeTxt("*" + Convert.unsigned2hex(z_Checksum, 2) + "\r\n");
+        writeTxt("*" + JavaLibBridge.unsigned2hex(z_Checksum, 2) + "\r\n");
     }
 
     /**
@@ -172,7 +172,7 @@ public final class GPSNMEAFile extends GPSFile {
             l -= a;
             l *= 60;
             // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + Convert.toString(l, 6));
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
             rec.append(sl);
         } else {
             rec.append(",,");
@@ -195,7 +195,7 @@ public final class GPSNMEAFile extends GPSFile {
             l -= a;
             l *= 60;
             // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + Convert.toString(l, 6));
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
             rec.append(sl);
         } else {
             rec.append(",,");
@@ -209,12 +209,12 @@ public final class GPSNMEAFile extends GPSFile {
         // 11 = E or W
         // 12 = Checksum
         if (activeFields.hasSpeed()) {
-            rec.append(Convert
+            rec.append(JavaLibBridge
                     .toString(s.speed * GPSNMEAFile.KMH_PER_KNOT, 3));
         }
         rec.append(",");
         if (activeFields.hasHeading()) {
-            rec.append(Convert.toString(s.heading, 6));
+            rec.append(JavaLibBridge.toString(s.heading, 6));
         }
         rec.append(",");
         if ((activeFields.hasUtc())) {
@@ -259,7 +259,7 @@ public final class GPSNMEAFile extends GPSFile {
             l -= a;
             l *= 60;
             // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + Convert.toString(l, 4));
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 4));
             rec.append(sl);
         } else {
             rec.append(",,");
@@ -280,7 +280,7 @@ public final class GPSNMEAFile extends GPSFile {
             l -= a;
             l *= 60;
             // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + Convert.toString(l, 4));
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 4));
             rec.append(sl);
         } else {
             rec.append(",,");
@@ -333,13 +333,13 @@ public final class GPSNMEAFile extends GPSFile {
         // - 08 is the number of SV's being tracked
         if (activeFields.hasNsat()) {
             rec.append((s.nsat & 0xFF00) >> 8);
-            // rec+="("+Convert.toString(s.nsat&0xFF)+")";
+            // rec+="("+JavaLibBridge.toString(s.nsat&0xFF)+")";
         }
         rec.append(",");
 
         // - 0.9 is the horizontal dilution of position (HDOP)
         if (activeFields.hasHdop()) {
-            rec.append(Convert.toString(s.hdop / 100.0, 2));
+            rec.append(JavaLibBridge.toString(s.hdop / 100.0, 2));
         }
         rec.append(",");
         // - 133.4,M is the altitude, in meters, above mean sea level
@@ -351,10 +351,10 @@ public final class GPSNMEAFile extends GPSFile {
                 separation = ((long) (10 * Conv.wgs84Separation(s.latitude,
                         s.longitude))) / 10.f;
             }
-            rec.append(Convert.toString(s.height - separation, 3));
+            rec.append(JavaLibBridge.toString(s.height - separation, 3));
             if (hasLatLon) {
                 rec.append(",M,");
-                rec.append(Convert.toString(separation, 1));
+                rec.append(JavaLibBridge.toString(separation, 1));
                 rec.append(",M,");
             } else {
                 rec.append(",M,0,M,");
@@ -413,7 +413,7 @@ public final class GPSNMEAFile extends GPSFile {
                 rec.append(",");
                 rec.append(m);
                 rec.append(",");
-                // rec.append(Convert.toString((s.nsat&0xFF00)>>8)); //
+                // rec.append(JavaLibBridge.toString((s.nsat&0xFF00)>>8)); //
                 // in use
                 rec.append(s.nsat & 0xFF); // in
                 // view
@@ -537,15 +537,15 @@ public final class GPSNMEAFile extends GPSFile {
             }
 
             if (activeFields.hasPdop()) {
-                rec.append(Convert.toString(s.pdop / 100f, 2));
+                rec.append(JavaLibBridge.toString(s.pdop / 100f, 2));
             }
             rec.append(",");
             if (activeFields.hasHdop()) {
-                rec.append(Convert.toString(s.hdop / 100f, 2));
+                rec.append(JavaLibBridge.toString(s.hdop / 100f, 2));
             }
             rec.append(",");
             if (activeFields.hasVdop()) {
-                rec.append(Convert.toString(s.vdop / 100f, 2));
+                rec.append(JavaLibBridge.toString(s.vdop / 100f, 2));
             }
             // rec.append(",");
             writeNMEA(rec.toString());

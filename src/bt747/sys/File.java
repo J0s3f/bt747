@@ -48,15 +48,15 @@ public final class File {
     }
 
     public File(final String path) {
-        file = Interface.tr.getFileInstance(path);
+        file = JavaLibBridge.getFileInstance(path);
     }
 
     public File(final String path, final int mode, final int card) {
-        file = Interface.tr.getFileInstance(path, mode, card);
+        file = JavaLibBridge.getFileInstance(path, mode, card);
     }
 
     public File(final String path, final int mode) {
-        file = Interface.tr.getFileInstance(path, mode);
+        file = JavaLibBridge.getFileInstance(path, mode);
     }
 
     public final int getSize() {
@@ -76,7 +76,7 @@ public final class File {
     }
 
     public final static boolean isAvailable() {
-        return Interface.tr.isAvailable();
+        return JavaLibBridge.isAvailable();
     }
 
     public static final char separatorChar = '/';

@@ -28,7 +28,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
 
 /**
@@ -887,7 +887,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                         getString("Choose_the_color_for_a_'bad_track'_(pure_blue_to_ignore)"),
                         myColor);
         if (myColor != null) {
-            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, Convert
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, JavaLibBridge
                     .unsigned2hex(myColor.getRGB() & 0xFFFFFF, 6));
         }
         updateColorButtons();
@@ -904,7 +904,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                         getString("Choose_the_color_for_a_'good_track'_(pure_blue_to_ignore)"),
                         myColor);
         if (myColor != null) {
-            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, Convert
+            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, JavaLibBridge
                     .unsigned2hex(myColor.getRGB() & 0xFFFFFF, 6));
         }
         updateColorButtons();

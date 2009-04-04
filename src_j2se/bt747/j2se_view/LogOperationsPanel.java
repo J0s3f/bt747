@@ -40,9 +40,9 @@ import org.jdesktop.swingx.JXDatePicker;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
 
@@ -119,7 +119,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 .getBooleanOpt(Model.DISABLELOGDURINGDOWNLOAD));
 
         BT747Time d;
-        d = Interface.getTimeInstance();
+        d = JavaLibBridge.getTimeInstance();
         d.setUTCTime(m.getFilterStartTime());
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")); // NO18N
         // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -231,7 +231,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                     + m.logMemUsedPercent() + "%)"); // NOI18N
             break;
         case ModelEvent.UPDATE_LOG_FLASH:
-            txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Convert
+            txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? JavaLibBridge
                     .unsigned2hex(m.getFlashManuProdID(), 8)
                     + " " + m.getFlashDesc() : "")); // NOI18N
             break;
@@ -287,12 +287,12 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
             // TODO
             // lbUsedMem.setText(Txt.MEM_USED +
-            // Convert.toString(m.logMemUsed())
+            // JavaLibBridge.toString(m.logMemUsed())
             // + "("
-            // + Convert.toString(m.logMemUsedPercent()) + "%)");
+            // + JavaLibBridge.toString(m.logMemUsedPercent()) + "%)");
             // m_UsedLabel.repaintNow();
             // lbUsedRecords.setText(Txt.NBR_RECORDS
-            // + Convert.toString(m.logNbrLogPts()) + " ("
+            // + JavaLibBridge.toString(m.logNbrLogPts()) + " ("
             // + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
             // + Txt.MEM_FREE + ")");
             break;
@@ -1220,7 +1220,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private void updateStartDate() {
         final Calendar cal = Calendar.getInstance();
         cal.setTime(startDate.getDate());
-        final BT747Date nd = Interface.getDateInstance(cal
+        final BT747Date nd = JavaLibBridge.getDateInstance(cal
                 .get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
                 - Calendar.JANUARY, cal.get(Calendar.YEAR));
         final int startTime = nd.dateToUTCepoch1970();
@@ -1232,7 +1232,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         final Calendar cal = Calendar.getInstance();
         BT747Date nd;
         cal.setTime(endDate.getDate());
-        nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal
+        nd = JavaLibBridge.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal
                 .get(Calendar.MONTH)
                 + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
         int endTime = nd.dateToUTCepoch1970();

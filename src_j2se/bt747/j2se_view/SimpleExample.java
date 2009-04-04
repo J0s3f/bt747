@@ -36,7 +36,7 @@ import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.File;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * 
@@ -45,8 +45,8 @@ import bt747.sys.Interface;
 public class SimpleExample implements bt747.model.ModelListener {
 
     static {
-        Interface
-                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+        JavaLibBridge
+                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
     }
 
     /**

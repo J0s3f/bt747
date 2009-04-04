@@ -31,7 +31,7 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.waba_view.ui.BT747MessageBox;
 
 /**
@@ -131,15 +131,15 @@ public final class GPSFlashOption extends Container implements ModelListener {
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             c.setFlashUserOption(false, // lock
-                    Convert.toInt(edUpdateRate.getText()), Convert
-                            .toInt(edBaudRate.getText()), Convert
-                            .toInt(edGLL_Period.getText()), Convert
-                            .toInt(edRMC_Period.getText()), Convert
-                            .toInt(edVTG_Period.getText()), Convert
-                            .toInt(edGSA_Period.getText()), Convert
-                            .toInt(edGSV_Period.getText()), Convert
-                            .toInt(edGGA_Period.getText()), Convert
-                            .toInt(edZDA_Period.getText()), Convert
+                    JavaLibBridge.toInt(edUpdateRate.getText()), JavaLibBridge
+                            .toInt(edBaudRate.getText()), JavaLibBridge
+                            .toInt(edGLL_Period.getText()), JavaLibBridge
+                            .toInt(edRMC_Period.getText()), JavaLibBridge
+                            .toInt(edVTG_Period.getText()), JavaLibBridge
+                            .toInt(edGSA_Period.getText()), JavaLibBridge
+                            .toInt(edGSV_Period.getText()), JavaLibBridge
+                            .toInt(edGGA_Period.getText()), JavaLibBridge
+                            .toInt(edZDA_Period.getText()), JavaLibBridge
                             .toInt(edMCHN_Period.getText()));
         }
 

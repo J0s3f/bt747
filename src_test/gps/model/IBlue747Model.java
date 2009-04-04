@@ -23,9 +23,9 @@ import java.io.FileInputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Implement a model of the BT747 (to run on PC).
@@ -52,8 +52,8 @@ public class IBlue747Model {
      */
     static {
         // Set up the low level functions interface.
-        Interface
-                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+        JavaLibBridge
+                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
         GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
 
@@ -133,13 +133,13 @@ public class IBlue747Model {
     public int replyLogNmea(final String[] p_nmea) {
         try {
             replyMTK_Log_Ack(p_nmea);
-            switch (Convert.toInt(p_nmea[1])) {
+            switch (JavaLibBridge.toInt(p_nmea[1])) {
             case BT747Constants.PMTK_LOG_Q:
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
                 // $PMTK182,3,TYPE,DATA
-                int z_type = Convert.toInt(p_nmea[2]);
+                int z_type = JavaLibBridge.toInt(p_nmea[2]);
                 if (p_nmea.length >= 3) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
@@ -149,7 +149,7 @@ public class IBlue747Model {
                                 + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + p_nmea[2] + ","
-                                + Convert.unsigned2hex(logFormat, logFormat<=0xFF?2:3) // Address
+                                + JavaLibBridge.unsigned2hex(logFormat, logFormat<=0xFF?2:3) // Address
                         );
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
@@ -221,7 +221,7 @@ public class IBlue747Model {
                     s.setLength(0);
                     int cur_addr = address; 
                     for(;cur_addr<logData.length&&cur_addr<address+payload;cur_addr++) {
-                        s.append(Convert.unsigned2hex(logData[cur_addr], 2));
+                        s.append(JavaLibBridge.unsigned2hex(logData[cur_addr], 2));
                     }
                     while(cur_addr++<address+payload) {
                         s.append("FF");
@@ -229,13 +229,13 @@ public class IBlue747Model {
                     System.err.println("PMTK"
                             + BT747Constants.PMTK_CMD_LOG_STR + ","
                             + BT747Constants.PMTK_LOG_DT_LOG + ","
-                            + Convert.unsigned2hex(address, 8) // Address
+                            + JavaLibBridge.unsigned2hex(address, 8) // Address
                             //+ "," + s
                             );
                     sendPacket("PMTK"
                             + BT747Constants.PMTK_CMD_LOG_STR + ","
                             + BT747Constants.PMTK_LOG_DT_LOG + ","
-                            + Convert.unsigned2hex(address, 8) // Address
+                            + JavaLibBridge.unsigned2hex(address, 8) // Address
                             + "," + s);
                     address += payload;
                     if((length&1)!=0 && address>=logData.length) {
@@ -267,7 +267,7 @@ public class IBlue747Model {
         Generic.debug(nmea.toString());
 
         if (p_nmea[0].startsWith("PMTK")) {
-            z_Cmd = Convert.toInt(p_nmea[0].substring(4));
+            z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
 
             if (z_Cmd != BT747Constants.PMTK_CMD_LOG) {
                 replyMTK_Ack(p_nmea);
@@ -348,7 +348,7 @@ public class IBlue747Model {
                 System.err.println("Not supported:" + z_Cmd);
             } // End switch
         } else if (p_nmea[0].startsWith("PTSI")) {
-            z_Cmd = Convert.toInt(p_nmea[0].substring(4));
+            z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
 
             replyMTK_Ack(p_nmea);
 

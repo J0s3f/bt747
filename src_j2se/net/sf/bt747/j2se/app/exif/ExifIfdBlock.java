@@ -14,7 +14,7 @@
 // *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
@@ -23,7 +23,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  */
 public class ExifIfdBlock {
 
-    private BT747Hashtable atrs = Interface.getHashtableInstance(10);
+    private BT747Hashtable atrs = JavaLibBridge.getHashtableInstance(10);
     private int nextIfdBlockOffset;
 
     public final int read(final byte[] buffer, final int initialIdxInBuffer,

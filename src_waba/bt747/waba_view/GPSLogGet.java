@@ -37,8 +37,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -86,8 +85,8 @@ public final class GPSLogGet extends Container implements ModelListener {
             Txt.getString(Txt.ONE_FILE_DAY), Txt.getString(Txt.ONE_FILE_TRK) };
     private static final String[] heightCorrectStr = {
             Txt.getString(Txt.HEIGHT_CONV_AUTOMATIC),
-            Txt.getString(Txt.HEIGHT_CONV_MSL_TO_WGS84),
             Txt.getString(Txt.HEIGHT_CONV_WGS84_TO_MSL),
+            Txt.getString(Txt.HEIGHT_CONV_MSL_TO_WGS84),
             Txt.getString(Txt.HEIGHT_CONV_NONE), };
     private Color savedBackColor;
     private Label lbUsedMem;
@@ -104,7 +103,7 @@ public final class GPSLogGet extends Container implements ModelListener {
     }
 
     private static final String convertUTCtoDateString(final int utcTime) {
-        BT747Time t = Interface.getTimeInstance();
+        BT747Time t = JavaLibBridge.getTimeInstance();
         String dateString;
         t.setUTCTime(utcTime);
         int day = t.getDay();
@@ -295,7 +294,7 @@ public final class GPSLogGet extends Container implements ModelListener {
                 if (tmp.charAt(0) == '+') {
                     index = 1;
                 }
-                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, JavaLibBridge
                         .toInt((String) tmp.substring(index)));
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
@@ -345,7 +344,7 @@ public final class GPSLogGet extends Container implements ModelListener {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == edTrkSep) {
-                c.setIntOpt(AppSettings.TRKSEP, Convert.toInt(edTrkSep
+                c.setIntOpt(AppSettings.TRKSEP, JavaLibBridge.toInt(edTrkSep
                         .getText()));
                 edTrkSep.setText("" + m.getIntOpt(AppSettings.TRKSEP));
             }

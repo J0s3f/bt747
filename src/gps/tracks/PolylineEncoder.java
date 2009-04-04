@@ -9,8 +9,7 @@
  */
 package gps.tracks;
 
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -84,7 +83,7 @@ public final class PolylineEncoder {
      */
     public final BT747Hashtable dpEncode(final Track track) {
         int i, maxLoc = 0;
-        final BT747Vector stack = Interface.getVectorInstance();
+        final BT747Vector stack = JavaLibBridge.getVectorInstance();
         final double[] dists = new double[track.getTrackpoints().size()];
         double maxDist, absMaxDist = 0.0;
         int[] current;
@@ -135,7 +134,7 @@ public final class PolylineEncoder {
         encodedLevels = encodeLevels(track, dists, absMaxDist);
         // System.out.println("encodedLevels: " + encodedLevels);
 
-        final BT747Hashtable hm = Interface.getHashtableInstance(0);
+        final BT747Hashtable hm = JavaLibBridge.getHashtableInstance(0);
         hm.put("encodedPoints", encodedPoints);
         hm.put("encodedLevels", encodedLevels);
         return hm;
@@ -402,11 +401,11 @@ public final class PolylineEncoder {
             }
         }
 
-        final BT747Hashtable lbounds = Interface.getHashtableInstance(0);
-        lbounds.put("maxlat", Convert.toString(maxlat));
-        lbounds.put("minlat", Convert.toString(minlat));
-        lbounds.put("maxlon", Convert.toString(maxlon));
-        lbounds.put("minlon", Convert.toString(minlon));
+        final BT747Hashtable lbounds = JavaLibBridge.getHashtableInstance(0);
+        lbounds.put("maxlat", JavaLibBridge.toString(maxlat));
+        lbounds.put("minlat", JavaLibBridge.toString(minlat));
+        lbounds.put("maxlon", JavaLibBridge.toString(maxlon));
+        lbounds.put("minlon", JavaLibBridge.toString(minlon));
 
         setBounds(lbounds);
         return encodedPoints.toString();
@@ -419,7 +418,7 @@ public final class PolylineEncoder {
     public final BT747Hashtable createEncodings(final Track track,
             final int level, final int step) {
 
-        final BT747Hashtable resultMap = Interface.getHashtableInstance(0);
+        final BT747Hashtable resultMap = JavaLibBridge.getHashtableInstance(0);
         final StringBuffer encodedPoints = new StringBuffer();
         final StringBuffer encodedLevels = new StringBuffer();
 

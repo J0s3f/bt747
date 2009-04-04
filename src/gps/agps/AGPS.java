@@ -3,7 +3,7 @@
  */
 package gps.agps;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
@@ -11,7 +11,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  * 
  */
 public class AGPS {
-    private final BT747Hashtable table = Interface
+    private final BT747Hashtable table = JavaLibBridge
             .getHashtableInstance(14 * 4);
 
     public void addData(final byte[] buffer) {

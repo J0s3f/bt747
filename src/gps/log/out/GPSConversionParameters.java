@@ -3,7 +3,7 @@
  */
 package gps.log.out;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Object to hold conversion parameters that are provided for conversion but
@@ -37,7 +37,7 @@ public final class GPSConversionParameters {
      */
     public final static String CSV_DATE_FORMAT_INT = "csv-datefmt";
 
-    private final bt747.sys.interfaces.BT747Hashtable h = Interface
+    private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);
 
     public final boolean hasParam(final String param) {

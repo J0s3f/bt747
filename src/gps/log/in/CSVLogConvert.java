@@ -19,10 +19,9 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import bt747.model.Model;
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747StringTokenizer;
 
@@ -70,7 +69,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
     private static final int BUF_SIZE = 0x800;
 
     /**
-     * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFileConverterInterface, int)}
+     * JavaLibBridge the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFileConverterInterface, int)}
      * is one of them.
      * 
      * @param gpsFile
@@ -169,7 +168,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                             s.append((char) bytes[i]);
                         }
 
-                        final BT747StringTokenizer fields = Interface
+                        final BT747StringTokenizer fields = JavaLibBridge
                                 .getStringTokenizerInstance(s.toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; (offsetInBuffer < sizeToRead)
@@ -380,13 +379,13 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
         try {
             switch (fieldType) {
             case C_LOGTIME:
-                r.logPeriod = (int) (Convert.toFloat(field) * 10);
+                r.logPeriod = (int) (JavaLibBridge.toFloat(field) * 10);
                 break;
             case C_LOGDIST:
-                r.logDistance = (int) (Convert.toFloat(field) * 10);
+                r.logDistance = (int) (JavaLibBridge.toFloat(field) * 10);
                 break;
             case C_LOGSPD:
-                r.logSpeed = (int) (Convert.toFloat(field) * 10);
+                r.logSpeed = (int) (JavaLibBridge.toFloat(field) * 10);
                 break;
             case FMT_NS:
                 // Supposes longitude preceded
@@ -405,7 +404,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                 }
                 break;
             case FMT_REC_NBR:
-                r.recCount = Convert.toInt(field);
+                r.recCount = JavaLibBridge.toInt(field);
                 recCount = r.recCount;
                 break;
             case FMT_DATE: {
@@ -417,7 +416,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                         format = Settings.DATE_DMY;
                     }
 
-                    final int date = (Interface
+                    final int date = (JavaLibBridge
                             .getDateInstance(field, format))
                             .dateToUTCepoch1970();
                     r.utc += date;
@@ -425,8 +424,8 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                     if (field.charAt(2) == '-' && field.charAt(6) == '-') {
                         int day;
                         int year;
-                        day = Convert.toInt(field.substring(0, 2));
-                        year = Convert.toInt(field.substring(7,9)) + 2000;
+                        day = JavaLibBridge.toInt(field.substring(0, 2));
+                        year = JavaLibBridge.toInt(field.substring(7,9)) + 2000;
                         String m = field.substring(3, 6);
                         int idx = 0;
                         if (m.equals(MONTHS_AS_TEXT[previousIdx])) {
@@ -438,7 +437,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                             }
                         }
                         if (idx < MONTHS_AS_TEXT.length) {
-                            r.utc += Interface.getDateInstance(day, idx + 1,
+                            r.utc += JavaLibBridge.getDateInstance(day, idx + 1,
                                     year).dateToUTCepoch1970();
                         }
                     }
@@ -446,10 +445,10 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                     int day;
                     int month;
                     int year;
-                    year = Convert.toInt(field.substring(0, 2)) + 2000;
-                    month = Convert.toInt(field.substring(2, 4));
-                    day = Convert.toInt(field.substring(4, 6));
-                    r.utc += Interface.getDateInstance(day, month, year)
+                    year = JavaLibBridge.toInt(field.substring(0, 2)) + 2000;
+                    month = JavaLibBridge.toInt(field.substring(2, 4));
+                    day = JavaLibBridge.toInt(field.substring(4, 6));
+                    r.utc += JavaLibBridge.getDateInstance(day, month, year)
                             .dateToUTCepoch1970();
                 }
             }
@@ -459,9 +458,9 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                     int secondes;
                     int minutes;
                     int hours;
-                    hours = Convert.toInt(field.substring(0, 2));
-                    minutes = Convert.toInt(field.substring(2, 4));
-                    secondes = Convert.toInt(field.substring(4, 6));
+                    hours = JavaLibBridge.toInt(field.substring(0, 2));
+                    minutes = JavaLibBridge.toInt(field.substring(2, 4));
+                    secondes = JavaLibBridge.toInt(field.substring(4, 6));
                     r.utc += secondes + minutes * 60 + 3600 * hours;
                 } else {
                     // gpsRec.utc=;
@@ -470,16 +469,16 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                         // TODO: check if idx out
                         // of
                         // range.
-                        r.milisecond = Convert.toInt(field
+                        r.milisecond = JavaLibBridge.toInt(field
                                 .substring(dotidx + 1));
                         field = field.substring(0, dotidx);
                     }
-                    final BT747StringTokenizer tfields = Interface
+                    final BT747StringTokenizer tfields = JavaLibBridge
                             .getStringTokenizerInstance(field, ':');
                     if (tfields.countTokens() == 3) {
-                        r.utc += Convert.toInt(tfields.nextToken()) * 3600
-                                + Convert.toInt(tfields.nextToken()) * 60
-                                + Convert.toInt(tfields.nextToken());
+                        r.utc += JavaLibBridge.toInt(tfields.nextToken()) * 3600
+                                + JavaLibBridge.toInt(tfields.nextToken()) * 60
+                                + JavaLibBridge.toInt(tfields.nextToken());
                     }
                 }
             }
@@ -510,7 +509,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             case FMT_LATNS: {
                 final String latns = field.substring(0, field.length() - 1);
                 final char or = field.charAt(latns.length());
-                r.latitude = Convert.toDouble(latns);
+                r.latitude = JavaLibBridge.toDouble(latns);
                 if (((or == 'N') && (r.latitude < 0))
                         || ((or == 'S') && (r.latitude > 0))) {
                     r.latitude = -r.latitude;
@@ -520,7 +519,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             case FMT_LONEW: {
                 final String lonns = field.substring(0, field.length() - 1);
                 final char or = field.charAt(lonns.length());
-                r.longitude = Convert.toDouble(lonns);
+                r.longitude = JavaLibBridge.toDouble(lonns);
                 if (((or == 'E') && (r.longitude < 0))
                         || ((or == 'W') && (r.longitude > 0))) {
                     r.longitude = -r.longitude;
@@ -528,64 +527,64 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             }
                 break;
             case BT747Constants.FMT_LATITUDE_IDX:
-                r.latitude = Convert.toDouble(field);
+                r.latitude = JavaLibBridge.toDouble(field);
                 break;
             case BT747Constants.FMT_LONGITUDE_IDX:
-                r.longitude = Convert.toDouble(field);
+                r.longitude = JavaLibBridge.toDouble(field);
                 break;
             case BT747Constants.FMT_HEIGHT_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.height = Convert.toFloat(n.nextToken());
+                r.height = JavaLibBridge.toFloat(n.nextToken());
             }
                 break;
             case FMT_HEIGHT_FT_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.height = Convert.toFloat(n.nextToken()) / 3.28083989501312F;
+                r.height = JavaLibBridge.toFloat(n.nextToken()) / 3.28083989501312F;
             }
                 break;
 
             case BT747Constants.FMT_SPEED_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.speed = Convert.toFloat(n.nextToken());
+                r.speed = JavaLibBridge.toFloat(n.nextToken());
             }
                 break;
             case FMT_SPEED_MPH_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.speed = Convert.toFloat(n.nextToken()) / 0.621371192237334F;
+                r.speed = JavaLibBridge.toFloat(n.nextToken()) / 0.621371192237334F;
             }
                 break;
 
-            // gpsRec.speed=Convert.toFloatBitwise(speed);
+            // gpsRec.speed=JavaLibBridge.toFloatBitwise(speed);
             case BT747Constants.FMT_HEADING_IDX:
-                r.heading = Convert.toFloat(field);
+                r.heading = JavaLibBridge.toFloat(field);
                 break;
             case BT747Constants.FMT_DSTA_IDX:
-                r.dsta = Convert.toInt(field);
+                r.dsta = JavaLibBridge.toInt(field);
                 break;
             case BT747Constants.FMT_DAGE_IDX:
-                r.dage = Convert.toInt(field);
+                r.dage = JavaLibBridge.toInt(field);
                 break;
             case BT747Constants.FMT_PDOP_IDX:
-                r.pdop = (int) (Convert.toFloat(field) * 100);
+                r.pdop = (int) (JavaLibBridge.toFloat(field) * 100);
                 break;
             case BT747Constants.FMT_HDOP_IDX:
-                r.hdop = (int) (Convert.toFloat(field) * 100);
+                r.hdop = (int) (JavaLibBridge.toFloat(field) * 100);
                 break;
             case BT747Constants.FMT_VDOP_IDX:
-                r.vdop = (int) (Convert.toFloat(field) * 100);
+                r.vdop = (int) (JavaLibBridge.toFloat(field) * 100);
                 break;
             case BT747Constants.FMT_NSAT_IDX: {
-                final BT747StringTokenizer nfields = Interface
+                final BT747StringTokenizer nfields = JavaLibBridge
                         .getStringTokenizerInstance(field, '(');
                 if (nfields.countTokens() >= 2) {
-                    r.nsat = Convert.toInt(nfields.nextToken()) * 256;
+                    r.nsat = JavaLibBridge.toInt(nfields.nextToken()) * 256;
                     String t = nfields.nextToken();
                     t = t.substring(0, t.indexOf(')'));
-                    r.nsat += Convert.toInt(t);
+                    r.nsat += JavaLibBridge.toInt(t);
                 }
             }
                 // Need to handle ()
@@ -597,7 +596,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             case BT747Constants.FMT_MAX_SATS:
                 break;
             case BT747Constants.FMT_SID_IDX: {
-                final BT747StringTokenizer SatFields = Interface
+                final BT747StringTokenizer SatFields = JavaLibBridge
                         .getStringTokenizerInstance(field, ';');
                 final int cnt = SatFields.countTokens();
                 r.sid = new int[cnt];
@@ -609,25 +608,25 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                     final String satf = SatFields.nextToken();
                     if (satf.length() != 0) {
                         r.sidinuse[i] = (satf.charAt(0) == '#');
-                        final BT747StringTokenizer sinfos = Interface
+                        final BT747StringTokenizer sinfos = JavaLibBridge
                                 .getStringTokenizerInstance(satf
                                         .substring(r.sidinuse[i] ? 1 : 0),
                                         '-');
                         // Vm.debug(sinfos[0]);
                         if (sinfos.hasMoreTokens()) {
-                            r.sid[i] = Convert.toInt(sinfos.nextToken());
+                            r.sid[i] = JavaLibBridge.toInt(sinfos.nextToken());
                         }
                         if (activeFileFieldsRecord.hasEle()
                                 && sinfos.hasMoreTokens()) {
-                            r.ele[i] = Convert.toInt(sinfos.nextToken());
+                            r.ele[i] = JavaLibBridge.toInt(sinfos.nextToken());
                         }
                         if (activeFileFieldsRecord.hasAzi()
                                 && sinfos.hasMoreTokens()) {
-                            r.azi[i] = Convert.toInt(sinfos.nextToken());
+                            r.azi[i] = JavaLibBridge.toInt(sinfos.nextToken());
                         }
                         if (activeFileFieldsRecord.hasSnr()
                                 && sinfos.hasMoreTokens()) {
-                            r.snr[i] = Convert.toInt(sinfos.nextToken());
+                            r.snr[i] = JavaLibBridge.toInt(sinfos.nextToken());
                         }
                     } // length
                 } // for
@@ -706,15 +705,15 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                 // gpsRec.milisecond=
                 break;
             case BT747Constants.FMT_DISTANCE_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.distance = Convert.toDouble(n.nextToken());
+                r.distance = JavaLibBridge.toDouble(n.nextToken());
             }
                 break;
             case FMT_DISTANCE_FT_IDX: {
-                final BT747StringTokenizer n = Interface
+                final BT747StringTokenizer n = JavaLibBridge
                         .getStringTokenizerInstance(field, ' ');
-                r.distance = Convert.toDouble(n.nextToken()) / 3.28083989501312;
+                r.distance = JavaLibBridge.toDouble(n.nextToken()) / 3.28083989501312;
             }
                 break;
             case BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX:

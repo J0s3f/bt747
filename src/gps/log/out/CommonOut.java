@@ -17,8 +17,7 @@ package gps.log.out;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Time;
 
 public final class CommonOut {
@@ -137,17 +136,17 @@ public final class CommonOut {
         // Time t=utcTime(s.utc);
         //                    
         // rec.append("<br>DATE: ");
-        // rec.append(Convert.toString(t.getYear())+"/"
+        // rec.append(JavaLibBridge.toString(t.getYear())+"/"
         // +(
-        // t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+        // t.getMonth()<10?"0":"")+JavaLibBridge.toString(t.getMonth())+"/"
         // +(
-        // t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"<br
+        // t.getDay()<10?"0":"")+JavaLibBridge.toString(t.getDay())+"<br
         // />"
         // +"TIME: "
         // +(
-        // t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
-        // +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
-        // +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
+        // t.getHour()<10?"0":"")+JavaLibBridge.toString(t.getHour())+":"
+        // +(t.getMinute()<10?"0":"")+JavaLibBridge.toString(t.getMinute())+":"
+        // +(t.getSecond()<10?"0":"")+JavaLibBridge.toString(t.getSecond())
         // );
         // }
         if ((activeFields.hasValid()) && (selectedFields.hasValid())) {
@@ -158,46 +157,46 @@ public final class CommonOut {
         if ((activeFields.hasLatitude()) && (selectedFields.hasLatitude())) {
             rec.append("<br>LATITUDE: ");
             if (s.latitude >= 0) {
-                rec.append(Convert.toString(s.latitude, 6));
+                rec.append(JavaLibBridge.toString(s.latitude, 6));
                 rec.append(" N");
             } else {
-                rec.append(Convert.toString(-s.latitude, 6));
+                rec.append(JavaLibBridge.toString(-s.latitude, 6));
                 rec.append(" S");
             }
         }
         if ((activeFields.hasLongitude()) && (selectedFields.hasLongitude())) {
             rec.append("<br>LONGITUDE: ");
             if (s.longitude >= 0) {
-                rec.append(Convert.toString(s.longitude, 6));
+                rec.append(JavaLibBridge.toString(s.longitude, 6));
                 rec.append(" E");
             } else {
-                rec.append(Convert.toString(-s.longitude, 6));
+                rec.append(JavaLibBridge.toString(-s.longitude, 6));
                 rec.append(" W");
             }
         }
         if ((activeFields.hasHeight()) && (selectedFields.hasHeight())) {
             rec.append("<br>HEIGHT: ");
             if (!imperial) {
-                rec.append(Convert.toString(s.height, 3) + " m");
+                rec.append(JavaLibBridge.toString(s.height, 3) + " m");
             } else {
                 // / speed/distance/altitude in imperial units
                 // (mph/miles/feet?).
-                rec.append(Convert.toString(s.height * 3.28083989501312, 3)
+                rec.append(JavaLibBridge.toString(s.height * 3.28083989501312, 3)
                         + " feet");
             }
         }
         if ((activeFields.hasSpeed()) && (selectedFields.hasSpeed())) {
             rec.append("<br>SPEED: ");
             if (!imperial) {
-                rec.append(Convert.toString(s.speed, 3) + " km/h");
+                rec.append(JavaLibBridge.toString(s.speed, 3) + " km/h");
             } else {
-                rec.append(Convert.toString(s.speed * 0.621371192237334, 3)
+                rec.append(JavaLibBridge.toString(s.speed * 0.621371192237334, 3)
                         + " mph");
             }
         }
         if ((activeFields.hasHeading()) && (selectedFields.hasHeading())) {
             rec.append("<br>HEADING: ");
-            rec.append(Convert.toString(s.heading));
+            rec.append(JavaLibBridge.toString(s.heading));
         }
         if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
             rec.append("<br>DSTA: ");
@@ -209,23 +208,23 @@ public final class CommonOut {
         }
         if ((activeFields.hasPdop()) && (selectedFields.hasPdop())) {
             rec.append("<br>PDOP: ");
-            rec.append(Convert.toString(s.pdop / 100.0, 2));
+            rec.append(JavaLibBridge.toString(s.pdop / 100.0, 2));
         }
         if ((activeFields.hasHdop()) && (selectedFields.hasHdop())) {
             rec.append("<br>HDOP: ");
-            rec.append(Convert.toString(s.hdop / 100.0, 2));
+            rec.append(JavaLibBridge.toString(s.hdop / 100.0, 2));
         }
         if ((activeFields.hasVdop()) && (selectedFields.hasVdop())) {
             rec.append("<br>VDOP: ");
-            rec.append(Convert.toString(s.vdop / 100.0, 2));
+            rec.append(JavaLibBridge.toString(s.vdop / 100.0, 2));
         }
         if ((activeFields.hasDistance()) && (selectedFields.hasDistance())) {
             rec.append("<br>DISTANCE: ");
             if (!imperial) {
-                rec.append(Convert.toString(s.distance, 2));
+                rec.append(JavaLibBridge.toString(s.distance, 2));
                 rec.append(" m");
             } else {
-                rec.append(Convert.toString(s.distance * 3.2808398950131234,
+                rec.append(JavaLibBridge.toString(s.distance * 3.2808398950131234,
                         2));
                 rec.append(" feet");
             }
@@ -233,19 +232,19 @@ public final class CommonOut {
     }
 
     public final static String getDateTimeStr(final int utcTime) {
-        final BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = JavaLibBridge.getTimeInstance();
         t.setUTCTime(utcTime);
         return CommonOut.getDateTimeStr(t);
     }
 
     public final static String getDateStr(final int utcTime) {
-        final BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = JavaLibBridge.getTimeInstance();
         t.setUTCTime(utcTime);
         return CommonOut.getDateTxtStr(t);
     }
 
     public final static String getTimeStr(final int utcTime) {
-        final BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = JavaLibBridge.getTimeInstance();
         t.setUTCTime(utcTime);
         return CommonOut.getTimeStr(t);
     }
@@ -317,7 +316,7 @@ public final class CommonOut {
             }
         } else {
             rcrStr.append("X");
-            rcrStr.append(Convert.unsigned2hex(s.rcr, 4));
+            rcrStr.append(JavaLibBridge.unsigned2hex(s.rcr, 4));
         }
 
         // // Still 16-4 = 12 possibilities.

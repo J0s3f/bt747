@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * 
@@ -98,8 +98,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel
 
     private final void setFlashConfig() {
         final boolean lock = false;
-        final int updateRate = Convert.toInt(txtFlashUpdateRate.getText());
-        final int baudRate = Convert.toInt(txtFlashBaudRate.getText());
+        final int updateRate = JavaLibBridge.toInt(txtFlashUpdateRate.getText());
+        final int baudRate = JavaLibBridge.toInt(txtFlashBaudRate.getText());
         final int periodGLL = cbFlashGLL.getSelectedIndex();
         final int periodRMC = cbFlashRMC.getSelectedIndex();
         final int periodVTG = cbFlashVTG.getSelectedIndex();

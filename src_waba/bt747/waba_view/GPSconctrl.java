@@ -36,8 +36,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -122,7 +121,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         }
         // Set a default setting
         if (!baudRate.equals((String) cbBaud.getSelectedItem())) {
-            c.setIntOpt(AppSettings.BAUDRATE, Convert.toInt(baudRate));
+            c.setIntOpt(AppSettings.BAUDRATE, JavaLibBridge.toInt(baudRate));
         }
         add(lbLat = new Label(""), LEFT, AFTER + 2); //$NON-NLS-1$)
         add(lbLon = new Label(""), LEFT, AFTER); //$NON-NLS-1$)
@@ -167,7 +166,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         // model.replaceFirst("\?",Txt.getString(Txt.UNKNOWN));
         lbModel.setText(((model.length() != 0) ? Txt.getString(Txt.MODEL) : "") + model);
         lbFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Txt.getString(Txt.FLASHINFO)
-                + Convert.unsigned2hex(m.getFlashManuProdID(), 8) + " "
+                + JavaLibBridge.unsigned2hex(m.getFlashManuProdID(), 8) + " "
                 + m.getFlashDesc() : ""));
         // lbFirmwareMainVersion.repaintNow();
         // lbFirmwareName.repaintNow();
@@ -178,15 +177,15 @@ public final class GPSconctrl extends Container implements ModelListener {
 
     private void updateRMCData(final GPSRecord gps) {
         if (gps.utc > 0) {
-            BT747Time t = Interface.getTimeInstance();
+            BT747Time t = JavaLibBridge.getTimeInstance();
             t.setUTCTime(gps.utc);
             TimeStr = Txt.getString(Txt.TIME_SEP)
                     +
-                    // Convert.toString(
+                    // JavaLibBridge.toString(
                     // t.getYear())+"/"
                     // +(
-                    // t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
-                    // +( t.getDay()<10?"0":"")+Convert.toString(t.getDay())+" "
+                    // t.getMonth()<10?"0":"")+JavaLibBridge.toString(t.getMonth())+"/"
+                    // +( t.getDay()<10?"0":"")+JavaLibBridge.toString(t.getDay())+" "
                     (t.getHour() < 10 ? "0" : "")
                     + t.getHour() + ":"
                     + (t.getMinute() < 10 ? "0" : "")
@@ -199,15 +198,15 @@ public final class GPSconctrl extends Container implements ModelListener {
 
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLat.setText(Txt.getString(Txt.LAT) + Convert.toString(gps.latitude, 5)
-                + Txt.getString(Txt.HGHT_SEP) + Convert.toString(gps.height, 3)
+        lbLat.setText(Txt.getString(Txt.LAT) + JavaLibBridge.toString(gps.latitude, 5)
+                + Txt.getString(Txt.HGHT_SEP) + JavaLibBridge.toString(gps.height, 3)
                 + Txt.getString(Txt.METERS_ABBR));
-        lbLon.setText(Txt.getString(Txt.LON) + Convert.toString(gps.longitude, 5) + TimeStr);
+        lbLon.setText(Txt.getString(Txt.LON) + JavaLibBridge.toString(gps.longitude, 5) + TimeStr);
         lbGeoid.setText(Txt.getString(Txt.GEOID)
-                + Convert.toString(gps.geoid, 3)
+                + JavaLibBridge.toString(gps.geoid, 3)
                 + Txt.getString(Txt.METERS_ABBR)
                 + Txt.getString(Txt.CALC)
-                + Convert.toString(Conv.wgs84Separation(gps.latitude,
+                + JavaLibBridge.toString(Conv.wgs84Separation(gps.latitude,
                         gps.longitude), 3) + Txt.getString(Txt.METERS_ABBR) + ")");
 
         // lbLat.repaintNow();
@@ -221,13 +220,13 @@ public final class GPSconctrl extends Container implements ModelListener {
             if (event.target == btnBluetooth) {
                 GPS_setChannel(SerialPort.BLUETOOTH);
             } else if (event.target == btnConnectPort) {
-                c.setBaudRate(Convert.toInt((String) cbBaud.getSelectedItem()));
-                GPS_setChannel(Convert.toInt(((String) cbPorts
+                c.setBaudRate(JavaLibBridge.toInt((String) cbBaud.getSelectedItem()));
+                GPS_setChannel(JavaLibBridge.toInt(((String) cbPorts
                         .getSelectedItem())));
                 // } else if (event.target == btnUSB) {
                 // GPS_setChannel(SerialPort.USB);
             } else if (event.target == cbBaud) {
-                // m.setBaudRate(Convert.toInt((String)m_cbBaud.getSelectedItem()));
+                // m.setBaudRate(JavaLibBridge.toInt((String)m_cbBaud.getSelectedItem()));
             } else if (event.target == cbPorts) {
 
             } else if (event.target == this) {

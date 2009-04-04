@@ -30,9 +30,9 @@ import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
-import bt747.sys.interfaces.JavaTranslationsInterface;
+import bt747.sys.interfaces.JavaLibImplementation;
 
-public final class WabaJavaTranslations implements JavaTranslationsInterface {
+public final class WabaJavaTranslations implements JavaLibImplementation {
     public final BT747Date getDateInstance() {
         return new WabaDate();
     }
@@ -183,12 +183,15 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return waba.sys.Settings.appSettings;
     }
 
+    private static final void mySetAppSettings(final String appSettings) {
+        waba.sys.Settings.appSettings = appSettings;
+    }
     /**
      * @param appSettings
      *            the appSettings to set
      */
     public final void setAppSettings(final String appSettings) {
-        waba.sys.Settings.appSettings = appSettings;
+        mySetAppSettings(appSettings);
     }
 
     public final BT747Semaphore getSemaphoreInstance(final int value) {

@@ -31,7 +31,7 @@ import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * @author Mario De Weerd
@@ -101,7 +101,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         chkTimeOnOff.setChecked(m.getLogTimeInterval() != 0);
         edTime.setEnabled(m.getLogTimeInterval() != 0);
         if (m.getLogTimeInterval() != 0) {
-            edTime.setText(Convert.toString(
+            edTime.setText(JavaLibBridge.toString(
                     ((float) m.getLogTimeInterval()) / 10, 1));
         }
         chkSpeedOnOff.setChecked(m.getLogSpeedInterval() != 0);
@@ -112,7 +112,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         chkDistanceOnOff.setChecked(m.getLogDistanceInterval() != 0);
         edDistance.setEnabled(m.getLogDistanceInterval() != 0);
         if (m.getLogDistanceInterval() != 0) {
-            edDistance.setText(Convert.toString((float) m
+            edDistance.setText(JavaLibBridge.toString((float) m
                     .getLogDistanceInterval() / 10, 1));
         }
         edFix.setText("" + m.getLogFixPeriod());
@@ -128,23 +128,23 @@ public final class GPSLogReason extends Container implements ModelListener {
 
     public final void setSettings() {
         if (chkTimeOnOff.getChecked()) {
-            c.setLogTimeInterval((int) (10 * Convert
+            c.setLogTimeInterval((int) (10 * JavaLibBridge
                     .toFloat(edTime.getText())));
         } else {
             c.setLogTimeInterval(0);
         }
         if (chkSpeedOnOff.getChecked()) {
-            c.setLogSpeedInterval(Convert.toInt(edSpeed.getText()));
+            c.setLogSpeedInterval(JavaLibBridge.toInt(edSpeed.getText()));
         } else {
             c.setLogSpeedInterval(0);
         }
         if (chkDistanceOnOff.getChecked()) {
-            c.setLogDistanceInterval((int) (10 * Convert.toFloat(edDistance
+            c.setLogDistanceInterval((int) (10 * JavaLibBridge.toFloat(edDistance
                     .getText())));
         } else {
             c.setLogDistanceInterval(0);
         }
-        c.setFixInterval(Convert.toInt(edFix.getText()));
+        c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
         c.reqLogReasonStatus();
     }
 

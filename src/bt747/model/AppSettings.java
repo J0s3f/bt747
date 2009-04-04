@@ -17,10 +17,9 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.convert.Conv;
 
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747HashSet;
 
@@ -288,7 +287,7 @@ public class AppSettings {
 
         mVersion = getStringOpt(AppSettings.VERSION);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
-            VersionX100 = Convert.toInt(mVersion.charAt(0)
+            VersionX100 = JavaLibBridge.toInt(mVersion.charAt(0)
                     + mVersion.substring(2, 4));
         }
         updateSettings(VersionX100);
@@ -1151,7 +1150,7 @@ public class AppSettings {
 
     private final void setLocalIntOpt(final int param, final int src,
             final int idx, final int size) {
-        setOpt(param, Convert.unsigned2hex(src, size), idx, size);
+        setOpt(param, JavaLibBridge.unsigned2hex(src, size), idx, size);
     }
 
     private final int getLocalIntOpt(final int idx, final int size) {
@@ -1161,12 +1160,12 @@ public class AppSettings {
 
     private final void setFloatOpt(final int eventType, final float src,
             final int idx, final int size) {
-        setOpt(eventType, Convert.unsigned2hex(Convert.toIntBitwise(src),
+        setOpt(eventType, JavaLibBridge.unsigned2hex(JavaLibBridge.toIntBitwise(src),
                 size), idx, size);
     }
 
     private final float getFloatOpt(final int idx, final int size) {
-        return Convert.toFloatBitwise(Conv.hex2Int(getStringOpt(idx, size)));
+        return JavaLibBridge.toFloatBitwise(Conv.hex2Int(getStringOpt(idx, size)));
     }
 
     private final String getStringOpt(final int idx, final int size) {
@@ -1188,7 +1187,7 @@ public class AppSettings {
      * Event posting
      */
 
-    private final BT747HashSet listeners = Interface.getHashSetInstance();
+    private final BT747HashSet listeners = JavaLibBridge.getHashSetInstance();
 
     /** add a listener to event thrown by this class */
     public final void addListener(final ModelListener l) {

@@ -16,8 +16,7 @@ package gps.log;
 
 import gps.BT747Constants;
 
-import bt747.sys.Convert;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -570,7 +569,7 @@ public class GPSRecord {
     }
 
     public final BT747Time getBT747Time() {
-        final BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = JavaLibBridge.getTimeInstance();
         t.setUTCTime(utc);
         return t;
     }
@@ -589,7 +588,7 @@ public class GPSRecord {
                     + "(" + utc + ")");
         }
         if (hasValid()) {
-            rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
+            rec.append("\nVALID:" + JavaLibBridge.unsigned2hex(valid, 8));
         }
         if (hasLatitude()) {
             rec.append("\nLAT;" + latitude);
@@ -598,7 +597,7 @@ public class GPSRecord {
             rec.append("\nLON:" + longitude);
         }
         if (hasRcr()) {
-            rec.append("\nRCR:" + Convert.unsigned2hex(rcr, 8));
+            rec.append("\nRCR:" + JavaLibBridge.unsigned2hex(rcr, 8));
         }
         if (hasHeight()) {
             rec.append("\nHEIGHT:" + height);

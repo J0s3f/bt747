@@ -14,14 +14,14 @@
 // *** *********************************************************** ***
 package gps;
 
+
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
 
-import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -328,7 +328,7 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR + ","
-                + Convert.unsigned2hex(logFmt, 8));
+                + JavaLibBridge.unsigned2hex(logFmt, 8));
         setChanged(GPSstate.DATA_LOG_FORMAT);
     }
 
@@ -473,7 +473,7 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_USER + ","
-                + Convert.unsigned2hex(value, 4));
+                + JavaLibBridge.unsigned2hex(value, 4));
     }
 
     public final void setLogTimeInterval(final int value) {
@@ -699,7 +699,7 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
-        final BT747StringTokenizer fields = Interface
+        final BT747StringTokenizer fields = JavaLibBridge
                 .getStringTokenizerInstance(btMacAddr, ':');
         while (fields.hasMoreTokens()) {
             myMacAddr = fields.nextToken() + myMacAddr;
@@ -845,7 +845,7 @@ public final class GPSstate implements BT747Thread {
                     }
                     Generic.debug(s);
                 }
-                cmd = Convert.toInt(sNmea[0].substring(4));
+                cmd = JavaLibBridge.toInt(sNmea[0].substring(4));
 
                 result = -1; // Suppose cmd not treated
                 switch (cmd) {
@@ -861,14 +861,14 @@ public final class GPSstate implements BT747Thread {
                     break;
                 case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
                     if (sNmea.length >= 2) {
-                        logFixPeriod = Convert.toInt(sNmea[1]);
+                        logFixPeriod = JavaLibBridge.toInt(sNmea[1]);
                         postGpsEvent(GpsEvent.UPDATE_FIX_PERIOD, null);
                     }
                     dataOK |= GPSstate.C_OK_FIX;
                     break;
                 case BT747Constants.PMTK_DT_DGPS_MODE: // CMD 501
                     if (sNmea.length == 2) {
-                        dgpsMode = Convert.toInt(sNmea[1]);
+                        dgpsMode = JavaLibBridge.toInt(sNmea[1]);
                     }
                     dataOK |= GPSstate.C_OK_DGPS;
                     postEvent(GpsEvent.UPDATE_DGPS_MODE);
@@ -883,7 +883,7 @@ public final class GPSstate implements BT747Thread {
                 case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
                     if (sNmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
                         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-                            NMEA_periods[i] = Convert.toInt(sNmea[i + 1]);
+                            NMEA_periods[i] = JavaLibBridge.toInt(sNmea[i + 1]);
                         }
                     }
                     dataOK |= GPSstate.C_OK_NMEA;
@@ -904,23 +904,23 @@ public final class GPSstate implements BT747Thread {
                     break;
                 case BT747Constants.PMTK_DT_DATUM: // CMD 530
                     if (sNmea.length == 2) {
-                        datum = Convert.toInt(sNmea[1]);
+                        datum = JavaLibBridge.toInt(sNmea[1]);
                     }
                     dataOK |= GPSstate.C_OK_DATUM;
                     postEvent(GpsEvent.UPDATE_DATUM);
                     break;
                 case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
-                    dtUserOptionTimesLeft = Convert.toInt(sNmea[1]);
-                    dtUpdateRate = Convert.toInt(sNmea[2]);
-                    dtBaudRate = Convert.toInt(sNmea[3]);
-                    dtGLL_Period = Convert.toInt(sNmea[4]);
-                    dtRMC_Period = Convert.toInt(sNmea[5]);
-                    dtVTG_Period = Convert.toInt(sNmea[6]);
-                    dtGSA_Period = Convert.toInt(sNmea[7]);
-                    dtGSV_Period = Convert.toInt(sNmea[8]);
-                    dtGGA_Period = Convert.toInt(sNmea[9]);
-                    dtZDA_Period = Convert.toInt(sNmea[10]);
-                    dtMCHN_Period = Convert.toInt(sNmea[11]);
+                    dtUserOptionTimesLeft = JavaLibBridge.toInt(sNmea[1]);
+                    dtUpdateRate = JavaLibBridge.toInt(sNmea[2]);
+                    dtBaudRate = JavaLibBridge.toInt(sNmea[3]);
+                    dtGLL_Period = JavaLibBridge.toInt(sNmea[4]);
+                    dtRMC_Period = JavaLibBridge.toInt(sNmea[5]);
+                    dtVTG_Period = JavaLibBridge.toInt(sNmea[6]);
+                    dtGSA_Period = JavaLibBridge.toInt(sNmea[7]);
+                    dtGSV_Period = JavaLibBridge.toInt(sNmea[8]);
+                    dtGGA_Period = JavaLibBridge.toInt(sNmea[9]);
+                    dtZDA_Period = JavaLibBridge.toInt(sNmea[10]);
+                    dtMCHN_Period = JavaLibBridge.toInt(sNmea[11]);
                     postEvent(GpsEvent.UPDATE_FLASH_CONFIG);
                     break;
                 case BT747Constants.PMTK_DT_BT_MAC_ADDR: // CMD 592
@@ -972,7 +972,7 @@ public final class GPSstate implements BT747Thread {
                     }
                     Generic.debug(s);
                 }
-                cmd = Convert.toInt(sNmea[1]);
+                cmd = JavaLibBridge.toInt(sNmea[1]);
 
                 result = -1; // Suppose cmd not treated
                 switch (cmd) {
@@ -1143,13 +1143,13 @@ public final class GPSstate implements BT747Thread {
         // The other data we send ourselves
         handler.resetLogTimeOut(); // Reset timeout
         if (sNmea.length > 2) {
-            switch (Convert.toInt(sNmea[1])) {
+            switch (JavaLibBridge.toInt(sNmea[1])) {
             case BT747Constants.PMTK_LOG_DT:
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
                 // $PMTK182,3,TYPE,DATA
-                final int z_type = Convert.toInt(sNmea[2]);
+                final int z_type = JavaLibBridge.toInt(sNmea[2]);
                 if (sNmea.length == 4) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FLASH_STAT:
@@ -1163,29 +1163,29 @@ public final class GPSstate implements BT747Thread {
                         postEvent(GpsEvent.UPDATE_LOG_FORMAT);
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
-                        logTimeInterval = Convert.toInt(sNmea[3]);
+                        logTimeInterval = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= GPSstate.C_OK_TIME;
                         postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
-                        logDistanceInterval = Convert.toInt(sNmea[3]);
+                        logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= GPSstate.C_OK_DIST;
                         postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
-                        logSpeedInterval = Convert.toInt(sNmea[3]) / 10;
+                        logSpeedInterval = JavaLibBridge.toInt(sNmea[3]) / 10;
                         dataOK |= GPSstate.C_OK_SPEED;
                         postEvent(GpsEvent.UPDATE_LOG_SPEED_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
-                        logFullOverwrite = (Convert.toInt(sNmea[3]) == 1);
+                        logFullOverwrite = (JavaLibBridge.toInt(sNmea[3]) == 1);
                         postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2
                         // =
                         // logging
                         // on/off
-                        logStatus = Convert.toInt(sNmea[3]);
+                        logStatus = JavaLibBridge.toInt(sNmea[3]);
                         // logFullOverwrite = (((logStatus &
                         // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK)
                         // !=
@@ -1219,8 +1219,8 @@ public final class GPSstate implements BT747Thread {
                         break;
                     case BT747Constants.PMTK_LOG_VERSION: // 12:
                         MtkLogVersion = "V"
-                                + Convert.toString(
-                                        Convert.toInt(sNmea[3]) / 100f, 2);
+                                + JavaLibBridge.toString(
+                                        JavaLibBridge.toInt(sNmea[3]) / 100f, 2);
                         setAvailable(GPSstate.DATA_LOG_VERSION);
                         postEvent(GpsEvent.UPDATE_LOG_VERSION);
                         break;
@@ -1346,7 +1346,7 @@ public final class GPSstate implements BT747Thread {
         return gpsPos;
     }
 
-    private final BT747HashSet listeners = Interface.getHashSetInstance();
+    private final BT747HashSet listeners = JavaLibBridge.getHashSetInstance();
 
     /** add a listener to event thrown by this class */
     public final void addListener(final GPSListener l) {

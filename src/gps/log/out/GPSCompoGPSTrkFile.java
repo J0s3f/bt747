@@ -18,7 +18,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.Version;
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 
 /**
  * Class to write a CompeGPS TRK file or WPT file.
@@ -130,10 +130,10 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             if ((activeFields.hasLatitude())
                     && (selectedFileFields.hasLatitude())) {
                 if (s.latitude >= 0) {
-                    rec.append(Convert.toString(s.latitude, 8)
+                    rec.append(JavaLibBridge.toString(s.latitude, 8)
                             + ((char) 0xBA) + "N");
                 } else {
-                    rec.append(Convert.toString(-s.latitude, 8)
+                    rec.append(JavaLibBridge.toString(-s.latitude, 8)
                             + ((char) 0xBA) + "S");
                 }
             } else {
@@ -144,10 +144,10 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             if ((activeFields.hasLongitude())
                     && (selectedFileFields.hasLongitude())) {
                 if (s.longitude >= 0) {
-                    rec.append(Convert.toString(s.longitude, 8)
+                    rec.append(JavaLibBridge.toString(s.longitude, 8)
                             + ((char) 0xBA) + "E");
                 } else {
-                    rec.append(Convert.toString(-s.longitude, 8)
+                    rec.append(JavaLibBridge.toString(-s.longitude, 8)
                             + ((char) 0xBA) + "W");
                 }
             } else {
@@ -156,7 +156,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             rec.append(" ");
 
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
-                // rec.append(Convert.toString(
+                // rec.append(JavaLibBridge.toString(
                 // (s.utc+(activeFields.milisecond!=0?(s.milisecond/1000.0):0))
                 // /86400.0+25569, //Days since 30/12/1899
                 // 7)); // 7 fractional digits
@@ -187,7 +187,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
                 // rec+=".";
                 // rec+=(s.milisecond<100)?"0":"";
                 // rec+=(s.milisecond<10)?"0":"";
-                // rec+=Convert.toString(s.milisecond);
+                // rec+=JavaLibBridge.toString(s.milisecond);
                 // }
                 rec.append(" ");
             } else {
@@ -207,9 +207,9 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
 
             if ((activeFields.hasHeight())
                     && (selectedFileFields.hasHeight())) {
-                rec.append(Convert.toString(s.height, 1));
+                rec.append(JavaLibBridge.toString(s.height, 1));
                 if (waypt) {
-                    wrec.append(Convert.toString(s.height, 1));
+                    wrec.append(JavaLibBridge.toString(s.height, 1));
                 }
             } else {
                 rec.append("0.0");
