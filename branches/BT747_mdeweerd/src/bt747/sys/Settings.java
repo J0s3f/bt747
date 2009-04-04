@@ -13,8 +13,8 @@ package bt747.sys;
  * Preferences - Java - Code Style - Code Templates
  */
 public final class Settings {
-    public final static byte DATE_YMD = 1;
-    public final static byte DATE_DMY = 2;
+    public static final byte DATE_YMD = 1;
+    public static final byte DATE_DMY = 2;
 
     /**
      * @return the appSettings

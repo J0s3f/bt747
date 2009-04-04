@@ -42,10 +42,7 @@ public final class File {
      */
     public static final int CREATE = 4;
 
-    protected BT747File file;
-
-    protected File() {
-    }
+    private final BT747File file;
 
     public File(final String path) {
         file = JavaLibBridge.getFileInstance(path);
@@ -75,7 +72,7 @@ public final class File {
         return file.createDir();
     }
 
-    public final static boolean isAvailable() {
+    public static final boolean isAvailable() {
         return JavaLibBridge.isAvailable();
     }
 

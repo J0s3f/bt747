@@ -40,7 +40,7 @@ public final class Generic {
      * 
      * @return debug level.
      */
-    public static int getDebugLevel() {
+    public static final int getDebugLevel() {
         return Generic.debugLevel;
     }
 
@@ -75,7 +75,7 @@ public final class Generic {
      * @param highPrio
      *                True if high priority.
      */
-    public final static void addThread(final BT747Thread o,
+    public static final void addThread(final BT747Thread o,
             final boolean highPrio) {
         JavaLibBridge.addThread(o, highPrio);
     }
@@ -86,7 +86,7 @@ public final class Generic {
      * @param o
      *                Thread to remove.
      */
-    public final static void removeThread(final BT747Thread o) {
+    public static final void removeThread(final BT747Thread o) {
         JavaLibBridge.removeThread(o);
     }
 
@@ -98,7 +98,7 @@ public final class Generic {
      * 
      * @return acos(x)
      */
-    public final static double acos(final double x) {
+    public static final double acos(final double x) {
         return JavaLibBridge.acos(x);
     }
 
@@ -111,7 +111,7 @@ public final class Generic {
      *                y.
      * @return x^^y.
      */
-    public final static double pow(final double x, final double y) {
+    public static final double pow(final double x, final double y) {
         return JavaLibBridge.pow(x, y);
     }
 }
