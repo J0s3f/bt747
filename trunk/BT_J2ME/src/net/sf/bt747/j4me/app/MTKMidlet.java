@@ -16,7 +16,7 @@ import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.UIManager;
 
-import bt747.sys.Interface;
+import bt747.sys.JavaLibBridge;
 
 /**
  * The entry point for the application.
@@ -28,7 +28,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     private static MTKMidlet instance;
 
     static {
-        Interface.setJavaTranslationInterface(new J2MEJavaTranslations());
+        JavaLibBridge.setJavaLibImplementation(new J2MEJavaTranslations());
     }
 
     private static AppModel m;

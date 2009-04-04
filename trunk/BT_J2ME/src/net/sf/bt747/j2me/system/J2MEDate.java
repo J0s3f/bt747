@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import bt747.sys.Convert;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Date;
@@ -138,9 +138,9 @@ public final class J2MEDate implements BT747Date {
             int arg1;
             int arg2;
 
-            arg0 = Convert.toInt(fields.nextToken());
-            arg1 = Convert.toInt(fields.nextToken());
-            arg2 = Convert.toInt(fields.nextToken());
+            arg0 = JavaLibBridge.toInt(fields.nextToken());
+            arg1 = JavaLibBridge.toInt(fields.nextToken());
+            arg2 = JavaLibBridge.toInt(fields.nextToken());
 
             // TODO: may need to correct year.
             if (dateFormat == Settings.DATE_YMD) {

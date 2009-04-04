@@ -59,7 +59,7 @@ public final class WayFieldSelectScreen extends BT747Dialog {
             logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
         }
         Log.debug("Way Point Format:"
-                + bt747.sys.Convert.unsigned2hex(logFormat, 8));
+                + bt747.sys.JavaLibBridge.unsigned2hex(logFormat, 8));
 
         return logFormat;
     }
@@ -103,7 +103,7 @@ public final class WayFieldSelectScreen extends BT747Dialog {
         c.setLogFormat(getSelectedLogFormat());
         c.reqLogFormat();
         // Log.debug("FileFieldFormat:" +
-        // bt747.sys.Convert.unsigned2hex(getSelectedLogFormat(), 8));
+        // bt747.sys.JavaLibBridge.unsigned2hex(getSelectedLogFormat(), 8));
     }
 
     private final AppModel m() {
