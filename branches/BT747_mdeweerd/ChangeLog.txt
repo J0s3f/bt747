@@ -1,3 +1,6 @@
+Version 1.68.9
+* Log overwrite was requested in two popups.  Fixed.
+
 Version 1.68.8
 * Height conversion options added to PDA version.
 
