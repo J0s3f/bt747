@@ -676,7 +676,7 @@ final class MTKLogDownloadHandler {
 
     protected final void eraseLog() {
         if (gpsState.isConnected()) {
-            gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+            gpsState.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                     + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);
             waitEraseDone();
@@ -690,7 +690,7 @@ final class MTKLogDownloadHandler {
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information
         // from
         // device
-        // TODO:
+        // TODO: Handle flash sector information.
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
 

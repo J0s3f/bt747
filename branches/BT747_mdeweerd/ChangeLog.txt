@@ -1,3 +1,8 @@
+Version 1.68.10
+* Erase procedure did not necessarily wait properly when the command buffer
+  was not empty.  Fixed.
+* Some internal code refactoring started.
+
 Version 1.68.9
 * Log overwrite was requested in two popups.  Fixed.
 
