@@ -27,6 +27,7 @@ import gps.connection.GPSrxtx;
  */
 /* Final for the moment */
 public final class GPSstate extends gps.mvc.Model  {
+    private gps.mvc.Controller gpsC;
     /**
      * Initialiser
      * 
@@ -34,6 +35,27 @@ public final class GPSstate extends gps.mvc.Model  {
      */
     public GPSstate(final GPSrxtx gpsRxTx) {
         super(gpsRxTx);
+        gpsC = gps.mvc.Controller.getInstance(this);
+    }
+
+    
+    //*****************************
+    // To factor out
+    
+    public final void initConnection() {
+        gpsC.initConnection();
+    }
+    
+    /**
+     * Erase the log.
+     */
+    public final void eraseLog() {
+        gpsC.eraseLog();
+    }
+
+    
+    public final void stopErase() {
+        gpsC.stopErase();
     }
 
 }

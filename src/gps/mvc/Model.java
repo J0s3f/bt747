@@ -15,21 +15,22 @@
 package gps.mvc;
 
 
+import gps.BT747Constants;
+import gps.GPSListener;
+import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
-import gps.BT747Constants;
-import gps.GpsEvent;
-import gps.GPSListener;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747StringTokenizer;
-import bt747.sys.interfaces.BT747Thread;
 
 /**
+ * Refactoring ongoing (split in Model and Controller).
+ * 
  * GPSstate maintains a higher level state of communication with the GPS
  * device. It currently contains very specific commands MTK loggers but that
  * could change in the future by extending GPSstate with such features in a
@@ -40,7 +41,7 @@ import bt747.sys.interfaces.BT747Thread;
  * 
  */
 /* Final for the moment */
-public class Model implements BT747Thread {
+public class Model {
     private final GPSLinkHandler handler = new GPSLinkHandler();
     private final MTKLogDownloadHandler mtkLogHandler = new MTKLogDownloadHandler(
             this);
@@ -163,33 +164,17 @@ public class Model implements BT747Thread {
     public final static int DATA_INITIAL_LOG = 6;
     public final static int DATA_LOG_STATUS = 7;
     public final static int DATA_LOG_VERSION = 8;
-    private final static int DATA_LAST_INDEX = 8; // The last possible index
+    protected final static int DATA_LAST_INDEX = 8; // The last possible index
 
     /**
      * Reset the availability of all values - e.g. after loss of connection.
      */
-    public final void resetAvailable() {
+    protected final void setAllUnavailable() {
         final int ts = Generic.getTimeStamp() - 5 * 60 * 1000;
         for (int i = 0; i < dataAvailable.length; i++) {
             dataAvailable[i] = false;
             dataRequested[i] = ts;
         }
-        nextValueToCheck = 0;
-    }
-
-    private int nextValueToCheck = 0;
-
-    /**
-     * Called regularly to check if values are available and request them.
-     */
-    private void checkNextAvailable() {
-        int next = nextValueToCheck;
-        checkAvailable(next);
-        next += 1;
-        if (next >= dataAvailable.length) {
-            next = 0;
-        }
-        nextValueToCheck = next;
     }
 
     /**
@@ -292,22 +277,6 @@ public class Model implements BT747Thread {
         checkAvailable(Model.DATA_FLASH_TYPE);
         checkAvailable(Model.DATA_MEM_USED);
         return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
-    }
-
-    /**
-     * Start the timer To be called once the port is opened. The timer is used
-     * to launch functions that will check if there is information on the
-     * serial connection or to send to the GPS device.
-     */
-    public final void initConnection() {
-        // TODO: set up thread in gpsRxTx directly (through controller)
-        if (handler.isConnected()) {
-            nextRun = Generic.getTimeStamp() + 300; // Delay before first
-            resetAvailable();
-            handler.initConnected();
-            // transaction
-            Generic.addThread(this, false);
-        }
     }
 
     /**
@@ -1042,63 +1011,6 @@ public class Model implements BT747Thread {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
     }
 
-    /*************************************************************************
-     * Thread methods implementation
-     */
-
-    private int nextRun = 0;
-    private int nextAvailableRun = 0;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see waba.sys.Thread#run()
-     */
-    public final void run() {
-        final int timeStamp = Generic.getTimeStamp();
-        if (timeStamp >= nextRun) {
-            nextRun = timeStamp + 10;
-            int loopsToGo = 0; // Setting to 0 for more responsiveness
-            if (handler.isConnected()) {
-                mtkLogHandler.notifyRun();
-                String[] lastResponse;
-                do {
-                    lastResponse = handler.getResponse();
-                    if (lastResponse != null) {
-                        analyseNMEA(lastResponse);
-                    }
-                    handler.checkSendCmdFromQueue();
-                } while ((loopsToGo-- > 0) && (lastResponse != null));
-                if ((nextAvailableRun < timeStamp)
-                        && (getOutStandingCmdsCount() == 0)
-                        && !isLogDownloadOnGoing()) {
-                    nextAvailableRun = nextRun + 300;
-                    checkNextAvailable();
-                }
-            } else {
-                Generic.removeThread(this);
-                mtkLogHandler.notifyDisconnected();
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see waba.sys.Thread#started()
-     */
-    public final void started() {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see waba.sys.Thread#stopped()
-     */
-    public final void stopped() {
-
-    }
 
     /*************************************************************************
      * LOGGING FUNCTIONALITY
@@ -1567,6 +1479,16 @@ public class Model implements BT747Thread {
     public final void sendNMEA(final String s) {
         handler.sendNMEA(s);
     }
+    
+    
+    /**
+     * Immediate string sending.
+     * 
+     * @param s
+     */
+    protected final void doSendNMEA(final String s) {
+        handler.doSendNMEA(s);
+    }
 
     /**
      * Get the number of Cmds that are still waiting to be sent and/or waiting
@@ -1602,10 +1524,6 @@ public class Model implements BT747Thread {
         return handler.isConnected();
     }
 
-    public final void eraseLog() {
-        mtkLogHandler.eraseLog();
-    }
-
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
@@ -1626,14 +1544,6 @@ public class Model implements BT747Thread {
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
-    }
-
-    /**
-     * The log is being erased - the user request to abandon waiting for the
-     * end of this operation.
-     */
-    public final void stopErase() {
-        mtkLogHandler.stopErase();
     }
 
     public final void getLogInit(final int startAddr, final int endAddr,
@@ -1691,4 +1601,15 @@ public class Model implements BT747Thread {
     public final int getNextReadAddr() {
         return mtkLogHandler.getNextReadAddr();
     }
+    
+    /////////////////////////////////////////////////////////////////
+    // To be removed after refactoring.
+    protected final GPSLinkHandler getHandler() {
+        return handler;
+    }
+
+    protected final MTKLogDownloadHandler getMtkLogHandler() {
+        return mtkLogHandler;
+    }
+
 }

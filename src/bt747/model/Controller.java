@@ -933,7 +933,6 @@ public class Controller {
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             final GPSstate gpsModel = m.gpsModel();
-            gpsModel.resetAvailable();
             gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG); // First may
             // fail.
             gpsModel.reqStatus();
