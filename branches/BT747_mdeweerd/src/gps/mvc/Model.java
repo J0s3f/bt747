@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package gps.mvc;
 
-
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
@@ -855,7 +854,8 @@ public class Model {
                 case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
                     if (sNmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
                         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-                            NMEA_periods[i] = JavaLibBridge.toInt(sNmea[i + 1]);
+                            NMEA_periods[i] = JavaLibBridge
+                                    .toInt(sNmea[i + 1]);
                         }
                     }
                     dataOK |= Model.C_OK_NMEA;
@@ -1011,7 +1011,6 @@ public class Model {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
     }
 
-
     /*************************************************************************
      * LOGGING FUNCTIONALITY
      ************************************************************************/
@@ -1134,8 +1133,8 @@ public class Model {
                         break;
                     case BT747Constants.PMTK_LOG_VERSION: // 12:
                         MtkLogVersion = "V"
-                                + JavaLibBridge.toString(
-                                        JavaLibBridge.toInt(sNmea[3]) / 100f, 2);
+                                + JavaLibBridge.toString(JavaLibBridge
+                                        .toInt(sNmea[3]) / 100f, 2);
                         setAvailable(Model.DATA_LOG_VERSION);
                         postEvent(GpsEvent.UPDATE_LOG_VERSION);
                         break;
@@ -1479,8 +1478,7 @@ public class Model {
     public final void sendNMEA(final String s) {
         handler.sendNMEA(s);
     }
-    
-    
+
     /**
      * Immediate string sending.
      * 
@@ -1504,12 +1502,22 @@ public class Model {
         return loggingActive;
     }
 
+    private boolean eraseOngoing = false;
+
     protected final boolean isEraseOngoing() {
-        return handler.isEraseOngoing();
+        return eraseOngoing;
     }
 
     protected final void setEraseOngoing(final boolean eraseOngoing) {
-        handler.setEraseOngoing(eraseOngoing);
+        if (this.eraseOngoing != eraseOngoing) {
+            this.eraseOngoing = eraseOngoing;
+            if (eraseOngoing) {
+                postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
+            } else {
+                postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+            }
+            handler.setEraseOngoing(eraseOngoing);
+        }
     }
 
     protected final int timeSinceLastStamp() {
@@ -1549,8 +1557,7 @@ public class Model {
     public final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
             final boolean isIncremental, // True if incremental read
-            final boolean disableLogging
-    ) {
+            final boolean disableLogging) {
         mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
                 card, isIncremental, disableLogging);
     }
@@ -1601,8 +1608,8 @@ public class Model {
     public final int getNextReadAddr() {
         return mtkLogHandler.getNextReadAddr();
     }
-    
-    /////////////////////////////////////////////////////////////////
+
+    // ///////////////////////////////////////////////////////////////
     // To be removed after refactoring.
     protected final GPSLinkHandler getHandler() {
         return handler;
