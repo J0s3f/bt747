@@ -185,13 +185,17 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
     public final String getAppSettings() {
         return appSettings;
     }
+    
+    private final static void mySetAppSettings(final String settings) {
+        appSettings = settings;
+    }
 
     /**
      * @param appSettings
      *                the appSettings to set
      */
     public final void setAppSettings(final String settings) {
-        appSettings = settings;
+        mySetAppSettings(settings);
     }
 
     public final BT747Semaphore getSemaphoreInstance(final int value) {
