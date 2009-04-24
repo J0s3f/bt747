@@ -29,7 +29,9 @@ public final class WabaThread implements waba.sys.Thread {
     }
 
     public final void run() {
-        btThread.run();
+        if(btThread!=null) {
+            btThread.run();
+        }
     }
 
     public void started() {
