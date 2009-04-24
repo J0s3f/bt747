@@ -19,6 +19,9 @@ import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
+import gps.BT747Constants;
+import gps.GpsEvent;
+import gps.GPSListener;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -37,7 +40,7 @@ import bt747.sys.interfaces.BT747Thread;
  * 
  */
 /* Final for the moment */
-public final class GPSstate extends gps.mvc implements BT747Thread {
+public class Model implements BT747Thread {
     private final GPSLinkHandler handler = new GPSLinkHandler();
     private final MTKLogDownloadHandler mtkLogHandler = new MTKLogDownloadHandler(
             this);
@@ -126,7 +129,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
      * 
      * 
      */
-    public GPSstate(final GPSrxtx gpsRxTx) {
+    public Model(final GPSrxtx gpsRxTx) {
         setGPSRxtx(gpsRxTx);
     }
 
@@ -138,8 +141,8 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
         GPS_STATS = stats;
     }
 
-    private final boolean[] dataAvailable = new boolean[GPSstate.DATA_LAST_INDEX + 1];
-    private final int[] dataRequested = new int[GPSstate.DATA_LAST_INDEX + 1];
+    private final boolean[] dataAvailable = new boolean[Model.DATA_LAST_INDEX + 1];
+    private final int[] dataRequested = new int[Model.DATA_LAST_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
     true, // DATA_MEM_USED
             true, // DATA_MEM_PTS_LOGGED
@@ -256,7 +259,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
 
             break;
         case DATA_LOG_FORMAT:
-            dataOK |= GPSstate.C_OK_FORMAT;
+            dataOK |= Model.C_OK_FORMAT;
             break;
         default:
         case DATA_MEM_USED:
@@ -278,7 +281,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
      * @return The useful bytes in the log.
      */
     public final int logMemUsefullSize() {
-        checkAvailable(GPSstate.DATA_FLASH_TYPE);
+        checkAvailable(Model.DATA_FLASH_TYPE);
         return (int) ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
@@ -286,8 +289,8 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
      * @return Useful free bytes in the log.
      */
     public final int logFreeMemUsefullSize() {
-        checkAvailable(GPSstate.DATA_FLASH_TYPE);
-        checkAvailable(GPSstate.DATA_MEM_USED);
+        checkAvailable(Model.DATA_FLASH_TYPE);
+        checkAvailable(Model.DATA_MEM_USED);
         return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
@@ -329,7 +332,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR + ","
                 + JavaLibBridge.unsigned2hex(logFmt, 8));
-        setChanged(GPSstate.DATA_LOG_FORMAT);
+        setChanged(Model.DATA_LOG_FORMAT);
     }
 
     public final void doHotStart() {
@@ -357,10 +360,10 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
     }
 
     public final void reqDeviceInfo() {
-        checkAvailable(GPSstate.DATA_MTK_RELEASE);
-        checkAvailable(GPSstate.DATA_MTK_VERSION);
-        checkAvailable(GPSstate.DATA_FLASH_TYPE);
-        checkAvailable(GPSstate.DATA_LOG_VERSION);
+        checkAvailable(Model.DATA_MTK_RELEASE);
+        checkAvailable(Model.DATA_MTK_VERSION);
+        checkAvailable(Model.DATA_FLASH_TYPE);
+        checkAvailable(Model.DATA_LOG_VERSION);
     }
 
     /**
@@ -535,7 +538,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
 
     /** Get the current status of the device */
     public final void reqStatus() {
-        checkAvailable(GPSstate.DATA_LOG_FORMAT);
+        checkAvailable(Model.DATA_LOG_FORMAT);
         getLogCtrlInfo();
         // getLogReasonStatus();
         // getPowerSaveEnabled();
@@ -551,9 +554,9 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
     }
 
     private final void getLogCtrlInfo() {
-        checkAvailable(GPSstate.DATA_LOG_VERSION);
-        checkAvailable(GPSstate.DATA_MEM_USED);
-        checkAvailable(GPSstate.DATA_MEM_PTS_LOGGED);
+        checkAvailable(Model.DATA_LOG_VERSION);
+        checkAvailable(Model.DATA_MEM_USED);
+        checkAvailable(Model.DATA_MEM_PTS_LOGGED);
         reqLogOverwrite();
     }
 
@@ -864,20 +867,20 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                         logFixPeriod = JavaLibBridge.toInt(sNmea[1]);
                         postGpsEvent(GpsEvent.UPDATE_FIX_PERIOD, null);
                     }
-                    dataOK |= GPSstate.C_OK_FIX;
+                    dataOK |= Model.C_OK_FIX;
                     break;
                 case BT747Constants.PMTK_DT_DGPS_MODE: // CMD 501
                     if (sNmea.length == 2) {
                         dgpsMode = JavaLibBridge.toInt(sNmea[1]);
                     }
-                    dataOK |= GPSstate.C_OK_DGPS;
+                    dataOK |= Model.C_OK_DGPS;
                     postEvent(GpsEvent.UPDATE_DGPS_MODE);
                     break;
                 case BT747Constants.PMTK_DT_SBAS: // CMD 513
                     if (sNmea.length == 2) {
                         SBASEnabled = (sNmea[1].equals("1"));
                     }
-                    dataOK |= GPSstate.C_OK_SBAS;
+                    dataOK |= Model.C_OK_SBAS;
                     postEvent(GpsEvent.UPDATE_SBAS);
                     break;
                 case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
@@ -886,14 +889,14 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                             NMEA_periods[i] = JavaLibBridge.toInt(sNmea[i + 1]);
                         }
                     }
-                    dataOK |= GPSstate.C_OK_NMEA;
+                    dataOK |= Model.C_OK_NMEA;
                     postEvent(GpsEvent.UPDATE_OUTPUT_NMEA_PERIOD);
                     break;
                 case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
                     if (sNmea.length == 2) {
                         SBASTestEnabled = (sNmea[1].equals("0"));
                     }
-                    dataOK |= GPSstate.C_OK_SBAS_TEST;
+                    dataOK |= Model.C_OK_SBAS_TEST;
                     postEvent(GpsEvent.UPDATE_SBAS_TEST);
                     break;
                 case BT747Constants.PMTK_DT_PWR_SAV_MODE: // CMD 520
@@ -906,7 +909,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                     if (sNmea.length == 2) {
                         datum = JavaLibBridge.toInt(sNmea[1]);
                     }
-                    dataOK |= GPSstate.C_OK_DATUM;
+                    dataOK |= Model.C_OK_DATUM;
                     postEvent(GpsEvent.UPDATE_DATUM);
                     break;
                 case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
@@ -939,7 +942,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                     break;
                 case BT747Constants.PMTK_DT_VERSION: // CMD 704
                     mainVersion = sNmea[1] + "." + sNmea[2] + "." + sNmea[3];
-                    setAvailable(GPSstate.DATA_MTK_VERSION);
+                    setAvailable(Model.DATA_MTK_VERSION);
                     postEvent(GpsEvent.UPDATE_MTK_VERSION);
                     break;
                 case BT747Constants.PMTK_DT_RELEASE: // CMD 705
@@ -951,7 +954,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                     } else {
                         device = "";
                     }
-                    setAvailable(GPSstate.DATA_MTK_RELEASE);
+                    setAvailable(Model.DATA_MTK_RELEASE);
                     postEvent(GpsEvent.UPDATE_MTK_RELEASE);
                     break;
 
@@ -1159,22 +1162,22 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                         // if(GPS_DEBUG) {
                         // waba.sys.debugMsg("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(sNmea[3]);
-                        setAvailable(GPSstate.DATA_LOG_FORMAT);
+                        setAvailable(Model.DATA_LOG_FORMAT);
                         postEvent(GpsEvent.UPDATE_LOG_FORMAT);
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
                         logTimeInterval = JavaLibBridge.toInt(sNmea[3]);
-                        dataOK |= GPSstate.C_OK_TIME;
+                        dataOK |= Model.C_OK_TIME;
                         postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
                         logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
-                        dataOK |= GPSstate.C_OK_DIST;
+                        dataOK |= Model.C_OK_DIST;
                         postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
                         logSpeedInterval = JavaLibBridge.toInt(sNmea[3]) / 10;
-                        dataOK |= GPSstate.C_OK_SPEED;
+                        dataOK |= Model.C_OK_SPEED;
                         postEvent(GpsEvent.UPDATE_LOG_SPEED_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
@@ -1194,24 +1197,24 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
-                        setAvailable(GPSstate.DATA_LOG_STATUS);
+                        setAvailable(Model.DATA_LOG_STATUS);
                         postEvent(GpsEvent.UPDATE_LOG_LOG_STATUS);
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
                         logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
-                        setAvailable(GPSstate.DATA_MEM_USED);
+                        setAvailable(Model.DATA_MEM_USED);
                         postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
-                        setAvailable(GPSstate.DATA_FLASH_TYPE);
+                        setAvailable(Model.DATA_FLASH_TYPE);
                         postEvent(GpsEvent.UPDATE_LOG_FLASH);
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(sNmea[3]);
-                        setAvailable(GPSstate.DATA_MEM_PTS_LOGGED);
+                        setAvailable(Model.DATA_MEM_PTS_LOGGED);
                         postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
@@ -1221,7 +1224,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                         MtkLogVersion = "V"
                                 + JavaLibBridge.toString(
                                         JavaLibBridge.toInt(sNmea[3]) / 100f, 2);
-                        setAvailable(GPSstate.DATA_LOG_VERSION);
+                        setAvailable(Model.DATA_LOG_VERSION);
                         postEvent(GpsEvent.UPDATE_LOG_VERSION);
                         break;
                     default:
@@ -1242,7 +1245,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
                         // correct endian.
                         initialLogMode = (initialLogMode & 0xFF << 8)
                                 | (initialLogMode >> 8);
-                        setAvailable(GPSstate.DATA_INITIAL_LOG);
+                        setAvailable(Model.DATA_INITIAL_LOG);
                     }
                 } catch (final Exception e) {
                     // Do not care about exception
@@ -1471,17 +1474,17 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
     private static final int C_DPL700_OFF = 0;
     private static final int C_DPL700_NEEDGETLOG = 1;
     private static final int C_DPL700_GETLOG = 2;
-    private int DPL700_State = GPSstate.C_DPL700_OFF;
+    private int DPL700_State = Model.C_DPL700_OFF;
 
     public final void getDPL700Log(final String p_FileName, final int card) {
         DPL700LogFileName = p_FileName;
         DPL700Card = card;
         enterDPL700Mode();
-        DPL700_State = GPSstate.C_DPL700_NEEDGETLOG;
+        DPL700_State = Model.C_DPL700_NEEDGETLOG;
     }
 
     public final void reqDPL700Log() {
-        DPL700_State = GPSstate.C_DPL700_GETLOG;
+        DPL700_State = Model.C_DPL700_GETLOG;
         handler.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
@@ -1494,7 +1497,7 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
 
     public final void exitDPL700Mode() {
         handler.sendDPL700Cmd("WP AP-Exit"); // No reply expected
-        DPL700_State = GPSstate.C_DPL700_OFF;
+        DPL700_State = Model.C_DPL700_OFF;
     }
 
     public final void reqDPL700LogSize() {
@@ -1520,11 +1523,11 @@ public final class GPSstate extends gps.mvc implements BT747Thread {
         if (s.startsWith("WP GPS")) {
             // WP GPS+BT
             // Response to W'P detect
-            if (DPL700_State == GPSstate.C_DPL700_NEEDGETLOG) {
+            if (DPL700_State == Model.C_DPL700_NEEDGETLOG) {
                 reqDPL700Log();
             }
         } else if (s.startsWith("WP Update Over")) {
-            if (DPL700_State == GPSstate.C_DPL700_GETLOG) {
+            if (DPL700_State == Model.C_DPL700_GETLOG) {
                 if (DPL700LogFileName != null) {
                     if (!DPL700LogFileName.endsWith(".sr")) {
                         DPL700LogFileName += ".sr";

@@ -12,11 +12,13 @@
 // *** IS ASSUMED BY THE USER. ***
 // *** See the GNU General Public License Version 3 for details. ***
 // *** *********************************************************** ***
-package gps;
+package gps.mvc;
 
 
 import gps.convert.Conv;
 import gps.log.in.WindowedFile;
+import gps.GpsEvent;
+import gps.BT747Constants;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -24,7 +26,7 @@ import bt747.sys.JavaLibBridge;
 
 final class MTKLogDownloadHandler {
 
-    private final GPSstate gpsState;
+    private final Model gpsState;
     private int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
 
     /** File handle for binary log being downloaded. */
@@ -81,7 +83,7 @@ final class MTKLogDownloadHandler {
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
-    protected MTKLogDownloadHandler(final GPSstate state) {
+    protected MTKLogDownloadHandler(final Model state) {
         gpsState = state;
     }
 
