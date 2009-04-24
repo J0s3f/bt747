@@ -207,6 +207,10 @@ public final class GPSRxTxPort extends GPSPort {
 
     }
 
+    /** Maximum index when looking for BT port number given a base name. */
+    private static final int MAX_BTPORT_SEARCH_IDX = 3;
+    /** Maximum index when looking for USB port number given a base name. */
+    private static final int MAX_USBPORT_SEARCH_IDX = 6;
     /**
      * Set a bluetooth connection.
      */
@@ -215,29 +219,29 @@ public final class GPSRxTxPort extends GPSPort {
         spPortNbr = 0;
         boolean portFound = false;
         if (os_name.toLowerCase().startsWith("mac")) {
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 // /dev/tty.HOLUX_M-241-SPPSlave-1
                 freeTextPort = "/dev/tty.HOLUX_M-241-SPPSlave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 // /dev/tty.HOLUX_M-241-SPPSlave-1
                 freeTextPort = "/dev/tty.HoluxM-1000C-SPPslave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPSlave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPslave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/cu.QstarzGPS-SPPslave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 3); i++) {
+            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/tty.QstarzGPS-SPPslave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
@@ -272,15 +276,15 @@ public final class GPSRxTxPort extends GPSPort {
             portFound = isValidPort(freeTextPort);
         }
         if (!portFound) {
-            freeTextPort = "/dev/cu.usbmodem1d10";                                    
+            freeTextPort = "/dev/cu.usbmodem1d10";
             portFound = isValidPort(freeTextPort);
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
-            for (int i = 0; !portFound && (i < 6); i++) {
+            for (int i = 0; !portFound && (i < MAX_USBPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/ttyUSB" + i;
                 portFound = isValidPort(freeTextPort);
             }
-            for (int i = 0; !portFound && (i < 6); i++) {
+            for (int i = 0; !portFound && (i < MAX_USBPORT_SEARCH_IDX); i++) {
                 freeTextPort = "/dev/ttyACM" + i;
                 portFound = isValidPort(freeTextPort);
             }
