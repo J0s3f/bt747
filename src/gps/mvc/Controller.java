@@ -46,6 +46,7 @@ public class Controller implements BT747Thread {
      */
     public final void eraseLog() {
         eraseRequested = true;
+        gpsM.setEraseOngoing(true);  // For popup
     }
     
     /**

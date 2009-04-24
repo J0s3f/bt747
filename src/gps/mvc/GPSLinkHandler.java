@@ -272,7 +272,7 @@ final class GPSLinkHandler {
         return gpsRxTx.getDPL700_buffer_idx();
     }
 
-    protected final boolean isEraseOngoing() {
+    private final boolean isEraseOngoing() {
         return eraseOngoing;
     }
 
