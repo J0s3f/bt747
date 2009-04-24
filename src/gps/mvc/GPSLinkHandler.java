@@ -12,8 +12,9 @@
 // *** IS ASSUMED BY THE USER. See the GNU General Public License ***
 // *** for more details. ***
 // *** *********************************************************** ***
-package gps;
+package gps.mvc;
 
+import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
 import bt747.sys.Generic;
