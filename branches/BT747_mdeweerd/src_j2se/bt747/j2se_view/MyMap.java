@@ -33,6 +33,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -93,6 +96,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
         map.setAddressLocation(new GeoPosition(51.5, 0));
 
+        if (false) { // set to TRUE to get messages from map loader.
+            LogManager lm = LogManager.getLogManager();
+            java.util.Enumeration<String> iter = lm.getLoggerNames();
+            while (iter.hasMoreElements()) {
+                Logger l = LogManager.getLogManager().getLogger(
+                        iter.nextElement());
+                l.setLevel(Level.ALL);
+            }
+        }
+
         setMapTileCacheDirectory();
     }
 
@@ -124,7 +137,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         // waypointList.setPreferredSize(new Dimension(100,0));
         splitPane.setDividerLocation(100);
 
-        new TagFilePopupMenu(wayPointScrollPane,waypointList);
+        new TagFilePopupMenu(wayPointScrollPane, waypointList);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
