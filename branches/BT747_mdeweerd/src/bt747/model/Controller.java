@@ -715,25 +715,25 @@ public class Controller {
      * 
      */
     public final void reqMtkLogVersion() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_VERSION);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_MEM_USED);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_MEM_USED);
     }
 
     public final void reqInitialLogMode() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_INITIAL_LOG);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_INITIAL_LOG);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_MEM_PTS_LOGGED);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -762,7 +762,7 @@ public class Controller {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_STATUS);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_STATUS);
     }
 
     /**
@@ -771,7 +771,7 @@ public class Controller {
      * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_FORMAT);
+        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_FORMAT);
     }
 
     /**
@@ -933,12 +933,12 @@ public class Controller {
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             final GPSstate gpsModel = m.gpsModel();
-            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG); // First may
+            gpsModel.setDataNeeded(GPSstate.DATA_INITIAL_LOG); // First may
             // fail.
             gpsModel.reqStatus();
-            gpsModel.checkAvailable(GPSstate.DATA_FLASH_TYPE);
+            gpsModel.setDataNeeded(GPSstate.DATA_FLASH_TYPE);
             reqLogFormat();
-            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG);
+            gpsModel.setDataNeeded(GPSstate.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             gpsModel.initConnection();
             // Remember defaults

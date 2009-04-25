@@ -176,13 +176,28 @@ public class Model {
         }
     }
 
+    private static final int DATA_TIMEOUT = 3500;
+
+    protected final boolean isDataNeedsRequest(final int ts,
+            final int dataType) {
+        if ( // Data not available or out of date.
+        ((dataTimesOut[dataType] || !isDataAvailable(dataType))
+        // Request must have timed out
+        && ((ts - dataRequested[dataType]) > DATA_TIMEOUT))) {
+            dataRequested[dataType] = ts;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Check if the data is available and if it is not, requests it.
      * 
      * @param dataType
      * @return
      */
-    public final boolean checkAvailable(final int dataType) {
+    public final void setDataNeeded(final int dataType) {
         if (handler.isConnected()) {
             final int ts = Generic.getTimeStamp();
             if (Generic.getDebugLevel() > 1) {
@@ -191,9 +206,7 @@ public class Model {
                         + dataAvailable[dataType] + " requested:"
                         + (ts - dataRequested[dataType]));
             }
-            if ((dataTimesOut[dataType] || !dataAvailable[dataType])
-                    && ((ts - dataRequested[dataType]) > 3500)) {
-                dataRequested[dataType] = ts;
+            if (isDataNeedsRequest(ts, dataType)) {
                 switch (dataType) {
                 case DATA_MEM_USED:
                     reqLogMemUsed();
@@ -225,15 +238,11 @@ public class Model {
                 default:
                     break;
                 }
-                return false;
-            } else {
-                return true;
             }
         }
         if (Generic.isDebug() && (Generic.getDebugLevel() >= 2)) {
             Generic.debug("Data request of " + dataType + " skipped");
         }
-        return false;
     }
 
     private final void setAvailable(final int dataType) {
@@ -251,21 +260,21 @@ public class Model {
         }
     }
 
-    public final boolean isAvailable(final int dataType) {
+    public final boolean isDataAvailable(final int dataType) {
         return dataAvailable[dataType];
     }
 
     private final void setChanged(final int dataType) {
         dataAvailable[dataType] = false;
         dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
-        checkAvailable(dataType);
+        setDataNeeded(dataType);
     }
 
     /**
      * @return The useful bytes in the log.
      */
     public final int logMemUsefullSize() {
-        checkAvailable(Model.DATA_FLASH_TYPE);
+        setDataNeeded(Model.DATA_FLASH_TYPE);
         return (int) ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
@@ -273,8 +282,8 @@ public class Model {
      * @return Useful free bytes in the log.
      */
     public final int logFreeMemUsefullSize() {
-        checkAvailable(Model.DATA_FLASH_TYPE);
-        checkAvailable(Model.DATA_MEM_USED);
+        setDataNeeded(Model.DATA_FLASH_TYPE);
+        setDataNeeded(Model.DATA_MEM_USED);
         return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
@@ -328,10 +337,10 @@ public class Model {
     }
 
     public final void reqDeviceInfo() {
-        checkAvailable(Model.DATA_MTK_RELEASE);
-        checkAvailable(Model.DATA_MTK_VERSION);
-        checkAvailable(Model.DATA_FLASH_TYPE);
-        checkAvailable(Model.DATA_LOG_VERSION);
+        setDataNeeded(Model.DATA_MTK_RELEASE);
+        setDataNeeded(Model.DATA_MTK_VERSION);
+        setDataNeeded(Model.DATA_FLASH_TYPE);
+        setDataNeeded(Model.DATA_LOG_VERSION);
     }
 
     /**
@@ -361,7 +370,7 @@ public class Model {
 
     /**
      * Request the current log format from the device.<br>
-     * Must use {@link #checkAvailable(int)} and {@link #DATA_LOG_FORMAT}.
+     * Must use {@link #setDataNeeded(int)} and {@link #DATA_LOG_FORMAT}.
      */
     private final void reqLogFormat() {
         // Request log format from device
@@ -372,7 +381,7 @@ public class Model {
 
     /**
      * Request the current log status from the device.<br>
-     * Must use {@link #checkAvailable(int)} and {@link #DATA_LOG_STATUS}.
+     * Must use {@link #setDataNeeded(int)} and {@link #DATA_LOG_STATUS}.
      */
     protected final void reqLogStatus() {
 
@@ -383,7 +392,7 @@ public class Model {
 
     /**
      * Requests the amount of memory currently used.<br>
-     * Must use {@link #checkAvailable(int)} and {@link #DATA_MEM_USED}.
+     * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_USED}.
      */
     private final void reqLogMemUsed() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
@@ -393,7 +402,7 @@ public class Model {
 
     /**
      * Requests the number of points logged in memory.<br>
-     * Must use {@link #checkAvailable(int)} and {@link #DATA_MEM_PTS_LOGGED}.
+     * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_PTS_LOGGED}.
      */
     private final void reqLogMemPtsLogged() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
@@ -506,7 +515,7 @@ public class Model {
 
     /** Get the current status of the device */
     public final void reqStatus() {
-        checkAvailable(Model.DATA_LOG_FORMAT);
+        setDataNeeded(Model.DATA_LOG_FORMAT);
         getLogCtrlInfo();
         // getLogReasonStatus();
         // getPowerSaveEnabled();
@@ -522,9 +531,9 @@ public class Model {
     }
 
     private final void getLogCtrlInfo() {
-        checkAvailable(Model.DATA_LOG_VERSION);
-        checkAvailable(Model.DATA_MEM_USED);
-        checkAvailable(Model.DATA_MEM_PTS_LOGGED);
+        setDataNeeded(Model.DATA_LOG_VERSION);
+        setDataNeeded(Model.DATA_MEM_USED);
+        setDataNeeded(Model.DATA_MEM_PTS_LOGGED);
         reqLogOverwrite();
     }
 

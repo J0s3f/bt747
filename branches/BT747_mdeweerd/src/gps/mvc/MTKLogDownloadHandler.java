@@ -26,17 +26,16 @@ import bt747.sys.JavaLibBridge;
 final class MTKLogDownloadHandler {
 
     private final MTKLogDownloadContext context = new MTKLogDownloadContext();
-
-    private final Model gpsM;
-    private int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
-
     
     /** Data that can be reused across states.
      * [Preparation to implement the State Design Pattern]
      * @author Mario
      *
      */
-    private class MTKLogDownloadContext {
+    private final class MTKLogDownloadContext {
+        protected Model gpsM;
+        protected int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
+
         protected File logFile = null;
 
         /**
@@ -46,11 +45,15 @@ final class MTKLogDownloadHandler {
         /** Card (for Palm) of binary log file. Defaults to last card in device. */
         protected int logFileCard = -1;
 
+        protected int startAddr;  // Parameter
+        protected int endAddr;    // Parameter
+        
         protected int logNextReqAddr;
         protected int logNextReadAddr;
         protected int logRequestStep;
 
         protected boolean incremental = true;
+        protected boolean disableLogging;
         protected boolean loggingIsActiveBeforeDownload = false;
 
         // Fields to keep track of logging status
@@ -60,11 +63,17 @@ final class MTKLogDownloadHandler {
 
         protected int logRequestAhead = 0;
 
-        private byte[] expectedResult;
+        protected byte[] expectedResult;
 
-        private boolean forcedErase = false;
+        protected boolean forcedErase = false;
 
-        private boolean getFullLogBlocks = true; // If true, get the entire log
+        protected boolean getFullLogBlocks = true; // If true, get the entire log
+
+        protected int usedLogRequestAhead = 0;
+        /** buffer used for reading data. */
+        protected final byte[] readDataBuffer = new byte[0x800];
+
+
     }
 
     
@@ -95,7 +104,7 @@ final class MTKLogDownloadHandler {
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
     protected MTKLogDownloadHandler(final Model state) {
-        gpsM = state;
+        context.gpsM = state;
     }
 
     /**
@@ -117,50 +126,56 @@ final class MTKLogDownloadHandler {
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
             final boolean isIncremental, final boolean disableLogging) {
-        if (logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
+        context.startAddr = startAddr;
+        context.endAddr = endAddr;
+        // The size of each individual request.
+        context.logRequestStep = requestStep;
+        context.logFileName = fileName;
+        context.logFileCard = card;
+        context.incremental = isIncremental;
+        context.disableLogging = disableLogging;
+        MTKLogDownloadHandler.logInit(context);
+    }
+    
+    private static final void logInit(MTKLogDownloadContext context) {
+        if (context.logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             // Disable device logging while downloading to improve
             // performance.
-            context.loggingIsActiveBeforeDownload = gpsM.isLoggingActive();
-            if (disableLogging && context.loggingIsActiveBeforeDownload) {
-                gpsM.stopLog();
-                gpsM.reqLogOnOffStatus();
+            context.loggingIsActiveBeforeDownload = context.gpsM.isLoggingActive();
+            if (context.disableLogging && context.loggingIsActiveBeforeDownload) {
+                context.gpsM.stopLog();
+                context.gpsM.reqLogOnOffStatus();
             }
         }
-        gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
+        context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
 
         if (Generic.isDebug()) {
-            Generic.debug((isIncremental ? "Incremental d" : "D")
+            Generic.debug((context.incremental ? "Incremental d" : "D")
                     + "ownload request from "
-                    + JavaLibBridge.unsigned2hex(startAddr, 8) + " to "
-                    + JavaLibBridge.unsigned2hex(endAddr, 8));
+                    + JavaLibBridge.unsigned2hex(context.startAddr, 8) + " to "
+                    + JavaLibBridge.unsigned2hex(context.endAddr, 8));
         }
 
+
         // Start address
-        context.logDownloadStartAddr = startAddr;
+        context.logDownloadStartAddr = context.startAddr;
         // Round end address to end of block
-        context.logDownloadEndAddr = ((endAddr + 0xFFFF) & 0xFFFF0000) - 1;
+        context.logDownloadEndAddr = ((context.endAddr + 0xFFFF) & 0xFFFF0000) - 1;
         // Next address to request from device is start address.
         context.logNextReqAddr = context.logDownloadStartAddr;
         // Next address expected from device is start address.
         context.logNextReadAddr = context.logDownloadStartAddr;
-        // The size of each individual request.
-        context.logRequestStep = requestStep;
-
+        
         if (context.logRequestStep > 0x800) {
             // Not requesting anything ahead of time is individual size is
             // big.
-            usedLogRequestAhead = 0;
+            context.usedLogRequestAhead = 0;
         } else {
             // The request pipeline is as set by the user.
-            usedLogRequestAhead = context.logRequestAhead;
+            context.usedLogRequestAhead = context.logRequestAhead;
         }
 
-        context.logFileName = fileName;
-        context.logFileCard = card;
-
-        context.incremental = isIncremental;
-
-        logState = MTKLogDownloadHandler.C_LOG_START;
+        context.logState = MTKLogDownloadHandler.C_LOG_START;
     }
 
     private final void realDownloadStart() {
@@ -279,15 +294,15 @@ final class MTKLogDownloadHandler {
                         for (int i = context.expectedResult.length - 1; i >= 0; i--) {
                             context.expectedResult[i] = b[i];
                         }
-                        logState = MTKLogDownloadHandler.C_LOG_CHECK;
-                        gpsM.resetLogTimeOut();
+                        context.logState = MTKLogDownloadHandler.C_LOG_CHECK;
+                        context.gpsM.resetLogTimeOut();
                         requestCheckBlock();
                     }
                 }
-                gpsM.updateIgnoreNMEA();
+                context.gpsM.updateIgnoreNMEA();
                 windowedLogFile.close();
             }
-            if (!(logState == MTKLogDownloadHandler.C_LOG_CHECK)) {
+            if (!(context.logState == MTKLogDownloadHandler.C_LOG_CHECK)) {
                 // File could not be opened or is not incremental.
                 openNewLog(context.logFileName, context.logFileCard);
                 if (Generic.isDebug()) {
@@ -297,10 +312,10 @@ final class MTKLogDownloadHandler {
                             + JavaLibBridge.unsigned2hex(context.logDownloadEndAddr,
                                     8));
                 }
-                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
+                context.logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             }
-            if (logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
-                gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
+            if (context.logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
+                context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             }
         } catch (final Exception e) {
             Generic.debug("getLogInit", e);
@@ -330,7 +345,7 @@ final class MTKLogDownloadHandler {
             context.logFileCard = card;
 
             if ((context.logFile == null) || !(context.logFile.isOpen())) {
-                gpsM.postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
+                context.gpsM.postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
             }
         } catch (final Exception e) {
             Generic.debug("openNewLog", e);
@@ -350,19 +365,19 @@ final class MTKLogDownloadHandler {
 
     // Called regularly
     private void getNextLogPart() {
-        if (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
+        if (context.logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             int z_Step;
 
             z_Step = context.logDownloadEndAddr - context.logNextReqAddr + 1;
 
-            switch (logState) {
+            switch (context.logState) {
             case C_LOG_ACTIVE:
                 if (context.logDownloadEndAddr <= context.logNextReadAddr) {
                     // Log is completely downloaded
                     endGetLog();
                 }
                 if (context.logNextReqAddr > context.logNextReadAddr + context.logRequestStep
-                        * usedLogRequestAhead) {
+                        * context.usedLogRequestAhead) {
                     z_Step = 0;
                 }
                 break;
@@ -394,7 +409,7 @@ final class MTKLogDownloadHandler {
                 }
                 readLog(context.logNextReqAddr, z_Step);
                 context.logNextReqAddr += z_Step;
-                if (logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
+                if (context.logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
                     getNextLogPart(); // Recursive to get requests 'ahead'
                 }
             }
@@ -403,7 +418,7 @@ final class MTKLogDownloadHandler {
 
     // Called when no outstanding requests
     private void getLogPartNoOutstandingRequests() {
-        switch (logState) {
+        switch (context.logState) {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
             context.logNextReqAddr = context.logNextReadAddr; // Recover from timeout.
@@ -423,7 +438,7 @@ final class MTKLogDownloadHandler {
     private void recoverFromLogError() {
         // TODO: Make sure that is not called in C_LOG_CHECK mode.
         // logNextReqAddr = logNextReadAddr;
-        logState = MTKLogDownloadHandler.C_LOG_RECOVER; // recover through
+        context.logState = MTKLogDownloadHandler.C_LOG_RECOVER; // recover through
         // timeout.
     }
 
@@ -431,15 +446,15 @@ final class MTKLogDownloadHandler {
             final String sData) {
         int dataLength;
         // Convert hex data to bytes
-        dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2;
+        dataLength = Conv.hexStringToBytes(sData, context.readDataBuffer) / 2;
         // debugMsg("Got "+startAddr+"
         // "+JavaLibBridge.toString(sData.length())+"):
         // "+JavaLibBridge.toString(dataLength));
-        switch (logState) {
+        switch (context.logState) {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
             if (context.logNextReadAddr == startAddr) {
-                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
+                context.logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
                 int j = 0;
 
                 // The Palm platform showed problems writing 0x800 blocks.
@@ -457,7 +472,7 @@ final class MTKLogDownloadHandler {
                         Generic.debug("Unexpected datalength: "
                                 + JavaLibBridge.unsigned2hex(dataLength, 8));
                     }
-                    logState = MTKLogDownloadHandler.C_LOG_RECOVER;
+                    context.logState = MTKLogDownloadHandler.C_LOG_RECOVER;
                 } else {
                     // Data seems ok
                     for (int i = dataLength; i > 0; i -= MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE) {
@@ -470,7 +485,7 @@ final class MTKLogDownloadHandler {
                         // "+JavaLibBridge.toString(l));
 
                         try {
-                            if ((context.logFile.writeBytes(readDataBuffer, j, l)) != l) {
+                            if ((context.logFile.writeBytes(context.readDataBuffer, j, l)) != l) {
                                 // debugMsg("Problem during anaLog:
                                 // "+JavaLibBridge.toString(m_context.logFile.lastError));
                                 cancelGetLog();
@@ -488,13 +503,13 @@ final class MTKLogDownloadHandler {
                             && (((startAddr - 1 + dataLength) & 0xFFFF0000) >= startAddr)) {
                         // Block boundary (0xX0000) is inside data.
                         final int blockStart = 0xFFFF & (0x10000 - (startAddr & 0xFFFF));
-                        if (!(((readDataBuffer[blockStart] & 0xFF) == 0xFF) && ((readDataBuffer[blockStart + 1] & 0xFF) == 0xFF))) {
+                        if (!(((context.readDataBuffer[blockStart] & 0xFF) == 0xFF) && ((context.readDataBuffer[blockStart + 1] & 0xFF) == 0xFF))) {
                             // This block is full, next block is still data
                             int minEndAddr;
                             // This block and next one.
                             minEndAddr = (startAddr & 0xFFFF0000) + 0x20000 - 1;
-                            if (minEndAddr > gpsM.getLogMemSize() - 1) {
-                                minEndAddr = gpsM.getLogMemSize() - 1;
+                            if (minEndAddr > context.gpsM.getLogMemSize() - 1) {
+                                minEndAddr = context.gpsM.getLogMemSize() - 1;
                             }
                             if (minEndAddr > context.logDownloadEndAddr) {
                                 context.logDownloadEndAddr = minEndAddr;
@@ -503,7 +518,7 @@ final class MTKLogDownloadHandler {
                     }
                 }
                 if (context.logNextReadAddr > context.logDownloadEndAddr) {
-                    gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
+                    context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
                     endGetLog();
                 } else {
                     getNextLogPart();
@@ -518,7 +533,7 @@ final class MTKLogDownloadHandler {
             }
             break;
         case C_LOG_CHECK:
-            logState = MTKLogDownloadHandler.C_LOG_NOLOGGING; // Default.
+            context.logState = MTKLogDownloadHandler.C_LOG_NOLOGGING; // Default.
             if ((startAddr == MTKLogDownloadHandler.C_BLOCKVERIF_START)
                     && (dataLength == MTKLogDownloadHandler.C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
@@ -526,7 +541,7 @@ final class MTKLogDownloadHandler {
                 boolean success;
                 success = true;
                 for (int i = dataLength - 1; i >= 0; i--) {
-                    if (readDataBuffer[i] != context.expectedResult[i]) {
+                    if (context.readDataBuffer[i] != context.expectedResult[i]) {
                         // The log is not the same, data is different
                         success = false;
                         break; // Exit from the loop
@@ -550,15 +565,15 @@ final class MTKLogDownloadHandler {
                                 + JavaLibBridge.unsigned2hex(
                                         context.logDownloadEndAddr, 8));
                     }
-                    logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
+                    context.logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
                     getNextLogPart();
                 } else {
-                    logState = MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
+                    context.logState = MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
                     if (Generic.isDebug()) {
                         Generic
                                 .debug("Different data - requesting overwrite confirmation");
                     }
-                    gpsM
+                    context.gpsM
                             .postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
             } else {
@@ -578,14 +593,14 @@ final class MTKLogDownloadHandler {
                                                     dataLength, 8) + ")",
                                     null);
                 }
-                logState = MTKLogDownloadHandler.C_LOG_CHECK;
+                context.logState = MTKLogDownloadHandler.C_LOG_CHECK;
                 // recoverFromLogError();
             }
             break;
         default:
             break;
-        } // Switch m_logState
-        gpsM.postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+        } // Switch m_context.logState
+        context.gpsM.postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
     }
 
     /**
@@ -595,19 +610,18 @@ final class MTKLogDownloadHandler {
      * @param overwrite
      */
     protected final void replyToOkToOverwrite(final boolean overwrite) {
-        if (logState == MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
+        if (context.logState == MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
                 openNewLog(context.logFileName, context.logFileCard);
                 context.logNextReadAddr = 0;
                 context.logNextReadAddr = 0;
-                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
+                context.logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             } else {
                 endGetLog();
             }
         }
     }
 
-    private int usedLogRequestAhead = 0;
 
     /**
      * Start of block position to verify if log in device corresponds to log
@@ -619,9 +633,6 @@ final class MTKLogDownloadHandler {
     private static final int C_BLOCKVERIF_SIZE = 0x200;
 
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
-
-    /** buffer used for reading data. */
-    private final byte[] readDataBuffer = new byte[0x800];
 
     /**
      * Request the block to validate that log in device is log in file.
@@ -646,19 +657,19 @@ final class MTKLogDownloadHandler {
     }
 
     private void endGetLog() {
-        logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
+        context.logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
         closeLog();
 
         if (context.loggingIsActiveBeforeDownload) {
-            gpsM.startLog();
-            gpsM.reqLogOnOffStatus();
+            context.gpsM.startLog();
+            context.gpsM.reqLogOnOffStatus();
         }
-        gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
+        context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
     }
 
     protected final boolean isLogDownloadOnGoing() {
-        return (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
-                && (logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE);
+        return (context.logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
+                && (context.logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE);
     }
 
     protected final int getStartAddr() {
@@ -687,8 +698,8 @@ final class MTKLogDownloadHandler {
      */
 
     protected final void eraseLog() {
-        if (gpsM.isConnected()) {
-            gpsM.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+        if (context.gpsM.isConnected()) {
+            context.gpsM.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);
             waitEraseDone();
@@ -697,16 +708,16 @@ final class MTKLogDownloadHandler {
 
     protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
-        gpsM.stopLog(); // Stop logging for this operation
-        gpsM.reqLogStatus(); // Check status
-        gpsM.reqLogFlashSectorStatus(); // Get flash sector information
+        context.gpsM.stopLog(); // Stop logging for this operation
+        context.gpsM.reqLogStatus(); // Check status
+        context.gpsM.reqLogFlashSectorStatus(); // Get flash sector information
         // from
         // device
         // TODO: Handle flash sector information.
-        gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
 
-        gpsM.reqLogStatus(); // Check status
+        context.gpsM.reqLogStatus(); // Check status
 
         context.forcedErase = true;
         eraseLog();
@@ -714,40 +725,40 @@ final class MTKLogDownloadHandler {
     }
 
     private void postRecoveryEraseLog() {
-        gpsM.reqLogStatus();
-        gpsM.reqLogFlashSectorStatus(); // Get flash sector information
+        context.gpsM.reqLogStatus();
+        context.gpsM.reqLogFlashSectorStatus(); // Get flash sector information
         // from
         // device
 
-        gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
-        gpsM.reqLogFlashSectorStatus(); // Get flash sector information
+        context.gpsM.reqLogFlashSectorStatus(); // Get flash sector information
         // from
         // device
-        gpsM.reqLogStatus();
+        context.gpsM.reqLogStatus();
     }
 
     private void waitEraseDone() {
-        logState = MTKLogDownloadHandler.C_LOG_ERASE_STATE;
-        gpsM.resetLogTimeOut();
+        context.logState = MTKLogDownloadHandler.C_LOG_ERASE_STATE;
+        context.gpsM.resetLogTimeOut();
         // readLogFlashStatus(); - Will be done after timeout
     }
 
     private void signalEraseDone() {
-        logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
-        gpsM.setEraseOngoing(false);
+        context.logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
+        context.gpsM.setEraseOngoing(false);
     }
 
     protected final void stopErase() {
-        if (gpsM.isEraseOngoing()
-                && (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
-            gpsM.updateIgnoreNMEA();
+        if (context.gpsM.isEraseOngoing()
+                && (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
+            context.gpsM.updateIgnoreNMEA();
 
             signalEraseDone();
         } else {
             // Not changing state.
-            gpsM.setEraseOngoing(false);
+            context.gpsM.setEraseOngoing(false);
         }
     }
 
@@ -755,32 +766,32 @@ final class MTKLogDownloadHandler {
      * Called from within run of GPSstate (regularly called).
      */
     protected void notifyRun() {
-        if ((gpsM.getOutStandingCmdsCount() == 0)
-                && (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
-                && (logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
+        if ((context.gpsM.getOutStandingCmdsCount() == 0)
+                && (context.logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
+                && (context.logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
             // Sending command on next timer adds some delay after
             // the end of the previous command (reception)
             getLogPartNoOutstandingRequests();
-        } else if (logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
+        } else if (context.logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
             getNextLogPart();
-        } else if (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
-            if (gpsM.timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
-                gpsM.reqLogFlashStatus();
+        } else if (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
+            if (context.gpsM.timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
+                context.gpsM.reqLogFlashStatus();
             }
         }
     }
 
     protected final void notifyDisconnected() {
-        if (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
+        if (context.logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             endGetLog();
         }
     }
 
     protected final void handleLogFlashStatReply(final String s) {
-        if (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
+        if (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
             switch (JavaLibBridge.toInt(s)) {
             case 1:
-                if (gpsM.isEraseOngoing()) {
+                if (context.gpsM.isEraseOngoing()) {
                     signalEraseDone();
                 }
                 if (context.forcedErase) {
@@ -806,7 +817,7 @@ final class MTKLogDownloadHandler {
      *                size of the data range requested
      */
     protected final void readLog(final int startAddr, final int size) {
-        gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_Q_LOG + ","
                 + JavaLibBridge.unsigned2hex(startAddr, 8) + ","
                 + JavaLibBridge.unsigned2hex(size, 8));
