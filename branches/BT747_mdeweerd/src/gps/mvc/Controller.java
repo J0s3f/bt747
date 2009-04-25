@@ -124,7 +124,7 @@ public class Controller implements BT747Thread {
                     handler.checkSendCmdFromQueue();
                 } while ((loopsToGo-- > 0) && (lastResponse != null));
                 if ((nextAvailableRun < timeStamp)
-                        && (gpsM.getOutStandingCmdsCount() == 0)
+                        && (handler.getOutStandingCmdsCount() == 0)
                         && !gpsM.isLogDownloadOnGoing()) {
                     if(eraseRequested) {
                         eraseRequested = false; // Erase request handled

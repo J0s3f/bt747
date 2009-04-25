@@ -1,7 +1,4 @@
-Version 1.68.11
-* Erase popup did no longer appear 'immediately'.  Improved.
-
-Version 1.68.10
+Version 1.68.10-12
 * Erase procedure did not necessarily wait properly when the command buffer
   was not empty.  Fixed.
 * Some internal code refactoring started.

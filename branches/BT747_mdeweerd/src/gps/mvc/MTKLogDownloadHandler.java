@@ -699,6 +699,7 @@ final class MTKLogDownloadHandler {
 
     protected final void eraseLog() {
         if (context.gpsM.isConnected()) {
+            context.gpsM.getHandler().setEraseOngoing(true);
             context.gpsM.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);

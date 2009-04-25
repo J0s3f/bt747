@@ -243,6 +243,10 @@ final class GPSLinkHandler {
         cmdBuffersAccess.down();
         total = sentCmds.size() + toSendCmds.size();
         cmdBuffersAccess.up();
+        //Generic.debug("sent:"+sentCmds.size()+" tosend:"+toSendCmds.size());
+        //if(toSendCmds.size()>0) {
+        //    Generic.debug(""+toSendCmds.elementAt(0));
+        //}
         return total;
     }
 

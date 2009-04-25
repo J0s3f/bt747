@@ -1524,8 +1524,8 @@ public class Model {
                 postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
             } else {
                 postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+                handler.setEraseOngoing(false);
             }
-            handler.setEraseOngoing(eraseOngoing);
         }
     }
 
