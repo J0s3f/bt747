@@ -776,7 +776,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return
      */
     public final boolean isAvailable(final int dataType) {
-        return gpsModel.isAvailable(dataType);
+        return gpsModel.isDataAvailable(dataType);
     }
 
     /**

@@ -88,7 +88,7 @@ public class Controller implements BT747Thread {
      */
     private void checkNextAvailable() {
         int next = nextValueToCheck;
-        gpsM.checkAvailable(next);
+        gpsM.setDataNeeded(next);
         next += 1;
         if (next > Model.DATA_LAST_INDEX) {
             next = 0;
