@@ -630,6 +630,10 @@ public final class BT747Constants { // dev as in device
             mdStr = "757/ZI v1";
             // logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
+// Not needed because other detection works
+//        case 0x0415:
+//            mdStr = "NCS-NAVI 150+";
+//            break;
         case 0x231B:
             mdStr = "ML7";
             break;
@@ -661,12 +665,14 @@ public final class BT747Constants { // dev as in device
             mdStr = "Qstarz BT-1000X";
         } else if (device.equals("GR-245")) {
             mdStr = "Holux GPSport 245";
+        } else if (device.equals("R150+")) {
+            mdStr = "NCS-NAVI 150+";
         }
         return mdStr;
     }
 
     /**
-     * Next entries are elated to <code>PMTK_API_Q_NMEA_OUTPUT</code> and
+     * Next entries are related to <code>PMTK_API_Q_NMEA_OUTPUT</code> and
      * similar.
      * 
      */
