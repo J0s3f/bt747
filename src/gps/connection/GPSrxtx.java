@@ -48,6 +48,10 @@ public final class GPSrxtx {
         GPSrxtx.gpsPort = portInstance;
     }
 
+    protected GPSPort getGpsPortInstance() {
+        return GPSrxtx.gpsPort;
+    }
+
     /**
      * Set the defaults for the device according to the given parameters.
      * 
@@ -295,10 +299,93 @@ public final class GPSrxtx {
         }
     }
 
-    private final BT747Semaphore getResponseOngoing = JavaLibBridge
+    protected final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    public String[] getResponse() {
+    protected final boolean isReadBufferEmpty() {
+        return read_buf_p >= bytesRead;
+    }
+    
+    protected final char getReadBufferChar() {
+        return (char) read_buf[read_buf_p++];
+    }
+    
+    /**
+     * @return true if bytes found.
+     */
+    protected final boolean refillBuffer() {
+        boolean result = true;
+        read_buf_p = 0;
+        bytesRead = 0;
+        if (isConnected()) { // && rxtxMode != DPL700_MODE) {
+            if (virtualInput != null) {
+                final byte[] ns = virtualInput.toString().getBytes();
+                int l = ns.length;
+                if (l > read_buf.length) {
+                    l = read_buf.length;
+                }
+                bytesRead = l;
+                while (--l >= 0) {
+                    read_buf[l] = ns[l];
+                }
+                Generic.debug("Virtual:" + virtualInput.toString());
+                virtualInput = null;
+            } else {
+                try {
+                    int max = GPSrxtx.gpsPort.readCheck();
+                    if (!stableStrategy || (prevReadCheck == max)
+                            || (max > GPSrxtx.C_BUF_SIZE)) {
+
+                        // gpsPort.writeDebug("\r\nC1:" + max + ":");
+                        if ((max > GPSrxtx.C_BUF_SIZE)) {
+                            prevReadCheck = max - GPSrxtx.C_BUF_SIZE;
+                            max = GPSrxtx.C_BUF_SIZE;
+                        } else {
+                            prevReadCheck = 0;
+                        }
+
+                        // gpsPort.writeDebug("\r\nC2:" + max + ":");
+                        if (max > 0) {
+                            bytesRead = GPSrxtx.gpsPort.readBytes(
+                                    read_buf, 0, max);
+                            // if (bytesRead != 0) {
+                            // String sb = new String(read_buf, 0,
+                            // bytesRead);
+                            // System.out.println("RCVD:"
+                            // + JavaLibBridge.toString(bytesRead)
+                            // + ":" + sb + ":");
+                            // }
+                        }
+                        // gpsPort.writeDebug("\r\nC3:" + bytesRead +
+                        // ":");
+                    } else {
+                        prevReadCheck = max;
+                    }
+                    // if(prevReadCheck!=0)
+                    // {System.out.println("prev:"+prevReadCheck+":");}
+                } catch (final Exception e) {
+                    // new
+                    // MessageBox("Waiting","Exception").popupBlockingModal();
+                    bytesRead = 0;
+                }
+            }
+            if (bytesRead == 0) {
+                result = false;
+            } else {
+                if (GPSrxtx.gpsPort.debugActive()) {
+                    final String q = "(" + Generic.getTimeStamp()
+                            + ")";
+                    GPSrxtx.gpsPort.writeDebug(q.getBytes(), 0, q
+                            .length());
+                    GPSrxtx.gpsPort
+                            .writeDebug(read_buf, 0, bytesRead);
+                }
+            }
+        }
+        return result;
+    }
+
+    public final String[] getResponse() {
         boolean continueReading;
         boolean readAgain = true;
         int myError = GPSrxtx.ERR_NOERROR;
@@ -320,8 +407,8 @@ public final class GPSrxtx {
 
             while (continueReading && (read_buf_p < bytesRead)) {
                 // Still bytes in read buffer to interpret
-                char c;
-                c = (char) read_buf[read_buf_p++]; // Next character from
+                //char c;
+                final char c = (char) read_buf[read_buf_p++]; // Next character from
                 // buffer
                 // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
                 // {
@@ -525,7 +612,7 @@ public final class GPSrxtx {
                     current_state = GPSrxtx.C_ERROR_STATE;
                     break;
                 }
-                if (cmd_buf_p > (GPSrxtx.C_BUF_SIZE - 1)) {
+                if (cmd_buf_p > (GPSrxtx.C_CMDBUF_SIZE - 1)) {
                     myError = GPSrxtx.ERR_TOO_LONG;
                     current_state = GPSrxtx.C_ERROR_STATE;
                 }
@@ -540,75 +627,9 @@ public final class GPSrxtx {
 
             // All bytes in buffer are read.
             // If the command is not complete, we continue reading
-            if (continueReading) {
-                read_buf_p = 0;
-                bytesRead = 0;
-                if (isConnected()) { // && rxtxMode != DPL700_MODE) {
-                    if (virtualInput != null) {
-                        final byte[] ns = virtualInput.toString().getBytes();
-                        int l = ns.length;
-                        if (l > read_buf.length) {
-                            l = read_buf.length;
-                        }
-                        bytesRead = l;
-                        while (--l >= 0) {
-                            read_buf[l] = ns[l];
-                        }
-                        Generic.debug("Virtual:" + virtualInput.toString());
-                        virtualInput = null;
-                    } else if (readAgain) {
-                        readAgain = false;
-                        try {
-                            int max = GPSrxtx.gpsPort.readCheck();
-                            if (!stableStrategy || (prevReadCheck == max)
-                                    || (max > GPSrxtx.C_BUF_SIZE)) {
-
-                                // gpsPort.writeDebug("\r\nC1:" + max + ":");
-                                if ((max > GPSrxtx.C_BUF_SIZE)) {
-                                    prevReadCheck = max - GPSrxtx.C_BUF_SIZE;
-                                    max = GPSrxtx.C_BUF_SIZE;
-                                } else {
-                                    prevReadCheck = 0;
-                                }
-
-                                // gpsPort.writeDebug("\r\nC2:" + max + ":");
-                                if (max > 0) {
-                                    bytesRead = GPSrxtx.gpsPort.readBytes(
-                                            read_buf, 0, max);
-                                    // if (bytesRead != 0) {
-                                    // String sb = new String(read_buf, 0,
-                                    // bytesRead);
-                                    // System.out.println("RCVD:"
-                                    // + JavaLibBridge.toString(bytesRead)
-                                    // + ":" + sb + ":");
-                                    // }
-                                }
-                                // gpsPort.writeDebug("\r\nC3:" + bytesRead +
-                                // ":");
-                            } else {
-                                prevReadCheck = max;
-                            }
-                            // if(prevReadCheck!=0)
-                            // {System.out.println("prev:"+prevReadCheck+":");}
-                        } catch (final Exception e) {
-                            // new
-                            // MessageBox("Waiting","Exception").popupBlockingModal();
-                            bytesRead = 0;
-                        }
-                    }
-                    if (bytesRead == 0) {
-                        continueReading = false;
-                    } else {
-                        if (GPSrxtx.gpsPort.debugActive()) {
-                            final String q = "(" + Generic.getTimeStamp()
-                                    + ")";
-                            GPSrxtx.gpsPort.writeDebug(q.getBytes(), 0, q
-                                    .length());
-                            GPSrxtx.gpsPort
-                                    .writeDebug(read_buf, 0, bytesRead);
-                        }
-                    }
-                }
+            if (continueReading && readAgain) {
+                readAgain = false;
+                continueReading = refillBuffer();
             } // continueReading
         }
         if (myError == GPSrxtx.C_ERROR_STATE) {

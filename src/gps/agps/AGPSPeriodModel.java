@@ -10,12 +10,12 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario
  * 
  */
-public class AGPSPeriodData {
+public class AGPSPeriodModel {
     private int time = 0;
 
     private final BT747Vector satData = JavaLibBridge.getVectorInstance();
 
-    public boolean addIfBelongsTo(final AGPSSatRecord r) {
+    public boolean addIfBelongsTo(final AGPSSatRecordModel r) {
         final int rTime = r.getUTCTime();
         if (time == 0) {
             time = rTime;
@@ -50,7 +50,7 @@ public class AGPSPeriodData {
     public int fillBuffer(final byte[] buffer, int bufidx,
             final int startIdx, final int endIdx) {
         for (int i = startIdx; i <= endIdx; i++) {
-            bufidx = ((AGPSSatRecord) satData.elementAt(i)).fillbuffer(
+            bufidx = ((AGPSSatRecordModel) satData.elementAt(i)).fillbuffer(
                     buffer, bufidx);
         }
         return bufidx;

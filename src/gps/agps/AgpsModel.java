@@ -10,7 +10,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  * @author Mario
  * 
  */
-public class AGPS {
+public class AgpsModel {
     private final BT747Hashtable table = JavaLibBridge
             .getHashtableInstance(14 * 4);
 
@@ -18,13 +18,13 @@ public class AGPS {
         int idx;
         idx = 0;
         while (idx + 60 <= buffer.length) {
-            final AGPSSatRecord r = new AGPSSatRecord(buffer, idx);
-            AGPSPeriodData p;
+            final AGPSSatRecordModel r = new AGPSSatRecordModel(buffer, idx);
+            AGPSPeriodModel p;
             TimeInt time;
             time = new TimeInt(r.getUTCTime());
-            p = (AGPSPeriodData) table.get(time);
+            p = (AGPSPeriodModel) table.get(time);
             if (p == null) {
-                p = new AGPSPeriodData();
+                p = new AGPSPeriodModel();
                 table.put(time, p);
             }
             p.addIfBelongsTo(r);
@@ -36,7 +36,7 @@ public class AGPS {
         final BT747Hashtable iter = table.iterator();
         int size = 0;
         while (iter.hasNext()) {
-            final AGPSPeriodData p = (AGPSPeriodData) iter
+            final AGPSPeriodModel p = (AGPSPeriodModel) iter
                     .get(iter.nextKey());
             if (p.getTime() >= time) {
                 size += p.getSize();
