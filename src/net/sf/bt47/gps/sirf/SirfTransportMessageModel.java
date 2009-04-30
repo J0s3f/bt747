@@ -53,7 +53,7 @@ public class SirfTransportMessageModel {
         for (int i = 0; i < payload.length; i++) {
             message[i + 4] = payload[i];
             checksum += payload[i];
-            checksum &= 0xFFFF;
+            checksum &= 0x7FFF;
         }
         message[transportSize - 3] = (byte) (checksum >> 8);
         message[transportSize - 2] = (byte) (checksum & 0xFF);
@@ -97,7 +97,7 @@ public class SirfTransportMessageModel {
         for (int i = 0; i < payloadlenght; i++) {
             payload[i] = message[i + 4];
             checksum += payload[i];
-            checksum &= 0xFFFF;
+            checksum &= 0x7FFF;
         }
         if (checksum != expected_checksum) {
             return false;
