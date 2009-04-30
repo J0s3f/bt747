@@ -154,9 +154,9 @@ public class Model {
             true, // DATA_LOG_STATUS
             false, // DATA_LOG_VERSION
     };
-    public final static int DATA_MEM_USED = 0;
+    public final static int DATA_FLASH_TYPE = 0;
     public final static int DATA_MEM_PTS_LOGGED = 1;
-    public final static int DATA_FLASH_TYPE = 2;
+    public final static int DATA_MEM_USED = 2;
     public final static int DATA_LOG_FORMAT = 3;
     public final static int DATA_MTK_VERSION = 4;
     public final static int DATA_MTK_RELEASE = 5;
