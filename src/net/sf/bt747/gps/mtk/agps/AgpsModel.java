@@ -19,12 +19,12 @@ public class AgpsModel {
         idx = 0;
         while (idx + 60 <= buffer.length) {
             final AgpsSatRecordModel r = new AgpsSatRecordModel(buffer, idx);
-            AgpsPeriodModelx p;
+            AgpsPeriodModel p;
             TimeInt time;
             time = new TimeInt(r.getUTCTime());
-            p = (AgpsPeriodModelx) table.get(time);
+            p = (AgpsPeriodModel) table.get(time);
             if (p == null) {
-                p = new AgpsPeriodModelx();
+                p = new AgpsPeriodModel();
                 table.put(time, p);
             }
             p.addIfBelongsTo(r);
@@ -36,7 +36,7 @@ public class AgpsModel {
         final BT747Hashtable iter = table.iterator();
         int size = 0;
         while (iter.hasNext()) {
-            final AgpsPeriodModelx p = (AgpsPeriodModelx) iter
+            final AgpsPeriodModel p = (AgpsPeriodModel) iter
                     .get(iter.nextKey());
             if (p.getTime() >= time) {
                 size += p.getSize();

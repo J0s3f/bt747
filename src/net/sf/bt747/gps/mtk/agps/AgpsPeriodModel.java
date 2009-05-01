@@ -10,7 +10,7 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario
  * 
  */
-public class AgpsPeriodModelx {
+public class AgpsPeriodModel {
     private int time = 0;
 
     private final BT747Vector satData = JavaLibBridge.getVectorInstance();
