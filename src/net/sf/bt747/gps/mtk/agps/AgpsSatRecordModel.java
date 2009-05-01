@@ -9,19 +9,19 @@ import bt747.sys.JavaLibBridge;
  * @author Mario
  * 
  */
-public class AgpsSatRecordModelx {
+public class AgpsSatRecordModel {
 
     private final byte[] satRecord;
 
     /**
      * 
      */
-    public AgpsSatRecordModelx() {
+    public AgpsSatRecordModel() {
         satRecord = new byte[60];
         // TODO Auto-generated constructor stub
     }
 
-    public AgpsSatRecordModelx(final byte[] buffer, final int index) {
+    public AgpsSatRecordModel(final byte[] buffer, final int index) {
         satRecord = new byte[60];
         for (int i = 0; i < 60; i++) {
             satRecord[i] = buffer[index + i];
