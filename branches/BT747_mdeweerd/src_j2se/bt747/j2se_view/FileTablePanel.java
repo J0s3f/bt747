@@ -20,7 +20,6 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
@@ -130,20 +129,16 @@ public class FileTablePanel extends javax.swing.JPanel implements
         setTargetTemplateComboBox();
     }
     
-    private TaggedFilePathFactory fpf = new TaggedFilePathFactory();
-
     private void updateTargetTemplate() {
         String s = (String) cbTargetTemplate.getSelectedItem();
         String t;
         if (s.equals(getString(OPT_INPLACE_TAGGING))) {
             t = "%p%f%e";
-
         } else if (s.equals(getString(OPT_RENAME_TAGGING))) {
             t = "%p%f_tagged%e";
         } else {
             t = s;
-        }
-        fpf.setDestTemplate(t);
+        }       
         c.setStringOpt(J2SEAppModel.TAGGEDFILE_TEMPLATE, t);
     }
     
@@ -164,6 +159,10 @@ public class FileTablePanel extends javax.swing.JPanel implements
             try {
                 if (w instanceof ImageData) {
                     final ImageData id = (ImageData) w;
+                    final TaggedFilePathFactory fpf = new TaggedFilePathFactory();
+                    final String t = m.getStringOpt(J2SEAppModel.TAGGEDFILE_TEMPLATE);
+                    fpf.setDestTemplate(t);
+
                     J2SEController.tagImage(fpf, id);
                 }
             } catch (Exception e) {

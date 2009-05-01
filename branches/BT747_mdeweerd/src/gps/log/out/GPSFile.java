@@ -32,6 +32,12 @@ import bt747.sys.interfaces.BT747Time;
  * This abstract class defines the 'interface' with the BT747LogConvert class.
  * Derived classes will be able to write the desired output in the formats
  * they implement.
+ * 
+ * Refactoring / Discussion:
+ * Either each implementation of this abstract class is a Strategy Design Pattern.
+ * Or this abstract class could be a concrete class and be a Strategy itself.
+ * The concrete classes currently deriving from this class would be Builders.
+ * This will be given some thought.  It is not urgent to make the change.
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
 
