@@ -257,6 +257,10 @@ public class AppSettings {
     public final static int IS_GPX_1_1 = 50;
     /** Type of device to download from - used in GUI */
     public final static int DOWNLOAD_DEVICE = 51;
+    /**
+     * The previous field for the filetime offset.
+     */
+    public static final int FILETIMEOFFSETOLD = 52;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -444,7 +448,11 @@ public class AppSettings {
             /* fall through */
         case 36:
             setIntOpt(AppSettings.DOWNLOAD_DEVICE, 0);
-            setStringOpt(AppSettings.VERSION, "0.37");
+            /* fall through */
+        case 37:
+            // New field is coded on 4 byte (8 chars)
+            setIntOpt(AppSettings.FILETIMEOFFSET, getIntOpt(AppSettings.FILETIMEOFFSETOLD));
+            setStringOpt(AppSettings.VERSION, "0.38");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1410,11 +1418,11 @@ public class AppSettings {
     private static final int C_IMAGEDIR_IDX = AppSettings.C_LANGUAGE_IDX
             + AppSettings.C_LANGUAGE_SIZE;
     private static final int C_IMAGEDIR_SIZE = 256;
-    private static final int C_FILETIMEOFFSET_IDX = AppSettings.C_IMAGEDIR_IDX
+    private static final int C_FILETIMEOFFSETOLD_IDX = AppSettings.C_IMAGEDIR_IDX
             + AppSettings.C_IMAGEDIR_SIZE;
-    private static final int C_FILETIMEOFFSET_SIZE = 4;
-    private static final int C_TAG_OVERRIDEPOSITIONS_IDX = AppSettings.C_FILETIMEOFFSET_IDX
-            + AppSettings.C_FILETIMEOFFSET_SIZE;
+    private static final int C_FILETIMEOFFSETOLD_SIZE = 4;
+    private static final int C_TAG_OVERRIDEPOSITIONS_IDX = AppSettings.C_FILETIMEOFFSETOLD_IDX
+            + AppSettings.C_FILETIMEOFFSETOLD_SIZE;
     private static final int C_TAG_OVERRIDEPOSITIONS_SIZE = 1;
     private static final int C_TAG_MAXTIMEDIFFERENCE_IDX = AppSettings.C_TAG_OVERRIDEPOSITIONS_IDX
             + AppSettings.C_TAG_OVERRIDEPOSITIONS_SIZE;
@@ -1443,8 +1451,12 @@ public class AppSettings {
     private static final int C_DOWNLOAD_DEVICE_IDX = AppSettings.C_IS_GPX_1_1_IDX
             + AppSettings.C_IS_GPX_1_1_SIZE;
     private static final int C_DOWNLOAD_DEVICE_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_DOWNLOAD_DEVICE_IDX
+    private static final int C_FILETIMEOFFSET_IDX = AppSettings.C_DOWNLOAD_DEVICE_IDX
             + AppSettings.C_DOWNLOAD_DEVICE_SIZE;
+    private static final int C_FILETIMEOFFSET_SIZE = 8;
+    private static final int C_NEXT_IDX = AppSettings.C_FILETIMEOFFSET_IDX
+    + AppSettings.C_FILETIMEOFFSET_SIZE;
+    
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1593,6 +1605,9 @@ public class AppSettings {
                             AppSettings.C_IS_GPX_1_1_IDX, AppSettings.C_IS_GPX_1_1_SIZE },
                         { AppSettings.INT, AppSettings.DOWNLOAD_DEVICE,
                             AppSettings.C_DOWNLOAD_DEVICE_IDX, AppSettings.C_DOWNLOAD_DEVICE_SIZE },
+                            { AppSettings.INT, AppSettings.FILETIMEOFFSETOLD,
+                                AppSettings.C_FILETIMEOFFSETOLD_IDX,
+                                AppSettings.C_FILETIMEOFFSETOLD_SIZE },
     // End of list
     };
 
