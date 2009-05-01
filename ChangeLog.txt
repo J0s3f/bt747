@@ -1,3 +1,7 @@
+Version 1.68.13
+* Added device types.
+* Internal changes.
+
 Version 1.68.10-12 Version 1.68.10-12 (BT_J2ME 0.2.68)
 * Erase procedure did not necessarily wait properly when the command buffer
   was not empty.  Fixed.
