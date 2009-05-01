@@ -4,7 +4,8 @@
 package net.sf.bt747.gps.sirf;
 
 /**
- * @author Mario
+ * Constants for SirfIII Message IDs
+ * @author Mario De Weerd
  *
  */
 public class SirfMessageID {
