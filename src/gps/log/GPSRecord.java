@@ -187,7 +187,7 @@ public class GPSRecord {
         if (r.hasUtc()) {
             utc = r.utc;
         }
-        if (r.hasUtc()) {
+        if (r.hasTagUtc()) {
             tagutc = r.tagutc;
         }
         if (r.hasValid()) {
@@ -586,6 +586,10 @@ public class GPSRecord {
         if (hasUtc()) {
             rec.append("\nUTC:" + gps.log.out.CommonOut.getDateTimeStr(utc)
                     + "(" + utc + ")");
+        }
+        if (hasTagUtc()) {
+            rec.append("\nTAGUTC:" + gps.log.out.CommonOut.getDateTimeStr(tagutc)
+                    + "(" + tagutc + ")");
         }
         if (hasValid()) {
             rec.append("\nVALID:" + JavaLibBridge.unsigned2hex(valid, 8));
