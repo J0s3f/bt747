@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.bt47.gps.sirf;
+package net.sf.bt747.gps.sirf;
 
 /**
  * @author Mario
