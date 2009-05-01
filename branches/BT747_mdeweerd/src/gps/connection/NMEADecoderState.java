@@ -308,6 +308,8 @@ public class NMEADecoderState implements DecoderStateInterface {
                 }
             }
 
+            continueReading &= readAgain;
+            readAgain = false;
             // All bytes in buffer are read.
             // If the command is not complete, we continue reading
             if (continueReading && readAgain) {

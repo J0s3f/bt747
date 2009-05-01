@@ -305,11 +305,11 @@ public final class GPSrxtx {
     protected final boolean isReadBufferEmpty() {
         return read_buf_p >= bytesRead;
     }
-    
+
     protected final char getReadBufferChar() {
         return (char) read_buf[read_buf_p++];
     }
-    
+
     /**
      * @return true if bytes found.
      */
@@ -346,8 +346,8 @@ public final class GPSrxtx {
 
                         // gpsPort.writeDebug("\r\nC2:" + max + ":");
                         if (max > 0) {
-                            bytesRead = GPSrxtx.gpsPort.readBytes(
-                                    read_buf, 0, max);
+                            bytesRead = GPSrxtx.gpsPort.readBytes(read_buf,
+                                    0, max);
                             // if (bytesRead != 0) {
                             // String sb = new String(read_buf, 0,
                             // bytesRead);
@@ -373,12 +373,9 @@ public final class GPSrxtx {
                 result = false;
             } else {
                 if (GPSrxtx.gpsPort.debugActive()) {
-                    final String q = "(" + Generic.getTimeStamp()
-                            + ")";
-                    GPSrxtx.gpsPort.writeDebug(q.getBytes(), 0, q
-                            .length());
-                    GPSrxtx.gpsPort
-                            .writeDebug(read_buf, 0, bytesRead);
+                    final String q = "(" + Generic.getTimeStamp() + ")";
+                    GPSrxtx.gpsPort.writeDebug(q.getBytes(), 0, q.length());
+                    GPSrxtx.gpsPort.writeDebug(read_buf, 0, bytesRead);
                 }
             }
         }
@@ -407,8 +404,10 @@ public final class GPSrxtx {
 
             while (continueReading && (read_buf_p < bytesRead)) {
                 // Still bytes in read buffer to interpret
-                //char c;
-                final char c = (char) read_buf[read_buf_p++]; // Next character from
+                // char c;
+                final char c = (char) read_buf[read_buf_p++]; // Next
+                                                                // character
+                                                                // from
                 // buffer
                 // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
                 // {
@@ -627,8 +626,9 @@ public final class GPSrxtx {
 
             // All bytes in buffer are read.
             // If the command is not complete, we continue reading
-            if (continueReading && readAgain) {
-                readAgain = false;
+            continueReading &= readAgain;
+            readAgain = false;
+            if (continueReading) {
                 continueReading = refillBuffer();
             } // continueReading
         }
