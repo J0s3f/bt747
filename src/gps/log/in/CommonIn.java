@@ -292,7 +292,7 @@ public final class CommonIn {
                     }
                 }
             } catch (final Exception e) {
-                Generic.debug("GPGGA9:" + sNmea[9], e);
+                Generic.debug("GPGGA9:" + sNmea[9] + " GPGGA11:" + sNmea[11], e);
             }
             if (sNmea.length >= 14) {
                 try {
