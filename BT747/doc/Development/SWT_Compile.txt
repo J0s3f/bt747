@@ -1,0 +1,131 @@
+s is the mail archive of the java@gcc.gnu.org mailing list for the Java project. 
+
+
+--------------------------------------------------------------------------------
+Index Nav: [Date Index] [Subject Index] [Author Index] [Thread Index]  
+Message Nav: [Date Prev] [Date Next] [Thread Prev] [Thread Next] 
+Other format: [Raw text] 
+
+Re: GCJ 3.2 for Win32: Updated Snapshot
+From: Ranjit Mathew <rmathew at hotmail dot com> 
+To: java at gcc dot gnu dot org 
+Cc: mingw-users at lists dot sourceforge dot net 
+Date: Tue, 10 Dec 2002 20:45:55 +0530 
+Subject: Re: GCJ 3.2 for Win32: Updated Snapshot 
+References: <at4sel$oha$1@main.gmane.org> 
+
+--------------------------------------------------------------------------------
+
+Ranjit Mathew wrote:
+
+1. AWT/Swing still do not work (though SWT does!).
+
+I think the SWT part merits a bit more of an
+explanation. ;-)
+
+This mail explains how to create native GUI applications
+written in Java using SWT and GCJ 3.2 for Win32.
+
+1. You will first need to create a native library for
+   linking SWT applications, say "libswt.a":
+
+      a. Get the swt.jar and swt-win32-xxxx.dll files from your
+         Eclipse installation.
+      b. Extract the class files from swt.jar into a temporary
+         folder and compile each into a native object file using
+         gcj (be sure to use the -fjni option to gcj).
+      c. Combine all of these object files into a single library.
+
+   (This method was suggested by Ingo Bormann (a.k.a. Linuxhippy?).)
+
+   If you have MinGW MSYS, you can use a convenient shell script
+   that I'm attaching at the end of this message to create this
+   library. Create a *separate, temporary folder*, say "/tmp/swt"
+   and execute this script in MSYS after you've edited it to point
+   it to your Eclipse/SWT installation (be sure to update the SWT
+   DLL version number as well) - I am using Eclipse SDK 2.0.2. After
+   it executes successfully, it will leave you with libswt.a,
+   the SWT JAR and the SWT DLL in the folder in which it was
+   executed.
+
+2. Now take your favourite SWT program and try compiling it like
+   this:
+
+   gcj --classpath=./swt.jar --main=HelloSWT HelloSWT.java -L. -lswt
+
+   (assuming that the SWT library, JAR and DLL are all in the current
+   folder)
+
+3. Execute the program thus created and rejoice. ;-)
+
+(See:
+
+http://www-106.ibm.com/developerworks/java/library/j-nativegui/index.html
+
+if you want to know more about creating native GUI applications
+using GCJ and SWT.)
+
+Here is the shell script to automate the steps given in (1) above:
+------------------------------ 8< -------------------------------
+#!/bin/sh
+
+SWT_BASE_DIR="/c/Program Files/Eclipse/plugins/org.eclipse.swt.win32_2.0.2"
+SWT_JAR=$SWT_BASE_DIR/ws/win32/swt.jar
+SWT_DLL=$SWT_BASE_DIR/os/win32/x86/swt-win32-2052.dll
+
+jar -xvf "$SWT_JAR"
+
+SWT_CLASSES=`find . -name "*.class" -print |sed 's/^\.\///'`
+
+for i in $SWT_CLASSES
+do
+    OBJ_FILE=`echo $i |sed 's/\//_/g' |sed 's/\.class$/\.o/'`
+    echo Compiling $i to $OBJ_FILE
+    gcj -fjni -g0 -c -o $OBJ_FILE $i
+done
+
+gcj -c --resource=org.eclipse.swt.internal.SWTMessages \
+    -o SWTMessages.o org/eclipse/swt/internal/SWTMessages.properties
+
+echo Creating libswt.a
+ar -rcs libswt.a *.o
+ranlib libswt.a
+
+echo Cleaning up
+rm -fr org
+rm -fr META-INF
+rm -f version.txt
+rm -f *.o
+
+echo Copying SWT DLL
+cp "$SWT_DLL" .
+
+echo Copying SWT JAR
+cp "$SWT_JAR" .
+
+echo Done.
+------------------------------ 8< -------------------------------
+
+Sincerely Yours,
+Ranjit.
+
+--
+Ranjit Mathew          Email: rmathew AT hotmail DOT com
+
+Bangalore, INDIA.      Web: http://ranjitmathew.tripod.com/
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+Follow-Ups: 
+Re: GCJ 3.2 for Win32: Updated Snapshot 
+From: Ranjit Mathew
+References: 
+GCJ 3.2 for Win32: Updated Snapshot 
+From: Ranjit Mathew
+Index Nav: [Date Index] [Subject Index] [Author Index] [Thread Index]  
+Message Nav: [Date Prev] [Date Next] [Thread Prev] [Thread Next] 
+
