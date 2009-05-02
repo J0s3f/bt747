@@ -83,6 +83,7 @@ public class ExifAttribute {
     public final int getValueIdx() {
         return valueOrgIdx;
     }
+    
     public final int read(final byte[] buffer, final int currentIdxInBuffer,
             final int tiffHeaderStart, final boolean bigEndian) {
         this.bigEndian = bigEndian;
@@ -108,9 +109,10 @@ public class ExifAttribute {
             // }
 
             valueIdx = currentIdxInBuffer + 8;
-            if (size > 4) {
+            if (size > 4 || type == ExifConstants.IFDBLOCK) {
                 usePointer = true;
             }
+            // TODO: Check out how to handle OLYMPUS IFDBLOCKS
             if (usePointer) {
                 valueIdx = tiffHeaderStart
                         + ExifUtils.getLong4byte(buffer,

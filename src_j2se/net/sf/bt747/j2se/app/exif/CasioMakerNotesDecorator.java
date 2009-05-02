@@ -90,6 +90,7 @@ public class CasioMakerNotesDecorator extends ExifAttribute {
         if (makerNotes.hasTag(0x2000) && makerNotes.hasTag(0x0004)) {
             ExifAttribute a = makerNotes.get(0x0004); // PreviewImageStart
             ExifAttribute b = makerNotes.get(0x2000); // PreviewImageOffset.
+            // b.getValueIndex is the original offset.
             a.setIntValue(0, b.getValueIdx() - tiffHeaderOffset);
             makerNotes.set(a);
             makerNotes.fillBuffer(buffer, tiffHeaderOffset, bigEndian,

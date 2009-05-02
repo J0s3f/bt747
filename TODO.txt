@@ -1,0 +1,23 @@
+A small text files with things that can be done for BT747.
+There is no particular plan to implement this.  It is mainly a list so that nothing is forgotten.
+
+PROBLEMS
+* When there are a lot of pictures, loading the previews is too slow.
+  Need to improve worker task.
+  Could use preview data in pictures.
+
+FEATURES
+
+Device
+* Add AGPS capability.
+* Add SIRFIII support.
+
+Tracks
+* Allow chan
+
+Tagging
+* Allow tagging using the exiftool.
+
+Map
+* Add scale to map.
+* Use specific icons according to the waypoint type.
