@@ -32,7 +32,7 @@ final class MTKLogDownloadHandler {
      * @author Mario
      *
      */
-    private final class MTKLogDownloadContext {
+    private final static class MTKLogDownloadContext {
         protected Model gpsM;
         protected int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
 

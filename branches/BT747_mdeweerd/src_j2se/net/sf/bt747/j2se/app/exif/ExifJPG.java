@@ -219,7 +219,7 @@ public class ExifJPG {
 
     public final void setGpsPosition(final double lat, final double lon) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLATITUDEREF,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSLATITUDEREF,
                 ExifConstants.ASCII, 2);
         if (lat < 0) {
             atr.setStringValue("S");
@@ -229,12 +229,12 @@ public class ExifJPG {
 
         setGpsAttribute(atr);
 
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLATITUDE,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSLATITUDE,
                 ExifConstants.RATIONAL, 3);
         atr.setGpsFloatValue(lat);
         setGpsAttribute(atr);
 
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
                 ExifConstants.ASCII, 2);
         if (lon < 0) {
             atr.setStringValue("W");
@@ -243,7 +243,7 @@ public class ExifJPG {
         }
         setGpsAttribute(atr);
 
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSLONGITUDE,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSLONGITUDE,
                 ExifConstants.RATIONAL, 3);
         atr.setGpsFloatValue(lon);
         setGpsAttribute(atr);
@@ -251,10 +251,10 @@ public class ExifJPG {
 
     public final void setGpsAltitudeMSL(final float altitude) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSALTITUDEREF,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSALTITUDEREF,
                 ExifConstants.BYTE, 1);
         ExifAttribute altitudeAtr;
-        altitudeAtr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSALTITUDE,
+        altitudeAtr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSALTITUDE,
                 ExifConstants.RATIONAL, 1);
         if (altitude < 0) {
             atr.setIntValue(0, 1);
@@ -271,14 +271,14 @@ public class ExifJPG {
             final int day, final int hour, final int minutes,
             final int seconds) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
                 ExifConstants.RATIONAL, 3);
         atr.setFloatValue(0, hour, 1);
         atr.setFloatValue(1, minutes, 1);
         atr.setFloatValue(2, seconds, 1);
         setGpsAttribute(atr);
 
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSDATESTAMP,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSDATESTAMP,
                 ExifConstants.ASCII, 11);
 
         String dateStr = "" + year + ":";
@@ -300,14 +300,14 @@ public class ExifJPG {
 
     public final void setDifferential(final boolean isDifferential) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
                 ExifConstants.SHORT, 1);
         atr.setIntValue(0, isDifferential ? 1 : 0);
     }
 
     public final void setGpsSatInformation(final String str) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSSATELLITES,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSSATELLITES,
                 ExifConstants.ASCII, str.length() + 1);
         atr.setStringValue(str);
         setGpsAttribute(atr);
@@ -320,7 +320,7 @@ public class ExifJPG {
      */
     public final void setGpsStatus(final boolean measurementInProgressA) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSSTATUS,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSSTATUS,
                 ExifConstants.ASCII, 2);
         if (measurementInProgressA) {
             atr.setStringValue("A");
@@ -335,7 +335,7 @@ public class ExifJPG {
      */
     public final void setGpsMeasureMode(final boolean is3d) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSMEASUREMODE,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSMEASUREMODE,
                 ExifConstants.ASCII, 2);
         if (is3d) {
             atr.setStringValue("3");
@@ -350,7 +350,7 @@ public class ExifJPG {
      */
     public final void setGpsHDOP(final float hdopX100) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSDOP,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSDOP,
                 ExifConstants.RATIONAL, 1);
         atr.setFloatValue(0, (int) hdopX100, 100);
         setGpsAttribute(atr);
@@ -362,7 +362,7 @@ public class ExifJPG {
      */
     public final void setGpsPDOP(final int pdopX100) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSDOP,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSDOP,
                 ExifConstants.RATIONAL, 1);
         atr.setFloatValue(0, pdopX100, 100);
         setGpsAttribute(atr);
@@ -374,10 +374,10 @@ public class ExifJPG {
      */
     public final void setGpsSpeedKmH(final float speed) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSSPEEDREF,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSSPEEDREF,
                 ExifConstants.ASCII, 2);
         ExifAttribute speedAtr;
-        speedAtr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSSPEED,
+        speedAtr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSSPEED,
                 ExifConstants.RATIONAL, 1);
         atr.setStringValue("K");
         speedAtr.setFloatValue(0, (int) (speed * 100), 100);
@@ -390,10 +390,10 @@ public class ExifJPG {
      */
     public final void setGpsTrack(final float heading) {
         ExifAttribute atr;
-        atr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSTRACKREF,
+        atr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSTRACKREF,
                 ExifConstants.ASCII, 2);
         ExifAttribute trackAtr;
-        trackAtr = exifApp1.ExifAttribute(ExifConstants.TAG_GPSTRACK,
+        trackAtr = exifApp1.newExifAttribute(ExifConstants.TAG_GPSTRACK,
                 ExifConstants.RATIONAL, 1);
         atr.setStringValue("T");
         trackAtr.setFloatValue(0, (int) (heading * 100), 100);
@@ -415,7 +415,7 @@ public class ExifJPG {
         }
         if (sw.indexOf(SW) < 0) {
             sw = SW + sw;
-            atr = exifApp1.ExifAttribute(ExifConstants.TAG_SOFTWARE,
+            atr = exifApp1.newExifAttribute(ExifConstants.TAG_SOFTWARE,
                     ExifConstants.ASCII, sw.length() + 1);
             atr.setStringValue(sw);
             exifApp1.setIfd0Attribute(atr);

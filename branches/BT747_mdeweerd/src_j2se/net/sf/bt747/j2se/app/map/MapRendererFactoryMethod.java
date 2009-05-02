@@ -83,10 +83,8 @@ public class MapRendererFactoryMethod implements WaypointRenderer {
     }
 
     public final void toggleSelected(final Waypoint waypoint) {
-        try {
+        if (waypoint instanceof BT747Waypoint) {
             ((BT747Waypoint) (waypoint)).toggleShowTag();
-        } catch (final ClassCastException e) {
-
         }
     }
 }
