@@ -17,11 +17,10 @@ package gps.connection;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
-import bt747.sys.interfaces.BT747Vector;
 
 /**
- * This class implements the low level driver of the GPS device. It extracs
- * NMEA strings. The getResponse function should be called regurarly to get
+ * This class implements the low level driver of the GPS device. It extracts
+ * NMEA strings. The getResponse function should be called regularly to get
  * the GPS device's response.
  * 
  * @author Mario De Weerd
@@ -29,20 +28,15 @@ import bt747.sys.interfaces.BT747Vector;
 public final class GPSrxtx {
     private static GPSPort gpsPort;
 
+    private DecoderStateInterface state = DecoderStateFactory
+            .getInstance(NMEADecoderState.class);
+
     private final BT747Semaphore writeOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
-
-    private boolean ignoreNMEA = false;
 
     private boolean stableStrategy = false; // Some improvement on PDA when
     // true.
     private int prevReadCheck = 0;
-
-    /**
-     * Class constructor.
-     */
-    public GPSrxtx() {
-    }
 
     public static void setGpsPortInstance(final GPSPort portInstance) {
         GPSrxtx.gpsPort = portInstance;
@@ -115,45 +109,21 @@ public final class GPSrxtx {
         GPSrxtx.gpsPort.setSpeed(speed);
     }
 
-    private static final int C_INITIAL_STATE = 0;
-    private static final int C_START_STATE = 1;
-    private static final int C_FIELD_STATE = 2;
-    private static final int C_STAR_STATE = 3;
-    private static final int C_CHECKSUM_CHAR1_STATE = 4;
-    // private static final int C_CHECKSUM_CHAR2_STATE = 5;
-    private static final int C_EOL_STATE = 6;
-    private static final int C_ERROR_STATE = 7;
-    private static final int C_FOUND_STATE = 8;
-    private static final int C_DPL700_STATE = 9;
-    private static final int C_DPL700_W_STATE = 10;
-    private static final int C_DPL700_P_STATE = 11;
-    private static final int C_DPL700_TEXT_STATE = 12;
-    private static final int C_DPL700_END_STATE = 13;
-    private static final int C_DPL700_TICK_STATE = 14;
-
     // The maximum length of each packet is restricted to 255 bytes (except
     // for
     // logger)
     private static final int C_BUF_SIZE = 0x1100;
-    private static final int C_CMDBUF_SIZE = 0x1100;
-
-    private int current_state = GPSrxtx.C_INITIAL_STATE;
 
     private final byte[] read_buf = new byte[GPSrxtx.C_BUF_SIZE];
-    private final char[] cmd_buf = new char[GPSrxtx.C_CMDBUF_SIZE];
 
     private int read_buf_p = 0;
-    private int cmd_buf_p = 0;
     private int bytesRead = 0;
-    private int checksum = 0;
-    private int read_checksum;
 
     static final int ERR_NOERROR = 0;
     static final int ERR_CHECKSUM = 1;
     static final int ERR_INCOMPLETE = 2;
     static final int ERR_TOO_LONG = 3;
 
-    private final BT747Vector vCmd = JavaLibBridge.getVectorInstance();
     private static final char[] EOL_BYTES = { '\015', '\012' };
 
     private final StringBuffer rec = new StringBuffer(256);
@@ -196,22 +166,20 @@ public final class GPSrxtx {
         }
     }
 
-    private static final int NORMAL_MODE = 0;
-    private static final int DPL700_MODE = 1;
-
-    private int rxtxMode = GPSrxtx.NORMAL_MODE;
-
-    private byte[] DPL700_buffer;
-    private int DPL700_buffer_idx;
-    private final byte[] DPL700_EndString = new byte[200];
-    private int endStringIdx;
-
-    public final byte[] getDPL700_buffer() {
-        return DPL700_buffer;
+    protected void newState(Class<?> newState) {
+        this.state.exitState(this);
+        this.state = DecoderStateFactory.getInstance(newState);
+        this.state.enterState(this);
     }
 
-    public final int getDPL700_buffer_idx() {
-        return DPL700_buffer_idx;
+    /**
+     * The DPL700 state gets the buffer size from this method. Not a very
+     * 'clean' way to do that.
+     */
+    private int DPL700BufferSize;
+
+    protected int getDPL700BufferSize() {
+        return DPL700BufferSize;
     }
 
     public final void sendCmdAndGetDPL700Response(final int cmd,
@@ -220,11 +188,8 @@ public final class GPSrxtx {
             final byte[] sendbuffer = new byte[7];
             writeOngoing.down(); // Semaphore - reserve link
             try {
-                DPL700_buffer = new byte[buffer_size];
-                rxtxMode = GPSrxtx.DPL700_MODE;
-                endStringIdx = 0;
-                current_state = GPSrxtx.C_DPL700_STATE;
-                DPL700_buffer_idx = 0;
+                DPL700BufferSize = buffer_size;
+                newState(DPL700DecoderState.class);
                 if (Generic.isDebug()) {
                     Generic.debug(">0x" + JavaLibBridge.unsigned2hex(cmd, 8)
                             + "000000");
@@ -249,11 +214,8 @@ public final class GPSrxtx {
         if (isConnected()) {
             writeOngoing.down(); // Semaphore - reserve link
             try {
-                DPL700_buffer = new byte[buffer_size];
-                rxtxMode = GPSrxtx.DPL700_MODE;
-                endStringIdx = 0;
-                current_state = GPSrxtx.C_DPL700_STATE;
-                DPL700_buffer_idx = 0;
+                DPL700BufferSize = buffer_size;
+                newState(DPL700DecoderState.class);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
@@ -272,8 +234,8 @@ public final class GPSrxtx {
         if (isConnected()) {
             writeOngoing.down(); // Semaphore - reserve link
             try {
-                current_state = GPSrxtx.C_DPL700_STATE;
-                rxtxMode = GPSrxtx.DPL700_MODE;
+                DPL700BufferSize = 0;
+                newState(DPL700DecoderState.class);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
@@ -299,10 +261,16 @@ public final class GPSrxtx {
         }
     }
 
-    protected final BT747Semaphore getResponseOngoing = JavaLibBridge
+    private final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
     protected final boolean isReadBufferEmpty() {
+        if (read_buf_p >= bytesRead) {
+            if (isReadAgain()) {
+                // Buffer is empty. Fill it if ok.
+                refillBuffer();
+            }
+        }
         return read_buf_p >= bytesRead;
     }
 
@@ -313,7 +281,7 @@ public final class GPSrxtx {
     /**
      * @return true if bytes found.
      */
-    protected final boolean refillBuffer() {
+    private final boolean refillBuffer() {
         boolean result = true;
         read_buf_p = 0;
         bytesRead = 0;
@@ -379,323 +347,22 @@ public final class GPSrxtx {
                 }
             }
         }
+        readAgain = false;
         return result;
     }
 
-    public final String[] getResponse() {
-        boolean continueReading;
-        boolean readAgain = true;
-        int myError = GPSrxtx.ERR_NOERROR;
-        final boolean skipError = true;
-        continueReading = GPSrxtx.gpsPort.isConnected();
+    private boolean readAgain;
 
+    private boolean isReadAgain() {
+        return readAgain;
+    }
+
+    public final Object getResponse() {
         getResponseOngoing.down();
-        if (GPSrxtx.gpsPort.debugActive()) {
-            // Test to avoid unnecessary lost time
-            GPSrxtx.gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp()
-                    + ":");
-        }
-
-        if (current_state == GPSrxtx.C_FOUND_STATE) {
-            current_state = GPSrxtx.C_START_STATE;
-        }
-
-        while (continueReading) {
-
-            while (continueReading && (read_buf_p < bytesRead)) {
-                // Still bytes in read buffer to interpret
-                // char c;
-                final char c = (char) read_buf[read_buf_p++]; // Next
-                                                                // character
-                                                                // from
-                // buffer
-                // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
-                // {
-                // bt747.sys.Vm.debug(JavaLibBridge.toString(c));
-                // System.err.print("["+c+"]");
-                // }
-                if (rxtxMode == GPSrxtx.DPL700_MODE) {
-                    if (DPL700_buffer_idx < DPL700_buffer.length) {
-                        DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
-                        // } else {
-                        // rxtxMode = NORMAL_MODE;
-                    }
-                }
-
-                switch (current_state) {
-                case C_EOL_STATE:
-                    // EOL found, record is ok.
-                    // StringBuffer sb = new StringBuffer(cmd_buf_p);
-                    // sb.setLength(0);
-                    // sb.append(cmd_buf,0,cmd_buf_p);
-                    // if(GPS_DEBUG)
-                    // {bt747.sys.Vm.debug(sb.toString()+"\n");};
-                    if (((c == 10) || (c == 13))) {
-                        current_state = GPSrxtx.C_FOUND_STATE;
-                        continueReading = false;
-                        // System.err.println("[NEW]");
-
-                        if (ignoreNMEA) {
-                            // Skip NMEA strings if requested.
-                            continueReading = ((String) vCmd.elementAt(0))
-                                    .startsWith("GP");
-                        }
-                    } else {
-                        current_state = GPSrxtx.C_ERROR_STATE;
-                    }
-                    break;
-
-                case C_FOUND_STATE:
-                    current_state = GPSrxtx.C_START_STATE;
-                    /* Fall through */
-                case C_INITIAL_STATE:
-                case C_START_STATE:
-                    vCmd.removeAllElements();
-                    if (c == '$') {
-                        // First character of NMEA string found
-                        current_state = GPSrxtx.C_FIELD_STATE;
-                        cmd_buf_p = 0;
-
-                        // cmd_and_param=new String()[];
-                        // cmd_buf[cmd_buf_p++]= c;
-                        checksum = 0;
-                    } else if (!((c == 10) || (c == 13))) {
-                        if (current_state == GPSrxtx.C_START_STATE) {
-                            myError = GPSrxtx.ERR_INCOMPLETE;
-                            current_state = GPSrxtx.C_ERROR_STATE;
-                        }
-                    }
-                    break;
-                case C_FIELD_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        current_state = GPSrxtx.C_EOL_STATE;
-                    } else if (c == '*') {
-                        current_state = GPSrxtx.C_STAR_STATE;
-                        vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
-                        // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
-                        // {
-                        // bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
-                        // }
-                    } else if (c == ',') {
-                        checksum ^= c;
-                        vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
-                        cmd_buf_p = 0;
-                    } else {
-                        cmd_buf[cmd_buf_p++] = c;
-                        checksum ^= c;
-                    }
-                    break;
-                case C_STAR_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        current_state = GPSrxtx.C_ERROR_STATE;
-                    } else if ((((c >= '0') && (c <= '9'))
-                            || ((c >= 'A') && (c <= 'F')) || ((c >= 'a') && (c <= 'f')))) {
-                        // cmd_buf[cmd_buf_p++]= c;
-                        if ((c >= '0') && (c <= '9')) {
-                            read_checksum = (c - '0') << 4;
-                        } else if ((c >= 'A') && (c <= 'F')) {
-                            read_checksum = (c - 'A' + 10) << 4;
-                        } else {
-                            read_checksum = (c - 'a' + 10) << 4;
-                        }
-                        current_state = GPSrxtx.C_CHECKSUM_CHAR1_STATE;
-                    } else {
-                        myError = GPSrxtx.ERR_INCOMPLETE;
-                        current_state = GPSrxtx.C_ERROR_STATE;
-                    }
-                    break;
-                case C_CHECKSUM_CHAR1_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        myError = GPSrxtx.ERR_INCOMPLETE;
-                        current_state = GPSrxtx.C_ERROR_STATE;
-                    } else if ((((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'F')))) {
-                        // cmd_buf[cmd_buf_p++]= c;
-                        if ((c >= '0') && (c <= '9')) {
-                            read_checksum += c - '0';
-                        } else if ((c >= 'A') && (c <= 'F')) {
-                            read_checksum += c - 'A' + 10;
-                        } else {
-                            read_checksum += c - 'a' + 10;
-                        }
-
-                        if (read_checksum != checksum) {
-                            myError = GPSrxtx.ERR_CHECKSUM;
-                            current_state = GPSrxtx.C_ERROR_STATE;
-                        }
-                        current_state = GPSrxtx.C_EOL_STATE;
-                    } else {
-                        myError = GPSrxtx.ERR_INCOMPLETE;
-                        current_state = GPSrxtx.C_ERROR_STATE;
-                    }
-                    break;
-                case C_ERROR_STATE:
-                    if (((c == 10) || (c == 13))) {
-                        // EOL found, start is ok.
-                        current_state = GPSrxtx.C_START_STATE;
-                    }
-                    break;
-                case C_DPL700_STATE:
-                    // Vm.debug("INIT_STATE");
-                    // System.err.print(c);
-                    if (c == 'W') {
-                        endStringIdx = 0;
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_W_STATE;
-                    } else {
-                        current_state = GPSrxtx.C_DPL700_STATE;
-                    }
-                    break;
-                case C_DPL700_W_STATE:
-                    // Vm.debug("W_STATE");
-                    if (c == 'P') {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_P_STATE;
-                        break;
-                    } else if (c == 'W') {
-                        endStringIdx = 0;
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_W_STATE;
-                    } else if (c == '\'') {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_TICK_STATE;
-                    } else {
-                        current_state = GPSrxtx.C_DPL700_STATE;
-                    }
-                    break;
-                case C_DPL700_TICK_STATE:
-                    // Vm.debug("TICK_STATE");
-                    if (c == 'P') {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_P_STATE;
-                        break;
-                    } else if (c == 'W') {
-                        endStringIdx = 0;
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_W_STATE;
-                    } else {
-                        current_state = GPSrxtx.C_DPL700_STATE;
-                    }
-                    break;
-                case C_DPL700_P_STATE:
-                    // Vm.debug("P_STATE");
-                    if (c == ' ') {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = GPSrxtx.C_DPL700_TEXT_STATE;
-                        break;
-                    } else if (c == 'W') {
-                        current_state = GPSrxtx.C_DPL700_W_STATE;
-                    } else {
-                        current_state = GPSrxtx.C_DPL700_STATE;
-                    }
-                    break;
-                case C_DPL700_TEXT_STATE:
-                    // Vm.debug("TXT_STATE");
-                    // Trying to read end string
-                    if (c == 0) {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                        DPL700_buffer_idx -= endStringIdx;
-                        rxtxMode = GPSrxtx.NORMAL_MODE;
-                        current_state = GPSrxtx.C_DPL700_END_STATE;
-                        Generic.debug("End DPL700");
-                        continueReading = false;
-                    } else if (((c >= 'A') && (c <= 'Z'))
-                            || ((c >= 'a') && (c <= 'z')) || (c == ' ')
-                            || (c == '+') || (c == '\'')) {
-                        DPL700_EndString[endStringIdx++] = (byte) c;
-                    } else {
-                        current_state = GPSrxtx.C_DPL700_STATE;
-                    }
-                    break;
-                default:
-                    rxtxMode = GPSrxtx.NORMAL_MODE;
-                    current_state = GPSrxtx.C_ERROR_STATE;
-                    break;
-                }
-                if (cmd_buf_p > (GPSrxtx.C_CMDBUF_SIZE - 1)) {
-                    myError = GPSrxtx.ERR_TOO_LONG;
-                    current_state = GPSrxtx.C_ERROR_STATE;
-                }
-                if (current_state == GPSrxtx.C_ERROR_STATE) {
-                    current_state = GPSrxtx.C_INITIAL_STATE;
-                    vCmd.removeAllElements();
-                    if (!skipError) {
-                        continueReading = false;
-                    }
-                }
-            }
-
-            // All bytes in buffer are read.
-            // If the command is not complete, we continue reading
-            continueReading &= readAgain;
-            readAgain = false;
-            if (continueReading) {
-                continueReading = refillBuffer();
-            } // continueReading
-        }
-        if (myError == GPSrxtx.C_ERROR_STATE) {
-            // bt747.sys.Vm.debug("Error on reception");
-            //
-            // if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
-            // String s;
-            // s="-";
-            // bt747.sys.Vm.debug(s);
-            // for (int i = 0; i < vCmd.getCount(); i++) {
-            // bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
-            // };
-            // //bt747.sys.Vm.debug(s);
-            // }
-            vCmd.removeAllElements();
-        }
-        // if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
-        // String s=new String();
-        // s="<";
-        // bt747.sys.Vm.debug("<");
-        // for (int i = 0; i < vCmd.getCount(); i++) {
-        // s+=((String[])vCmd.toObjectArray())[i];
-        // };
-        // bt747.sys.Vm.debug(s);
-        // }
-        if (current_state == GPSrxtx.C_FOUND_STATE) {
-            // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
-            // {
-            // // return (String[])vCmd.toObjectArray();
-            // // }
-            // for (int i = 0; i < vCmd.getCount(); i++) {
-            // bt747.sys.Vm.debug("Rec:"+JavaLibBridge.toString(
-            // ((String[])vCmd.toObjectArray())[i].length()));
-            // };
-            // }
-            getResponseOngoing.up();
-            return JavaLibBridge.toStringArrayAndEmpty(vCmd);
-        } else if (current_state == GPSrxtx.C_DPL700_END_STATE) {
-            current_state = GPSrxtx.C_FOUND_STATE;
-            final String[] resp = new String[1];
-            resp[0] = new String(DPL700_EndString, 0, endStringIdx - 1);
-            if (GPSrxtx.gpsPort.debugActive()) {
-                // Test to avoid unnecessary lost time
-                GPSrxtx.gpsPort.writeDebug("\r\nDPL700:" + resp[0]);
-            }
-            getResponseOngoing.up();
-            return resp;
-        } else {
-            getResponseOngoing.up();
-            return null;
-        }
-    }
-
-    /**
-     * @return Returns the ignoreNMEA.
-     */
-    public final boolean isIgnoreNMEA() {
-        return ignoreNMEA;
-    }
-
-    /**
-     * @param ignoreNMEA
-     *                The ignoreNMEA to set.
-     */
-    public final void setIgnoreNMEA(final boolean ignoreNMEA) {
-        this.ignoreNMEA = ignoreNMEA;
+        readAgain = true;
+        final Object result = state.getResponse(this);
+        getResponseOngoing.up();
+        return result;
     }
 
     public final void setDebugConn(final boolean gps_debug, final String s) {
@@ -710,5 +377,4 @@ public final class GPSrxtx {
     public final boolean isDebugConn() {
         return GPSrxtx.gpsPort.debugActive();
     }
-
 }

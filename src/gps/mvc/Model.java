@@ -17,6 +17,7 @@ package gps.mvc;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
+import gps.connection.DPL700ResponseModel;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
@@ -771,6 +772,13 @@ public class Model {
     private boolean gpsDecode = true;
     private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
+    public final void analyseResponse(final Object response) {
+        if (response instanceof DPL700ResponseModel) {
+            analyseDPL700Data((DPL700ResponseModel) response);
+        } else {
+            analyseNMEA((String[])response);
+        }
+    }
     public final int analyseNMEA(final String[] sNmea) {
         int cmd;
         int result;
@@ -781,8 +789,6 @@ public class Model {
             if (sNmea.length == 0) {
                 // Should not happen, problem in program
                 Generic.debug("Problem - report NMEA is 0 length");
-            } else if ((sNmea.length == 1) && sNmea[0].startsWith("WP")) {
-                AnalyseDPL700Data(sNmea[0]);
             } else if (gpsDecode
                     && !isLogDownloadOnGoing() // Not
                     // during
@@ -1436,7 +1442,8 @@ public class Model {
         handler.sendCmdAndGetDPL700Response(0x62B60000, 255);
     }
 
-    private void AnalyseDPL700Data(final String s) {
+    private void analyseDPL700Data(final DPL700ResponseModel resp) {
+        final String s = resp.getResponseType(); 
         if (Generic.isDebug()) {
             Generic.debug("<DPL700 " + s);
         }
@@ -1455,8 +1462,8 @@ public class Model {
                     mtkLogHandler.openNewLog(DPL700LogFileName, DPL700Card);
                     try {
                         mtkLogHandler.getLogFile().writeBytes(
-                                handler.getDPL700_buffer(), 0,
-                                handler.getDPL700_buffer_idx());
+                                resp.getResponseBuffer(), 0,
+                                resp.getResponseSize());
                         mtkLogHandler.getLogFile().close();
                     } catch (final Exception e) {
                         Generic.debug("", e);

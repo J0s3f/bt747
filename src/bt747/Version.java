@@ -45,5 +45,5 @@ public final class Version {
      * <li>z = bug fix version
      * </ul>
      */
-    public static final String VERSION_NUMBER = "d.evel";
+    public static final String VERSION_NUMBER = "2.dev";
 }

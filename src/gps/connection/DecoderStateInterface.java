@@ -11,7 +11,11 @@ package gps.connection;
  * @author Mario
  * 
  */
-public interface DecoderStateInterface {
-    /** Returns valid data from the serial link */
-    public String[] getResponse(final GPSrxtx context);
+public interface DecoderStateInterface { 
+    /** Returns valid data from the serial link. */
+    public Object getResponse(final GPSrxtx context);
+    /** Indicates this state is stopped. Allows end of state operations. */
+    public void exitState(final GPSrxtx context);
+    /** Indicates this state is entered. Allows initialization operations. */
+    public void enterState(final GPSrxtx context);
 }

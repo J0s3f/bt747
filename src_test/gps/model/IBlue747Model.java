@@ -92,7 +92,7 @@ public class IBlue747Model {
             public void run() {
                 try {
                     if (gpsRxTx.isConnected()) {
-                        lastResponse = gpsRxTx.getResponse();
+                        lastResponse = (String []) gpsRxTx.getResponse();
                         if (lastResponse != null) {
                             analyseNMEA(lastResponse);
                         }
