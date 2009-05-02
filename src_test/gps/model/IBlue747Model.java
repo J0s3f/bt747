@@ -45,7 +45,7 @@ public class IBlue747Model {
     private GPSrxtx gpsRxTx = null;
 
     private byte[] logData = null;
-    private final String logFile = "c:/bt747/Test.bin";
+    private static final String logFile = "c:/bt747/Test.bin";
 
     /**
      * Set up system specific classes.
