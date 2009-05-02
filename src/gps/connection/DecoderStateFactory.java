@@ -15,9 +15,9 @@ public final class DecoderStateFactory {
     private final static BT747Hashtable states = JavaLibBridge
             .getHashtableInstance(2);
 
-    
     public final static int NMEA_STATE = 0;
     public final static int DPL700_STATE = 1;
+
     /**
      * Gets an instance for the requested state. Currently a Singleton
      * instance.
@@ -26,8 +26,9 @@ public final class DecoderStateFactory {
      * @return Instance for the state.
      */
     public final static DecoderStateInterface getInstance(final int state) {
+        final String stateStr = "" + state;
         final DecoderStateInterface instanceFromHash = (DecoderStateInterface) states
-                .get(state);
+                .get("" + stateStr);
         if (instanceFromHash != null) {
             return instanceFromHash;
         } else {
@@ -41,7 +42,7 @@ public final class DecoderStateFactory {
                 newState = new DPL700DecoderState();
                 break;
             }
-            states.put(state, newState);
+            states.put(stateStr, newState);
             return newState;
         }
     }
