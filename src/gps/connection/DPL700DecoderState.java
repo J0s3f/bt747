@@ -17,16 +17,27 @@ public class DPL700DecoderState implements DecoderStateInterface {
     private final byte[] DPL700_EndString = new byte[200];
     private int endStringIdx;
 
+    /** Size of read buffer to create */
+    private static int bufferSize;
+
+    public final static void setNewBufferSize(final int size) {
+        DPL700DecoderState.bufferSize = size;
+    }
+
+    private final static int getNewBufferSize() {
+        return DPL700DecoderState.bufferSize;
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
      */
-    public void enterState(GPSrxtx context) {
+    public final void enterState(final GPSrxtx context) {
         endStringIdx = 0;
         DPL700_buffer_idx = 0;
-        DPL700_buffer = new byte[context.getDPL700BufferSize()];
-        current_state = C_DPL700_STATE;
+        DPL700_buffer = new byte[DPL700DecoderState.getNewBufferSize()];
+        current_state = DPL700DecoderState.C_DPL700_STATE;
     }
 
     /*
@@ -34,9 +45,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
      * 
      * @see gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
      */
-    public void exitState(GPSrxtx context) {
-        // TODO Auto-generated method stub
-
+    public final void exitState(final GPSrxtx context) {
     }
 
     private static final int C_DPL700_STATE = 9;
@@ -160,7 +169,8 @@ public class DPL700DecoderState implements DecoderStateInterface {
         if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
             context.newState(DecoderStateFactory.NMEA_STATE);
             final DPL700ResponseModel resp = new DPL700ResponseModel();
-            resp.setResponseType( new String(DPL700_EndString, 0, endStringIdx - 1));
+            resp.setResponseType(new String(DPL700_EndString, 0,
+                    endStringIdx - 1));
             resp.setResponseBuffer(DPL700_buffer);
             resp.setResponseSize(DPL700_buffer_idx);
             DPL700_buffer = null;
