@@ -15,8 +15,10 @@
 package gps.mvc;
 
 import gps.BT747Constants;
+import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEADecoderState;
+import gps.connection.NMEAWriter;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -102,7 +104,7 @@ final class GPSLinkHandler {
                 sentCmds.addElement(cmd);
             }
 
-            gpsRxTx.sendPacket(cmd);
+            NMEAWriter.sendPacket(gpsRxTx,cmd);
             if (Generic.isDebug()) {
                 Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
             }
@@ -257,16 +259,16 @@ final class GPSLinkHandler {
 
     protected final void sendCmdAndGetDPL700Response(final int cmd,
             final int buffer_size) {
-        gpsRxTx.sendCmdAndGetDPL700Response(cmd, buffer_size);
+        DPL700Writer.sendCmd(gpsRxTx, cmd, buffer_size);
     }
 
     protected final void sendCmdAndGetDPL700Response(final String cmd,
             final int buffer_size) {
-        gpsRxTx.sendCmdAndGetDPL700Response(cmd, buffer_size);
+        DPL700Writer.sendCmd(gpsRxTx, cmd, buffer_size);
     }
 
     protected final void sendDPL700Cmd(final String cmd) {
-        gpsRxTx.sendDPL700Cmd(cmd);
+        DPL700Writer.sendCmd(gpsRxTx, cmd);
     }
 
     private final boolean isEraseOngoing() {
