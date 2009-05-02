@@ -59,7 +59,7 @@ public final class NMEADecoderState implements DecoderStateInterface {
      * 
      * @see gps.connection.DecoderInterface#getResponse()
      */
-    public final String[] getResponse(final GPSrxtx context) {
+    public final Object getResponse(final GPSrxtx context) {
         final GPSPort gpsPort = context.getGpsPortInstance();
         boolean continueReading;
         int myError = GPSrxtx.ERR_NOERROR;
