@@ -86,7 +86,7 @@ public abstract class GPSPort {
     protected String freeTextPort = "";
 
     public void setFreeTextPort(final String s) {
-        freeTextPort = s;
+        setFreeTextPort(s);
     }
 
     public String getFreeTextPort() {

@@ -141,7 +141,7 @@ public class TagFilePopupMenu {
             JMenuItem item = (JMenuItem) e.getSource();
             if (item.getText() == "Insert Rows") {
                 adapter.insertColumn(e);
-            } else if (item.getText() == getString(DELETE_CMD)) {
+            } else if (item.getText().equals(getString(DELETE_CMD))) {
                 adapter.deleteSelectedRows(e);
             }
 
