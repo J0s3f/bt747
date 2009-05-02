@@ -9,7 +9,7 @@ import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
- * Refactoring ongoing
+ * Refactoring ongoing.
  * 
  * @author Mario
  * 
@@ -115,14 +115,15 @@ public class Controller implements BT747Thread {
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
-                String[] lastResponse;
                 do {
-                    lastResponse = handler.getResponse();
+                    final Object lastResponse = (String []) handler.getResponse();
                     if (lastResponse != null) {
-                        gpsM.analyseNMEA(lastResponse);
+                        gpsM.analyseResponse(lastResponse);
+                    } else {
+                        loopsToGo = 0; // Exit do/while
                     }
                     handler.checkSendCmdFromQueue();
-                } while ((loopsToGo-- > 0) && (lastResponse != null));
+                } while ((loopsToGo-- > 0));
                 if ((nextAvailableRun < timeStamp)
                         && (handler.getOutStandingCmdsCount() == 0)
                         && !gpsM.isLogDownloadOnGoing()) {

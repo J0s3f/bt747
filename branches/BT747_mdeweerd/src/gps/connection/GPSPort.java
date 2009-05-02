@@ -65,7 +65,7 @@ public abstract class GPSPort {
      */
     public void setPort(final int port) {
         spPortNbr = port;
-        freeTextPort = "";
+        setFreeTextPort("");
     }
 
     public int openPort() {
@@ -76,11 +76,11 @@ public abstract class GPSPort {
     }
 
     public void setBlueTooth() {
-        freeTextPort = "";
+        setFreeTextPort("");
     }
 
     public void setUSB() {
-        freeTextPort = "";
+        setFreeTextPort("");
     }
 
     protected String freeTextPort = "";

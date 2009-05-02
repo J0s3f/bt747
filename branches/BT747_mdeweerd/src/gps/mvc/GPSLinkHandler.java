@@ -16,6 +16,7 @@ package gps.mvc;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
+import gps.connection.NMEADecoderState;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -85,7 +86,7 @@ final class GPSLinkHandler {
     }
 
     public final void setIgnoreNMEA(final boolean ignoreNMEA) {
-        gpsRxTx.setIgnoreNMEA(ignoreNMEA);
+        NMEADecoderState.setIgnoreNMEA(ignoreNMEA);
     }
 
     private int nextCmdSendTime = 0;
@@ -250,7 +251,7 @@ final class GPSLinkHandler {
         return total;
     }
 
-    protected final String[] getResponse() {
+    protected final Object getResponse() {
         return gpsRxTx.getResponse();
     }
 
@@ -266,14 +267,6 @@ final class GPSLinkHandler {
 
     protected final void sendDPL700Cmd(final String cmd) {
         gpsRxTx.sendDPL700Cmd(cmd);
-    }
-
-    protected final byte[] getDPL700_buffer() {
-        return gpsRxTx.getDPL700_buffer();
-    }
-
-    protected final int getDPL700_buffer_idx() {
-        return gpsRxTx.getDPL700_buffer_idx();
     }
 
     private final boolean isEraseOngoing() {

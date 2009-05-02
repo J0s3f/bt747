@@ -294,7 +294,7 @@ public final class GPSRxTxPort extends GPSPort {
         }
     }
 
-    public final void setFreeTextPort(final String s) {
+    public final synchronized void setFreeTextPort(final String s) {
         super.setFreeTextPort(s);
     }
 
