@@ -146,6 +146,7 @@ public class ExifApp1 {
                 ExifAttribute atr;
                 atr = exifBlock.get(ExifConstants.TAG_MAKERNOTE);
                 exifBlock.set(CasioMakerNotesDecorator.decorate(atr, buffer, tiffHeaderStart, bigEndian));
+                exifBlock.set(OlympusMakerNotesDecorator.decorate(atr, buffer, tiffHeaderStart, bigEndian));
             }
         }
         return 0;

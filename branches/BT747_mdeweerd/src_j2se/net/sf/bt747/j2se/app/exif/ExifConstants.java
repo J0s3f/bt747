@@ -277,6 +277,7 @@ public class ExifConstants {
     // is denominator
     public static final int FLOAT = 11;
     public static final int DOUBLE = 12;
+    public static final int IFDBLOCK = 13; // Seems to be Olympus standard // Could be other too
 
     /**
      * IFD Structure<br>
