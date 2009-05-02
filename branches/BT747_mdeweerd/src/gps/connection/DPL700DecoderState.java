@@ -141,7 +141,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
                     DPL700_buffer_idx -= endStringIdx;
                     current_state = DPL700DecoderState.C_DPL700_END_STATE;
                     Generic.debug("End DPL700");
-                    context.newState(NMEADecoderState.class);
+                    context.newState(DecoderStateFactory.NMEA_STATE);
                     continueReading = false;
                 } else if (((c >= 'A') && (c <= 'Z'))
                         || ((c >= 'a') && (c <= 'z')) || (c == ' ')
@@ -158,7 +158,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
         }
 
         if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
-            context.newState(NMEADecoderState.class);
+            context.newState(DecoderStateFactory.NMEA_STATE);
             final DPL700ResponseModel resp = new DPL700ResponseModel();
             resp.setResponseType( new String(DPL700_EndString, 0, endStringIdx - 1));
             resp.setResponseBuffer(DPL700_buffer);

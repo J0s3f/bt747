@@ -19,9 +19,11 @@ import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
 
 /**
- * This class implements the low level driver of the GPS device. It extracts
- * NMEA strings. The getResponse function should be called regularly to get
- * the GPS device's response.
+ * This class implements the low level driver of the GPS device.<br>
+ * The serial link reader is defined as a State. The State defines the
+ * protocol.<br>
+ * The {@link #getResponse()} function should be called regularly to retrieve
+ * and interpret the GPS device's response.
  * 
  * @author Mario De Weerd
  */
@@ -29,7 +31,7 @@ public final class GPSrxtx {
     private static GPSPort gpsPort;
 
     private DecoderStateInterface state = DecoderStateFactory
-            .getInstance(NMEADecoderState.class);
+            .getInstance(DecoderStateFactory.NMEA_STATE);
 
     private final BT747Semaphore writeOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
@@ -166,7 +168,7 @@ public final class GPSrxtx {
         }
     }
 
-    protected void newState(Class<?> newState) {
+    protected final void newState(final int newState) {
         this.state.exitState(this);
         this.state = DecoderStateFactory.getInstance(newState);
         this.state.enterState(this);
@@ -189,7 +191,7 @@ public final class GPSrxtx {
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700BufferSize = buffer_size;
-                newState(DPL700DecoderState.class);
+                newState(DecoderStateFactory.DPL700_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">0x" + JavaLibBridge.unsigned2hex(cmd, 8)
                             + "000000");
@@ -215,7 +217,7 @@ public final class GPSrxtx {
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700BufferSize = buffer_size;
-                newState(DPL700DecoderState.class);
+                newState(DecoderStateFactory.DPL700_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
@@ -235,7 +237,7 @@ public final class GPSrxtx {
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700BufferSize = 0;
-                newState(DPL700DecoderState.class);
+                newState(DecoderStateFactory.DPL700_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
