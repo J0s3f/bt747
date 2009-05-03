@@ -3,6 +3,7 @@
  */
 package bt747.j2se_view;
 
+import gps.log.GPSRecord;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 
@@ -77,6 +78,11 @@ public class J2SEController extends Controller {
      */
     public final static void tagImage(final TaggedFilePathFactory fpf,
             final ImageData img) throws IOException {
+
+        if (!img.getGpsRecord().hasPosition()) {
+            // Do not do anything for images without a position
+            return;
+        }
         final String p = img.getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);
 
@@ -103,6 +109,5 @@ public class J2SEController extends Controller {
             bt747.sys.Generic.debug("Problem adding log file", e);
         }
     }
-
 
 }

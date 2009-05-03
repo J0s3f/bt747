@@ -21,7 +21,6 @@ import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
 
-import bt747.sys.JavaLibBridge;
 import bt747.sys.File;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
@@ -203,10 +202,11 @@ public class ImageData extends FileWaypoint {
                     day = JavaLibBridge.toInt(DateTime.substring(8, 10));
                     seconds = JavaLibBridge.toInt(DateTime.substring(11, 13))
                             * 3600
-                            + JavaLibBridge.toInt(DateTime.substring(14, 16)) * 60
+                            + JavaLibBridge.toInt(DateTime.substring(14, 16))
+                            * 60
                             + JavaLibBridge.toInt(DateTime.substring(17, 19));
-                    final BT747Date d = JavaLibBridge.getDateInstance(day, month,
-                            year);
+                    final BT747Date d = JavaLibBridge.getDateInstance(day,
+                            month, year);
                     setUtc(d.dateToUTCepoch1970() + seconds);
                 }
             } else {
@@ -227,9 +227,9 @@ public class ImageData extends FileWaypoint {
 
     public final void writeImage(final String orgPath, final String destPath,
             final int card) {
-        if (getGpsRecord().hasLatitude() && getGpsRecord().hasLongitude()) {
-            final ExifJPG exifJpg = new ExifJPG();
-            exifJpg.setPath(orgPath); // Get exif data from file
+        final ExifJPG exifJpg = new ExifJPG();
+        exifJpg.setPath(orgPath); // Get exif data from file
+        if (getGpsRecord().hasPosition()) {
             final GPSRecord g = getGpsRecord();
             if (g.hasPosition()) {
                 exifJpg.setGpsPosition(g.latitude, g.longitude);
@@ -262,7 +262,7 @@ public class ImageData extends FileWaypoint {
                 if (satInfo.length() != 0) {
                     satInfo += " ";
                 }
-                satInfo += nsatInfoToString(g);
+                satInfo += ImageData.nsatInfoToString(g);
             }
             if (satInfo.length() != 0) {
                 exifJpg.setGpsSatInformation(satInfo);
@@ -277,9 +277,9 @@ public class ImageData extends FileWaypoint {
                 exifJpg
                         .setDifferential((g.valid & BT747Constants.VALID_DGPS_MASK) != 0);
             }
-            exifJpg.copyTo(destPath, card);
             exifJpg.setUsedSoftWare();
         }
+        exifJpg.copyTo(destPath, card);
     }
 
     private final static String nsatInfoToString(final GPSRecord r) {
