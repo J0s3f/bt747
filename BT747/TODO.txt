@@ -1,0 +1,34 @@
+A small text files with things that can be done for BT747.
+There is no particular plan to implement this.  It is mainly a list so that nothing is forgotten.
+
+PROBLEMS
+* When there are a lot of pictures, loading the previews is too slow.
+  Need to improve worker task.
+  Could use preview data in pictures.
+
+IMPROVEMENTS
+(Things not very visible to the user).
+* Detect power up/rest of device (Initial PMTK010) and use it to rerequest all the values.
+
+FEATURES
+
+Application
+* Implement a sanity check of the parameters and warn the user if they seem strange:
+  - Log conditions will not really log anything;
+  - LAT/LON/TIME missing from format;
+  - Too many NMEA strings for the serial speed.
+
+Device
+* Add AGPS capability.
+* Add SIRFIII support.
+
+Tracks
+* Allow changing data in J2SE gui.
+* Allow saving data from the J2SE gui table(s).
+
+Tagging
+* Allow tagging using the exiftool.
+
+Map
+* Add scale to map.
+* Use specific icons according to the waypoint type.
