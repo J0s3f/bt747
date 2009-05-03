@@ -700,7 +700,7 @@ final class MTKLogDownloadHandler {
     protected final void eraseLog() {
         if (context.gpsM.isConnected()) {
             context.gpsM.getHandler().setEraseOngoing(true);
-            context.gpsM.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+            context.gpsM.doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);
             waitEraseDone();
@@ -715,7 +715,7 @@ final class MTKLogDownloadHandler {
         // from
         // device
         // TODO: Handle flash sector information.
-        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
 
         context.gpsM.reqLogStatus(); // Check status
@@ -731,7 +731,7 @@ final class MTKLogDownloadHandler {
         // from
         // device
 
-        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
         context.gpsM.reqLogFlashSectorStatus(); // Get flash sector information
@@ -818,7 +818,7 @@ final class MTKLogDownloadHandler {
      *                size of the data range requested
      */
     protected final void readLog(final int startAddr, final int size) {
-        context.gpsM.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.gpsM.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_Q_LOG + ","
                 + JavaLibBridge.unsigned2hex(startAddr, 8) + ","
                 + JavaLibBridge.unsigned2hex(size, 8));

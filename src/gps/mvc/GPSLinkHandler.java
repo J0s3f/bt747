@@ -107,7 +107,7 @@ public final class GPSLinkHandler {
     private final BT747Semaphore cmdBuffersAccess = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    protected final void doSendNMEA(final String cmd) {
+    private final void doSendNMEA(final String cmd) {
         resetLogTimeOut();
         cmdBuffersAccess.down();
         try {
@@ -183,7 +183,7 @@ public final class GPSLinkHandler {
      * 
      * @param cmd
      */
-    private void doSendCmd(final Object cmd) {
+    public void doSendCmd(final Object cmd) {
         if (cmd instanceof String) {
             final String nmeaCmd = (String) cmd;
             doSendNMEA(nmeaCmd);

@@ -676,7 +676,10 @@ public class Controller {
      * Initiate the download of a 'DPL700' log.
      */
     public final void startDPL700Download() {
-        m.gpsModel().getDPL700Log(m.getStringOpt(AppSettings.LOGFILEPATH),
+        // TODO: Should listen to AppSettings.GPSTYPE changes and activate
+        // DPL700 when appropriate.
+        // Initialisation method and download start should change.
+        m.gpsModel().getDPL700Controller().getDPL700Log(m.getStringOpt(AppSettings.LOGFILEPATH),
                 m.getCard());
     }
 
@@ -862,7 +865,7 @@ public class Controller {
      * 
      */
     public final void sendNMEA(final String s) {
-        m.gpsModel().sendNMEA(s);
+        m.gpsModel().sendCmd(s);
     }
 
     /**
