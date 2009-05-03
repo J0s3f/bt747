@@ -18,13 +18,10 @@ import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
 import gps.connection.DPL700ResponseModel;
-import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
-import gps.mvc.commands.dpl700.DPL700IntCommand;
-import gps.mvc.commands.dpl700.DPL700StrCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -315,7 +312,7 @@ public class Model extends MtkModel {
             logFmt &= ~((1 << BT747Constants.FMT_ELEVATION_IDX)
                     | (1 << BT747Constants.FMT_AZIMUTH_IDX) | (1 << BT747Constants.FMT_SNR_IDX));
         }
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR + ","
                 + JavaLibBridge.unsigned2hex(logFmt, 8));
@@ -323,27 +320,27 @@ public class Model extends MtkModel {
     }
 
     public final void doHotStart() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_HOT_START_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_HOT_START_STR);
     }
 
     public final void doWarmStart() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_WARM_START_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_WARM_START_STR);
     }
 
     public final void doColdStart() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_COLD_START_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_COLD_START_STR);
     }
 
     public final void doFullColdStart() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_FULL_COLD_START_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_FULL_COLD_START_STR);
     }
 
     private final void reqDeviceVersion() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
     }
 
     private final void reqDeviceRelease() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
     }
 
     public final void reqDeviceInfo() {
@@ -369,7 +366,7 @@ public class Model extends MtkModel {
      * Must be accessed through {@link #DATA_FLASH_TYPE}
      */
     private final void reqFlashManuID() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
     }
@@ -384,7 +381,7 @@ public class Model extends MtkModel {
      */
     private final void reqLogFormat() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR);
     }
@@ -395,7 +392,7 @@ public class Model extends MtkModel {
      */
     protected final void reqLogStatus() {
 
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_LOG_STATUS_STR);
     }
@@ -405,7 +402,7 @@ public class Model extends MtkModel {
      * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_USED}.
      */
     private final void reqLogMemUsed() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_MEM_USED_STR);
     }
@@ -415,26 +412,26 @@ public class Model extends MtkModel {
      * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_PTS_LOGGED}.
      */
     private final void reqLogMemPtsLogged() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR);
     }
 
     private final void reqMtkLogVersion() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_VERSION_STR);
     }
 
     public final void reqLogReasonStatus() {
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR);
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR);
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR);
 
@@ -443,7 +440,7 @@ public class Model extends MtkModel {
     public final void reqLogFlashStatus() {
         /* Get flash status - immediate (not in output buffer) */
         /* Needed for erase */
-        handler.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_FLASH_STAT_STR);
     }
@@ -451,7 +448,7 @@ public class Model extends MtkModel {
     public final void reqLogFlashSectorStatus() {
         /* Get flash status - immediate (not in output buffer) */
         /* Needed for erase */
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_FLASH_SECTORS_STR);
     }
@@ -460,7 +457,7 @@ public class Model extends MtkModel {
         if (!loggingActive) {
             startLog();
         }
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_USER + ","
                 + JavaLibBridge.unsigned2hex(value, 4));
@@ -471,7 +468,7 @@ public class Model extends MtkModel {
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
         }
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
@@ -485,7 +482,7 @@ public class Model extends MtkModel {
         }
 
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
                 + z_value);
@@ -499,7 +496,7 @@ public class Model extends MtkModel {
             z_value = 1;
         }
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR + ","
                 + (z_value * 10));
@@ -514,13 +511,13 @@ public class Model extends MtkModel {
         }
 
         /* Set log distance interval */
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + "," + z_value
+        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + "," + z_value
                 + ",0,0,0.0,0.0");
     }
 
     public final void reqFixInterval() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_FIX_CTL);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_FIX_CTL);
     }
 
     /** Get the current status of the device */
@@ -550,7 +547,7 @@ public class Model extends MtkModel {
     /** Activate the logging by the device. */
     public final void startLog() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_ON);
         loggingActive = true; // This should be the result of the action.
         // The device will eventually tell the new status
@@ -559,7 +556,7 @@ public class Model extends MtkModel {
     /** Stop the automatic logging of the device. */
     public final void stopLog() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_OFF);
         loggingActive = false; // This should be the result of the action.
         // The device will eventually tell the new status
@@ -573,7 +570,7 @@ public class Model extends MtkModel {
 
     public final void setLogOverwrite(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_REC_METHOD_STR + ","
                 + (set ? "1" : "2"));
@@ -581,76 +578,76 @@ public class Model extends MtkModel {
 
     public final void reqLogOverwrite() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_REC_METHOD_STR);
     }
 
     public final void setSBASTestEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
                 + (set ? "0" : "1"));
     }
 
     public final void reqSBASTestEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
     }
 
     public final void setSBASEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_SBAS_STR + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_SBAS_STR + ","
                 + (set ? "1" : "0"));
     }
 
     public final void reqSBASEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_SBAS_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_SBAS_STR);
     }
 
     public final void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
+        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
                 + (set ? "1" : "0"));
     }
 
     public final void reqPowerSaveEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
     }
 
     public final void setDGPSMode(final int mode) {
         // Request log format from device
         if ((mode >= 0) && (mode <= 2)) {
-            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
+            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
                     + mode);
         }
     }
 
     public final void reqDGPSMode() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
     }
 
     public final void setDatumMode(final int mode) {
         // Request log format from device
         if ((mode >= 0) && (mode <= 2)) {
-            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
+            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
                     + mode);
         }
     }
 
     public final void reqDatumMode() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_DATUM_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_DATUM_STR);
     }
 
     public final void reqNMEAPeriods() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
     }
 
     public final void reqHoluxName() {
-        sendNMEA(BT747Constants.HOLUX_MAIN_CMD
+        sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_Q_NAME);
     }
 
@@ -659,7 +656,7 @@ public class Model extends MtkModel {
      *                The holuxName to set.
      */
     public final void setHoluxName(final String holuxName) {
-        sendNMEA(BT747Constants.HOLUX_MAIN_CMD
+        sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
         reqHoluxName();
     }
@@ -668,7 +665,7 @@ public class Model extends MtkModel {
      * Requests the current mac address for bluetooth (Holux 241 devices).
      */
     public final void reqBtMacAddr() {
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
     }
 
     /**
@@ -696,7 +693,7 @@ public class Model extends MtkModel {
         }
 
         if (myMacAddr.length() == 12) {
-            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_BT_MAC_ADDR + ","
+            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_BT_MAC_ADDR + ","
                     + myMacAddr.substring(0, 6) + ","
                     + myMacAddr.substring(6, 12));
             reqBtMacAddr();
@@ -711,7 +708,7 @@ public class Model extends MtkModel {
             sb.append(',');
             sb.append(periods[i]);
         }
-        sendNMEA(sb.toString());
+        sendCmd(sb.toString());
     }
 
     public final void setNMEADefaultPeriods() {
@@ -735,7 +732,7 @@ public class Model extends MtkModel {
             final int GSV_Period, final int GGA_Period, final int ZDA_Period,
             final int MCHN_Period) {
         // Request log format from device
-        sendNMEA("PMTK"
+        sendCmd("PMTK"
                 + BT747Constants.PMTK_API_SET_USER_OPTION
                 + ","
                 + "0" // Lock:
@@ -750,7 +747,7 @@ public class Model extends MtkModel {
 
     public final void reqFlashUserOption() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
+        sendCmd("PMTK" + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
     }
 
     /**
@@ -781,9 +778,20 @@ public class Model extends MtkModel {
     private boolean gpsDecode = true;
     private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
+    private DPL700Controller dpl700C;
+    
+    public final DPL700Controller getDPL700Controller() {
+        if(dpl700C==null) {
+            dpl700C = new DPL700Controller(handler,mtkLogHandler);
+        }
+        return dpl700C;
+    }
+    
     public final void analyseResponse(final Object response) {
         if (response instanceof DPL700ResponseModel) {
-            analyseDPL700Data((DPL700ResponseModel) response);
+            if(dpl700C!=null) {
+            dpl700C.analyseDPL700Data((DPL700ResponseModel) response);
+            }
         } else {
             analyseNMEA((String[])response);
         }
@@ -1403,87 +1411,6 @@ public class Model extends MtkModel {
         return datum;
     }
 
-    // DPL700 Functionality
-    private String DPL700LogFileName;
-    private int DPL700Card;
-    private static final int C_DPL700_OFF = 0;
-    private static final int C_DPL700_NEEDGETLOG = 1;
-    private static final int C_DPL700_GETLOG = 2;
-    private int DPL700_State = Model.C_DPL700_OFF;
-
-    public final void getDPL700Log(final String p_FileName, final int card) {
-        DPL700LogFileName = p_FileName;
-        DPL700Card = card;
-        enterDPL700Mode();
-        DPL700_State = Model.C_DPL700_NEEDGETLOG;
-    }
-
-    public final void reqDPL700Log() {
-        DPL700_State = Model.C_DPL700_GETLOG;
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 10 * 1024 * 1024));
-        // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
-    }
-
-    public final void enterDPL700Mode() {
-        exitDPL700Mode(); // Exit previous session if still open
-        handler.sendCmd(new DPL700StrCommand("W'P Camera Detect", 255));
-        // m_GPSrxtx.virtualReceive("WP GPS+BT\0");
-    }
-
-    public final void exitDPL700Mode() {
-        handler.sendCmd(new DPL700StrCommand("WP AP-Exit",0)); // No reply expected
-        DPL700_State = Model.C_DPL700_OFF;
-    }
-
-    public final void reqDPL700LogSize() {
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
-    }
-
-    public final void reqDPL700Erase() {
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
-    }
-
-    public final void reqDPL700DeviceInfo() {
-        handler.sendCmd(new DPL700IntCommand(0x5BB00000, 255));
-    }
-
-    public final void getDPL700GetSettings() {
-        handler.sendCmd(new DPL700IntCommand(0x62B60000, 255));
-    }
-
-    private void analyseDPL700Data(final DPL700ResponseModel resp) {
-        final String s = resp.getResponseType(); 
-        if (Generic.isDebug()) {
-            Generic.debug("<DPL700 " + s);
-        }
-        if (s.startsWith("WP GPS")) {
-            // WP GPS+BT
-            // Response to W'P detect
-            if (DPL700_State == Model.C_DPL700_NEEDGETLOG) {
-                reqDPL700Log();
-            }
-        } else if (s.startsWith("WP Update Over")) {
-            if (DPL700_State == Model.C_DPL700_GETLOG) {
-                if (DPL700LogFileName != null) {
-                    if (!DPL700LogFileName.endsWith(".sr")) {
-                        DPL700LogFileName += ".sr";
-                    }
-                    mtkLogHandler.openNewLog(DPL700LogFileName, DPL700Card);
-                    try {
-                        mtkLogHandler.getLogFile().writeBytes(
-                                resp.getResponseBuffer(), 0,
-                                resp.getResponseSize());
-                        mtkLogHandler.getLogFile().close();
-                    } catch (final Exception e) {
-                        Generic.debug("", e);
-                        // TODO: handle exception
-                    }
-                    DPL700LogFileName = null;
-                    exitDPL700Mode();
-                }
-            }
-        }
-    }
 
     public final void setLogRequestAhead(final int logRequestAhead) {
         mtkLogHandler.setLogRequestAhead(logRequestAhead);
@@ -1500,7 +1427,7 @@ public class Model extends MtkModel {
      * @param s
      *                NMEA string to send.
      */
-    public final void sendNMEA(final String s) {
+    public final void sendCmd(final String s) {
         handler.sendCmd(s);
     }
 
@@ -1509,8 +1436,8 @@ public class Model extends MtkModel {
      * 
      * @param s
      */
-    protected final void doSendNMEA(final String s) {
-        handler.doSendNMEA(s);
+    protected final void doSendCmd(final String s) {
+        handler.doSendCmd(s);
     }
 
     /**
@@ -1640,5 +1567,4 @@ public class Model extends MtkModel {
     protected final MTKLogDownloadHandler getMtkLogHandler() {
         return mtkLogHandler;
     }
-
 }
