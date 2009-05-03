@@ -1,39 +1,41 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 /*
  * SimpleExample.java
- *
+ * 
  * Created on 23 mars 2008, 10:37
  * 
- * To run:
- *   Path must include RXTX.  
- *   In Eclipse, set in environment, for example (on windows):
- *     PATH  ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
- *   classpath must include:
- *      libBT747.jar
- *      waba_forj2se.jar (if the libBT747 is a debug library)
- *      collections-superwaba.jar (if the libBT747 is a debug library).
+ * To run: Path must include RXTX. In Eclipse, set in environment, for example
+ * (on windows): PATH
+ * ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
+ * classpath must include: libBT747.jar waba_forj2se.jar (if the libBT747 is a
+ * debug library) collections-superwaba.jar (if the libBT747 is a debug
+ * library).
  */
-package bt747.j2se_view;
+package net.sf.bt747.j2se.examples;
 
 import gps.BT747Constants;
+import gps.connection.GPSrxtx;
 
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.Settings;
+import bt747.sys.interfaces.JavaLibImplementation;
 
 /**
  * 
@@ -42,11 +44,24 @@ import bt747.sys.Generic;
 public class TestDevice implements bt747.model.ModelListener {
 
     /**
+     * Initialize the bridge to the platform. Required for BT747 that runs on
+     * at least 3 different platforms.
+     */
+    static {
+        /* Get instance of implementation */
+        final JavaLibImplementation imp = new net.sf.bt747.j2se.system.J2SEJavaTranslations();
+        /* Declare the implementation */
+        JavaLibBridge.setJavaLibImplementation(imp);
+        /* Set the serial port class instance to use (also system specific). */
+        GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
+    }
+
+    /**
      * 
      */
     private static final long serialVersionUID = 1L;
-    Model m;
-    Controller c;
+    private Model m;
+    private Controller c;
 
     /** Creates new form SimpleExample */
     public TestDevice() {
@@ -71,6 +86,7 @@ public class TestDevice implements bt747.model.ModelListener {
     }
 
     private void initAppData() {
+        m.init(); // Initialise the app model.
         // Activate some debug.
         c.setDebug(true);
         // Make the connection
@@ -92,20 +108,21 @@ public class TestDevice implements bt747.model.ModelListener {
             try {
                 Thread.sleep(50);
             } catch (Exception e) {
-                Generic.debug("",e);
+                Generic.debug("", e);
                 // Do nothing
             }
         }
     }
+
     private void afterConnection() {
         getOutstandingCmds();
-        // c.sendNMEA("PMTK391");  // Resets
+        // c.sendNMEA("PMTK391"); // Resets
         getOutstandingCmds();
-        // c.sendNMEA("PMTK392");   // Resets
+        // c.sendNMEA("PMTK392"); // Resets
         getOutstandingCmds();
-        //c.sendNMEA("PMTK395");
+        // c.sendNMEA("PMTK395");
         getOutstandingCmds();
-        //c.sendNMEA("PMTK399");
+        // c.sendNMEA("PMTK399");
         getOutstandingCmds();
         c.sendNMEA("PMTK402");
         getOutstandingCmds();
@@ -274,12 +291,12 @@ public class TestDevice implements bt747.model.ModelListener {
             // updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
             // updateLogFormatData();
-//        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-//            // getRawLogFilePath();
-//        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-//            // getOutputFilePath();
-//        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-//            // getWorkDirPath();
+            // } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+            // // getRawLogFilePath();
+            // } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+            // // getOutputFilePath();
+            // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+            // // getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             // getIncremental();
         } else if (type == ModelEvent.TRK_VALID_CHANGE
@@ -307,11 +324,11 @@ public class TestDevice implements bt747.model.ModelListener {
         } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
             progressUpdate();
             handleDownloadEnded();
-//        } else if (type == ModelEvent.DEBUG_MSG) {
-//            System.out.flush();
-//            System.err.println((String) e.getArg());
-//            System.err.flush();
-//            progressUpdate();
+            // } else if (type == ModelEvent.DEBUG_MSG) {
+            // System.out.flush();
+            // System.err.println((String) e.getArg());
+            // System.err.flush();
+            // progressUpdate();
         } else if (type == ModelEvent.CONNECTED) {
             // btConnect.setText("Disconnect");
             // btConnectFunctionIsConnect = false;
@@ -365,13 +382,23 @@ public class TestDevice implements bt747.model.ModelListener {
 
     /**
      * @param args
-     *            the command line arguments
+     *                the command line arguments
      */
     public static void main(String args[]) {
+        java.lang.Thread
+                .setDefaultUncaughtExceptionHandler(new java.lang.Thread.UncaughtExceptionHandler() {
+
+                    public void uncaughtException(Thread t, Throwable e) {
+                        Generic.debug("Uncaught Exception", e);
+                    }
+                });
+
+        Settings.setAppSettings(new String(new byte[2048]));
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            Model m = new Model();
-            Controller c = new Controller(m);
+            final Model m = new Model();
+            final Controller c = new Controller(m);
 
             public void run() {
                 new TestDevice(m, c);

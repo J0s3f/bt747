@@ -159,19 +159,11 @@ public class BT747cmd implements bt747.model.ModelListener {
      * 
      */
     private static final String OPT_FILE_BASENAME = "f";
-    /**
-     * Debug option.
-     */
+    /** Debug option. */
     private static final String OPT_DEBUG = "d";
-
-    /**
-     * Photo time offset option.
-     */
+    /** Photo time offset option. */
     private static final String OPT_FILE_TIMEZONE = "tz";
-
-    /**
-     * Specify the format for the tagged filename.
-     */
+    /** Specify the format for the tagged filename. */
     private static final String OPT_TARGET_TAGGED_FILENAME = "template-taggedfilename";
 
     /**

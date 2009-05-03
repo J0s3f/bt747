@@ -6,14 +6,25 @@ PROBLEMS
   Need to improve worker task.
   Could use preview data in pictures.
 
+IMPROVEMENTS
+(Things not very visible to the user).
+* Detect power up/rest of device (Initial PMTK010) and use it to rerequest all the values.
+
 FEATURES
+
+Application
+* Implement a sanity check of the parameters and warn the user if they seem strange:
+  - Log conditions will not really log anything;
+  - LAT/LON/TIME missing from format;
+  - Too many NMEA strings for the serial speed.
 
 Device
 * Add AGPS capability.
 * Add SIRFIII support.
 
 Tracks
-* Allow chan
+* Allow changing data in J2SE gui.
+* Allow saving data from the J2SE gui table(s).
 
 Tagging
 * Allow tagging using the exiftool.
