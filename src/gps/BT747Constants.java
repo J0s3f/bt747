@@ -224,6 +224,8 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_CMD_FULL_COLD_START = 104;
     public static final int PMTK_CMD_LOG = 182;
     public static final int PMTK_SET_NMEA_BAUD_RATE = 251;
+    /** Set binary mode used in AGPS - will be tried for other too */
+    public static final int PMTK_SET_BIN_MODE = 253;
     /* REPLIES: SET - Set values same as futher below, but 3XX */
     public static final int PMTK_API_SET_FIX_CTL = 300;
     public static final int PMTK_API_SET_DGPS_MODE = 301;
@@ -353,6 +355,8 @@ public final class BT747Constants { // dev as in device
             + BT747Constants.PMTK_CMD_LOG;
     public static final String PMTK_SET_NMEA_BAUD_RATE_STR = ""
             + BT747Constants.PMTK_SET_NMEA_BAUD_RATE;
+    public static final String PMTK_SET_BIN_MODE_STR = ""
+            + + BT747Constants.PMTK_SET_BIN_MODE;
     public static final String PMTK_API_SET_FIX_CTL_STR = ""
             + BT747Constants.PMTK_API_SET_FIX_CTL;
     public static final String PMTK_API_SET_DGPS_MODE_STR = ""

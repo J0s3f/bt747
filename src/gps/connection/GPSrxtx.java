@@ -43,6 +43,11 @@ public final class GPSrxtx {
         state.enterState(this);
     }
 
+    /** Returns the current state which is part of the context. */
+    protected final Object getState() {
+        return state;
+    }
+
     /** Semaphore to avoid that two resources are writing to the link. */
     private final BT747Semaphore writeOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
@@ -219,7 +224,7 @@ public final class GPSrxtx {
             if (read_buf_p >= bytesRead) {
                 // Buffer is empty. Try to fill it (empty the input queue)
                 refillBuffer();
-                if (isReadAgain()) {
+                if (bytesRead > 100 || isReadAgain()) {
 
                     readAgain = false;
                 }

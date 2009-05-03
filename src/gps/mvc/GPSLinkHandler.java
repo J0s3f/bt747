@@ -15,17 +15,24 @@
 package gps.mvc;
 
 import gps.BT747Constants;
-import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEADecoderState;
 import gps.connection.NMEAWriter;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Vector;
 
-final class GPSLinkHandler {
+/**
+ * Refactoring ongoing. Stuff to do:<br> - message type should be generic and
+ * a factory can be used to find the right handler.
+ * 
+ * @author Mario De Weerd
+ * 
+ */
+public final class GPSLinkHandler {
     private GPSrxtx gpsRxTx = null;
     private static final int INITIAL_WAIT = 500;
 
@@ -62,12 +69,16 @@ final class GPSLinkHandler {
         this.gpsRxTx = gpsRxTx;
         // TODO: Add myself as listener
     }
+    
+    public final GPSrxtx getGPSRxtx() {
+        return this.gpsRxTx;
+    }
 
     public final boolean isConnected() {
         return gpsRxTx.isConnected();
     }
 
-    public final void sendNMEA(final String cmd) {
+    public final void sendCmd(final Object cmd) {
         int cmdsWaiting;
         cmdBuffersAccess.down();
         cmdsWaiting = sentCmds.size();
@@ -75,7 +86,7 @@ final class GPSLinkHandler {
         if (!isEraseOngoing() && (cmdsWaiting == 0)
                 && (Generic.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
-            doSendNMEA(cmd);
+            doSendCmd(cmd);
         } else if (cmdsWaiting < GPSLinkHandler.C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
             cmdBuffersAccess.down();
@@ -104,7 +115,7 @@ final class GPSLinkHandler {
                 sentCmds.addElement(cmd);
             }
 
-            NMEAWriter.sendPacket(gpsRxTx,cmd);
+            NMEAWriter.sendPacket(gpsRxTx, cmd);
             if (Generic.isDebug()) {
                 Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
             }
@@ -151,7 +162,7 @@ final class GPSLinkHandler {
                         && (Generic.getTimeStamp() > nextCmdSendTime)) {
                     // No more commands waiting for acknowledge
                     cmdBuffersAccess.up();
-                    doSendNMEA((String) toSendCmds.elementAt(0));
+                    doSendCmd(toSendCmds.elementAt(0));
                     cmdBuffersAccess.down();
                     toSendCmds.removeElementAt(0);
                 }
@@ -159,6 +170,26 @@ final class GPSLinkHandler {
                 Generic.debug("checkSendCmdFromQueue", e);
             }
             cmdBuffersAccess.up();
+        }
+    }
+
+    /**
+     * Immediate sending of cmd regardless of type.
+     * 
+     * This allows to change mode on the fly. The code here will reflect that.
+     * 
+     * Some commands can have execution method with context.
+     * TODO: Implement that.  
+     * 
+     * @param cmd
+     */
+    private void doSendCmd(final Object cmd) {
+        if (cmd instanceof String) {
+            final String nmeaCmd = (String) cmd;
+            doSendNMEA(nmeaCmd);
+        } else if (cmd instanceof GpsLinkExecCommand) {
+            GpsLinkExecCommand linkCmd = (GpsLinkExecCommand) cmd;
+            linkCmd.execute(this);
         }
     }
 
@@ -246,29 +277,16 @@ final class GPSLinkHandler {
         cmdBuffersAccess.down();
         total = sentCmds.size() + toSendCmds.size();
         cmdBuffersAccess.up();
-        //Generic.debug("sent:"+sentCmds.size()+" tosend:"+toSendCmds.size());
-        //if(toSendCmds.size()>0) {
-        //    Generic.debug(""+toSendCmds.elementAt(0));
-        //}
+        // Generic.debug("sent:"+sentCmds.size()+"
+        // tosend:"+toSendCmds.size());
+        // if(toSendCmds.size()>0) {
+        // Generic.debug(""+toSendCmds.elementAt(0));
+        // }
         return total;
     }
 
     protected final Object getResponse() {
         return gpsRxTx.getResponse();
-    }
-
-    protected final void sendCmdAndGetDPL700Response(final int cmd,
-            final int buffer_size) {
-        DPL700Writer.sendCmd(gpsRxTx, cmd, buffer_size);
-    }
-
-    protected final void sendCmdAndGetDPL700Response(final String cmd,
-            final int buffer_size) {
-        DPL700Writer.sendCmd(gpsRxTx, cmd, buffer_size);
-    }
-
-    protected final void sendDPL700Cmd(final String cmd) {
-        DPL700Writer.sendCmd(gpsRxTx, cmd);
     }
 
     private final boolean isEraseOngoing() {

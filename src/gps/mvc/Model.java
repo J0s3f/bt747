@@ -18,10 +18,13 @@ import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
 import gps.connection.DPL700ResponseModel;
+import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
+import gps.mvc.commands.dpl700.DPL700IntCommand;
+import gps.mvc.commands.dpl700.DPL700StrCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -36,13 +39,17 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  * could change in the future by extending GPSstate with such features in a
  * derived class.
  * 
+ * Extends MtkModel during refactoring.
+ * Refactoring can convert the specific link operations into GpsLinkCommands,
+ * or 
+ * 
  * @author Mario De Weerd
  * @see GPSrxtx
  * 
  */
 /* Final for the moment */
-public class Model {
-    private final GPSLinkHandler handler = new GPSLinkHandler();
+public class Model extends MtkModel {
+    private final GPSLinkHandler handler;
     private final MTKLogDownloadHandler mtkLogHandler = new MTKLogDownloadHandler(
             this);
 
@@ -131,6 +138,8 @@ public class Model {
      * 
      */
     public Model(final GPSrxtx gpsRxTx) {
+        super(new GPSLinkHandler());
+        handler = super.getHandler();
         setGPSRxtx(gpsRxTx);
     }
 
@@ -1411,35 +1420,35 @@ public class Model {
 
     public final void reqDPL700Log() {
         DPL700_State = Model.C_DPL700_GETLOG;
-        handler.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
+        handler.sendCmd(new DPL700IntCommand(0x60B50000, 10 * 1024 * 1024));
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
     public final void enterDPL700Mode() {
         exitDPL700Mode(); // Exit previous session if still open
-        handler.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
+        handler.sendCmd(new DPL700StrCommand("W'P Camera Detect", 255));
         // m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
     public final void exitDPL700Mode() {
-        handler.sendDPL700Cmd("WP AP-Exit"); // No reply expected
+        handler.sendCmd(new DPL700StrCommand("WP AP-Exit",0)); // No reply expected
         DPL700_State = Model.C_DPL700_OFF;
     }
 
     public final void reqDPL700LogSize() {
-        handler.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
     }
 
     public final void reqDPL700Erase() {
-        handler.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
     }
 
     public final void reqDPL700DeviceInfo() {
-        handler.sendCmdAndGetDPL700Response(0x5BB00000, 255);
+        handler.sendCmd(new DPL700IntCommand(0x5BB00000, 255));
     }
 
     public final void getDPL700GetSettings() {
-        handler.sendCmdAndGetDPL700Response(0x62B60000, 255);
+        handler.sendCmd(new DPL700IntCommand(0x62B60000, 255));
     }
 
     private void analyseDPL700Data(final DPL700ResponseModel resp) {
@@ -1492,7 +1501,7 @@ public class Model {
      *                NMEA string to send.
      */
     public final void sendNMEA(final String s) {
-        handler.sendNMEA(s);
+        handler.sendCmd(s);
     }
 
     /**
@@ -1627,9 +1636,6 @@ public class Model {
 
     // ///////////////////////////////////////////////////////////////
     // To be removed after refactoring.
-    protected final GPSLinkHandler getHandler() {
-        return handler;
-    }
 
     protected final MTKLogDownloadHandler getMtkLogHandler() {
         return mtkLogHandler;
