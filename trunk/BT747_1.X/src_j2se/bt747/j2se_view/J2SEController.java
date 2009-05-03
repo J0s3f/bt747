@@ -77,6 +77,10 @@ public class J2SEController extends Controller {
      */
     public final static void tagImage(final TaggedFilePathFactory fpf,
             final ImageData img) throws IOException {
+        if (!img.getGpsRecord().hasPosition()) {
+            // Do not do anything for images without a position
+            return;
+        }
         final String p = img.getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);
 
