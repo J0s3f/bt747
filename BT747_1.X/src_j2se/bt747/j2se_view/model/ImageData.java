@@ -227,9 +227,9 @@ public class ImageData extends FileWaypoint {
 
     public final void writeImage(final String orgPath, final String destPath,
             final int card) {
+        final ExifJPG exifJpg = new ExifJPG();
+        exifJpg.setPath(orgPath); // Get exif data from file
         if (getGpsRecord().hasLatitude() && getGpsRecord().hasLongitude()) {
-            final ExifJPG exifJpg = new ExifJPG();
-            exifJpg.setPath(orgPath); // Get exif data from file
             final GPSRecord g = getGpsRecord();
             if (g.hasPosition()) {
                 exifJpg.setGpsPosition(g.latitude, g.longitude);
@@ -277,9 +277,9 @@ public class ImageData extends FileWaypoint {
                 exifJpg
                         .setDifferential((g.valid & BT747Constants.VALID_DGPS_MASK) != 0);
             }
-            exifJpg.copyTo(destPath, card);
             exifJpg.setUsedSoftWare();
         }
+        exifJpg.copyTo(destPath, card);
     }
 
     private final static String nsatInfoToString(final GPSRecord r) {
