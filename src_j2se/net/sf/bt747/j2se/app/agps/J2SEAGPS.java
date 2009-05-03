@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bt747.j2se_view;
+package net.sf.bt747.j2se.app.agps;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

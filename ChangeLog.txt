@@ -1,3 +1,7 @@
+Version 1.68.15
+* Fixed problem when writing back files "in place" with no position.
+  Not doing anything for these files.
+
 Version 1.68.14
 * Fixed problem in tagging when time offset did not fit in 16 bit.
 * Fixed inplace tagging in  J2SE GUI.
