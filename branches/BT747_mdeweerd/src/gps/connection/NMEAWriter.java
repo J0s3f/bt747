@@ -3,6 +3,7 @@
  */
 package gps.connection;
 
+
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 

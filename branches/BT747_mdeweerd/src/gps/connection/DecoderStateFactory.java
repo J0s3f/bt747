@@ -17,6 +17,8 @@ public final class DecoderStateFactory {
 
     public final static int NMEA_STATE = 0;
     public final static int DPL700_STATE = 1;
+    public final static int SIRFIII_STATE = 2;
+    public final static int MTKBIN_STATE = 3;
 
     /**
      * Gets an instance for the requested state. Currently a Singleton
@@ -40,6 +42,12 @@ public final class DecoderStateFactory {
                 break;
             case DPL700_STATE:
                 newState = new DPL700DecoderState();
+                break;
+            case SIRFIII_STATE:
+                newState = new SirfDecoderState();
+                break;
+            case MTKBIN_STATE:
+                newState = new MtkBinDecoderState();
                 break;
             }
             states.put(stateStr, newState);

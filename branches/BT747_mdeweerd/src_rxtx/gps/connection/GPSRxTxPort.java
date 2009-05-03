@@ -211,6 +211,7 @@ public final class GPSRxTxPort extends GPSPort {
     private static final int MAX_BTPORT_SEARCH_IDX = 3;
     /** Maximum index when looking for USB port number given a base name. */
     private static final int MAX_USBPORT_SEARCH_IDX = 6;
+
     /**
      * Set a bluetooth connection.
      */
@@ -313,7 +314,9 @@ public final class GPSRxTxPort extends GPSPort {
 
     public final synchronized void write(final byte[] b) {
         try {
-            ds.write(b);
+            if (ds != null) {
+                ds.write(b);
+            }
         } catch (final Exception e) {
             Generic.debug("", e);
         }

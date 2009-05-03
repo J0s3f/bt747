@@ -17,10 +17,11 @@ import bt747.sys.interfaces.BT747Thread;
 public class Controller implements BT747Thread {
 
     private Model gpsM;
+    private MtkController mtkC;
 
     private final GPSLinkHandler handler;
     private final MTKLogDownloadHandler mtkLogHandler;
-    
+
     public final static Controller getInstance(GPSrxtx gpsRxTx) {
         return getInstance(new Model(gpsRxTx));
     }
@@ -32,23 +33,24 @@ public class Controller implements BT747Thread {
     private Controller(Model model) {
         this.gpsM = model;
         this.handler = model.getHandler();
+        this.mtkC = new MtkController(new MtkModel(handler));
         this.mtkLogHandler = model.getMtkLogHandler();
     }
 
     public final Model getModel() {
         return gpsM;
     }
-    
 
     private boolean eraseRequested;
+
     /**
      * Erase the log.
      */
     public final void eraseLog() {
         eraseRequested = true;
-        gpsM.setEraseOngoing(true);  // For popup
+        gpsM.setEraseOngoing(true); // For popup
     }
-    
+
     /**
      * The log is being erased - the user request to abandon waiting for the
      * end of this operation.
@@ -57,8 +59,6 @@ public class Controller implements BT747Thread {
         eraseRequested = false;
         mtkLogHandler.stopErase();
     }
-
-
 
     /**
      * Start the timer To be called once the port is opened. The timer is used
@@ -75,7 +75,7 @@ public class Controller implements BT747Thread {
             Generic.addThread(this, false);
         }
     }
-    
+
     private void resetAvailable() {
         gpsM.setAllUnavailable();
         nextValueToCheck = 0;
@@ -116,7 +116,8 @@ public class Controller implements BT747Thread {
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
                 do {
-                    final Object lastResponse = (String []) handler.getResponse();
+                    final Object lastResponse = (String[]) handler
+                            .getResponse();
                     if (lastResponse != null) {
                         gpsM.analyseResponse(lastResponse);
                     } else {
@@ -127,7 +128,7 @@ public class Controller implements BT747Thread {
                 if ((nextAvailableRun < timeStamp)
                         && (handler.getOutStandingCmdsCount() == 0)
                         && !gpsM.isLogDownloadOnGoing()) {
-                    if(eraseRequested) {
+                    if (eraseRequested) {
                         eraseRequested = false; // Erase request handled
                         mtkLogHandler.eraseLog();
                     }
