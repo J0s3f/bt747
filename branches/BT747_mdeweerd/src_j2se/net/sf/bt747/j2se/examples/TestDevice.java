@@ -26,8 +26,14 @@
  */
 package net.sf.bt747.j2se.examples;
 
+import org.apache.tools.ant.taskdefs.Sleep;
+
+import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
+import gps.mvc.commands.mtk.MtkBinCommand;
+import gps.mvc.commands.mtk.SetMtkBinModeCommand;
+import gps.mvc.commands.mtk.SetNmeaModeCommand;
 
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -89,6 +95,8 @@ public class TestDevice implements bt747.model.ModelListener {
         m.init(); // Initialise the app model.
         // Activate some debug.
         c.setDebug(true);
+        c.setAutoFetch(false); // Not sending commands outside the program
+        // control.
         // Make the connection
         c.openFreeTextPort("COM4");
         // Successfull connection will result in modelEvent.
@@ -114,152 +122,208 @@ public class TestDevice implements bt747.model.ModelListener {
         }
     }
 
+    private void testSingleNMEA(final Object cmd) {
+        c.sendCmd(cmd);
+        getOutstandingCmds();
+    }
+
     private void afterConnection() {
-        getOutstandingCmds();
-        // c.sendNMEA("PMTK391"); // Resets
-        getOutstandingCmds();
-        // c.sendNMEA("PMTK392"); // Resets
-        getOutstandingCmds();
-        // c.sendNMEA("PMTK395");
-        getOutstandingCmds();
-        // c.sendNMEA("PMTK399");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK402");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK403");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK404");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK405");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK406");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK407");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK408");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK409");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK410");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK411");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK412");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK415");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK416");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK417");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK418");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK412");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK421");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK435");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK445");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK450");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK451");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK452");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK453");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK454");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK455");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK456");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK457");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK458");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK459");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK460");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK461");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK462");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK463");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK464");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK465");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK466");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK467");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK472");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK473");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK474");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK480");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK481");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK491");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK492");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK495");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK499");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK600");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK601");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK603");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK605");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK650");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK651");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK711");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK712");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK713");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK714");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK715");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK716");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK717");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK718");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK800");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK801");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK802");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK803");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK804");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK806");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK810");
-        getOutstandingCmds();
-        c.sendNMEA("PMTK815");
-        getOutstandingCmds();
+
+        /** ************************************************************** */
+        /*********************************************************************
+         * Currently using this example to test the AGPS programming mode.
+         ********************************************************************/
+        Generic.setDebugLevel(2); // We are debugging, so raising debug
+        // level.
+        getOutstandingCmds();
+        /* Enter AGPS programming mode */
+        // Checked: the sent packet corresponds to what is needed. (seen in a
+        // trace)
+        c.sendCmd(new SetMtkBinModeCommand());
+        // getOutstandingCmds();
+        if (false) {
+            /* Wild guess at a packet to see if that works too. */
+            /*
+             * Exluded because entering and exiting the mode does not work on
+             * my device
+             */
+            byte[] payload;
+            payload = new byte[4];
+            payload[0] = (byte) (BT747Constants.PMTK_LOG_Q >> 8);
+            payload[1] = (byte) (BT747Constants.PMTK_LOG_Q);
+            payload[2] = (byte) (BT747Constants.PMTK_LOG_VERSION >> 8);
+            payload[3] = (byte) (BT747Constants.PMTK_LOG_VERSION);
+            c.sendCmd(new MtkBinCommand(new MtkBinTransportMessageModel(
+                    BT747Constants.PMTK_CMD_LOG, payload)));
+            // private final void reqMtkLogVersion() {
+            // sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+            // + BT747Constants.PMTK_LOG_Q + ","
+            // + BT747Constants.PMTK_LOG_VERSION_STR);
+            // }
+        }
+
+        /* Enter the NMEA mode again */
+        // Checked: the sent packet corresponds to what is needed. (seen in a
+        // trace)
+        c.sendCmd(new SetNmeaModeCommand());
+
+        /*
+         * Perform some other request so that Outstanding commands has to wait
+         * at least for the response to this one and get the communication of
+         * the previous ones in the serial protocol monitor.
+         */
+        c.reqDGPSMode();
+
+        getOutstandingCmds();
+        System.exit(0); // Testing just part of it so cowardly exiting
+                        // program.
+        
+        // Next is a list of commands to see what the device replies.
+        
+        // testSingleNMEA("PMTK391"); // Resets the device
+
+        // testSingleNMEA("PMTK392"); // Resets the device
+
+        // testSingleNMEA("PMTK395");
+
+        // testSingleNMEA("PMTK399");
+
+        testSingleNMEA("PMTK402");
+
+        testSingleNMEA("PMTK403");
+
+        testSingleNMEA("PMTK404");
+
+        testSingleNMEA("PMTK405");
+
+        testSingleNMEA("PMTK406");
+
+        testSingleNMEA("PMTK407");
+
+        testSingleNMEA("PMTK408");
+
+        testSingleNMEA("PMTK409");
+
+        testSingleNMEA("PMTK410");
+
+        testSingleNMEA("PMTK411");
+
+        testSingleNMEA("PMTK412");
+
+        testSingleNMEA("PMTK415");
+
+        testSingleNMEA("PMTK416");
+
+        testSingleNMEA("PMTK417");
+
+        testSingleNMEA("PMTK418");
+
+        testSingleNMEA("PMTK412");
+
+        testSingleNMEA("PMTK421");
+
+        testSingleNMEA("PMTK435");
+
+        testSingleNMEA("PMTK445");
+
+        testSingleNMEA("PMTK450");
+
+        testSingleNMEA("PMTK451");
+
+        testSingleNMEA("PMTK452");
+
+        testSingleNMEA("PMTK453");
+
+        testSingleNMEA("PMTK454");
+
+        testSingleNMEA("PMTK455");
+
+        testSingleNMEA("PMTK456");
+
+        testSingleNMEA("PMTK457");
+
+        testSingleNMEA("PMTK458");
+
+        testSingleNMEA("PMTK459");
+
+        testSingleNMEA("PMTK460");
+
+        testSingleNMEA("PMTK461");
+
+        testSingleNMEA("PMTK462");
+
+        testSingleNMEA("PMTK463");
+
+        testSingleNMEA("PMTK464");
+
+        testSingleNMEA("PMTK465");
+
+        testSingleNMEA("PMTK466");
+
+        testSingleNMEA("PMTK467");
+
+        testSingleNMEA("PMTK472");
+
+        testSingleNMEA("PMTK473");
+
+        testSingleNMEA("PMTK474");
+
+        testSingleNMEA("PMTK480");
+
+        testSingleNMEA("PMTK481");
+
+        testSingleNMEA("PMTK491");
+
+        testSingleNMEA("PMTK492");
+
+        testSingleNMEA("PMTK495");
+
+        testSingleNMEA("PMTK499");
+
+        testSingleNMEA("PMTK600");
+
+        testSingleNMEA("PMTK601");
+
+        testSingleNMEA("PMTK603");
+
+        testSingleNMEA("PMTK605");
+
+        testSingleNMEA("PMTK650");
+
+        testSingleNMEA("PMTK651");
+
+        testSingleNMEA("PMTK711");
+
+        testSingleNMEA("PMTK712");
+
+        testSingleNMEA("PMTK713");
+
+        testSingleNMEA("PMTK714");
+
+        testSingleNMEA("PMTK715");
+
+        testSingleNMEA("PMTK716");
+
+        testSingleNMEA("PMTK717");
+
+        testSingleNMEA("PMTK718");
+
+        testSingleNMEA("PMTK800");
+
+        testSingleNMEA("PMTK801");
+
+        testSingleNMEA("PMTK802");
+
+        testSingleNMEA("PMTK803");
+
+        testSingleNMEA("PMTK804");
+
+        testSingleNMEA("PMTK806");
+
+        testSingleNMEA("PMTK810");
+
+        testSingleNMEA("PMTK815");
+
         System.exit(0);
     }
 
@@ -394,7 +458,7 @@ public class TestDevice implements bt747.model.ModelListener {
                 });
 
         Settings.setAppSettings(new String(new byte[2048]));
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             final Model m = new Model();
