@@ -55,10 +55,10 @@ public class MtkBinTransportMessageModel {
         message[0] = startByte0;
         message[1] = startByte1;
         // Payload length
-        message[2] = (byte) (transportSize >> 8);
-        message[3] = (byte) (transportSize & 0xFF);
-        message[4] = (byte) (payloadType >> 8);
-        message[5] = (byte) (payloadType & 0xFF);
+        message[2] = (byte) (transportSize & 0xFF);
+        message[3] = (byte) (transportSize >> 8);
+        message[4] = (byte) (payloadType & 0xFF);
+        message[5] = (byte) (payloadType >> 8);
 
         for (int i = 0; i < payload.length; i++) {
             message[i + 6] = payload[i];
@@ -95,13 +95,13 @@ public class MtkBinTransportMessageModel {
             // Message has bad layer
             return false;
         }
-        int payloadlenght = (message[2] << 8) | (message[3] & 0xFF);
+        int payloadlenght = (message[3] << 8) | (message[2] & 0xFF);
         if (message.length != payloadlenght + 9) {
             // Message has wrong length
             return false;
         }
 
-        payloadType = (message[4] << 8) & 0xFF00 + (message[5] & 0xFF);
+        payloadType = (message[5] << 8) & 0xFF00 + (message[4] & 0xFF);
 
         // Get the payload
         final byte expected_checksum = message[message.length - 3];
