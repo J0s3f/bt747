@@ -40,6 +40,8 @@ import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
+import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsLinkNmeaCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -479,8 +481,8 @@ public class Controller {
         GPSLogConvertInterface lc;
         result = 0;
         configureGpsFile(gpsFile);
-        
-        if(logType == Model.OSM_LOGTYPE) {
+
+        if (logType == Model.OSM_LOGTYPE) {
             // For OSM output, we optimize the output file.
             gpsFile.setIncludeTrkComment(false);
             gpsFile.setIncludeTrkName(false);
@@ -534,7 +536,8 @@ public class Controller {
     /**
      * Vector of LogFileInfo.
      */
-    public final static BT747Vector logFiles = JavaLibBridge.getVectorInstance();
+    public final static BT747Vector logFiles = JavaLibBridge
+            .getVectorInstance();
 
     /**
      * Convert the log into an array of trackpoints.
@@ -644,7 +647,7 @@ public class Controller {
             m.getCard(), /* Card for file operations */
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_SMART,
-            m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
+                    m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
         } catch (final Exception e) {
             Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception
@@ -679,8 +682,8 @@ public class Controller {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
         // DPL700 when appropriate.
         // Initialisation method and download start should change.
-        m.gpsModel().getDPL700Controller().getDPL700Log(m.getStringOpt(AppSettings.LOGFILEPATH),
-                m.getCard());
+        m.gpsModel().getDPL700Controller().getDPL700Log(
+                m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 
     /**
@@ -861,11 +864,28 @@ public class Controller {
     }
 
     /**
-     * Send an arbitrary NMEA string.
+     * Send an arbitrary GPS command.
+     * 
+     * @param cmd
+     *                A string will be interpreted as a NMEA packet to send.<br>
+     *                Otherwise the class must be an implementation of
+     *                {@link GpsLinkExecCommand} or {@link GpsLinkNmeaCommand}.
      * 
      */
-    public final void sendNMEA(final String s) {
-        m.gpsModel().sendCmd(s);
+    public final void sendCmd(final Object cmd) {
+        m.gpsModel().sendCmd(cmd);
+    }
+
+    /**
+     * Some data will be constantly requested from the device to keep it up to
+     * date in the application. When inactive the benefit is that the
+     * application fully controls what happens on the serial link.
+     * 
+     * @param isAuto
+     *                When true, the data is fetched automatically.
+     */
+    public final void setAutoFetch(final boolean isAuto) {
+        m.gpsModel().setAutoFetch(isAuto);
     }
 
     /**
