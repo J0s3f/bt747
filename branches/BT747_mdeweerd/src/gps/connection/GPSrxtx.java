@@ -169,6 +169,12 @@ public final class GPSrxtx {
     public final Object getResponse() {
         getResponseOngoing.down();
         buffer.resetReadStrategy();
+
+        if (gpsPort.debugActive()) {
+            // Test to avoid unnecessary lost time
+            gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
+        }
+
         final Object result = state.getResponse(this);
         getResponseOngoing.up();
         return result;

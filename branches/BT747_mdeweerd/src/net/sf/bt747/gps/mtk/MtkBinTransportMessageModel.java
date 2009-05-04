@@ -3,6 +3,9 @@
  */
 package net.sf.bt747.gps.mtk;
 
+import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+
 /**
  * Model for MTK binary data package.
  * 
@@ -118,5 +121,22 @@ public class MtkBinTransportMessageModel {
             payload[i] = message[i + 6];
         }
         return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        // Intended for debugging.
+        final StringBuffer rec = new StringBuffer(50);
+        rec.append("MtkBinMsgType:");
+        rec.append(payloadType);
+        rec.append(" Payload:0x");
+        for(int i=0;i<payload.length;i++) {
+            // Add hex value of payload.
+            rec.append(JavaLibBridge.unsigned2hex(payload[i],2));
+        }
+        return rec.toString();
     }
 }

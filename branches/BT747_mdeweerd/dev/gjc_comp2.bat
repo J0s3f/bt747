@@ -13,6 +13,6 @@ REM gcj --boot waba.applet.Applet BT747.jar
 REM gcj  --boot bt747.j2se_view.BT747cmd ..\dist\libBT747.jar
 REM gcj  --main=bt747.j2se_view.BT747cmd ..\dist\libBT747.jar
 javac -d . ..\src_j2se\bt747\j2se_view\BT747cmd.java
-"C:\Program Files\Jarc\Mingw\bin\gcj.exe" --main=bt747.j2se_view.BT747cmd ..\dist\libBT747.jar ..\lib\rxtx-2.1-7-bins-r2\RXTXcomm.jar .\bt747\j2se_view\BT747cmd.class ..\lib\jopt-simple-2.4.1.jar ..\lib\rxtx-2.1-7-bins-r2\Windows\i368-mingw32\rxtxSerial.dll
+"C:\Program Files\Jarc\Mingw\bin\gcj.exe" --main=bt747.j2se_view.BT747cmd ..\dist\libBT747.jar ..\lib\rxtx-2.1-7-bins-r2\RXTXcomm.jar ..\lib\swingx-ws.jar .\bt747\j2se_view\BT747cmd.class ..\lib\jopt-simple-2.4.1.jar ..\lib\rxtx-2.1-7-bins-r2\Windows\i368-mingw32\rxtxSerial.dll
 set PATH=%ORGPATH%
 pause

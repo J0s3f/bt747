@@ -17,6 +17,7 @@ package gps.connection;
 // import bt747.io.DataStream;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
 
 /**
  * abstract class defining interface for serial port implementation. Allows
@@ -132,6 +133,17 @@ public abstract class GPSPort {
             final int len) {
         if (debugActive()) {
             try {
+//                final byte[] cb = new byte[5];
+//                cb[1] = '(';
+//                cb[4] = ')';
+//                for (int i = index; i < len; i++) {
+//                    final byte c = b[i];
+//                    final String s = JavaLibBridge.unsigned2hex(c, 2);
+//                    cb[0] = c;
+//                    cb[2] = (byte) s.charAt(0);
+//                    cb[3] = (byte) s.charAt(1);
+//                    debugFile.writeBytes(cb, 0, 5);
+//                }
                 debugFile.writeBytes(b, index, len);
             } catch (final Exception e) {
                 // e.printStackTrace();

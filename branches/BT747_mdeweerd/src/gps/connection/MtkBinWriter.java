@@ -3,6 +3,8 @@
  */
 package gps.connection;
 
+import bt747.sys.Generic;
+
 import gps.BT747Constants;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
@@ -15,7 +17,15 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 public final class MtkBinWriter {
     public final static void sendCmd(final GPSrxtx context,
             final MtkBinTransportMessageModel msg) {
-        if (context.isConnected()) {
+        final boolean isConnected = context.isConnected();
+        if (Generic.isDebug()) {
+            final String debugText = ">" + msg + " " + isConnected;
+            if (Generic.getDebugLevel() > 1) {
+                Generic.debug(debugText);
+            }
+            context.getGpsPortInstance().writeDebug(debugText);
+        }
+        if (isConnected) {
             context.write(msg.getMessage());
         }
     }

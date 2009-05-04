@@ -48,7 +48,7 @@ public class MtkController {
      * 
      * @param cmd
      */
-    private final void sendNMEA(final String cmd) {
+    private final void sendCmd(final Object cmd) {
         m.getHandler().sendCmd(cmd);
     }
 }

@@ -3,7 +3,6 @@
  */
 package gps.connection;
 
-import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -67,10 +66,6 @@ public final class NMEADecoderState implements DecoderStateInterface {
         final boolean ignoreNMEA = isIgnoreNMEA(); // Cached for
                                                             // efficiency
         continueReading = gpsPort.isConnected();
-        if (gpsPort.debugActive()) {
-            // Test to avoid unnecessary lost time
-            gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
-        }
 
         if (current_state == NMEADecoderState.C_FOUND_STATE) {
             current_state = NMEADecoderState.C_START_STATE;
