@@ -36,9 +36,8 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  * could change in the future by extending GPSstate with such features in a
  * derived class.
  * 
- * Extends MtkModel during refactoring.
- * Refactoring can convert the specific link operations into GpsLinkCommands,
- * or 
+ * Extends MtkModel during refactoring. Refactoring can convert the specific
+ * link operations into GpsLinkCommands, or
  * 
  * @author Mario De Weerd
  * @see GPSrxtx
@@ -184,11 +183,17 @@ public class Model extends MtkModel {
     }
 
     private static final int DATA_TIMEOUT = 3500;
+    private boolean autofetch = true;
+
+    public final void setAutoFetch(boolean isAuto) {
+        autofetch = isAuto;
+    }
 
     protected final boolean isDataNeedsRequest(final int ts,
             final int dataType) {
+        if(!autofetch) return false; // For debug.
         if ( // Data not available or out of date.
-        ((dataTimesOut[dataType] || !isDataAvailable(dataType))
+        (((autofetch && dataTimesOut[dataType]) || !isDataAvailable(dataType))
         // Request must have timed out
         && ((ts - dataRequested[dataType]) > DATA_TIMEOUT))) {
             dataRequested[dataType] = ts;
@@ -778,24 +783,30 @@ public class Model extends MtkModel {
     private boolean gpsDecode = true;
     private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
+    /**
+     * Local singleton of DPL700Controller.
+     * 
+     * Intermediate step in refactoring.
+     */
     private DPL700Controller dpl700C;
-    
+
     public final DPL700Controller getDPL700Controller() {
-        if(dpl700C==null) {
-            dpl700C = new DPL700Controller(handler,mtkLogHandler);
+        if (dpl700C == null) {
+            dpl700C = new DPL700Controller(handler, mtkLogHandler);
         }
         return dpl700C;
     }
-    
+
     public final void analyseResponse(final Object response) {
         if (response instanceof DPL700ResponseModel) {
-            if(dpl700C!=null) {
-            dpl700C.analyseDPL700Data((DPL700ResponseModel) response);
+            if (dpl700C != null) {
+                dpl700C.analyseDPL700Data((DPL700ResponseModel) response);
             }
         } else {
-            analyseNMEA((String[])response);
+            analyseNMEA((String[]) response);
         }
     }
+
     public final int analyseNMEA(final String[] sNmea) {
         int cmd;
         int result;
@@ -1411,7 +1422,6 @@ public class Model extends MtkModel {
         return datum;
     }
 
-
     public final void setLogRequestAhead(final int logRequestAhead) {
         mtkLogHandler.setLogRequestAhead(logRequestAhead);
     }
@@ -1427,7 +1437,7 @@ public class Model extends MtkModel {
      * @param s
      *                NMEA string to send.
      */
-    public final void sendCmd(final String s) {
+    public final void sendCmd(final Object s) {
         handler.sendCmd(s);
     }
 
@@ -1436,7 +1446,7 @@ public class Model extends MtkModel {
      * 
      * @param s
      */
-    protected final void doSendCmd(final String s) {
+    protected final void doSendCmd(final Object s) {
         handler.doSendCmd(s);
     }
 
