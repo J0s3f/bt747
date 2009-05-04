@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package gps.mvc;
 
+import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
@@ -191,7 +192,8 @@ public class Model extends MtkModel {
 
     protected final boolean isDataNeedsRequest(final int ts,
             final int dataType) {
-        if(!autofetch) return false; // For debug.
+        if (!autofetch)
+            return false; // For debug.
         if ( // Data not available or out of date.
         (((autofetch && dataTimesOut[dataType]) || !isDataAvailable(dataType))
         // Request must have timed out
@@ -802,9 +804,21 @@ public class Model extends MtkModel {
             if (dpl700C != null) {
                 dpl700C.analyseDPL700Data((DPL700ResponseModel) response);
             }
+        }
+        if (response instanceof MtkBinTransportMessageModel) {
+            analyseMtkBinData((MtkBinTransportMessageModel) response);
         } else {
             analyseNMEA((String[]) response);
         }
+    }
+
+    public final void analyseMtkBinData(final MtkBinTransportMessageModel response) {
+        if (Generic.isDebug()) {
+            Generic.debug("<"+response.toString());
+        }
+
+        // TODO: Handle response
+        // For starters: analyse AGPS response...
     }
 
     public final int analyseNMEA(final String[] sNmea) {

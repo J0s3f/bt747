@@ -1658,13 +1658,12 @@
 	<target name="updatelang">
 	</target>
 
-	<!-- Date information -->
-
 	<property name="encoding" value="UTF-8" />
 	<!-- Version information from SVN -->
 	<!-- SVN revision information -->
 	<!-- To property build.current.revision -->
-	<exec outputproperty="build.current.revision" executable="${svnversion}">
+	<exec outputproperty="build.current.revision" executable="${svnversion}"
+		failifexecutionfails="false" failonerror="false" >
 		<arg line="-n -c" />
 		<redirector>
 			<outputfilterchain>
@@ -1677,7 +1676,8 @@
 
 	<!-- SVN Version information -->
 	<!-- To property build.current.version -->
-	<exec outputproperty="build.current.version" executable="${svn}">
+	<exec outputproperty="build.current.version" executable="${svn}"
+		failifexecutionfails="false" failonerror="false">
 		<arg line="info" />
 		<redirector>
 			<outputfilterchain>

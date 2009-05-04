@@ -26,14 +26,12 @@
  */
 package net.sf.bt747.j2se.examples;
 
-import org.apache.tools.ant.taskdefs.Sleep;
-
-import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
+import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -136,6 +134,8 @@ public class TestDevice implements bt747.model.ModelListener {
         Generic.setDebugLevel(2); // We are debugging, so raising debug
         // level.
         getOutstandingCmds();
+        c.setStringOpt(Model.OUTPUTDIRPATH, ".");
+        c.setDebugConn(true);
         /* Enter AGPS programming mode */
         // Checked: the sent packet corresponds to what is needed. (seen in a
         // trace)

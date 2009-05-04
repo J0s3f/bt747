@@ -69,7 +69,7 @@ public final class GPSLinkHandler {
         this.gpsRxTx = gpsRxTx;
         // TODO: Add myself as listener
     }
-    
+
     public final GPSrxtx getGPSRxtx() {
         return this.gpsRxTx;
     }
@@ -107,25 +107,37 @@ public final class GPSLinkHandler {
     private final BT747Semaphore cmdBuffersAccess = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    private final void doSendNMEA(final String cmd) {
+    /**
+     * Immediate sending of cmd regardless of type.
+     * 
+     * This allows to change mode on the fly. The code here will reflect that.
+     * 
+     * Some commands can have execution method with context. TODO: Implement
+     * that.
+     * 
+     * @param cmd
+     */
+    public void doSendCmd(final Object cmd) {
         resetLogTimeOut();
         cmdBuffersAccess.down();
         try {
-            if (cmd.startsWith("PMTK")) {
-                sentCmds.addElement(cmd);
-            }
-
-            NMEAWriter.sendPacket(gpsRxTx, cmd);
-            if (Generic.isDebug()) {
-                Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
-            }
-            nextCmdSendTime = Generic.getTimeStamp()
-                    + GPSLinkHandler.C_MIN_TIME_BETWEEN_CMDS;
-            if (sentCmds.size() > GPSLinkHandler.C_MAX_SENT_COMMANDS) {
-                sentCmds.removeElementAt(0);
+            if (cmd instanceof String) {
+                final String nmeaCmd = (String) cmd;
+                if (nmeaCmd.startsWith("PMTK")) {
+                    sentCmds.addElement(cmd);
+                }
+                NMEAWriter.sendPacket(gpsRxTx, nmeaCmd);
+            } else if (cmd instanceof GpsLinkExecCommand) {
+                GpsLinkExecCommand linkCmd = (GpsLinkExecCommand) cmd;
+                linkCmd.execute(this);
             }
         } catch (final Exception e) {
-            Generic.debug("doSendNMEA", e);
+            Generic.debug("doSendCmd", e);
+        }
+        nextCmdSendTime = Generic.getTimeStamp()
+                + GPSLinkHandler.C_MIN_TIME_BETWEEN_CMDS;
+        if (sentCmds.size() > GPSLinkHandler.C_MAX_SENT_COMMANDS) {
+            sentCmds.removeElementAt(0);
         }
         cmdBuffersAccess.up();
     }
@@ -170,26 +182,6 @@ public final class GPSLinkHandler {
                 Generic.debug("checkSendCmdFromQueue", e);
             }
             cmdBuffersAccess.up();
-        }
-    }
-
-    /**
-     * Immediate sending of cmd regardless of type.
-     * 
-     * This allows to change mode on the fly. The code here will reflect that.
-     * 
-     * Some commands can have execution method with context.
-     * TODO: Implement that.  
-     * 
-     * @param cmd
-     */
-    public void doSendCmd(final Object cmd) {
-        if (cmd instanceof String) {
-            final String nmeaCmd = (String) cmd;
-            doSendNMEA(nmeaCmd);
-        } else if (cmd instanceof GpsLinkExecCommand) {
-            GpsLinkExecCommand linkCmd = (GpsLinkExecCommand) cmd;
-            linkCmd.execute(this);
         }
     }
 
