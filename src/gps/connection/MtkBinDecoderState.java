@@ -50,9 +50,9 @@ public class MtkBinDecoderState implements DecoderStateInterface {
      * 
      * @see gps.connection.DecoderStateInterface#getResponse(gps.connection.GPSrxtx)
      */
-    public Object getResponse(GPSrxtx context) {
-        byte c;
+    public final Object getResponse(final GPSrxtx context) {
         while (!context.isReadBufferEmpty()) {
+            final char c = context.getReadBufferChar();
             switch (state) {
             default:
             case INIT_STATE:
