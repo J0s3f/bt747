@@ -31,11 +31,12 @@ public final class MtkBinWriter {
     public final static void doSetNmeaMode(final GPSrxtx context,
             final int baudrate) {
         if (context.getState() instanceof MtkBinDecoderState) {
-            final byte[] payload = new byte[4];
+            final byte[] payload = new byte[5];
             payload[0] = 0;
-            payload[1] = 0;
+            payload[1] = (byte) (baudrate & 0xFF);
             payload[2] = (byte) (baudrate >> 8);
-            payload[3] = (byte) (baudrate & 0xFF);
+            payload[3] = (byte) (baudrate >> 16);
+            payload[4] = (byte) (baudrate >> 24);
             sendCmd(context, new MtkBinTransportMessageModel(
                     BT747Constants.PMTK_SET_BIN_MODE, payload));
         }
