@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
@@ -21,6 +22,7 @@ import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
+import gps.mvc.MtkModel;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -39,6 +41,14 @@ public class Model extends AppSettings implements GPSListener {
      * information regarding the state of the GPS device.
      */
     private GPSstate gpsModel;
+    
+    
+    /**
+     * The mtkModel is the model specific for mtk devices.
+     */
+    private MtkModel mtkModel;
+    
+    
     /**
      * The low level communication class with the GPS device. Needed by the
      * gpsModel.
@@ -178,6 +188,7 @@ public class Model extends AppSettings implements GPSListener {
                 + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);
+        mtkModel = gpsModel.getMtkModel();
         gpsModel.addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
     }
@@ -187,6 +198,13 @@ public class Model extends AppSettings implements GPSListener {
      */
     protected final GPSstate gpsModel() {
         return gpsModel;
+    }
+
+    /**
+     * @return The gpsModel instantiation.
+     */
+    protected final MtkModel mtkModel() {
+        return mtkModel;
     }
 
     /**
@@ -502,7 +520,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return true if the device is currently logging positions to memory.
      */
     public final boolean isLoggingActive() {
-        return gpsModel.isLoggingActive();
+        return mtkModel.isLoggingActive();
     }
 
     /**
@@ -511,7 +529,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return The ammount of memory available in bytes.
      */
     public final int logMemSize() {
-        return gpsModel.getLogMemSize();
+        return mtkModel.getLogMemSize();
     }
 
     /**
@@ -521,7 +539,7 @@ public class Model extends AppSettings implements GPSListener {
      *         used for other information than locations (e.g., headers)
      */
     public final int logMemUsed() {
-        return gpsModel.getLogMemUsed();
+        return mtkModel.getLogMemUsed();
     }
 
     /**
@@ -532,7 +550,7 @@ public class Model extends AppSettings implements GPSListener {
      *         but not all memory can be used to log actual points.
      */
     public final int logMemUsedPercent() {
-        return gpsModel.logMemUsedPercent;
+        return mtkModel.logMemUsedPercent;
     }
 
     /**
@@ -542,7 +560,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return The number of logged positions.
      */
     public final int logNbrLogPts() {
-        return gpsModel.logNbrLogPts;
+        return mtkModel.logNbrLogPts;
     }
 
     /**
@@ -551,19 +569,19 @@ public class Model extends AppSettings implements GPSListener {
      * @return Version of the MTK Logger SW.
      */
     public final String getMtkLogVersion() {
-        return gpsModel.getMtkLogVersion();
+        return mtkModel.getMtkLogVersion();
     }
 
     public final String getMainVersion() {
-        return gpsModel.getMainVersion();
+        return mtkModel.getMainVersion();
     }
 
     public final String getFirmwareVersion() {
-        return gpsModel.getFirmwareVersion();
+        return mtkModel.getFirmwareVersion();
     }
 
     public final String getModel() {
-        return gpsModel.getModel();
+        return mtkModel.getModel();
     }
 
     /**
@@ -572,103 +590,103 @@ public class Model extends AppSettings implements GPSListener {
      * @return The letter code of the manufacturer.
      */
     public final int getFlashManuProdID() {
-        return gpsModel.getFlashManuProdID();
+        return mtkModel.getFlashManuProdID();
     }
 
     public final String getFlashDesc() {
-        return gpsModel.getFlashDesc();
+        return mtkModel.getFlashDesc();
     }
 
     public final int getLogFormat() {
-        return gpsModel.getLogFormat();
+        return mtkModel.getLogFormat();
     }
 
     public final boolean isHolux() {
-        return gpsModel.isHolux();
+        return mtkModel.isHolux();
     }
 
     public final int logMemUsefullSize() {
-        return gpsModel.logMemUsefullSize();
+        return mtkModel.logMemUsefullSize();
     }
 
     public final int logFreeMemUsefullSize() {
-        return gpsModel.logFreeMemUsefullSize();
+        return mtkModel.logFreeMemUsefullSize();
     }
 
     public final int getDtUpdateRate() {
-        return gpsModel.getDtUpdateRate();
+        return mtkModel.getDtUpdateRate();
     }
 
     public final int getDtGLL_Period() {
-        return gpsModel.getDtGLL_Period();
+        return mtkModel.getDtGLL_Period();
     }
 
     public final int getDtRMC_Period() {
-        return gpsModel.getDtRMC_Period();
+        return mtkModel.getDtRMC_Period();
     }
 
     public final int getDtVTG_Period() {
-        return gpsModel.getDtVTG_Period();
+        return mtkModel.getDtVTG_Period();
     }
 
     public final int getDtGSA_Period() {
-        return gpsModel.getDtGSA_Period();
+        return mtkModel.getDtGSA_Period();
     }
 
     public final int getDtGSV_Period() {
-        return gpsModel.getDtGSV_Period();
+        return mtkModel.getDtGSV_Period();
     }
 
     public final int getDtGGA_Period() {
-        return gpsModel.getDtGGA_Period();
+        return mtkModel.getDtGGA_Period();
     }
 
     public final int getDtZDA_Period() {
-        return gpsModel.getDtZDA_Period();
+        return mtkModel.getDtZDA_Period();
     }
 
     public final int getDtMCHN_Period() {
-        return gpsModel.getDtMCHN_Period();
+        return mtkModel.getDtMCHN_Period();
     }
 
     public final int getDtBaudRate() {
-        return gpsModel.getDtBaudRate();
+        return mtkModel.getDtBaudRate();
     }
 
     public final int getDtUserOptionTimesLeft() {
-        return gpsModel.getDtUserOptionTimesLeft();
+        return mtkModel.getDtUserOptionTimesLeft();
     }
 
     public final String getHoluxName() {
-        return gpsModel.getHoluxName();
+        return mtkModel.getHoluxName();
     }
 
     public final String getBTAddr() {
-        return gpsModel.getBtMacAddr();
+        return mtkModel.getBtMacAddr();
     }
 
     public final int getNMEAPeriod(final int i) {
-        return gpsModel.getNMEAPeriod(i);
+        return mtkModel.getNMEAPeriod(i);
     }
 
     public final int getLogTimeInterval() {
-        return gpsModel.getLogTimeInterval();
+        return mtkModel.getLogTimeInterval();
     }
 
     public final int getLogSpeedInterval() {
-        return gpsModel.getLogSpeedInterval();
+        return mtkModel.getLogSpeedInterval();
     }
 
     public final int getLogDistanceInterval() {
-        return gpsModel.getLogDistanceInterval();
+        return mtkModel.getLogDistanceInterval();
     }
 
     public final int getLogFixPeriod() {
-        return gpsModel.getLogFixPeriod();
+        return mtkModel.getLogFixPeriod();
     }
 
     public final int getDgpsMode() {
-        return gpsModel.getDgpsMode();
+        return mtkModel.getDgpsMode();
     }
 
     /**
@@ -680,27 +698,27 @@ public class Model extends AppSettings implements GPSListener {
      *         memory is full.
      */
     public final boolean isLogFullOverwrite() {
-        return gpsModel.isLogFullOverwrite();
+        return mtkModel.isLogFullOverwrite();
     }
 
     public final boolean isInitialLogOverwrite() {
-        return gpsModel.isInitialLogOverwrite();
+        return mtkModel.isInitialLogOverwrite();
     }
 
     public final boolean isSBASEnabled() {
-        return gpsModel.isSBASEnabled();
+        return mtkModel.isSBASEnabled();
     }
 
     public final boolean isSBASTestEnabled() {
-        return gpsModel.isSBASTestEnabled();
+        return mtkModel.isSBASTestEnabled();
     }
 
     public final boolean isPowerSaveEnabled() {
-        return gpsModel.isPowerSaveEnabled();
+        return mtkModel.isPowerSaveEnabled();
     }
 
     public final int getDatum() {
-        return gpsModel.getDatum();
+        return mtkModel.getDatum();
     }
 
     /**
@@ -776,7 +794,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return
      */
     public final boolean isAvailable(final int dataType) {
-        return gpsModel.isDataAvailable(dataType);
+        return mtkModel.isDataAvailable(dataType);
     }
 
     /**

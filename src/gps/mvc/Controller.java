@@ -16,25 +16,23 @@ import bt747.sys.interfaces.BT747Thread;
  */
 public class Controller implements BT747Thread {
 
-    private Model gpsM;
-    private MtkController mtkC;
+    private final Model gpsM;
 
     private final GPSLinkHandler handler;
     private final MTKLogDownloadHandler mtkLogHandler;
 
-    public final static Controller getInstance(GPSrxtx gpsRxTx) {
-        return getInstance(new Model(gpsRxTx));
+    public final static Controller getInstance(final GPSrxtx gpsRxTx) {
+        return Controller.getInstance(new Model(gpsRxTx));
     }
 
-    public final static Controller getInstance(Model model) {
+    public final static Controller getInstance(final Model model) {
         return new Controller(model);
     }
 
-    private Controller(Model model) {
-        this.gpsM = model;
-        this.handler = model.getHandler();
-        this.mtkC = new MtkController(new MtkModel(handler));
-        this.mtkLogHandler = model.getMtkLogHandler();
+    private Controller(final Model model) {
+        gpsM = model;
+        handler = model.getHandler();
+        mtkLogHandler = model.getMtkLogHandler();
     }
 
     public final Model getModel() {
@@ -90,7 +88,7 @@ public class Controller implements BT747Thread {
         int next = nextValueToCheck;
         gpsM.setDataNeeded(next);
         next += 1;
-        if (next > Model.DATA_LAST_INDEX) {
+        if (next > MtkModel.DATA_LAST_INDEX) {
             next = 0;
         }
         nextValueToCheck = next;
@@ -116,8 +114,7 @@ public class Controller implements BT747Thread {
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
                 do {
-                    final Object lastResponse = (String[]) handler
-                            .getResponse();
+                    final Object lastResponse = handler.getResponse();
                     if (lastResponse != null) {
                         gpsM.analyseResponse(lastResponse);
                     } else {
