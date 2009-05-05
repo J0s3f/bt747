@@ -40,6 +40,7 @@ import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
+import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
 
@@ -635,7 +636,7 @@ public class Controller {
         try {
             int endAddress;
             if ((m.getDownloadMethod() == Model.DOWNLOAD_FULL)
-                    || m.gpsModel().isInitialLogOverwrite()) {
+                    || m.mtkModel().isInitialLogOverwrite()) {
                 endAddress = m.logMemSize() - 1;
             } else {
                 endAddress = m.logMemUsed() - 1;
@@ -721,25 +722,25 @@ public class Controller {
      * 
      */
     public final void reqMtkLogVersion() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_VERSION);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_MEM_USED);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_MEM_USED);
     }
 
     public final void reqInitialLogMode() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_INITIAL_LOG);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_MEM_PTS_LOGGED);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -768,7 +769,7 @@ public class Controller {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_STATUS);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_STATUS);
     }
 
     /**
@@ -777,7 +778,7 @@ public class Controller {
      * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        m.gpsModel().setDataNeeded(GPSstate.DATA_LOG_FORMAT);
+        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -885,7 +886,7 @@ public class Controller {
      *                When true, the data is fetched automatically.
      */
     public final void setAutoFetch(final boolean isAuto) {
-        m.gpsModel().setAutoFetch(isAuto);
+        m.mtkModel().setAutoFetch(isAuto);
     }
 
     /**
@@ -956,12 +957,12 @@ public class Controller {
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             final GPSstate gpsModel = m.gpsModel();
-            gpsModel.setDataNeeded(GPSstate.DATA_INITIAL_LOG); // First may
+            gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
             // fail.
             gpsModel.reqStatus();
-            gpsModel.setDataNeeded(GPSstate.DATA_FLASH_TYPE);
+            gpsModel.setDataNeeded(MtkModel.DATA_FLASH_TYPE);
             reqLogFormat();
-            gpsModel.setDataNeeded(GPSstate.DATA_INITIAL_LOG);
+            gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             gpsModel.initConnection();
             // Remember defaults
@@ -1453,13 +1454,13 @@ public class Controller {
     public final boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
         // should do this through an event to the view.
-        return m.gpsModel().isDataOK(
-                (GPSstate.C_OK_FIX | GPSstate.C_OK_DGPS | GPSstate.C_OK_SBAS
-                        | GPSstate.C_OK_NMEA | GPSstate.C_OK_SBAS_TEST
+        return m.mtkModel().isDataOK(
+                (MtkModel.C_OK_FIX | MtkModel.C_OK_DGPS | MtkModel.C_OK_SBAS
+                        | MtkModel.C_OK_NMEA | MtkModel.C_OK_SBAS_TEST
                         |
-                        // GPSstate.C_OK_SBAS_DATUM |
-                        GPSstate.C_OK_TIME | GPSstate.C_OK_SPEED
-                        | GPSstate.C_OK_DIST | GPSstate.C_OK_FORMAT));
+                        // MtkModel.C_OK_SBAS_DATUM |
+                        MtkModel.C_OK_TIME | MtkModel.C_OK_SPEED
+                        | MtkModel.C_OK_DIST | MtkModel.C_OK_FORMAT));
     }
 
     public final void setStats(final boolean b) {
