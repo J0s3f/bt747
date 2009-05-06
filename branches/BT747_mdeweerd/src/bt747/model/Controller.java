@@ -15,7 +15,6 @@
 package bt747.model;
 
 import gps.BT747Constants;
-import gps.GPSstate;
 import gps.GpsEvent;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
@@ -40,6 +39,7 @@ import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
+import gps.mvc.DeviceOperationHandlerIF;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
@@ -101,14 +101,23 @@ public class Controller {
     public Model getModel() {
         return m;
     }
+    
+    private final gps.mvc.Controller getGpsC() {
+        return m.gpsC();
+    }
 
+    private final gps.mvc.Model getGpsOldC() {
+        return m.gpsOldC();
+    }
+
+    
     /**
      * Called when the Controller starts. Used for initialization.
      */
     public void init() {
-        m.gpsModel().setGpsDecode(m.getBooleanOpt(AppSettings.DECODEGPS));
-        m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
-        m.gpsModel().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
+        getGpsOldC().setGpsDecode(m.getBooleanOpt(AppSettings.DECODEGPS));
+        getGpsOldC().setDownloadTimeOut(m.getDownloadTimeOut());
+        getGpsOldC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
 
         final int port = m.getIntOpt(AppSettings.PORTNBR);
         if (port != Controller.NOT_A_PORT_NUMBER) {
@@ -150,7 +159,7 @@ public class Controller {
      */
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
-        m.gpsModel().setDownloadTimeOut(timeout);
+        getGpsOldC().setDownloadTimeOut(timeout);
     }
 
     /**
@@ -174,7 +183,7 @@ public class Controller {
      */
     public final void setLogRequestAhead(final int numberOfRequestsAhead) {
         setIntOpt(AppSettings.LOGAHEAD, numberOfRequestsAhead);
-        m.gpsModel().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
+        getGpsOldC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
     }
 
     /**
@@ -608,7 +617,7 @@ public class Controller {
      * Cancel the log download process.
      */
     public final void cancelGetLog() {
-        m.gpsModel().cancelGetLog();
+        m.gpsOldC().cancelGetLog();
     }
 
     /**
@@ -641,7 +650,7 @@ public class Controller {
             } else {
                 endAddress = m.logMemUsed() - 1;
             }
-            m.gpsModel().getLogInit(0, /* StartPosition */
+            m.gpsOldC().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
             m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
@@ -665,7 +674,7 @@ public class Controller {
      *                If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
-        m.gpsModel().replyToOkToOverwrite(isOkToOverwrite);
+        m.gpsOldC().replyToOkToOverwrite(isOkToOverwrite);
     }
 
     /**
@@ -673,7 +682,7 @@ public class Controller {
      * end of this operation.
      */
     public final void stopErase() {
-        m.gpsModel().stopErase();
+        getGpsC().stopErase();
     }
 
     /**
@@ -683,7 +692,7 @@ public class Controller {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
         // DPL700 when appropriate.
         // Initialisation method and download start should change.
-        m.gpsModel().getDPL700Controller().getDPL700Log(
+        m.gpsOldC().getDPL700Controller().getDPL700Log(
                 m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 
@@ -695,11 +704,11 @@ public class Controller {
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
-            m.gpsModel().startLog();
+            m.gpsOldC().startLog();
         } else {
-            m.gpsModel().stopLog();
+            m.gpsOldC().stopLog();
         }
-        m.gpsModel().reqLogOnOffStatus();
+        m.gpsOldC().reqLogOnOffStatus();
     }
 
     /**
@@ -710,8 +719,8 @@ public class Controller {
      *                logging when device is full
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
-        m.gpsModel().setLogOverwrite(isOverWriteLog);
-        m.gpsModel().reqLogOverwrite();
+        getGpsOldC().setLogOverwrite(isOverWriteLog);
+        m.gpsOldC().reqLogOverwrite();
     };
 
     /**
@@ -722,25 +731,25 @@ public class Controller {
      * 
      */
     public final void reqMtkLogVersion() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_MEM_USED);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_MEM_USED);
     }
 
     public final void reqInitialLogMode() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -749,7 +758,7 @@ public class Controller {
      * {@link gps.GpsEvent#UPDATE_LOG_REC_METHOD} event to get the data.
      */
     public final void reqLogOverwrite() {
-        m.gpsModel().reqLogOverwrite();
+        m.gpsOldC().reqLogOverwrite();
     }
 
     /**
@@ -757,7 +766,7 @@ public class Controller {
      * after specific {@link GpsEvent} events.
      */
     public final void reqDeviceInfo() {
-        m.gpsModel().reqDeviceInfo();
+        m.gpsOldC().reqDeviceInfo();
     }
 
     /**
@@ -769,7 +778,7 @@ public class Controller {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_STATUS);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_STATUS);
     }
 
     /**
@@ -778,7 +787,7 @@ public class Controller {
      * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        m.gpsModel().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
+        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -814,7 +823,7 @@ public class Controller {
      *                <br>
      */
     public final void setLogFormat(final int newLogFormat) {
-        m.gpsModel().setLogFormat(newLogFormat);
+        getGpsOldC().setLogFormat(newLogFormat);
         reqLogFormat();
     }
 
@@ -823,7 +832,7 @@ public class Controller {
      */
     public final void eraseLog() {
         // TODO: Handle erase popup.
-        m.gpsModel().eraseLog();
+        getGpsC().eraseLog();
     }
 
     /**
@@ -831,7 +840,7 @@ public class Controller {
      * identified as 'bad'.
      */
     public final void recoveryEraseLog() {
-        m.gpsModel().recoveryEraseLog();
+        m.gpsOldC().recoveryEraseLog();
     }
 
     /*************************************************************************
@@ -874,7 +883,7 @@ public class Controller {
      * 
      */
     public final void sendCmd(final Object cmd) {
-        m.gpsModel().sendCmd(cmd);
+        getGpsOldC().sendCmd(cmd);
     }
 
     /**
@@ -956,7 +965,7 @@ public class Controller {
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            final GPSstate gpsModel = m.gpsModel();
+            final gps.mvc.Model gpsModel = getGpsOldC();
             gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
             // fail.
             gpsModel.reqStatus();
@@ -964,7 +973,7 @@ public class Controller {
             reqLogFormat();
             gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
-            gpsModel.initConnection();
+            getGpsC().initConnection();
             // Remember defaults
             setIntOpt(AppSettings.PORTNBR, m.gpsRxTx().getPort());
             setIntOpt(AppSettings.BAUDRATE, m.gpsRxTx().getSpeed());
@@ -1172,7 +1181,7 @@ public class Controller {
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
-        m.gpsModel().setFlashUserOption(lock, updateRate, baudRate,
+        getGpsOldC().setFlashUserOption(lock, updateRate, baudRate,
                 periodGLL, periodRMC, periodVTG, periodGSA, periodGSV,
                 periodGGA, periodZDA, periodMCHN);
         reqFlashUserOption();
@@ -1190,21 +1199,21 @@ public class Controller {
      * 
      */
     public final void reqFlashUserOption() {
-        m.gpsModel().reqFlashUserOption();
+        getGpsOldC().reqFlashUserOption();
     }
 
     /**
      * Get the flash user settings from the device.
      */
     public final void reqHoluxName() {
-        m.gpsModel().reqHoluxName();
+        getGpsOldC().reqHoluxName();
     }
 
     /**
      * Request the bluetooth Mac Address from the device.
      */
     public final void reqBTAddr() {
-        m.gpsModel().reqBtMacAddr();
+        getGpsOldC().reqBtMacAddr();
     }
 
     /**
@@ -1215,7 +1224,7 @@ public class Controller {
      *                00:1F:14:15:12:13.
      */
     public final void setBTMacAddr(final String btMacAddr) {
-        m.gpsModel().setBtMacAddr(btMacAddr);
+        getGpsOldC().setBtMacAddr(btMacAddr);
         reqBTAddr();
     }
 
@@ -1226,7 +1235,7 @@ public class Controller {
      *                The string to set as the Holux Name.
      */
     public final void setHoluxName(final String holuxName) {
-        m.gpsModel().setHoluxName(holuxName);
+        getGpsOldC().setHoluxName(holuxName);
         reqHoluxName();
     }
 
@@ -1234,7 +1243,7 @@ public class Controller {
      * Request the current NMEA period settings of the device.
      */
     public final void reqNMEAPeriods() {
-        m.gpsModel().reqNMEAPeriods();
+        getGpsOldC().reqNMEAPeriods();
     }
 
     /**
@@ -1258,7 +1267,7 @@ public class Controller {
      *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br> -
      */
     public final void setNMEAPeriods(final int[] periods) {
-        m.gpsModel().setNMEAPeriods(periods);
+        getGpsOldC().setNMEAPeriods(periods);
         reqNMEAPeriods();
     }
 
@@ -1266,7 +1275,7 @@ public class Controller {
      * Sets default NMEA periods (as observed on one iBlue 747 device).
      */
     public final void setNMEADefaultPeriods() {
-        m.gpsModel().setNMEADefaultPeriods();
+        getGpsOldC().setNMEADefaultPeriods();
     }
 
     /**
@@ -1276,7 +1285,7 @@ public class Controller {
      *                When true, enable test satellites.
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
-        m.gpsModel().setSBASTestEnabled(isSBASTestEnabled);
+        getGpsOldC().setSBASTestEnabled(isSBASTestEnabled);
         reqSBASTestEnabled();
     }
 
@@ -1286,7 +1295,7 @@ public class Controller {
      * {@link Model#isSBASTestEnabled()}.
      */
     public final void reqSBASTestEnabled() {
-        m.gpsModel().reqSBASTestEnabled();
+        getGpsOldC().reqSBASTestEnabled();
     }
 
     /**
@@ -1296,7 +1305,7 @@ public class Controller {
      *                When true, enables SBAS.
      */
     public final void setSBASEnabled(final boolean set) {
-        m.gpsModel().setSBASEnabled(set);
+        getGpsOldC().setSBASEnabled(set);
         reqSBASEnabled();
     }
 
@@ -1305,7 +1314,7 @@ public class Controller {
      * to be retrieved later with {@link Model#isSBASEnabled()}.
      */
     public final void reqSBASEnabled() {
-        m.gpsModel().reqSBASEnabled();
+        getGpsOldC().reqSBASEnabled();
     }
 
     /**
@@ -1313,7 +1322,7 @@ public class Controller {
      * {@link Model#getDatum()}.
      */
     public final void reqDatumMode() {
-        m.gpsModel().reqDatumMode();
+        getGpsOldC().reqDatumMode();
     }
 
     /**
@@ -1323,7 +1332,7 @@ public class Controller {
      *                The datum mode to set.
      */
     public final void setDatumMode(final int mode) {
-        m.gpsModel().setDatumMode(mode);
+        getGpsOldC().setDatumMode(mode);
         reqDatumMode();
     }
 
@@ -1334,7 +1343,7 @@ public class Controller {
      *                The mode to use.
      */
     public final void setDGPSMode(final int mode) {
-        m.gpsModel().setDGPSMode(mode);
+        getGpsOldC().setDGPSMode(mode);
         reqDGPSMode();
     }
 
@@ -1343,7 +1352,7 @@ public class Controller {
      * {@link Model#getDgpsMode()} later.
      */
     public final void reqDGPSMode() {
-        m.gpsModel().reqDGPSMode();
+        getGpsOldC().reqDGPSMode();
     }
 
     /**
@@ -1353,7 +1362,7 @@ public class Controller {
      *                If true, enable power save mode.
      */
     public final void setPowerSaveEnabled(final boolean set) {
-        m.gpsModel().setPowerSaveEnabled(set);
+        getGpsOldC().setPowerSaveEnabled(set);
         reqPowerSaveEnabled();
     }
 
@@ -1362,7 +1371,7 @@ public class Controller {
      * actual setting later with {@link Model#isPowerSaveEnabled()}.
      */
     public final void reqPowerSaveEnabled() {
-        m.gpsModel().reqPowerSaveEnabled();
+        getGpsOldC().reqPowerSaveEnabled();
     }
 
     /**
@@ -1374,7 +1383,7 @@ public class Controller {
      *       {@link Model#getLogSpeedInterval()}
      */
     public final void reqLogReasonStatus() {
-        m.gpsModel().reqLogReasonStatus();
+        getGpsOldC().reqLogReasonStatus();
     }
 
     /**
@@ -1383,7 +1392,7 @@ public class Controller {
      * 
      */
     public final void reqFixInterval() {
-        m.gpsModel().reqFixInterval();
+        getGpsOldC().reqFixInterval();
     }
 
     /**
@@ -1410,45 +1419,45 @@ public class Controller {
      *                {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void logImmediate(final int value) {
-        m.gpsModel().logImmediate(value);
+        getGpsOldC().logImmediate(value);
     }
 
     public final void setFixInterval(final int value) {
         if (value != 0) {
-            m.gpsModel().setFixInterval(value);
+            getGpsOldC().setFixInterval(value);
             reqFixInterval();
         }
     }
 
     public final void setLogTimeInterval(final int value) {
-        m.gpsModel().setLogTimeInterval(value);
+        getGpsOldC().setLogTimeInterval(value);
         // TODO : request time interval
     }
 
     public final void setLogDistanceInterval(final int value) {
-        m.gpsModel().setLogDistanceInterval(value);
+        getGpsOldC().setLogDistanceInterval(value);
         // TODO : request distance interval
     }
 
     public final void setLogSpeedInterval(final int value) {
-        m.gpsModel().setLogSpeedInterval(value);
+        getGpsOldC().setLogSpeedInterval(value);
         // TODO : request speed interval
     }
 
     public final void doHotStart() {
-        m.gpsModel().doHotStart();
+        getGpsOldC().doHotStart();
     }
 
     public final void doColdStart() {
-        m.gpsModel().doColdStart();
+        getGpsOldC().doColdStart();
     }
 
     public final void doWarmStart() {
-        m.gpsModel().doWarmStart();
+        getGpsOldC().doWarmStart();
     }
 
     public final void doFullColdStart() {
-        m.gpsModel().doFullColdStart();
+        getGpsOldC().doFullColdStart();
     }
 
     public final boolean isEnableStoreOK() {
@@ -1464,12 +1473,12 @@ public class Controller {
     }
 
     public final void setStats(final boolean b) {
-        m.gpsModel().setStats(b);
+        getGpsOldC().setStats(b);
     }
 
     public final void setGpsDecode(final boolean value) {
         setBooleanOpt(AppSettings.DECODEGPS, value);
-        m.gpsModel().setGpsDecode(value);
+        getGpsOldC().setGpsDecode(value);
     }
 
     public final void setGpxTrkSegWhenBig(final boolean b) {
@@ -1675,5 +1684,9 @@ public class Controller {
     public final static void addLogFile(final String path, final int card) {
         final LogFileInfo loginfo = new LogFileInfo(path, card);
         Controller.logFiles.addElement(loginfo);
+    }
+    
+    public final void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
+        getGpsC().setDeviceOperationHandler(h);
     }
 }

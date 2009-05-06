@@ -273,6 +273,8 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_DT_DGPS_INFO = 702;
     public static final int PMTK_DT_VERSION = 704;
     public static final int PMTK_DT_RELEASE = 705;
+    
+    public static final int PMTK_SET_EPO_DATA = 722;
 
     /**
      * Parameter 1 of PMTK_ACK reply. Packet invalid.

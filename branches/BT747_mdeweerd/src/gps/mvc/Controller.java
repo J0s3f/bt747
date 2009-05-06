@@ -94,6 +94,12 @@ public class Controller implements BT747Thread {
         nextValueToCheck = next;
     }
 
+    private DeviceOperationHandlerIF operationHandler;
+
+    public void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
+        operationHandler = h;
+    }
+
     /*************************************************************************
      * Thread methods implementation
      */
@@ -113,9 +119,24 @@ public class Controller implements BT747Thread {
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
+                {
+                    // local value
+                    final DeviceOperationHandlerIF h = operationHandler;
+                    if (h != null) {
+                        if (!h.notifyRun(handler)) {
+                            setDeviceOperationHandler(null);
+                        }
+                    }
+                }
+                final DeviceOperationHandlerIF h = operationHandler;
                 do {
                     final Object lastResponse = handler.getResponse();
                     if (lastResponse != null) {
+                        if (h != null) {
+                            if (h.analyseResponse(lastResponse)) {
+                                continue; // Skip other analyzers.
+                            }
+                        }
                         gpsM.analyseResponse(lastResponse);
                     } else {
                         loopsToGo = 0; // Exit do/while

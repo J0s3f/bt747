@@ -711,7 +711,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     .println("MTK Firmware: Version: "
                             + m.getFirmwareVersion()
                             + ", ID(Device): "
-                            + m.getModel()
+                            + m.getModelStr()
                             + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
                                     .getMainVersion())
                                     : ""));

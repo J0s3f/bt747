@@ -63,7 +63,7 @@ public class GpsEvent {
     /**
      * logFixPeriod update notification.
      * 
-     * @see GPSstate#getLogFixPeriod()
+     * @see GpsController#getLogFixPeriod()
      */
     public static final int UPDATE_FIX_PERIOD = 13;
     public static final int LOG_DOWNLOAD_SUCCESS = 14;
@@ -103,7 +103,7 @@ public class GpsEvent {
      * logStatus, loggingActive, loggerIsFull, loggerNeedsInit,
      * loggerIsDisabled update notification.
      * 
-     * @see GPSstate#isLoggingActive()
+     * @see GpsController#isLoggingActive()
      */
     public static final int UPDATE_LOG_LOG_STATUS = 28;
     /** dgpsMode update notification. */

@@ -31,6 +31,31 @@ public class AgpsModel {
             idx += 60;
         }
     }
+    
+    // TODO: Implement this.
+    public byte[] getData(final int startTime) {
+        byte[] result;
+
+        // Determine size of selected data.
+        // Get references to data
+        final BT747Hashtable iter = table.iterator();
+        int size = 0;
+        while (iter.hasNext()) {
+            final AgpsPeriodModel p = (AgpsPeriodModel) iter
+                    .get(iter.nextKey());
+            if (p.getTime() >= startTime) {
+                size += p.getSize();
+            }
+        }
+        
+        // Sort data according to time and satnbr.
+
+        // put data in buffer.
+        result = new byte[sizeOfDataAfter(startTime)];
+        int idx = 0;
+        //idx = p.fillBuffer(result, idx, startIdx, endIdx);        
+        return result;
+    }
 
     public int sizeOfDataAfter(final int time) {
         final BT747Hashtable iter = table.iterator();

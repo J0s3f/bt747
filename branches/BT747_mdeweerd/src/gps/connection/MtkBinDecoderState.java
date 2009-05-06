@@ -101,10 +101,10 @@ public class MtkBinDecoderState implements DecoderStateInterface {
             case LEN1_STATE:
                 len |= ((c) & 0xFF) << 8;
                 idx = 0;
-                if (len < 2) {
+                if (len < 9) {  // 2 header + 2 trailer + 2 len + 2 type + 1 checksum = 9 bytes
                     state = RECOVER_STATE;
                 } else {
-                    len -= 2;
+                    len -= 9;
                 }
                 value = new byte[len];
                 state = TYPE0_STATE;
@@ -118,7 +118,7 @@ public class MtkBinDecoderState implements DecoderStateInterface {
                 if (len <= 0) {
                     state = END0_STATE;
                 } else {
-                    state = CHECKSUM_STATE;
+                    state = PAYLOAD_STATE;
                 }
                 break;
             case PAYLOAD_STATE:

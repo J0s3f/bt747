@@ -14,10 +14,8 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.GPSListener;
-import gps.GPSstate;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
@@ -40,7 +38,8 @@ public class Model extends AppSettings implements GPSListener {
      * The gpsModel communicates with the GPS device and stores some
      * information regarding the state of the GPS device.
      */
-    private GPSstate gpsModel;
+    private gps.mvc.Model gpsOldC;  // Previous model had both M and C.
+    private gps.mvc.Controller gpsC;
     
     
     /**
@@ -171,7 +170,7 @@ public class Model extends AppSettings implements GPSListener {
      * Advanced log filters.
      */
     private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[Model.C_NBR_FILTERS];
-
+    
     /**
      * The default constructor of the model.
      */
@@ -187,19 +186,33 @@ public class Model extends AppSettings implements GPSListener {
         filterEndTime = (JavaLibBridge.getDateInstance()).dateToUTCepoch1970()
                 + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
-        gpsModel = new GPSstate(gpsRxTx);
-        mtkModel = gpsModel.getMtkModel();
-        gpsModel.addListener(this);
+        
+        gpsOldC = new gps.mvc.Model(gpsRxTx);
+        gpsC = gps.mvc.Controller.getInstance(gpsOldC);        
+        mtkModel = gpsC.getModel().getMtkModel();
+        gpsC.getModel().addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
     }
 
+    
+    /* TODO: This is here during refactoring - should be in controller later */
+    
     /**
      * @return The gpsModel instantiation.
      */
-    protected final GPSstate gpsModel() {
-        return gpsModel;
+    protected final gps.mvc.Model gpsOldC() {
+        return gpsOldC;
     }
 
+    
+    /**
+     * @return The gpsModel instantiation.
+     */
+    protected final gps.mvc.Controller gpsC() {
+        return gpsC;
+    }
+    
+    
     /**
      * @return The gpsModel instantiation.
      */
@@ -227,7 +240,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return Get the number of commands waiting for a response.
      */
     public final int getOutstandingCommandsCount() {
-        return gpsModel.getOutStandingCmdsCount();
+        return gpsOldC.getOutStandingCmdsCount();
     }
 
     /**
@@ -418,7 +431,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the startAddr
      */
     public final int getStartAddr() {
-        return gpsModel.getStartAddr();
+        return gpsOldC.getStartAddr();
     }
 
     /**
@@ -428,7 +441,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the endAddr
      */
     public final int getEndAddr() {
-        return gpsModel.getEndAddr();
+        return gpsOldC.getEndAddr();
     }
 
     /**
@@ -438,7 +451,7 @@ public class Model extends AppSettings implements GPSListener {
      *         the download progress bar.
      */
     public final boolean isDownloadOnGoing() {
-        return gpsModel.isLogDownloadOnGoing();
+        return gpsOldC.isLogDownloadOnGoing();
     }
 
     /**
@@ -448,7 +461,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {
-        return gpsModel.getNextReadAddr();
+        return gpsOldC.getNextReadAddr();
     }
 
     private int downloadMethod = Model.DOWNLOAD_SMART;
@@ -580,7 +593,7 @@ public class Model extends AppSettings implements GPSListener {
         return mtkModel.getFirmwareVersion();
     }
 
-    public final String getModel() {
+    public final String getModelStr() {
         return mtkModel.getModel();
     }
 
@@ -790,7 +803,7 @@ public class Model extends AppSettings implements GPSListener {
      * Indicates if the given data is available.
      * 
      * @param dataType
-     *                {@link GPSstate#DATA_MEM_USED}
+     *                {@link GpsController#DATA_MEM_USED}
      * @return
      */
     public final boolean isAvailable(final int dataType) {

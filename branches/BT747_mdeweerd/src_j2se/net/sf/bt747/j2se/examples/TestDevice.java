@@ -32,6 +32,8 @@ import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
+import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -136,10 +138,24 @@ public class TestDevice implements bt747.model.ModelListener {
         getOutstandingCmds();
         c.setStringOpt(Model.OUTPUTDIRPATH, ".");
         c.setDebugConn(true);
+
+        // GET AGPS Data
+        //J2SEAGPS agpsFetcher = new J2SEAGPS();
+        //agpsFetcher.getBytesFromUrl("ftp://tsi0001:passwd@www.transystem.com.tw/MTK7d.EPO")
+        byte[] agpsData = J2SEAGPS.getBytesFromUrl("http://bt747.free.fr/MTK7d.EPO");
+        
+        // Initialise the handler.
+        AgpsUploadHandler handler = new AgpsUploadHandler();
+        handler.setAgpsData(agpsData);
+        // Handler initialised.
+
+        c.setDeviceOperationHandler(handler);
+        
         /* Enter AGPS programming mode */
         // Checked: the sent packet corresponds to what is needed. (seen in a
         // trace)
         c.sendCmd(new SetMtkBinModeCommand());
+
         // getOutstandingCmds();
         if (false) {
             /* Wild guess at a packet to see if that works too. */
@@ -149,10 +165,10 @@ public class TestDevice implements bt747.model.ModelListener {
              */
             byte[] payload;
             payload = new byte[4];
-            payload[0] = (byte) (BT747Constants.PMTK_LOG_Q >> 8);
-            payload[1] = (byte) (BT747Constants.PMTK_LOG_Q);
-            payload[2] = (byte) (BT747Constants.PMTK_LOG_VERSION >> 8);
-            payload[3] = (byte) (BT747Constants.PMTK_LOG_VERSION);
+            payload[0] = (byte) (BT747Constants.PMTK_LOG_Q);
+            payload[1] = (byte) (BT747Constants.PMTK_LOG_Q >> 8);
+            payload[2] = (byte) (BT747Constants.PMTK_LOG_VERSION);
+            payload[3] = (byte) (BT747Constants.PMTK_LOG_VERSION >> 8);
             c.sendCmd(new MtkBinCommand(new MtkBinTransportMessageModel(
                     BT747Constants.PMTK_CMD_LOG, payload)));
             // private final void reqMtkLogVersion() {
