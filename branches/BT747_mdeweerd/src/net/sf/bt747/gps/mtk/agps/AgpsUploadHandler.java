@@ -3,6 +3,8 @@
  */
 package net.sf.bt747.gps.mtk.agps;
 
+import bt747.sys.Generic;
+
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.connection.MtkBinWriter;
@@ -17,6 +19,12 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
     private byte[] agpsData;
     private int idx;
 
+    private boolean firstData;
+    private boolean okForNext;
+
+    /**
+     * These methods are called one after the other - not in separate threads.
+     */
     /*
      * (non-Javadoc)
      * 
@@ -25,6 +33,27 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
     public boolean analyseResponse(Object o) {
         if (o instanceof MtkBinTransportMessageModel) {
             MtkBinTransportMessageModel msg = (MtkBinTransportMessageModel) o;
+
+            // Debugging for now:
+            Generic.debug("<<" + msg.toString());
+            if (firstData) {
+                // No AGPS data has been sent.
+                // Ok to send data.
+
+                firstData = false;
+                okForNext = true;
+                return false;
+            } else {
+                // Must receive acknowledge for previous data.
+                switch (msg.getType()) {
+                case 1:
+                case 2:
+                    okForNext = true;
+                    break;
+                default:
+                    break;
+                }
+            }
             // Check if data corresponds to sent data.
             // If not - handle error.
             // If timeout - handle error (send again?)
@@ -44,17 +73,18 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      * @see gps.mvc.DeviceOperationHandlerIF#notifyRun(gps.mvc.GPSLinkHandler)
      */
     public boolean notifyRun(GPSLinkHandler handler) {
-        if(nextDone) {
-            return false;  // End handler.
+        if (nextDone) {
+            return false; // End handler.
         }
-        if (true) {// if ok to send data // Should check response.
+        if (okForNext) {// if ok to send data // Should check response.
+            okForNext = false;
             // Get the payload
             byte[] payload = new byte[AGPS_PAYLOAD]; // Inits to 0
             int i;
             for (i = 0; i < AGPS_PAYLOAD && idx < agpsData.length; i++, idx++) {
                 payload[i] = agpsData[idx];
             }
-            if(i==0) {  // No more data - send empty data and then done.
+            if (i == 0) { // No more data - send empty data and then done.
                 nextDone = true;
             }
             // Send next piece of data to device.
@@ -74,6 +104,8 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         agpsData = data;
         idx = 0;
         nextDone = false;
+        firstData = true;
+        okForNext = false;
     }
 
     private void done() {
