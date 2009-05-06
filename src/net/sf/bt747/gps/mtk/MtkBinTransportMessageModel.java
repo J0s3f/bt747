@@ -47,6 +47,15 @@ public class MtkBinTransportMessageModel {
     }
 
     /**
+     * Get the type of the message.
+     * 
+     * @return Message type
+     */
+    public int getType() {
+        return payloadType;
+    }
+
+    /**
      * Provide the transport message.
      * 
      * @return The transport message.
@@ -122,8 +131,10 @@ public class MtkBinTransportMessageModel {
         }
         return true;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -133,9 +144,9 @@ public class MtkBinTransportMessageModel {
         rec.append("MtkBinMsgType:");
         rec.append(payloadType);
         rec.append(" Payload:0x");
-        for(int i=0;i<payload.length;i++) {
+        for (int i = 0; i < payload.length; i++) {
             // Add hex value of payload.
-            rec.append(JavaLibBridge.unsigned2hex(payload[i],2));
+            rec.append(JavaLibBridge.unsigned2hex(payload[i], 2));
         }
         return rec.toString();
     }

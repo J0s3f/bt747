@@ -273,7 +273,7 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_DT_DGPS_INFO = 702;
     public static final int PMTK_DT_VERSION = 704;
     public static final int PMTK_DT_RELEASE = 705;
-    
+    /** Send EPO data to device (722  0x2D2) */
     public static final int PMTK_SET_EPO_DATA = 722;
 
     /**
