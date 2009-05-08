@@ -49,6 +49,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 
 import bt747.Version;

@@ -6,11 +6,17 @@ package bt747.j2se_view;
 import gps.log.GPSRecord;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
+import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JFrame;
+
+import net.sf.bt747.j2se.app.agps.J2SEAGPS;
+
 import bt747.j2se_view.model.ImageData;
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 
@@ -110,4 +116,14 @@ public class J2SEController extends Controller {
         }
     }
 
+    public final void downloadAndUploadAgpsData() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public final void run() {
+                final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
+                byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
+                setAgpsData(agpsData);
+            }
+        });
+
+    }
 }

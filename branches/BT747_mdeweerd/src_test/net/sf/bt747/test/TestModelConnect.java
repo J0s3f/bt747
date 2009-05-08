@@ -37,23 +37,26 @@ public class TestModelConnect {
         /* Set the serial port class instance to use (also system specific). */
 
         try {
-            appOs = new PipedOutputStream(modelIs);
-            modelOs = new PipedOutputStream(appIs);
-            final MyVirtualPort modelPort = new MyVirtualPort(modelIs,
-                    modelOs);
-            appPort = new MyVirtualPort(appIs, appOs);
-            GPSrxtx.setDefaultGpsPortInstance(appPort);
+            TestModelConnect.appOs = new PipedOutputStream(
+                    TestModelConnect.modelIs);
+            TestModelConnect.modelOs = new PipedOutputStream(
+                    TestModelConnect.appIs);
+            final MyVirtualPort modelPort = new MyVirtualPort(
+                    TestModelConnect.modelIs, TestModelConnect.modelOs);
+            TestModelConnect.appPort = new MyVirtualPort(
+                    TestModelConnect.appIs, TestModelConnect.appOs);
+            GPSrxtx.setDefaultGpsPortInstance(TestModelConnect.appPort);
             IBlue747Model.setGpsPort(modelPort);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println("Problem setting up ports");
             e.printStackTrace();
             // TODO: handle exception
         }
     }
-    
+
     public static void main(final String args[]) {
         IBlue747Model.main(new String[0]);
-        GPSrxtx.setDefaultGpsPortInstance(appPort);
+        GPSrxtx.setDefaultGpsPortInstance(TestModelConnect.appPort);
         BT747Main.main(args);
     }
 
