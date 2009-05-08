@@ -261,6 +261,11 @@ public class AppSettings {
      * The previous field for the filetime offset.
      */
     public static final int FILETIMEOFFSETOLD = 52;
+    
+    /**
+     * AGPS external link.
+     */
+    public static final int AGPS_URL = 53;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;

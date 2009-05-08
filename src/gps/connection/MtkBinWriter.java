@@ -23,7 +23,7 @@ public final class MtkBinWriter {
             if (Generic.getDebugLevel() > 1) {
                 Generic.debug(debugText);
             }
-            context.getGpsPortInstance().writeDebug(debugText);
+            context.getGpsPort().writeDebug(debugText);
         }
         if (isConnected) {
             context.write(msg.getMessage());

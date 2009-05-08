@@ -40,6 +40,7 @@ import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 import gps.mvc.DeviceOperationHandlerIF;
+import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
@@ -53,7 +54,7 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario De Weerd
  * 
  */
-public class Controller {
+public class Controller implements ModelListener {
     /**
      * Fixed number indicating that the port number does not correspond to an
      * actual port.
@@ -95,7 +96,11 @@ public class Controller {
     }
 
     public void setModel(final Model model) {
+        if(m!=null) {
+            m.removeListener(this);
+        }
         m = model;
+        m.addListener(this);
     }
 
     public Model getModel() {
@@ -110,14 +115,34 @@ public class Controller {
         return m.gpsOldC();
     }
 
+    /* (non-Javadoc)
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
+    public void modelEvent(final ModelEvent e) {
+        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+            // TODO: Possibly move this to the mtkController.
+            if(m.mtkModel().isLoggingDisabled()) {
+                setAutoLog(true);
+            }
+        }
+        // TODO Auto-generated method stub
+    }
+
+    public final void setAutoLog(final boolean enable) {
+        mtkC().setAutoLog(enable);
+    }
+
+    private final MtkController mtkC() {
+        return getGpsC().getMtkController();
+    }
     
     /**
      * Called when the Controller starts. Used for initialization.
      */
     public void init() {
-        getGpsOldC().setGpsDecode(m.getBooleanOpt(AppSettings.DECODEGPS));
-        getGpsOldC().setDownloadTimeOut(m.getDownloadTimeOut());
-        getGpsOldC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
+        getGpsC().setGpsDecode(m.getBooleanOpt(AppSettings.DECODEGPS));
+        getGpsC().setDownloadTimeOut(m.getDownloadTimeOut());
+        mtkC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
 
         final int port = m.getIntOpt(AppSettings.PORTNBR);
         if (port != Controller.NOT_A_PORT_NUMBER) {
@@ -159,7 +184,7 @@ public class Controller {
      */
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
-        getGpsOldC().setDownloadTimeOut(timeout);
+        getGpsC().setDownloadTimeOut(timeout);
     }
 
     /**
@@ -183,7 +208,7 @@ public class Controller {
      */
     public final void setLogRequestAhead(final int numberOfRequestsAhead) {
         setIntOpt(AppSettings.LOGAHEAD, numberOfRequestsAhead);
-        getGpsOldC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
+        mtkC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
     }
 
     /**
@@ -617,7 +642,7 @@ public class Controller {
      * Cancel the log download process.
      */
     public final void cancelGetLog() {
-        m.gpsOldC().cancelGetLog();
+        mtkC().cancelGetLog();
     }
 
     /**
@@ -650,7 +675,7 @@ public class Controller {
             } else {
                 endAddress = m.logMemUsed() - 1;
             }
-            m.gpsOldC().getLogInit(0, /* StartPosition */
+            mtkC().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
             m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
@@ -674,7 +699,7 @@ public class Controller {
      *                If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
-        m.gpsOldC().replyToOkToOverwrite(isOkToOverwrite);
+        mtkC().replyToOkToOverwrite(isOkToOverwrite);
     }
 
     /**
@@ -704,11 +729,11 @@ public class Controller {
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
-            m.gpsOldC().startLog();
+            mtkC().startLog();
         } else {
-            m.gpsOldC().stopLog();
+            mtkC().stopLog();
         }
-        m.gpsOldC().reqLogOnOffStatus();
+        getGpsC().reqLogOnOffStatus();
     }
 
     /**
@@ -719,8 +744,8 @@ public class Controller {
      *                logging when device is full
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
-        getGpsOldC().setLogOverwrite(isOverWriteLog);
-        m.gpsOldC().reqLogOverwrite();
+        mtkC().setLogOverwrite(isOverWriteLog);
+        mtkC().reqLogOverwrite();
     };
 
     /**
@@ -731,25 +756,25 @@ public class Controller {
      * 
      */
     public final void reqMtkLogVersion() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        getGpsC().setDataNeeded(MtkModel.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_MEM_USED);
+        getGpsC().setDataNeeded(MtkModel.DATA_MEM_USED);
     }
 
     public final void reqInitialLogMode() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
+        getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
+        getGpsC().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -758,7 +783,7 @@ public class Controller {
      * {@link gps.GpsEvent#UPDATE_LOG_REC_METHOD} event to get the data.
      */
     public final void reqLogOverwrite() {
-        m.gpsOldC().reqLogOverwrite();
+        mtkC().reqLogOverwrite();
     }
 
     /**
@@ -766,7 +791,7 @@ public class Controller {
      * after specific {@link GpsEvent} events.
      */
     public final void reqDeviceInfo() {
-        m.gpsOldC().reqDeviceInfo();
+        getGpsC().reqDeviceInfo();
     }
 
     /**
@@ -778,7 +803,7 @@ public class Controller {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_STATUS);
+        getGpsC().setDataNeeded(MtkModel.DATA_LOG_STATUS);
     }
 
     /**
@@ -787,7 +812,7 @@ public class Controller {
      * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        getGpsOldC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
+        getGpsC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -823,7 +848,7 @@ public class Controller {
      *                <br>
      */
     public final void setLogFormat(final int newLogFormat) {
-        getGpsOldC().setLogFormat(newLogFormat);
+        mtkC().setLogFormat(newLogFormat);
         reqLogFormat();
     }
 
@@ -840,7 +865,7 @@ public class Controller {
      * identified as 'bad'.
      */
     public final void recoveryEraseLog() {
-        m.gpsOldC().recoveryEraseLog();
+        mtkC().recoveryEraseLog();
     }
 
     /*************************************************************************
@@ -965,13 +990,12 @@ public class Controller {
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            final gps.mvc.Model gpsModel = getGpsOldC();
-            gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
+            getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
             // fail.
-            gpsModel.reqStatus();
-            gpsModel.setDataNeeded(MtkModel.DATA_FLASH_TYPE);
+            getGpsC().reqStatus();
+            getGpsC().setDataNeeded(MtkModel.DATA_FLASH_TYPE);
             reqLogFormat();
-            gpsModel.setDataNeeded(MtkModel.DATA_INITIAL_LOG);
+            getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             getGpsC().initConnection();
             // Remember defaults
@@ -1181,7 +1205,7 @@ public class Controller {
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
-        getGpsOldC().setFlashUserOption(lock, updateRate, baudRate,
+        mtkC().setFlashUserOption(lock, updateRate, baudRate,
                 periodGLL, periodRMC, periodVTG, periodGSA, periodGSV,
                 periodGGA, periodZDA, periodMCHN);
         reqFlashUserOption();
@@ -1199,21 +1223,21 @@ public class Controller {
      * 
      */
     public final void reqFlashUserOption() {
-        getGpsOldC().reqFlashUserOption();
+        mtkC().reqFlashUserOption();
     }
 
     /**
      * Get the flash user settings from the device.
      */
     public final void reqHoluxName() {
-        getGpsOldC().reqHoluxName();
+        mtkC().reqHoluxName();
     }
 
     /**
      * Request the bluetooth Mac Address from the device.
      */
     public final void reqBTAddr() {
-        getGpsOldC().reqBtMacAddr();
+        mtkC().reqBtMacAddr();
     }
 
     /**
@@ -1224,7 +1248,7 @@ public class Controller {
      *                00:1F:14:15:12:13.
      */
     public final void setBTMacAddr(final String btMacAddr) {
-        getGpsOldC().setBtMacAddr(btMacAddr);
+        mtkC().setBtMacAddr(btMacAddr);
         reqBTAddr();
     }
 
@@ -1235,7 +1259,7 @@ public class Controller {
      *                The string to set as the Holux Name.
      */
     public final void setHoluxName(final String holuxName) {
-        getGpsOldC().setHoluxName(holuxName);
+        mtkC().setHoluxName(holuxName);
         reqHoluxName();
     }
 
@@ -1243,7 +1267,7 @@ public class Controller {
      * Request the current NMEA period settings of the device.
      */
     public final void reqNMEAPeriods() {
-        getGpsOldC().reqNMEAPeriods();
+        mtkC().reqNMEAPeriods();
     }
 
     /**
@@ -1267,7 +1291,7 @@ public class Controller {
      *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br> -
      */
     public final void setNMEAPeriods(final int[] periods) {
-        getGpsOldC().setNMEAPeriods(periods);
+        mtkC().setNMEAPeriods(periods);
         reqNMEAPeriods();
     }
 
@@ -1275,7 +1299,7 @@ public class Controller {
      * Sets default NMEA periods (as observed on one iBlue 747 device).
      */
     public final void setNMEADefaultPeriods() {
-        getGpsOldC().setNMEADefaultPeriods();
+        mtkC().setNMEADefaultPeriods();
     }
 
     /**
@@ -1285,7 +1309,7 @@ public class Controller {
      *                When true, enable test satellites.
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
-        getGpsOldC().setSBASTestEnabled(isSBASTestEnabled);
+        mtkC().setSBASTestEnabled(isSBASTestEnabled);
         reqSBASTestEnabled();
     }
 
@@ -1295,7 +1319,7 @@ public class Controller {
      * {@link Model#isSBASTestEnabled()}.
      */
     public final void reqSBASTestEnabled() {
-        getGpsOldC().reqSBASTestEnabled();
+        mtkC().reqSBASTestEnabled();
     }
 
     /**
@@ -1305,7 +1329,7 @@ public class Controller {
      *                When true, enables SBAS.
      */
     public final void setSBASEnabled(final boolean set) {
-        getGpsOldC().setSBASEnabled(set);
+        mtkC().setSBASEnabled(set);
         reqSBASEnabled();
     }
 
@@ -1314,7 +1338,7 @@ public class Controller {
      * to be retrieved later with {@link Model#isSBASEnabled()}.
      */
     public final void reqSBASEnabled() {
-        getGpsOldC().reqSBASEnabled();
+        mtkC().reqSBASEnabled();
     }
 
     /**
@@ -1322,7 +1346,7 @@ public class Controller {
      * {@link Model#getDatum()}.
      */
     public final void reqDatumMode() {
-        getGpsOldC().reqDatumMode();
+        mtkC().reqDatumMode();
     }
 
     /**
@@ -1332,7 +1356,7 @@ public class Controller {
      *                The datum mode to set.
      */
     public final void setDatumMode(final int mode) {
-        getGpsOldC().setDatumMode(mode);
+        mtkC().setDatumMode(mode);
         reqDatumMode();
     }
 
@@ -1343,7 +1367,7 @@ public class Controller {
      *                The mode to use.
      */
     public final void setDGPSMode(final int mode) {
-        getGpsOldC().setDGPSMode(mode);
+        mtkC().setDGPSMode(mode);
         reqDGPSMode();
     }
 
@@ -1352,7 +1376,7 @@ public class Controller {
      * {@link Model#getDgpsMode()} later.
      */
     public final void reqDGPSMode() {
-        getGpsOldC().reqDGPSMode();
+        mtkC().reqDGPSMode();
     }
 
     /**
@@ -1362,7 +1386,7 @@ public class Controller {
      *                If true, enable power save mode.
      */
     public final void setPowerSaveEnabled(final boolean set) {
-        getGpsOldC().setPowerSaveEnabled(set);
+        mtkC().setPowerSaveEnabled(set);
         reqPowerSaveEnabled();
     }
 
@@ -1371,7 +1395,7 @@ public class Controller {
      * actual setting later with {@link Model#isPowerSaveEnabled()}.
      */
     public final void reqPowerSaveEnabled() {
-        getGpsOldC().reqPowerSaveEnabled();
+        mtkC().reqPowerSaveEnabled();
     }
 
     /**
@@ -1383,7 +1407,7 @@ public class Controller {
      *       {@link Model#getLogSpeedInterval()}
      */
     public final void reqLogReasonStatus() {
-        getGpsOldC().reqLogReasonStatus();
+        mtkC().reqLogReasonStatus();
     }
 
     /**
@@ -1392,7 +1416,7 @@ public class Controller {
      * 
      */
     public final void reqFixInterval() {
-        getGpsOldC().reqFixInterval();
+        mtkC().reqFixInterval();
     }
 
     /**
@@ -1419,45 +1443,45 @@ public class Controller {
      *                {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void logImmediate(final int value) {
-        getGpsOldC().logImmediate(value);
+        mtkC().logImmediate(value);
     }
 
     public final void setFixInterval(final int value) {
         if (value != 0) {
-            getGpsOldC().setFixInterval(value);
+            mtkC().setFixInterval(value);
             reqFixInterval();
         }
     }
 
     public final void setLogTimeInterval(final int value) {
-        getGpsOldC().setLogTimeInterval(value);
+        mtkC().setLogTimeInterval(value);
         // TODO : request time interval
     }
 
     public final void setLogDistanceInterval(final int value) {
-        getGpsOldC().setLogDistanceInterval(value);
+        mtkC().setLogDistanceInterval(value);
         // TODO : request distance interval
     }
 
     public final void setLogSpeedInterval(final int value) {
-        getGpsOldC().setLogSpeedInterval(value);
+        mtkC().setLogSpeedInterval(value);
         // TODO : request speed interval
     }
 
     public final void doHotStart() {
-        getGpsOldC().doHotStart();
+        mtkC().doHotStart();
     }
 
     public final void doColdStart() {
-        getGpsOldC().doColdStart();
+        mtkC().doColdStart();
     }
 
     public final void doWarmStart() {
-        getGpsOldC().doWarmStart();
+        mtkC().doWarmStart();
     }
 
     public final void doFullColdStart() {
-        getGpsOldC().doFullColdStart();
+        mtkC().doFullColdStart();
     }
 
     public final boolean isEnableStoreOK() {

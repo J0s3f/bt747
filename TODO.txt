@@ -5,6 +5,8 @@ PROBLEMS
 * When there are a lot of pictures, loading the previews is too slow.
   - Need to improve worker task.
   - Could use preview data already available in pictures.
+  
+* Check the autolog functionality and integrate it in BT747.
 
 IMPROVEMENTS
 (Things not very visible to the user).

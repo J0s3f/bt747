@@ -21,6 +21,12 @@ import bt747.sys.JavaLibBridge;
  */
 public class MtkModel {
     private final GPSLinkHandler handler;
+    private MTKLogDownloadHandler mtkLogHandler;
+
+    protected final void setLogHandler(MTKLogDownloadHandler handler) {
+        mtkLogHandler = handler;
+    }
+    
     // Next should be private.
 
     private int logFormat = 0;
@@ -47,7 +53,7 @@ public class MtkModel {
     private boolean loggingActive = false;
     public boolean loggerIsFull = false;
     public boolean loggerNeedsInit = false;
-    public boolean loggerIsDisabled = false;
+    private boolean loggerIsDisabled = false;
 
     private boolean logFullOverwrite = false; // When true, overwrite log
     // when
@@ -111,16 +117,6 @@ public class MtkModel {
     MtkModel(final Model context, final GPSLinkHandler handler) {
         this.handler = handler;
         this.context = context;
-    }
-
-    /**
-     * TODO: this should not be called in the context/controller from the
-     * model. Should find a better method.
-     * 
-     * @param dataType
-     */
-    public final void setDataNeeded(final int dataType) {
-        context.setDataNeeded(dataType);
     }
 
     /**
@@ -232,7 +228,6 @@ public class MtkModel {
     protected final void setChanged(final int dataType) {
         dataAvailable[dataType] = false;
         dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
-        setDataNeeded(dataType);
     }
 
     public GPSLinkHandler getHandler() {
@@ -278,7 +273,7 @@ public class MtkModel {
                 if (sNmea.length == 4) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FLASH_STAT:
-                        context.mtkLogHandler
+                        mtkLogHandler
                                 .handleLogFlashStatReply(sNmea[3]);
                         break;
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
@@ -379,7 +374,7 @@ public class MtkModel {
                 try {
                     // waba.sys.debugMsg("Before
                     // AnalyzeLog:"+p_nmea[3].length());
-                    context.mtkLogHandler.analyzeLogPart(Conv
+                    mtkLogHandler.analyzeLogPart(Conv
                             .hex2Int(sNmea[2]), sNmea[3]);
                 } catch (final Exception e) {
                     Generic.debug("analyzeLogNMEA", e);
@@ -574,7 +569,6 @@ public class MtkModel {
      * @return The useful bytes in the log.
      */
     public final int logMemUsefullSize() {
-        setDataNeeded(MtkModel.DATA_FLASH_TYPE);
         return ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
@@ -582,8 +576,6 @@ public class MtkModel {
      * @return Useful free bytes in the log.
      */
     public final int logFreeMemUsefullSize() {
-        setDataNeeded(MtkModel.DATA_FLASH_TYPE);
-        setDataNeeded(MtkModel.DATA_MEM_USED);
         return ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
@@ -746,9 +738,44 @@ public class MtkModel {
     public final int getNMEAPeriod(final int i) {
         return NMEA_periods[i];
     }
+    
+    private boolean eraseOngoing = false;
 
+    protected final boolean isEraseOngoing() {
+        return eraseOngoing;
+    }
+
+    protected final void setEraseOngoing(final boolean eraseOngoing) {
+        if (this.eraseOngoing != eraseOngoing) {
+            this.eraseOngoing = eraseOngoing;
+            if (eraseOngoing) {
+                postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
+            } else {
+                postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+                handler.setEraseOngoing(false);
+            }
+        }
+    }
+
+
+    /**
+     * Get the 'logging activation' status of the device.
+     * 
+     * @return true if the device is currently logging positions to memory.
+     */
     public final boolean isLoggingActive() {
         return loggingActive;
+    }
+
+    /**
+     * Get the 'automatic logging activation' status of the device.<br>
+     * This concerns time, speed and distance logging.
+     * 
+     * @return true if the device is currently automatically logging positions
+     *         to memory.
+     */
+    public final boolean isLoggingDisabled() {
+        return loggerIsDisabled;
     }
 
     public final String getFirmwareVersion() {
@@ -798,4 +825,50 @@ public class MtkModel {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
     }
 
+    /**
+     * Get the start address for the log download. To be used for the download
+     * progress bar.
+     * 
+     * @return the startAddr
+     */
+    public final int getStartAddr() {
+        return mtkLogHandler.getStartAddr();
+    }
+
+    /**
+     * Get the end address for the log download. To be used for the download
+     * progress bar.
+     * 
+     * @return the endAddr
+     */
+    public final int getEndAddr() {
+        return mtkLogHandler.getEndAddr();
+    }
+
+    /**
+     * Get 'download ongoing' status.
+     * 
+     * @return true if the download is currently ongoing. This is usefull for
+     *         the download progress bar.
+     */
+    public final boolean isLogDownloadOnGoing() {
+        return mtkLogHandler.isLogDownloadOnGoing();
+    }
+
+    /**
+     * Get the log address that we are now expecting to receive data for. This
+     * is usefull for the download progress bar.
+     * 
+     * @return the nextReadAddr
+     */
+    public final int getNextReadAddr() {
+        return mtkLogHandler.getNextReadAddr();
+    }
+    
+    /**
+     * @deprecated
+     */
+    public final MTKLogDownloadHandler getMtkLogHandler() {
+        return mtkLogHandler;
+    }
 }

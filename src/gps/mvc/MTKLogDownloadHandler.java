@@ -35,10 +35,12 @@ final class MTKLogDownloadHandler {
      * 
      */
     private final static class MTKLogDownloadContext {
-        protected Model gpsC;
-        protected MtkModel gpsM;
+        protected MtkModel mtkM;
+        protected MtkController mtkC;
+        
         protected int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
 
+        // private final LogFile lf = new LogFile();
         protected File logFile = null;
 
         /**
@@ -80,6 +82,7 @@ final class MTKLogDownloadHandler {
         /** buffer used for reading data. */
         protected final byte[] readDataBuffer = new byte[0x800];
 
+        
     }
 
     // States for log reception state machine.
@@ -108,10 +111,10 @@ final class MTKLogDownloadHandler {
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
-    protected MTKLogDownloadHandler(final Model controller,
+    protected MTKLogDownloadHandler(final MtkController controller,
             final MtkModel model) {
-        context.gpsC = controller;
-        context.gpsM = model;
+        context.mtkC = controller;
+        context.mtkM = controller.getMtkModel();
     }
 
     /**
@@ -148,15 +151,15 @@ final class MTKLogDownloadHandler {
         if (context.logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             // Disable device logging while downloading to improve
             // performance.
-            context.loggingIsActiveBeforeDownload = context.gpsM
+            context.loggingIsActiveBeforeDownload = context.mtkM
                     .isLoggingActive();
             if (context.disableLogging
                     && context.loggingIsActiveBeforeDownload) {
-                context.gpsC.stopLog();
-                context.gpsC.reqLogOnOffStatus();
+                context.mtkC.stopLog();
+                context.mtkC.reqLogStatus();
             }
         }
-        context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
+        context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
 
         if (Generic.isDebug()) {
             Generic
@@ -186,6 +189,7 @@ final class MTKLogDownloadHandler {
             context.usedLogRequestAhead = context.logRequestAhead;
         }
 
+        context.mtkM.getHandler().setLogOrEraseOngoing(true);
         context.logState = MTKLogDownloadHandler.C_LOG_START;
     }
 
@@ -313,11 +317,11 @@ final class MTKLogDownloadHandler {
                             context.expectedResult[i] = b[i];
                         }
                         context.logState = MTKLogDownloadHandler.C_LOG_CHECK;
-                        context.gpsC.resetLogTimeOut();
+                        context.mtkM.getHandler().resetLogTimeOut();
                         requestCheckBlock();
                     }
                 }
-                context.gpsC.updateIgnoreNMEA();
+                context.mtkM.getHandler().updateIgnoreNMEA();
                 windowedLogFile.close();
             }
             if (!(context.logState == MTKLogDownloadHandler.C_LOG_CHECK)) {
@@ -334,7 +338,7 @@ final class MTKLogDownloadHandler {
                 context.logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             }
             if (context.logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
-                context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
+                context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             }
         } catch (final Exception e) {
             Generic.debug("getLogInit", e);
@@ -366,7 +370,7 @@ final class MTKLogDownloadHandler {
             context.logFileCard = card;
 
             if ((context.logFile == null) || !(context.logFile.isOpen())) {
-                context.gpsM
+                context.mtkM
                         .postEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
             }
         } catch (final Exception e) {
@@ -535,8 +539,8 @@ final class MTKLogDownloadHandler {
                             int minEndAddr;
                             // This block and next one.
                             minEndAddr = (startAddr & 0xFFFF0000) + 0x20000 - 1;
-                            if (minEndAddr > context.gpsM.getLogMemSize() - 1) {
-                                minEndAddr = context.gpsM.getLogMemSize() - 1;
+                            if (minEndAddr > context.mtkM.getLogMemSize() - 1) {
+                                minEndAddr = context.mtkM.getLogMemSize() - 1;
                             }
                             if (minEndAddr > context.logDownloadEndAddr) {
                                 context.logDownloadEndAddr = minEndAddr;
@@ -545,7 +549,7 @@ final class MTKLogDownloadHandler {
                     }
                 }
                 if (context.logNextReadAddr > context.logDownloadEndAddr) {
-                    context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
+                    context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
                     endGetLog();
                 } else {
                     getNextLogPart();
@@ -601,7 +605,7 @@ final class MTKLogDownloadHandler {
                         Generic
                                 .debug("Different data - requesting overwrite confirmation");
                     }
-                    context.gpsM
+                    context.mtkM
                             .postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
             } else {
@@ -628,7 +632,10 @@ final class MTKLogDownloadHandler {
         default:
             break;
         } // Switch m_context.logState
-        context.gpsM.postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+        if(context.logState == C_LOG_NOLOGGING) {
+            context.mtkM.getHandler().setLogOrEraseOngoing(false);
+        }
+        context.mtkM.postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
     }
 
     /**
@@ -688,10 +695,10 @@ final class MTKLogDownloadHandler {
         closeLog();
 
         if (context.loggingIsActiveBeforeDownload) {
-            context.gpsC.startLog();
-            context.gpsC.reqLogOnOffStatus();
+            context.mtkC.startLog();
+            context.mtkC.reqLogStatus();
         }
-        context.gpsM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
+        context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
     }
 
     protected final boolean isLogDownloadOnGoing() {
@@ -725,9 +732,9 @@ final class MTKLogDownloadHandler {
      */
 
     protected final void eraseLog() {
-        if (context.gpsC.isConnected()) {
-            context.gpsM.getHandler().setEraseOngoing(true);
-            context.gpsC.doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+        if (context.mtkM.getHandler().isConnected()) {
+            context.mtkM.getHandler().setEraseOngoing(true);
+            context.mtkC.doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);
             waitEraseDone();
@@ -736,17 +743,17 @@ final class MTKLogDownloadHandler {
 
     protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
-        context.gpsC.stopLog(); // Stop logging for this operation
-        context.gpsC.reqLogStatus(); // Check status
-        context.gpsC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.stopLog(); // Stop logging for this operation
+        context.mtkC.reqLogStatus(); // Check status
+        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
                                                 // information
         // from
         // device
         // TODO: Handle flash sector information.
-        context.gpsC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
 
-        context.gpsC.reqLogStatus(); // Check status
+        context.mtkC.reqLogStatus(); // Check status
 
         context.forcedErase = true;
         eraseLog();
@@ -754,42 +761,44 @@ final class MTKLogDownloadHandler {
     }
 
     private void postRecoveryEraseLog() {
-        context.gpsC.reqLogStatus();
-        context.gpsC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.reqLogStatus();
+        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
                                                 // information
         // from
         // device
 
-        context.gpsC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
-        context.gpsC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
                                                 // information
         // from
         // device
-        context.gpsC.reqLogStatus();
+        context.mtkC.reqLogStatus();
     }
 
     private void waitEraseDone() {
         context.logState = MTKLogDownloadHandler.C_LOG_ERASE_STATE;
-        context.gpsC.resetLogTimeOut();
+        context.mtkM.getHandler().setLogOrEraseOngoing(true);
+        context.mtkM.getHandler().resetLogTimeOut();
         // readLogFlashStatus(); - Will be done after timeout
     }
 
     private void signalEraseDone() {
         context.logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
-        context.gpsC.setEraseOngoing(false);
+        context.mtkM.getHandler().setLogOrEraseOngoing(true);
+        context.mtkM.setEraseOngoing(false);
     }
 
     protected final void stopErase() {
-        if (context.gpsC.isEraseOngoing()
+        if (context.mtkM.isEraseOngoing()
                 && (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
-            context.gpsC.updateIgnoreNMEA();
+            context.mtkM.getHandler().updateIgnoreNMEA();
 
             signalEraseDone();
         } else {
             // Not changing state.
-            context.gpsC.setEraseOngoing(false);
+            context.mtkM.setEraseOngoing(false);
         }
     }
 
@@ -797,7 +806,7 @@ final class MTKLogDownloadHandler {
      * Called from within run of GPSstate (regularly called).
      */
     protected void notifyRun() {
-        if ((context.gpsC.getOutStandingCmdsCount() == 0)
+        if ((context.mtkM.getHandler().getOutStandingCmdsCount() == 0)
                 && (context.logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
                 && (context.logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
             // Sending command on next timer adds some delay after
@@ -806,8 +815,8 @@ final class MTKLogDownloadHandler {
         } else if (context.logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
             getNextLogPart();
         } else if (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
-            if (context.gpsC.timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
-                context.gpsC.reqLogFlashStatus();
+            if (context.mtkM.getHandler().timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
+                context.mtkC.reqLogFlashStatus();
             }
         }
     }
@@ -822,7 +831,7 @@ final class MTKLogDownloadHandler {
         if (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
             switch (JavaLibBridge.toInt(s)) {
             case 1:
-                if (context.gpsC.isEraseOngoing()) {
+                if (context.mtkM.isEraseOngoing()) {
                     signalEraseDone();
                 }
                 if (context.forcedErase) {
@@ -848,7 +857,7 @@ final class MTKLogDownloadHandler {
      *                size of the data range requested
      */
     protected final void readLog(final int startAddr, final int size) {
-        context.gpsC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_Q_LOG + ","
                 + JavaLibBridge.unsigned2hex(startAddr, 8) + ","
                 + JavaLibBridge.unsigned2hex(size, 8));

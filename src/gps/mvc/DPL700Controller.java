@@ -22,14 +22,14 @@ public class DPL700Controller {
     private static final int C_DPL700_GETLOG = 2;
     private int DPL700_State = C_DPL700_OFF;
 
+    private final LogFile logFile = new LogFile();
     private final GPSLinkHandler handler;
-    private final MTKLogDownloadHandler mtkLogHandler; // Temporary (TODO: refactor).
+    //private final MTKLogDownloadHandler mtkLogHandler; // Temporary (TODO: refactor).
     /**
      * 
      */
-    public DPL700Controller(GPSLinkHandler handler, MTKLogDownloadHandler mtkLogHandler) {
+    public DPL700Controller(GPSLinkHandler handler) {
         this.handler = handler;
-        this.mtkLogHandler = mtkLogHandler;
     }
     
     
@@ -90,12 +90,12 @@ public class DPL700Controller {
                     if (!DPL700LogFileName.endsWith(".sr")) {
                         DPL700LogFileName += ".sr";
                     }
-                    mtkLogHandler.openNewLog(DPL700LogFileName, DPL700Card);
+                    logFile.openNewLog(DPL700LogFileName, DPL700Card);
                     try {
-                        mtkLogHandler.getLogFile().writeBytes(
+                        logFile.getLogFile().writeBytes(
                                 resp.getResponseBuffer(), 0,
                                 resp.getResponseSize());
-                        mtkLogHandler.getLogFile().close();
+                        logFile.getLogFile().close();
                     } catch (final Exception e) {
                         Generic.debug("", e);
                         // TODO: handle exception

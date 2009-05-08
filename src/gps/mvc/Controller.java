@@ -3,9 +3,15 @@
  */
 package gps.mvc;
 
+import gps.BT747Constants;
+import gps.GpsEvent;
 import gps.connection.GPSrxtx;
+import gps.log.GPSRecord;
+import gps.log.in.CommonIn;
 
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -17,12 +23,14 @@ import bt747.sys.interfaces.BT747Thread;
 public class Controller implements BT747Thread {
 
     private final Model gpsM;
+    private final MtkModel mtkM;
+    private final MtkController mtkC;
 
     private final GPSLinkHandler handler;
-    private final MTKLogDownloadHandler mtkLogHandler;
 
     public final static Controller getInstance(final GPSrxtx gpsRxTx) {
-        return Controller.getInstance(new Model(gpsRxTx));
+        final Model m = new Model(gpsRxTx);
+        return Controller.getInstance(m);
     }
 
     public final static Controller getInstance(final Model model) {
@@ -31,22 +39,117 @@ public class Controller implements BT747Thread {
 
     private Controller(final Model model) {
         gpsM = model;
-        handler = model.getHandler();
-        mtkLogHandler = model.getMtkLogHandler();
+        mtkM = gpsM.getMtkModel();
+        mtkC = new MtkController(mtkM);
+        handler = gpsM.getHandler();
     }
 
     public final Model getModel() {
         return gpsM;
     }
+    
+    public final MtkController getMtkController() {
+        return mtkC;
+    }
 
     private boolean eraseRequested;
+    
+    public final void setGpsDecode(final boolean gpsDecode) {
+        gpsM.setGpsDecode(gpsDecode);
+    }
+    
+    /**
+     * Check if the data is available and if it is not, requests it.
+     * 
+     * @param dataType
+     * @return
+     */
+    public final void setDataNeeded(final int dataType) {
+        if (handler.isConnected()) {
+            final int ts = Generic.getTimeStamp();
+            if (mtkM.isDataNeedsRequest(ts, dataType)) {
+                switch (dataType) {
+                case MtkModel.DATA_MEM_USED:
+                    mtkC.reqLogMemUsed();
+                    break;
+                case MtkModel.DATA_MEM_PTS_LOGGED:
+                    mtkC.reqLogMemPtsLogged();
+                    break;
+                case MtkModel.DATA_FLASH_TYPE:
+                    mtkC.reqFlashManuID();
+                    break;
+                case MtkModel.DATA_LOG_FORMAT:
+                    mtkC.reqLogFormat();
+                    break;
+                case MtkModel.DATA_MTK_VERSION:
+                    mtkC.reqDeviceVersion();
+                    break;
+                case MtkModel.DATA_MTK_RELEASE:
+                    mtkC.reqDeviceRelease();
+                    break;
+                case MtkModel.DATA_INITIAL_LOG:
+                    mtkC.reqInitialLogMode();
+                    break;
+                case MtkModel.DATA_LOG_STATUS:
+                    mtkC.reqLogStatus();
+                    break;
+                case MtkModel.DATA_LOG_VERSION:
+                    mtkC.reqMtkLogVersion();
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        if (Generic.isDebug() && (Generic.getDebugLevel() >= 2)) {
+            Generic.debug("Data request of " + dataType + " skipped");
+        }
+    }
+
+    
+    public final void reqDeviceInfo() {
+        setDataNeeded(MtkModel.DATA_MTK_RELEASE);
+        setDataNeeded(MtkModel.DATA_MTK_VERSION);
+        setDataNeeded(MtkModel.DATA_FLASH_TYPE);
+        setDataNeeded(MtkModel.DATA_LOG_VERSION);
+    }
+
+    public final void setDownloadTimeOut(final int downloadTimeOut) {
+        handler.setDownloadTimeOut(downloadTimeOut);
+    }
+
+    /** Get the current status of the device */
+    public final void reqStatus() {
+        setDataNeeded(MtkModel.DATA_LOG_FORMAT);
+        getLogCtrlInfo();
+        // getLogReasonStatus();
+        // getPowerSaveEnabled();
+        // getSBASEnabled();
+        // getDGPSMode();
+        // getDatumMode();
+        // getFixInterval();
+        mtkC.reqHoluxName(); // Mainly here to identify Holux device
+    }
+
+    public final void reqLogOnOffStatus() {
+        mtkC.reqLogStatus();
+    }
+
+    private final void getLogCtrlInfo() {
+        setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        setDataNeeded(MtkModel.DATA_MEM_USED);
+        setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
+        mtkC.reqLogOverwrite();
+    }
+
 
     /**
      * Erase the log.
      */
     public final void eraseLog() {
         eraseRequested = true;
-        gpsM.setEraseOngoing(true); // For popup
+        // TODO: do not change mtk model here.
+        mtkM.setEraseOngoing(true); // For popup
     }
 
     /**
@@ -55,7 +158,7 @@ public class Controller implements BT747Thread {
      */
     public final void stopErase() {
         eraseRequested = false;
-        mtkLogHandler.stopErase();
+        mtkC.getMtkLogHandler().stopErase();
     }
 
     /**
@@ -86,7 +189,7 @@ public class Controller implements BT747Thread {
      */
     private void checkNextAvailable() {
         int next = nextValueToCheck;
-        gpsM.setDataNeeded(next);
+        setDataNeeded(next);
         next += 1;
         if (next > MtkModel.DATA_LAST_INDEX) {
             next = 0;
@@ -118,7 +221,7 @@ public class Controller implements BT747Thread {
             nextRun = timeStamp + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
-                mtkLogHandler.notifyRun();
+                mtkC.getMtkLogHandler().notifyRun();
                 {
                     // local value
                     final DeviceOperationHandlerIF h = operationHandler;
@@ -145,17 +248,17 @@ public class Controller implements BT747Thread {
                 } while ((loopsToGo-- > 0));
                 if ((nextAvailableRun < timeStamp)
                         && (handler.getOutStandingCmdsCount() == 0)
-                        && !gpsM.isLogDownloadOnGoing()) {
+                        && !mtkC.getMtkLogHandler().isLogDownloadOnGoing()) {
                     if (eraseRequested) {
                         eraseRequested = false; // Erase request handled
-                        mtkLogHandler.eraseLog();
+                        mtkC.getMtkLogHandler().eraseLog();
                     }
                     nextAvailableRun = nextRun + 300;
                     checkNextAvailable();
                 }
             } else {
                 Generic.removeThread(this);
-                mtkLogHandler.notifyDisconnected();
+                mtkC.getMtkLogHandler().notifyDisconnected();
             }
         }
     }

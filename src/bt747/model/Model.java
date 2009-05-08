@@ -38,7 +38,7 @@ public class Model extends AppSettings implements GPSListener {
      * The gpsModel communicates with the GPS device and stores some
      * information regarding the state of the GPS device.
      */
-    private gps.mvc.Model gpsOldC;  // Previous model had both M and C.
+    private gps.mvc.Model gpsM;  // Previous model had both M and C.
     private gps.mvc.Controller gpsC;
     
     
@@ -47,7 +47,7 @@ public class Model extends AppSettings implements GPSListener {
      */
     private MtkModel mtkModel;
     
-    
+   
     /**
      * The low level communication class with the GPS device. Needed by the
      * gpsModel.
@@ -187,8 +187,8 @@ public class Model extends AppSettings implements GPSListener {
                 + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
         
-        gpsOldC = new gps.mvc.Model(gpsRxTx);
-        gpsC = gps.mvc.Controller.getInstance(gpsOldC);        
+        gpsM = new gps.mvc.Model(gpsRxTx);
+        gpsC = gps.mvc.Controller.getInstance(gpsM);        
         mtkModel = gpsC.getModel().getMtkModel();
         gpsC.getModel().addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
@@ -201,7 +201,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return The gpsModel instantiation.
      */
     protected final gps.mvc.Model gpsOldC() {
-        return gpsOldC;
+        return gpsM;
     }
 
     
@@ -211,7 +211,14 @@ public class Model extends AppSettings implements GPSListener {
     protected final gps.mvc.Controller gpsC() {
         return gpsC;
     }
-    
+
+    /**
+     * @return The gpsModel instantiation.
+     */
+    protected final gps.mvc.MtkController gpsMtkC() {
+        return gpsC.getMtkController();
+    }
+
     
     /**
      * @return The gpsModel instantiation.
@@ -240,7 +247,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return Get the number of commands waiting for a response.
      */
     public final int getOutstandingCommandsCount() {
-        return gpsOldC.getOutStandingCmdsCount();
+        return gpsM.getOutStandingCmdsCount();
     }
 
     /**
@@ -431,7 +438,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the startAddr
      */
     public final int getStartAddr() {
-        return gpsOldC.getStartAddr();
+        return gpsM.getStartAddr();
     }
 
     /**
@@ -441,7 +448,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the endAddr
      */
     public final int getEndAddr() {
-        return gpsOldC.getEndAddr();
+        return gpsM.getEndAddr();
     }
 
     /**
@@ -451,7 +458,7 @@ public class Model extends AppSettings implements GPSListener {
      *         the download progress bar.
      */
     public final boolean isDownloadOnGoing() {
-        return gpsOldC.isLogDownloadOnGoing();
+        return gpsM.isLogDownloadOnGoing();
     }
 
     /**
@@ -461,7 +468,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {
-        return gpsOldC.getNextReadAddr();
+        return gpsM.getNextReadAddr();
     }
 
     private int downloadMethod = Model.DOWNLOAD_SMART;
@@ -619,10 +626,15 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     public final int logMemUsefullSize() {
+        // TODO: should not need to call data needed here.
+        gpsC.setDataNeeded(MtkModel.DATA_FLASH_TYPE);
         return mtkModel.logMemUsefullSize();
     }
 
     public final int logFreeMemUsefullSize() {
+        // TODO: should not need to call data needed here.
+        gpsC.setDataNeeded(MtkModel.DATA_FLASH_TYPE);
+        gpsC.setDataNeeded(MtkModel.DATA_MEM_USED);
         return mtkModel.logFreeMemUsefullSize();
     }
 

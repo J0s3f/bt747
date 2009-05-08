@@ -91,7 +91,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
             gpsPort.setPort(0); // Should be bluetooth in WinCE
         }
 
-        GPSrxtx.setGpsPortInstance(gpsPort);
+        GPSrxtx.setDefaultGpsPortInstance(gpsPort);
 
         m = new Model();
         c = new AppController(m);

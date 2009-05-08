@@ -15,6 +15,7 @@
 package gps.model;
 
 import gps.BT747Constants;
+import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEAWriter;
 import gps.convert.Conv;
@@ -34,6 +35,12 @@ import bt747.sys.JavaLibBridge;
  * @author Mario De Weerd
  */
 public class IBlue747Model {
+
+    private static GPSPort modelPort;
+
+    public final static void setGpsPort(GPSPort port) {
+        modelPort = port;
+    }
 
     private int logFormat = 0x000215FF;// 0x3E;
 
@@ -56,7 +63,7 @@ public class IBlue747Model {
         JavaLibBridge
                 .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
-        GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
+        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
 
     }
 
@@ -81,7 +88,11 @@ public class IBlue747Model {
     }
 
     public void onStart() {
-        gpsRxTx = new GPSrxtx();
+        if (modelPort != null) {
+            gpsRxTx = new GPSrxtx(modelPort);
+        } else {
+            gpsRxTx = new GPSrxtx();
+        }
         gpsRxTx.setDefaults(20, 115200);
         gpsRxTx.openPort();
         // addTimer(10); // Palm minimum timer resolution= 10 ms
@@ -92,7 +103,7 @@ public class IBlue747Model {
             @Override
             public void run() {
                 try {
-                    if (gpsRxTx.isConnected()) {
+                    if (gpsRxTx.isConnected()) { // gpsRxTx.getGpsPort().readCheck()
                         lastResponse = (String[]) gpsRxTx.getResponse();
                         if (lastResponse != null) {
                             analyseNMEA(lastResponse);
@@ -109,6 +120,12 @@ public class IBlue747Model {
         tm.scheduleAtFixedRate(t, 100, 100);
     }
 
+    private static class MtkDataModel {
+        protected int logStatus = 256;
+    }
+    
+    private final MtkDataModel mtkData = new MtkDataModel();
+    
     public void replyMTK_Ack(final String[] p_nmea) {
         try {
             sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
@@ -170,7 +187,7 @@ public class IBlue747Model {
                         sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_LOG_STATUS + ","
-                                + "256"); // 9F
+                                + mtkData.logStatus); // 9F
                         // logging
                         // on/off
                         break;
@@ -245,6 +262,13 @@ public class IBlue747Model {
                     }
                 }
                 break;
+            case BT747Constants.PMTK_LOG_DISABLE:
+                mtkData.logStatus &= ~BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK;
+                break;
+            case BT747Constants.PMTK_LOG_ENABLE:
+                mtkData.logStatus |= BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK;
+                break;
+
             default:
                 // Nothing - unexpected
             }

@@ -627,7 +627,7 @@ public final class J2SEAppController extends J2SEController {
         try {
             gpsPort = new gps.connection.GPSRxTxPort();
             gpsPort.setPort(4);
-            GPSrxtx.setGpsPortInstance(gpsPort);
+            GPSrxtx.setDefaultGpsPortInstance(gpsPort);
         } catch (final Exception e) {
             e.printStackTrace();
         }
