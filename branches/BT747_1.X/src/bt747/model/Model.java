@@ -185,7 +185,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * @return The gpsModel instantiation.
      */
-    public final GPSstate gpsModel() {
+    protected final GPSstate gpsModel() {
         return gpsModel;
     }
 
@@ -370,6 +370,9 @@ public class Model extends AppSettings implements GPSListener {
         this.filterEndTime = filterEndTime;
     }
 
+    public final boolean isLoggerNeedsFormat() {
+        return gpsModel.isLoggerNeedsFormat();
+    }
     /**
      * Indicate that the log conversion started for the given log type.
      * 
