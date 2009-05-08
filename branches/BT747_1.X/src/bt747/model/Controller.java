@@ -50,7 +50,7 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario De Weerd
  * 
  */
-public class Controller {
+public class Controller implements ModelListener {
     /**
      * Fixed number indicating that the port number does not correspond to an
      * actual port.
@@ -92,13 +92,33 @@ public class Controller {
     }
 
     public void setModel(final Model model) {
+        if(m!=null) {
+            m.removeListener(this);
+        }
         m = model;
+        m.addListener(this);
     }
 
     public Model getModel() {
         return m;
     }
+    
+    /* (non-Javadoc)
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
+    public void modelEvent(final ModelEvent e) {
+        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+            if(m.gpsModel().isLoggingDisabled()) {
+                setAutoLog(true);
+            }
+        }
+        // TODO Auto-generated method stub
+    }
 
+    public final void setAutoLog(final boolean enable) {
+        m.gpsModel().setAutoLog(enable);
+    }
+    
     /**
      * Called when the Controller starts. Used for initialization.
      */

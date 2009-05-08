@@ -562,8 +562,8 @@ public class Model extends AppSettings implements GPSListener {
         return gpsModel.getFirmwareVersion();
     }
 
-    public final String getModel() {
-        return gpsModel.getModel();
+    public final String getModelStr() {
+        return gpsModel.getModelStr();
     }
 
     /**

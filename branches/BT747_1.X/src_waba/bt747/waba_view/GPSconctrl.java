@@ -162,7 +162,7 @@ public final class GPSconctrl extends Container implements ModelListener {
                 .setText(((m.getFirmwareVersion().length() != 0) ? Txt.getString(Txt.FIRMWARE)
                         : "")
                         + m.getFirmwareVersion());
-        String model = m.getModel();
+        String model = m.getModelStr();
         // model.replaceFirst("\?",Txt.getString(Txt.UNKNOWN));
         lbModel.setText(((model.length() != 0) ? Txt.getString(Txt.MODEL) : "") + model);
         lbFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Txt.getString(Txt.FLASHINFO)
