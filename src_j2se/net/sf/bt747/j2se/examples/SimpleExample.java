@@ -334,7 +334,7 @@ public class SimpleExample implements bt747.model.ModelListener {
      *                the command line arguments
      */
     public static void main(String args[]) {
-        Settings.setAppSettings(new String(new byte[2048]));
+        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
         java.awt.EventQueue.invokeLater(new Runnable() {
             private Model m = new Model();
             private Controller c = new Controller(m);

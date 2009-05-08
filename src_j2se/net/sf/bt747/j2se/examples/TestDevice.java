@@ -35,6 +35,7 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -473,7 +474,7 @@ public class TestDevice implements bt747.model.ModelListener {
                     }
                 });
 
-        Settings.setAppSettings(new String(new byte[2048]));
+        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
 
         java.awt.EventQueue.invokeLater(new Runnable() {
 

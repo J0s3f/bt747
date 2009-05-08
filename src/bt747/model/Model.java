@@ -223,7 +223,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * @return The gpsModel instantiation.
      */
-    protected final MtkModel mtkModel() {
+    public final MtkModel mtkModel() {
         return mtkModel;
     }
 

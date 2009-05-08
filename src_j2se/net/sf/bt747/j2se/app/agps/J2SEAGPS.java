@@ -26,7 +26,7 @@ public class J2SEAGPS {
     public static final byte[] getAGPS7d() {
         return getBytesFromUrl(TRANS_AGPS_7d);
     }
-    
+
     public static final byte[] getBytesFromUrl(String urlString) {
         byte[] result = null;
         try {
@@ -35,8 +35,8 @@ public class J2SEAGPS {
             urlc.setConnectTimeout(5000);
             urlc.setReadTimeout(5000);
             InputStream ins = urlc.getInputStream(); // To download
-            //OutputStream os = urlc.getOutputStream(); // To upload
-            ByteArrayOutputStream bout = new ByteArrayOutputStream(120*1024);
+            // OutputStream os = urlc.getOutputStream(); // To upload
+            ByteArrayOutputStream bout = new ByteArrayOutputStream(120 * 1024);
             byte[] buf = new byte[1024];
             while (true) {
                 int n = ins.read(buf);
@@ -50,7 +50,7 @@ public class J2SEAGPS {
             bout = null;
             ins = null;
         } catch (Exception e) {
-            Generic.debug("Problem downloading AGPS data");
+            Generic.debug("Problem downloading AGPS data", e);
         }
         return result;
     }

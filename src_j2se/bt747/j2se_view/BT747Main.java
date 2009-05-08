@@ -126,6 +126,7 @@ public class BT747Main extends javax.swing.JFrame implements
     //private FileTablePanel pnFilesToTagPanel;
     private FilesPanel pnFilesToTagPanel;
     private MyMap pnMap = new MyMap();
+    private AgpsPanel pnAgpsPanel;
 
     private final Component inScrollPane(final JPanel p) {
         JScrollPane sp;
@@ -214,6 +215,13 @@ public class BT747Main extends javax.swing.JFrame implements
             Generic.debug("During map setup", e);
             // TODO: handle exception
         }
+        
+        pnAgpsPanel = new AgpsPanel();
+        pnAgpsPanel.init(c);
+        tabbedPanelAll
+        .insertTab(
+                getString("BT747Main.AgpsPanel.TabConstraints.tabTitle"),
+                null /*getIcon("icon_devicesettungs.gif")*/, inScrollPane(pnAgpsPanel), null, 7);
         // System.err.println(tabbedPanelAll.getPreferredSize());
         // tabbedPanelAll.invalidate();
         // pnBottomInformation.invalidate();
