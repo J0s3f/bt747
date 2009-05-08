@@ -185,7 +185,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * @return The gpsModel instantiation.
      */
-    protected final GPSstate gpsModel() {
+    public final GPSstate gpsModel() {
         return gpsModel;
     }
 

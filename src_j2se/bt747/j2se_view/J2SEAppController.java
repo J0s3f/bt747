@@ -49,8 +49,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
-
 import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
@@ -88,7 +86,47 @@ public final class J2SEAppController extends J2SEController {
 
     public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
-    J2SEAppModel m;
+    private J2SEAppModel m;
+    
+    /* (non-Javadoc)
+     * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
+     */
+    @Override
+    public void modelEvent(ModelEvent e) {
+        // TODO Auto-generated method stub
+        super.modelEvent(e);
+        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+            if(!loggerNeedsFormatQuestionAsked
+                    && m.gpsModel().isLoggerNeedsFormat()) {
+                loggerNeedsFormatQuestionAsked = true;
+                askLoggerNeedsFormat();
+            }
+        } if(e.getType() == ModelEvent.CONNECTED) {
+            resetValuesAfterConnect();
+        }
+    }
+    
+    private boolean loggerNeedsFormatQuestionAsked;
+    private final void resetValuesAfterConnect() {
+        loggerNeedsFormatQuestionAsked = false;
+    }
+
+    private void askLoggerNeedsFormat() {
+        int choice;
+        
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("LOGGER_NEEDS_FORMAT_TEXT"),
+                getString("LOGGER_NEEDS_FORMAT_TITLE"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, C_ERASE_OR_CANCEL, C_ERASE_OR_CANCEL[1]);
+
+        if (choice == 0) {
+            eraseLog();
+        }
+
+    }
+    
+
 
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/" + iconPath);
@@ -556,7 +594,7 @@ public final class J2SEAppController extends J2SEController {
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)
                 || (java.lang.System.getProperty("bt747_settings") != null)) {
-            Settings.setAppSettings(new String(new byte[2048]));
+            Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
             int readLength = 0;
 
             FileInputStream preferencesFile = null;
@@ -564,7 +602,7 @@ public final class J2SEAppController extends J2SEController {
                 preferencesFile = new FileInputStream(CONFIG_FILE_NAME);
                 readLength = preferencesFile.available();
                 if (readLength >= 100) {
-                    final byte[] appSettingsArray = new byte[2048];
+                    final byte[] appSettingsArray = new byte[AppSettings.SIZE];
 
                     preferencesFile.read(appSettingsArray, 0, readLength);
                     Settings.setAppSettings(new String(appSettingsArray));
