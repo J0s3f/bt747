@@ -97,7 +97,7 @@ public final class J2SEAppController extends J2SEController {
         super.modelEvent(e);
         if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
             if(!loggerNeedsFormatQuestionAsked
-                    && m.gpsModel().isLoggerNeedsFormat()) {
+                    && m.isLoggerNeedsFormat()) {
                 loggerNeedsFormatQuestionAsked = true;
                 askLoggerNeedsFormat();
             }
