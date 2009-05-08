@@ -5,7 +5,6 @@ package net.sf.bt747.test;
 
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
-import gps.model.IBlue747Model;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;

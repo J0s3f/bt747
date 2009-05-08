@@ -12,7 +12,7 @@
 // *** IS ASSUMED BY THE USER. See the GNU General Public License ***
 // *** for more details. ***
 // *** *********************************************************** ***
-package gps.model;
+package net.sf.bt747.test;
 
 import gps.BT747Constants;
 import gps.connection.GPSPort;
@@ -27,7 +27,6 @@ import java.util.TimerTask;
 
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
-import bt747.sys.JavaLibBridge;
 
 /**
  * Implement a model of the BT747 (to run on PC).
@@ -121,7 +120,7 @@ public class IBlue747Model {
     }
 
     private static class MtkDataModel {
-        protected int logStatus = 256;
+        protected int logStatus = 1284;
     }
     
     private final MtkDataModel mtkData = new MtkDataModel();
