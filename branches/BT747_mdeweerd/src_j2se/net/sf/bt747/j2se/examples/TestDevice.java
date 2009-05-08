@@ -59,7 +59,7 @@ public class TestDevice implements bt747.model.ModelListener {
         /* Declare the implementation */
         JavaLibBridge.setJavaLibImplementation(imp);
         /* Set the serial port class instance to use (also system specific). */
-        GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
+        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
     }
 
     /**

@@ -62,6 +62,14 @@ public final class GPSLinkHandler {
 
     private static final int C_MIN_TIME_BETWEEN_CMDS = 30;
 
+    /**
+     * 
+     */
+    public GPSLinkHandler() {
+        
+    }
+    
+    
     public final void setGPSRxtx(final GPSrxtx gpsRxTx) {
         if (this.gpsRxTx != null) {
             // TODO Remove myself as listener
@@ -97,6 +105,34 @@ public final class GPSLinkHandler {
             cmdBuffersAccess.up();
         }
     }
+
+    private boolean gpsDecode = true;
+    /**
+     * @return Returns the gpsDecode.
+     */
+    public final boolean isGpsDecode() {
+        return gpsDecode;
+    }
+
+    public final void setGpsDecode(boolean isGpsDecode) {
+        gpsDecode = isGpsDecode;
+        updateIgnoreNMEA();
+    }
+
+    private boolean logDownloadOngoing;
+    private final boolean isLogDownloadOngoing() {
+        return logDownloadOngoing;
+    }
+    
+    public final void setLogOrEraseOngoing(final boolean onGoing) {
+        logDownloadOngoing = onGoing;
+        updateIgnoreNMEA();
+    }
+    
+    public final void updateIgnoreNMEA() {
+        setIgnoreNMEA((!gpsDecode) || isLogDownloadOngoing());
+    }
+
 
     public final void setIgnoreNMEA(final boolean ignoreNMEA) {
         NMEADecoderState.setIgnoreNMEA(ignoreNMEA);

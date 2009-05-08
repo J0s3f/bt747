@@ -36,7 +36,6 @@ public final class GPSrxtx {
      * 
      */
     public GPSrxtx() {
-        // TODO Auto-generated constructor stub
         this(defaultGpsPort);
     }
     

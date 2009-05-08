@@ -1,16 +1,16 @@
 /**
  * 
  */
-package net.sf.bt747.gps.connection.test;
+package net.sf.bt747.test;
+
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
+import gps.model.IBlue747Model;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import net.sf.bt747.test.MyVirtualPort;
-import gps.connection.GPSrxtx;
-import gps.connection.MtkBinDecoderState;
-import gps.model.IBlue747Model;
-
+import bt747.j2se_view.BT747Main;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.JavaLibImplementation;
 
@@ -18,11 +18,12 @@ import bt747.sys.interfaces.JavaLibImplementation;
  * @author Mario
  * 
  */
-public class TestMtkBinDecoderState {
+public class TestModelConnect {
     final static PipedInputStream appIs = new PipedInputStream();
     final static PipedInputStream modelIs = new PipedInputStream();
     static PipedOutputStream appOs;
     static PipedOutputStream modelOs;
+    static GPSPort appPort;
 
     /**
      * Initialize the bridge to the platform. Required for BT747 that runs on
@@ -38,32 +39,22 @@ public class TestMtkBinDecoderState {
         try {
             appOs = new PipedOutputStream(modelIs);
             modelOs = new PipedOutputStream(appIs);
-//            final MyVirtualPort modelPort = new MyVirtualPort(modelIs,
-//                    modelOs);
-            final MyVirtualPort appPort = new MyVirtualPort(appIs, appOs);
+            final MyVirtualPort modelPort = new MyVirtualPort(modelIs,
+                    modelOs);
+            appPort = new MyVirtualPort(appIs, appOs);
             GPSrxtx.setDefaultGpsPortInstance(appPort);
-            //IBlue747Model.setGpsPort(modelPort);
+            IBlue747Model.setGpsPort(modelPort);
         } catch (Exception e) {
             System.err.println("Problem setting up ports");
             e.printStackTrace();
             // TODO: handle exception
         }
     }
-
-    private static final byte[] testRcv = { (byte) 0x04, (byte) 0x24,
-            (byte) 0x0c, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0xfd,
-            (byte) 0x00, (byte) 0x03, (byte) 0xf3, (byte) 0x0d, (byte) 0x0a };
-
-    public static void main(String[] args) {
-        GPSrxtx gpsRxTx = new GPSrxtx();
-        gpsRxTx.openPort();
-        try { 
-        modelOs.write(testRcv);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        MtkBinDecoderState mtkState = new MtkBinDecoderState();
-        mtkState.enterState(gpsRxTx);
-        System.out.println(mtkState.getResponse(gpsRxTx));
+    
+    public static void main(final String args[]) {
+        IBlue747Model.main(new String[0]);
+        GPSrxtx.setDefaultGpsPortInstance(appPort);
+        BT747Main.main(args);
     }
+
 }

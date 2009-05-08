@@ -63,7 +63,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
      * @see gps.connection.DecoderInterface#getResponse()
      */
     public final Object getResponse(final GPSrxtx context) {
-        final GPSPort gpsPort = context.getGpsPortInstance();
+        final GPSPort gpsPort = context.getGpsPort();
         boolean continueReading;
         continueReading = gpsPort.isConnected();
 
