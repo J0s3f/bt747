@@ -244,7 +244,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
         case ModelEvent.UPDATE_MTK_VERSION:
         case ModelEvent.UPDATE_MTK_RELEASE:
-            txtModel.setText(m.getModel());
+            txtModel.setText(m.getModelStr());
             String fwString;
             fwString = "";
             lbFirmWare.setToolTipText("");

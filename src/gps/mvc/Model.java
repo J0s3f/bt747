@@ -67,9 +67,9 @@ public class Model {
     private int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
     private boolean loggingActive = false;
-    public boolean loggerIsFull = false;
-    public boolean loggerNeedsInit = false;
-    public boolean loggerIsDisabled = false;
+    private boolean loggerIsFull = false;
+    private boolean loggerNeedsInit = false;
+    private boolean loggerIsDisabled = false;
 
     private boolean logFullOverwrite = false; // When true, overwrite log
     // when
@@ -388,6 +388,16 @@ public class Model {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_LOG_STATUS_STR);
+    }
+
+    public final void setAutoLog(final boolean enable) {
+        if (enable) {
+            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+                    + "," + BT747Constants.PMTK_LOG_ENABLE);
+        } else {
+            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+                    + "," + BT747Constants.PMTK_LOG_DISABLE);
+        }
     }
 
     /**
@@ -1016,7 +1026,7 @@ public class Model {
         return BT747Constants.modelName(Conv.hex2Int(model), device);
     }
 
-    public final String getModel() {
+    public final String getModelStr() {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
     }
 
@@ -1509,6 +1519,10 @@ public class Model {
 
     public final boolean isLoggingActive() {
         return loggingActive;
+    }
+
+    public final boolean isLoggingDisabled() {
+        return loggerIsDisabled;
     }
 
     private boolean eraseOngoing = false;

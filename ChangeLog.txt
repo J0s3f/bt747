@@ -1,5 +1,8 @@
 Version 1.68.16
 * Italian translation update.
+* Forcing autolog (a few users had trouble with this setting being changed
+  on their device for mysterious reason.
+  Autolog corresponds to logging for time, speed or distance reason.
 
 Version 1.68.15
 * Fixed problem when writing back files "in place" with no position.
