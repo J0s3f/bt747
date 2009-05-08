@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.log.GPSFilter;
@@ -44,6 +45,7 @@ import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
+import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -1712,5 +1714,18 @@ public class Controller implements ModelListener {
     
     public final void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
         getGpsC().setDeviceOperationHandler(h);
+    }
+    
+    public final void setAgpsData(byte[] agpsData) {
+        // Initialise the handler (will respond/send data).
+        AgpsUploadHandler handler = new AgpsUploadHandler();
+        handler.setAgpsData(agpsData);
+        
+        //TODO: Move part of this to the MtkController.
+        // Set the handler
+        setDeviceOperationHandler(handler);
+        // Enter binary sending so that the handler can do his work.
+        sendCmd(new SetMtkBinModeCommand());
+
     }
 }

@@ -18,18 +18,19 @@ public class MyVirtualPort extends GPSPort {
     private final java.io.InputStream is;
     private final java.io.OutputStream os;
 
-    
-    public MyVirtualPort(java.io.InputStream is, java.io.OutputStream os) {
+    public MyVirtualPort(final java.io.InputStream is,
+            final java.io.OutputStream os) {
         this.is = is;
-        this.os =os;
+        this.os = os;
     }
+
     /*
      * (non-Javadoc)
      * 
      * @see gps.connection.GPSPort#write(java.lang.String)
      */
     @Override
-    public void write(String s) {
+    public void write(final String s) {
         write(s.getBytes());
         // TODO Auto-generated method stub
 
@@ -41,10 +42,10 @@ public class MyVirtualPort extends GPSPort {
      * @see gps.connection.GPSPort#write(byte[])
      */
     @Override
-    public void write(byte[] b) {
+    public void write(final byte[] b) {
         try {
             os.write(b);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Generic.debug("MyPort write", e);
         }
 
@@ -59,7 +60,7 @@ public class MyVirtualPort extends GPSPort {
     public int readCheck() {
         try {
             return is.available();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Generic.debug("MyPort available", e);
         }
         return 0;
@@ -72,10 +73,10 @@ public class MyVirtualPort extends GPSPort {
      * @see gps.connection.GPSPort#readBytes(byte[], int, int)
      */
     @Override
-    public int readBytes(byte[] b, int start, int max) {
+    public int readBytes(final byte[] b, final int start, final int max) {
         try {
             return is.read(b, start, max);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Generic.debug("MyPort read", e);
         }
         return 0;
