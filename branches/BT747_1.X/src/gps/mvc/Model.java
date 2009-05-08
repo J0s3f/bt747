@@ -175,6 +175,10 @@ public class Model {
             dataRequested[i] = ts;
         }
     }
+    
+    public final boolean isLoggerNeedsFormat() {
+        return loggerNeedsInit;
+    }
 
     private static final int DATA_TIMEOUT = 3500;
 

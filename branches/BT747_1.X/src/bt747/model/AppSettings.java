@@ -451,7 +451,8 @@ public class AppSettings {
             /* fall through */
         case 37:
             // New field is coded on 4 byte (8 chars)
-            setIntOpt(AppSettings.FILETIMEOFFSET, getIntOpt(AppSettings.FILETIMEOFFSETOLD));
+            setIntOpt(AppSettings.FILETIMEOFFSET,
+                    getIntOpt(AppSettings.FILETIMEOFFSETOLD));
             setStringOpt(AppSettings.VERSION, "0.38");
             /* fall through */
         default:
@@ -1168,12 +1169,13 @@ public class AppSettings {
 
     private final void setFloatOpt(final int eventType, final float src,
             final int idx, final int size) {
-        setOpt(eventType, JavaLibBridge.unsigned2hex(JavaLibBridge.toIntBitwise(src),
-                size), idx, size);
+        setOpt(eventType, JavaLibBridge.unsigned2hex(JavaLibBridge
+                .toIntBitwise(src), size), idx, size);
     }
 
     private final float getFloatOpt(final int idx, final int size) {
-        return JavaLibBridge.toFloatBitwise(Conv.hex2Int(getStringOpt(idx, size)));
+        return JavaLibBridge.toFloatBitwise(Conv.hex2Int(getStringOpt(idx,
+                size)));
     }
 
     private final String getStringOpt(final int idx, final int size) {
@@ -1454,14 +1456,18 @@ public class AppSettings {
     private static final int C_FILETIMEOFFSET_IDX = AppSettings.C_DOWNLOAD_DEVICE_IDX
             + AppSettings.C_DOWNLOAD_DEVICE_SIZE;
     private static final int C_FILETIMEOFFSET_SIZE = 8;
-    private static final int C_NEXT_IDX = AppSettings.C_FILETIMEOFFSET_IDX
-    + AppSettings.C_FILETIMEOFFSET_SIZE;
-    
+    private static final int C_AGPSURL_IDX = AppSettings.C_FILETIMEOFFSET_IDX
+            + AppSettings.C_FILETIMEOFFSET_SIZE;
+    private static final int C_AGPSURL_SIZE = 256;
+    private static final int C_NEXT_IDX = AppSettings.C_AGPSURL_IDX
+            + AppSettings.C_AGPSURL_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
             + AppSettings.C_NEXT_SIZE;
+    
+    public static int SIZE = C_NEW_NEXT_IDX;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -1599,15 +1605,18 @@ public class AppSettings {
                     AppSettings.C_TRKSEP_SIZE },
             { AppSettings.INT, AppSettings.LOGAHEAD,
                     AppSettings.C_LOGAHEAD_IDX, AppSettings.C_LOGAHEAD_SIZE },
-                    { AppSettings.BOOL, AppSettings.GPX_LINK_INFO,
-                        AppSettings.C_GPX_LINK_INFO_IDX, AppSettings.C_GPX_LINK_INFO_SIZE },
-                        { AppSettings.BOOL, AppSettings.IS_GPX_1_1,
-                            AppSettings.C_IS_GPX_1_1_IDX, AppSettings.C_IS_GPX_1_1_SIZE },
-                        { AppSettings.INT, AppSettings.DOWNLOAD_DEVICE,
-                            AppSettings.C_DOWNLOAD_DEVICE_IDX, AppSettings.C_DOWNLOAD_DEVICE_SIZE },
-                            { AppSettings.INT, AppSettings.FILETIMEOFFSETOLD,
-                                AppSettings.C_FILETIMEOFFSETOLD_IDX,
-                                AppSettings.C_FILETIMEOFFSETOLD_SIZE },
+            { AppSettings.BOOL, AppSettings.GPX_LINK_INFO,
+                    AppSettings.C_GPX_LINK_INFO_IDX,
+                    AppSettings.C_GPX_LINK_INFO_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_GPX_1_1,
+                    AppSettings.C_IS_GPX_1_1_IDX,
+                    AppSettings.C_IS_GPX_1_1_SIZE },
+            { AppSettings.INT, AppSettings.DOWNLOAD_DEVICE,
+                    AppSettings.C_DOWNLOAD_DEVICE_IDX,
+                    AppSettings.C_DOWNLOAD_DEVICE_SIZE },
+            { AppSettings.INT, AppSettings.FILETIMEOFFSETOLD,
+                    AppSettings.C_FILETIMEOFFSETOLD_IDX,
+                    AppSettings.C_FILETIMEOFFSETOLD_SIZE },
     // End of list
     };
 
