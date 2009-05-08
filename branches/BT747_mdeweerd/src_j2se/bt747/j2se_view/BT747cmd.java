@@ -38,6 +38,7 @@ import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -187,7 +188,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     public BT747cmd(final Model m, final J2SEController c,
             final OptionSet options) {
-        Settings.setAppSettings(new String(new byte[2048]));
+        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
         setController(c);
         setModel(m);
         handleOptions(options);
@@ -1284,7 +1285,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     // // TODO: handle exception
     // }
     //
-    // Settings.setAppSettings(new String(new byte[2048]));
+    // Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
     // m.init();
     // }
 

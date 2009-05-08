@@ -12,6 +12,7 @@ IMPROVEMENTS
 (Things not very visible to the user).
 * Detect power up/rest of device (Initial PMTK010) and use it to rerequest all the values.
 * More precise height conversion (at least on PC).
+* Need to indicate that the device needs formatting in all setups (J2ME, PDA).
 
 FEATURES
 
@@ -39,7 +40,7 @@ Application
      Easy configurations
         (On foot,
          By car,
-         Personal onstraints
+         Personal ocnstraints
            [est. travel distance, travel time, precision
             and determine log conditions from that]
 * Incremental download of 'overwrite' data by appending to existing file.
@@ -54,6 +55,7 @@ Device
 Tracks
 * Allow changing data in J2SE gui.
 * Allow saving data from the J2SE gui table(s).
+* Allow color configuration.
 
 Tagging
 * Allow tagging using the exiftool.
@@ -62,3 +64,7 @@ Map
 * Add scale to map.
 * Use specific icons according to the waypoint type.
 * Add google map - the legal way (integrate a browser).
+* Add statistics for the path:
+   - traveled distance since start
+   - traveled distance to end
+   

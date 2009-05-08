@@ -3,7 +3,6 @@
  */
 package gps.mvc;
 
-import sun.security.action.GetLongAction;
 import gps.GpsEvent;
 
 import bt747.sys.File;

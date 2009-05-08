@@ -295,7 +295,7 @@ public final class AppController extends Controller {
                 || (bt747.sys.Settings.getAppSettings().length() < 100)
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
         ) {
-            bt747.sys.Settings.setAppSettings(new String(new byte[2048]));
+            bt747.sys.Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
 
             if (isWin32LikeDevice()
             // #if RXTX ||java.lang.System.getProperty("os.name")
@@ -312,7 +312,7 @@ public final class AppController extends Controller {
                     preferencesFile = new File(CONFIG_FILE_NAME, File.READ_ONLY);
                     readLength = preferencesFile.getSize();
                     if (readLength >= 100) {
-                        byte[] appSettingsArray = new byte[2048];
+                        byte[] appSettingsArray = new byte[AppSettings.SIZE];
 
                         preferencesFile.readBytes(appSettingsArray, 0,
                                 readLength);

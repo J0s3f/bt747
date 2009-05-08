@@ -1476,6 +1476,8 @@ public class AppSettings {
     private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
             + AppSettings.C_NEXT_SIZE;
 
+    public static int SIZE = C_NEW_NEXT_IDX;
+
     private static final int[][] paramsList =
     // Type, idx, start, size
     {

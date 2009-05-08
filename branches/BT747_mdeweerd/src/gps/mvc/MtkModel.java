@@ -52,7 +52,7 @@ public class MtkModel {
 
     private boolean loggingActive = false;
     public boolean loggerIsFull = false;
-    public boolean loggerNeedsInit = false;
+    private boolean loggerNeedsInit = false;
     private boolean loggerIsDisabled = false;
 
     private boolean logFullOverwrite = false; // When true, overwrite log
@@ -776,6 +776,10 @@ public class MtkModel {
      */
     public final boolean isLoggingDisabled() {
         return loggerIsDisabled;
+    }
+    
+    public final boolean isLoggerNeedsFormat() {
+        return loggerNeedsInit;
     }
 
     public final String getFirmwareVersion() {

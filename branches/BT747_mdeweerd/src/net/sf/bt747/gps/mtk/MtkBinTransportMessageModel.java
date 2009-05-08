@@ -136,8 +136,8 @@ public class MtkBinTransportMessageModel {
      * (non-Javadoc)
      * 
      * @see java.lang.Object#toString()
+     * @Override
      */
-    @Override
     public String toString() {
         // Intended for debugging.
         final StringBuffer rec = new StringBuffer(50);
