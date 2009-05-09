@@ -201,7 +201,7 @@
  	      -keep public class * implements bt747.lang.TxtInterface
           -keep public class * extends gps.connection.GPSPort
 	      -keep public class * {
-			public static void setGpsPortInstance(gps.connection.GPSPort);
+			public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
 		  }
 	      -keep public class bt747.Version { *; }
           -keepclasseswithmembers public class * {
@@ -445,7 +445,7 @@
               -keep public class * implements bt747.lang.TxtInterface
               -keep public class * extends gps.connection.GPSPort
               -keep public class * {
-                public static void setGpsPortInstance(gps.connection.GPSPort);
+                public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
               }
               -keep public class bt747.Version { *; }
             </proguard>
@@ -576,7 +576,7 @@
             public *;
         }
                         -keep public class * {
-	                       public static void setGpsPortInstance(gps.connection.GPSPort);
+	                       public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
 	                    }
                         -keep public class gps.connection.GPSPort  { *; }
                </proguard>
@@ -703,7 +703,7 @@
  		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort
     	        -keep public class * {
-    	          public static void setGpsPortInstance(gps.connection.GPSPort);
+    	          public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
     	        }
 			    -keep public class bt747.Version { *; }
                 -keep public interface bt747.interfaces.* {

@@ -38,16 +38,14 @@ public class Model extends AppSettings implements GPSListener {
      * The gpsModel communicates with the GPS device and stores some
      * information regarding the state of the GPS device.
      */
-    private gps.mvc.Model gpsM;  // Previous model had both M and C.
+    private gps.mvc.Model gpsM; // Previous model had both M and C.
     private gps.mvc.Controller gpsC;
-    
-    
+
     /**
      * The mtkModel is the model specific for mtk devices.
      */
     private MtkModel mtkModel;
-    
-   
+
     /**
      * The low level communication class with the GPS device. Needed by the
      * gpsModel.
@@ -170,7 +168,7 @@ public class Model extends AppSettings implements GPSListener {
      * Advanced log filters.
      */
     private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[Model.C_NBR_FILTERS];
-    
+
     /**
      * The default constructor of the model.
      */
@@ -183,20 +181,20 @@ public class Model extends AppSettings implements GPSListener {
         // Initialise times
         filterStartTime = (JavaLibBridge.getDateInstance(1, 1, 1983)
                 .dateToUTCepoch1970());
-        filterEndTime = (JavaLibBridge.getDateInstance()).dateToUTCepoch1970()
+        filterEndTime = (JavaLibBridge.getDateInstance())
+                .dateToUTCepoch1970()
                 + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
-        
+
         gpsM = new gps.mvc.Model(gpsRxTx);
-        gpsC = gps.mvc.Controller.getInstance(gpsM);        
+        gpsC = gps.mvc.Controller.getInstance(gpsM);
         mtkModel = gpsC.getModel().getMtkModel();
         gpsC.getModel().addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
     }
 
-    
     /* TODO: This is here during refactoring - should be in controller later */
-    
+
     /**
      * @return The gpsModel instantiation.
      */
@@ -204,7 +202,6 @@ public class Model extends AppSettings implements GPSListener {
         return gpsM;
     }
 
-    
     /**
      * @return The gpsModel instantiation.
      */
@@ -219,7 +216,6 @@ public class Model extends AppSettings implements GPSListener {
         return gpsC.getMtkController();
     }
 
-    
     /**
      * @return The gpsModel instantiation.
      */
@@ -541,6 +537,16 @@ public class Model extends AppSettings implements GPSListener {
      */
     public final boolean isLoggingActive() {
         return mtkModel.isLoggingActive();
+    }
+
+    /**
+     * Value provided by the logger indicating that the device needs to be
+     * initialised/formatted.
+     * 
+     * @return
+     */
+    public final boolean isLoggerNeedsFormat() {
+        return mtkModel.isLoggerNeedsFormat();
     }
 
     /**
