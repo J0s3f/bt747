@@ -221,8 +221,6 @@ public final class J2SEAppController extends J2SEController {
      *                The model to associate with this controller.
      */
     public J2SEAppController(final J2SEAppModel model) {
-        initGpsPort();
-
         m = model;
         c = this; // Temporary solution until application controller methods
 
@@ -654,18 +652,6 @@ public final class J2SEAppController extends J2SEController {
             os.write(Settings.getAppSettings().getBytes(), 0, Settings
                     .getAppSettings().length());
             os.close();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initGpsPort() {
-        GPSPort gpsPort;
-
-        try {
-            gpsPort = new gps.connection.GPSRxTxPort();
-            gpsPort.setPort(4);
-            GPSrxtx.setDefaultGpsPortInstance(gpsPort);
         } catch (final Exception e) {
             e.printStackTrace();
         }
