@@ -112,7 +112,8 @@ public final class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         // UIManager.init(midlet);
-        UIManager.setTheme(new BlueTheme(getScreenHeight(),getScreenWidth()));
+        UIManager
+                .setTheme(new BlueTheme(getScreenHeight(), getScreenWidth()));
 
         // Set the title.
         setTitle("MTK Logger Control V"
@@ -124,8 +125,8 @@ public final class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(ScreenFactory.LOGGERSTATUSSCREEN, c,
-                this, this);
+        loggerInfoScreen = new DelayedDialog(
+                ScreenFactory.LOGGERSTATUSSCREEN, c, this, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
@@ -139,8 +140,8 @@ public final class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new DelayedDialog(ScreenFactory.LOGFIELDSELECTSCREEN,
-                c, this, this);
+        logFieldSelectScreen = new DelayedDialog(
+                ScreenFactory.LOGFIELDSELECTSCREEN, c, this, this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -222,6 +223,9 @@ public final class MainScreen extends Dialog implements ModelListener {
         });
 
         rootMenu.appendSubmenu(subMenu);
+
+        rootMenu.appendMenuOption("AGPS", new DelayedDialog(
+                ScreenFactory.AGPSSCREEN, c, this, this));
 
         m().addListener(this);
     }

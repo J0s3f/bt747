@@ -43,14 +43,14 @@ public class AppController extends Controller {
     }
 
     private void appInit() {
-        GPSrxtx.setGpsPortInstance(new BluetoothGPS());
+        GPSrxtx.setDefaultGpsPortInstance(new BluetoothGPS());
         initAppSettings();
         setBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD, true);
         // TODO: Should load settings for Model^
     }
 
     private void initAppSettings() {
-        Settings.setAppSettings(new String(new byte[2048]));
+        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
         RecordStore recordStore;
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
