@@ -24,7 +24,7 @@
  * debug library) collections-superwaba.jar (if the libBT747 is a debug
  * library).
  */
-package net.sf.bt747.j2se.examples;
+package net.sf.bt747.j2se.app.examples;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
