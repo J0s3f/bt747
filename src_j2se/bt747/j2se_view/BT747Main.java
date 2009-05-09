@@ -15,7 +15,6 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
-import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 
 import java.awt.Component;
@@ -64,8 +63,10 @@ public class BT747Main extends javax.swing.JFrame implements
         JavaLibBridge
                 .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
-        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
-    }
+        if (!GPSrxtx.hasDefaultPortInstance()) {
+            GPSrxtx
+                    .setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        }    }
     
     /**
      * 
@@ -411,7 +412,7 @@ public class BT747Main extends javax.swing.JFrame implements
     public void windowOpened(final WindowEvent e) {
     }
 
-    boolean btConnectFunctionIsConnect = true;
+    private boolean btConnectFunctionIsConnect = true;
 
     private void updateMapType() {
         try {
@@ -473,8 +474,7 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
 
         case ModelEvent.CONNECTED:
-            btConnect.setText(getString("Disconnect"));
-            btConnectFunctionIsConnect = false;
+            updateConnectFunction(false);
             // TODO: Find the way to do this on tab entry.
             c.reqHoluxName();
             c.reqFlashUserOption();
@@ -494,8 +494,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
             break;
         case ModelEvent.DISCONNECTED:
-            btConnect.setText(getString("Connect"));
-            btConnectFunctionIsConnect = true;
+            updateConnectFunction(true);
             break;
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
         case ModelEvent.LOG_DOWNLOAD_DONE:
@@ -554,6 +553,17 @@ public class BT747Main extends javax.swing.JFrame implements
         }
     }
 
+    private final void updateConnectFunction(final boolean isButtonConnect) {
+        String btText;
+        if(isButtonConnect) {
+            btText = getString("Disconnect");
+        } else {
+            btText = getString("Connect");
+        }
+        btConnect.setText(btText);
+        btConnectFunctionIsConnect = isButtonConnect;
+
+    }
     private PositionTablePanel trackPanel = null;
     private PositionTablePanel waypointPanel = null;
 
@@ -1101,7 +1111,6 @@ public class BT747Main extends javax.swing.JFrame implements
             openPort(cbPortName.getSelectedItem().toString());
         } else {
             c.closeGPS();
-            ;
         }
     }//GEN-LAST:event_btConnectActionPerformed
 

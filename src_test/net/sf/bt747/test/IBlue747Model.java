@@ -62,7 +62,10 @@ public class IBlue747Model {
         JavaLibBridge
                 .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
-        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        if (!GPSrxtx.hasDefaultPortInstance()) {
+            GPSrxtx
+                    .setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        }
 
     }
 

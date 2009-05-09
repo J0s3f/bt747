@@ -69,11 +69,15 @@ public final class GPSrxtx {
     private final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    public static void setDefaultGpsPortInstance(final GPSPort portInstance) {
+    public static final void setDefaultGpsPortInstance(final GPSPort portInstance) {
         GPSrxtx.defaultGpsPort = portInstance;
     }
+    
+    public static final boolean hasDefaultPortInstance() {
+        return GPSrxtx.defaultGpsPort != null;
+    }
 
-    protected GPSPort getGpsPort() {
+    protected final GPSPort getGpsPort() {
         return gpsPort;
     }
 
