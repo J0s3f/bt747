@@ -461,7 +461,7 @@ public class AppSettings {
             /* fall through */
         case 38:
             setStringOpt(AppSettings.AGPSURL,
-                    "ftp://login:passwd/siteURL.com/MTK7d.EPO");
+                    "ftp://login:passwd@siteURL.com/MTK7d.EPO");
             setStringOpt(AppSettings.VERSION, "0.39");
             /* fall through */
         default:
