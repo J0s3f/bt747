@@ -16,7 +16,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.maven.ide.eclipse.launchconfig.classpathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="net.sf.bt747.j2se.examples.SimpleExample"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="net.sf.bt747.j2se.app.examples.SimpleExample"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT747"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.maven.ide.eclipse.launchconfig.sourcepathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.library.path=${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/${system_property:path.separator}${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/"/>
