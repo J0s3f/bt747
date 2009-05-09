@@ -15,6 +15,8 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -55,11 +57,16 @@ public class BT747Main extends javax.swing.JFrame implements
     /**
      * Initialize the lower level interface class. Needed for BT747 to work.
      */
+    /**
+     * Initialize the lower level interface class. Needed for BT747 to work.
+     */
     static {
         JavaLibBridge
                 .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+        // Set the serial port class instance to use (also system specific).
+        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
     }
-
+    
     /**
      * 
      */
