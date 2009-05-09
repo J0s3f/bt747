@@ -34,7 +34,8 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import gps.GpsEvent;
-import gps.connection.*;
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
 import net.sf.bt747.waba.system.WabaJavaTranslations;
 
 import bt747.Txt;
@@ -64,38 +65,43 @@ public class AppBT747 extends MainWindow implements ModelListener {
         Sound.setEnabled(false);
 
         // Set up the port.
-        GPSPort gpsPort;
+        if (!GPSrxtx.hasDefaultPortInstance()) {
+            GPSPort gpsPort;
 
-        try {
-            gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-                    .newInstance();
-        } catch (final Exception e) {
-            gpsPort = new GPSWabaPort();
+            try {
+                gpsPort = (GPSPort) Class.forName(
+                        "gps.connection.GPSRxTxPort").newInstance();
+            } catch (final Exception e) {
+                gpsPort = new GPSWabaPort();
+            }
+
+            /**
+             * Set the defaults of the device according to preset, guessed
+             * values.
+             */
+            // Settings.platform:
+            // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
+            // Win32, Symbian, Linux, Posix
+            final String Platform = waba.sys.Settings.platform;
+
+            if ((Platform.equals("Java")) || (Platform.equals("Win32"))
+                    || (Platform.equals("Posix"))
+                    || (Platform.equals("Linux"))) {
+                // Try USB Port
+                gpsPort.setUSB();
+            } else if (Platform.startsWith("PalmOS")) {
+                gpsPort.setBlueTooth();
+            } else {
+                gpsPort.setPort(0); // Should be bluetooth in WinCE
+            }
+            // Set the serial port class instance to use (also system
+            // specific).
+            GPSrxtx.setDefaultGpsPortInstance(gpsPort);
         }
-
-        /**
-         * Set the defaults of the device according to preset, guessed values.
-         */
-        // Settings.platform:
-        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
-        // Win32, Symbian, Linux, Posix
-        final String Platform = waba.sys.Settings.platform;
-
-        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
-                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
-            // Try USB Port
-            gpsPort.setUSB();
-        } else if (Platform.startsWith("PalmOS")) {
-            gpsPort.setBlueTooth();
-        } else {
-            gpsPort.setPort(0); // Should be bluetooth in WinCE
-        }
-
-        GPSrxtx.setDefaultGpsPortInstance(gpsPort);
 
         m = new Model();
-        c = new AppController(m);
-        Txt.setLang(m.getStringOpt(AppSettings.LANGUAGE));
+        c = new AppController(AppBT747.m);
+        Txt.setLang(AppBT747.m.getStringOpt(AppSettings.LANGUAGE));
     }
 
     /**
@@ -297,7 +303,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
 
         setDoubleBuffer(true);
-        setBorderStyle(TAB_ONLY_BORDER);
+        setBorderStyle(Window.TAB_ONLY_BORDER);
         setTitle(Txt.getString(Txt.S_TITLE));
         waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
     }
@@ -315,11 +321,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public void onStart() {
         super.onStart();
 
-        setLang(m.getStringOpt(AppSettings.LANGUAGE));
-        if (Settings.version < requiredVersion) {
+        setLang(AppBT747.m.getStringOpt(AppSettings.LANGUAGE));
+        if (Settings.version < AppBT747.requiredVersion) {
             new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt
                     .getString(Txt.BAD_SUPERWABAVERSION)
-                    + requiredVersionStr
+                    + AppBT747.requiredVersionStr
                     + Txt.getString(Txt.BAD_SUPERWABAVERSION_CONT)
                     + Settings.versionStr
                     + Txt.getString(Txt.BAD_SUPERWABAVERSION_CONT2)
@@ -335,59 +341,70 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // Doing this on the windows platform
         // if (Settings.platform.equals("Java")) m_model= new BT747model();
         // sp.writeBytes(buf,0,1);
-        miGpxUTC0.isChecked = m.getBooleanOpt(AppSettings.GPXUTC0);
+        miGpxUTC0.isChecked = AppBT747.m.getBooleanOpt(AppSettings.GPXUTC0);
 
-        miGpxTrkSegWhenBig.isChecked = m
+        miGpxTrkSegWhenBig.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.GPXTRKSEGBIG);
 
-        miGpsDecode.isChecked = m.getBooleanOpt(AppSettings.DECODEGPS);
+        miGpsDecode.isChecked = AppBT747.m
+                .getBooleanOpt(AppSettings.DECODEGPS);
 
-        miRecordNumberInLogs.isChecked = m
+        miRecordNumberInLogs.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
-        miHolux.isChecked = m.getBooleanOpt(AppSettings.FORCE_HOLUXM241);
-        miImperial.isChecked = m.getBooleanOpt(AppSettings.IMPERIAL);
-        miOutputLogConditions.isChecked = m
+        miHolux.isChecked = AppBT747.m
+                .getBooleanOpt(AppSettings.FORCE_HOLUXM241);
+        miImperial.isChecked = AppBT747.m.getBooleanOpt(AppSettings.IMPERIAL);
+        miOutputLogConditions.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
 
         tabPanel = new TabPanel(c_tpCaptions);
-        add(tabPanel, CENTER, CENTER);
+        add(tabPanel, Control.CENTER, Control.CENTER);
         // Progress bar to show download progress (separate thread)
         progressLabel = new Label(Txt.getString(Txt.LB_DOWNLOAD));
         progressBar = new ProgressBar();
-        add(progressLabel, LEFT, BOTTOM);
-        progressLabel.setRect(LEFT, BOTTOM, PREFERRED, PREFERRED);
+        add(progressLabel, Control.LEFT, Control.BOTTOM);
+        progressLabel.setRect(Control.LEFT, Control.BOTTOM,
+                Control.PREFERRED, Control.PREFERRED);
         progressLabel.setVisible(false);
         // m_ProgressLabel.setVisible(false);
         tabPanel.setBorderStyle(Window.NO_BORDER);
         tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0,
                 -progressBar.getPreferredHeight()));
 
-        add(progressBar, RIGHT, SAME);
-        progressBar.setRect(RIGHT,
-                BOTTOM, // BOTTOM,RIGHT,
+        add(progressBar, Control.RIGHT, Control.SAME);
+        progressBar.setRect(Control.RIGHT,
+                Control.BOTTOM, // BOTTOM,RIGHT,
                 getClientRect().width - progressLabel.getRect().width - 2,
-                PREFERRED);
+                Control.PREFERRED);
         updateProgressBar();
 
         numPanels = 0;
-        tabPanel.setPanel(TAB_LOG_CTRL_IDX, new GPSLogFormat(m, c));
+        tabPanel.setPanel(AppBT747.TAB_LOG_CTRL_IDX, new GPSLogFormat(
+                AppBT747.m, AppBT747.c));
         numPanels++;
-        tabPanel.setPanel(TAB_LOGINFO_IDX, new GPSLogReason(c, m));
+        tabPanel.setPanel(AppBT747.TAB_LOGINFO_IDX, new GPSLogReason(
+                AppBT747.c, AppBT747.m));
         numPanels++;
-        tabPanel.setPanel(TAB_LOG_GET_IDX, new GPSLogGet(m, c));
+        tabPanel.setPanel(AppBT747.TAB_LOG_GET_IDX, new GPSLogGet(AppBT747.m,
+                AppBT747.c));
         numPanels++;
-        tabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
+        tabPanel.setPanel(AppBT747.C_GPS_FILECTRL_IDX, new GPSLogFile(
+                AppBT747.c, AppBT747.m));
         numPanels++;
-        tabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GpsFilterTabPanel(m, c));
+        tabPanel.setPanel(AppBT747.C_GPS_FILTERCTRL_IDX,
+                new GpsFilterTabPanel(AppBT747.m, AppBT747.c));
         numPanels++;
-        tabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
+        tabPanel.setPanel(AppBT747.C_GPS_EASYCTRL_IDX, new GPSLogEasy(
+                AppBT747.m, AppBT747.c));
         numPanels++;
-        tabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
+        tabPanel.setPanel(AppBT747.C_GPS_CONCTRL_IDX, new GPSconctrl(
+                AppBT747.c, AppBT747.m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new
         // GPSFlashOption(m_GPSstate));
         // C_NUM_PANELS++;
-        tabPanel.setPanel(C_GPS_FLASH_IDX, new GPSOtherTabPanel(c, m));
+        tabPanel.setPanel(AppBT747.C_GPS_FLASH_IDX, new GPSOtherTabPanel(
+                AppBT747.c, AppBT747.m));
         numPanels++;
         // m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         // m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
@@ -397,16 +414,16 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // m_ProgressBar.setRect(m_ProgressLabel.getRect().x2(),m_ProgressLabel.getRect().y,//BOTTOM,RIGHT,
         // 10,//getClientRect().width-m_ProgressLabel.getRect().width,
         // 10+0*PREFERRED);
-        tabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
+        tabPanel.setActiveTab(AppBT747.C_GPS_CONCTRL_IDX);
 
-        waba.sys.Settings.keyboardFocusTraversable = m
+        waba.sys.Settings.keyboardFocusTraversable = AppBT747.m
                 .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
-        miTraversableFocus.isChecked = m
+        miTraversableFocus.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
-        miStopLogOnConnect.isChecked = m
+        miStopLogOnConnect.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT);
 
-        m.addListener(this);
+        AppBT747.m.addListener(this);
         addTimer(this, 55);
 
         gpsType();
@@ -422,7 +439,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miLangKO.isChecked = lang.equals("ko");
         miLangNL.isChecked = lang.equals("nl");
         miLangZH.isChecked = lang.equals("zh");
-        c.setStringOpt(AppSettings.LANGUAGE, lang);
+        AppBT747.c.setStringOpt(AppSettings.LANGUAGE, lang);
     }
 
     /**
@@ -433,7 +450,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miGisteqType1.isChecked = false;
         miGisteqType2.isChecked = false;
         miGisteqType3.isChecked = false;
-        switch (m.getIntOpt(AppSettings.GPSTYPE)) {
+        switch (AppBT747.m.getIntOpt(AppSettings.GPSTYPE)) {
         case AppSettings.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
             break;
@@ -464,7 +481,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // "+event.consumed); }
         switch (event.type) {
         case ControlEvent.TIMER:
-            if ((topMost == this) && AppSettings.isSolveMacLagProblem()
+            if ((Window.topMost == this)
+                    && AppSettings.isSolveMacLagProblem()
                     && (event.target == this)) {
                 this._doPaint();
             }
@@ -495,50 +513,53 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     // Back to application
                     break;
                 case C_MENU_STOP_LOG_ON_CONNECT:
-                    c.setBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT,
+                    AppBT747.c.setBooleanOpt(
+                            AppSettings.IS_STOP_LOGGING_ON_CONNECT,
                             miStopLogOnConnect.isChecked);
                     break;
                 case C_MENU_STOP_CONNECTION:
-                    c.closeGPS();
+                    AppBT747.c.closeGPS();
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
-                    c.setBooleanOpt(AppSettings.IS_TRAVERSABLE,
+                    AppBT747.c.setBooleanOpt(AppSettings.IS_TRAVERSABLE,
                             miTraversableFocus.isChecked);
-                    waba.sys.Settings.keyboardFocusTraversable = m
+                    waba.sys.Settings.keyboardFocusTraversable = AppBT747.m
                             .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
                     break;
                 case C_MENU_DEBUG_ACTIVE:
-                    c.setDebug(miDebug.isChecked);
+                    AppBT747.c.setDebug(miDebug.isChecked);
                     break;
                 case C_MENU_DEBUG_CONN:
-                    c.setDebugConn(miDebugConn.isChecked);
+                    AppBT747.c.setDebugConn(miDebugConn.isChecked);
                     break;
                 case C_MENU_STATS_ACTIVE:
-                    c.setStats(miStats.isChecked);
+                    AppBT747.c.setStats(miStats.isChecked);
                     break;
                 case C_MENU_HOLUX_241:
-                    c.setBooleanOpt(AppSettings.FORCE_HOLUXM241,
+                    AppBT747.c.setBooleanOpt(AppSettings.FORCE_HOLUXM241,
                             miHolux.isChecked);
                     break;
                 case C_MENU_OUTPUT_LOGCONDITIONS:
-                    c.setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS,
+                    AppBT747.c.setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS,
                             miOutputLogConditions.isChecked);
                     break;
                 case C_MENU_IMPERIAL:
-                    c.setBooleanOpt(AppSettings.IMPERIAL,
+                    AppBT747.c.setBooleanOpt(AppSettings.IMPERIAL,
                             miImperial.isChecked);
                     break;
                 case C_MENU_GPX_UTC0:
-                    c.setGpxUTC0(miGpxUTC0.isChecked);
+                    AppBT747.c.setGpxUTC0(miGpxUTC0.isChecked);
                     break;
                 case C_MENU_GPX_TRKSEG_BIGONLY:
-                    c.setGpxTrkSegWhenBig(miGpxTrkSegWhenBig.isChecked);
+                    AppBT747.c
+                            .setGpxTrkSegWhenBig(miGpxTrkSegWhenBig.isChecked);
                     break;
                 case C_MENU_GPS_DECODE_ACTIVE:
-                    c.setGpsDecode(miGpsDecode.isChecked);
+                    AppBT747.c.setGpsDecode(miGpsDecode.isChecked);
                     break;
                 case C_MENU_RECORDNMBR_IN_LOGS:
-                    c.setBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS,
+                    AppBT747.c.setBooleanOpt(
+                            AppSettings.IS_RECORDNBR_IN_LOGS,
                             miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
@@ -558,22 +579,22 @@ public class AppBT747 extends MainWindow implements ModelListener {
                             Txt.getString(Txt.DISCLAIMER_TXT)).popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
-                    c.setIntOpt(AppSettings.GPSTYPE,
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
                             AppSettings.GPS_TYPE_DEFAULT);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE1:
-                    c.setIntOpt(AppSettings.GPSTYPE,
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
                             AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
-                    c.setIntOpt(AppSettings.GPSTYPE,
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
                             AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
-                    c
+                    AppBT747.c
                             .setIntOpt(
                                     AppSettings.GPSTYPE,
                                     AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
@@ -635,13 +656,13 @@ public class AppBT747 extends MainWindow implements ModelListener {
      */
     private void updateProgressBar() {
         if (progressBar != null) {
-            if (m.isDownloadOnGoing()) {
-                progressBar.min = m.getStartAddr();
-                progressBar.max = m.getEndAddr();
-                progressBar.setValue(m.getNextReadAddr(), "", " b");
+            if (AppBT747.m.isDownloadOnGoing()) {
+                progressBar.min = AppBT747.m.getStartAddr();
+                progressBar.max = AppBT747.m.getEndAddr();
+                progressBar.setValue(AppBT747.m.getNextReadAddr(), "", " b");
             }
-            progressBar.setVisible(m.isDownloadOnGoing());
-            progressLabel.setVisible(m.isDownloadOnGoing());
+            progressBar.setVisible(AppBT747.m.isDownloadOnGoing());
+            progressLabel.setVisible(AppBT747.m.isDownloadOnGoing());
         }
     }
 
@@ -656,7 +677,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
         case ModelEvent.CONNECTED:
-            tabPanel.setActiveTab(TAB_LOG_GET_IDX);
+            tabPanel.setActiveTab(AppBT747.TAB_LOG_GET_IDX);
             break;
         case GpsEvent.DOWNLOAD_STATE_CHANGE:
         case GpsEvent.LOG_DOWNLOAD_STARTED:
@@ -695,7 +716,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing
         // BT
         // trouble
-        c.saveSettings();
+        AppBT747.c.saveSettings();
     }
 
     /**
@@ -709,7 +730,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt
                 .getString(Txt.DATA_NOT_SAME), mbStr);
         mb.popupBlockingModal();
-        c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
+        AppBT747.c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
     }
 
     /**
@@ -741,7 +762,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
      * The user requested to stop waiting for erasal.
      */
     private void stopErase() {
-        c.stopErase();
+        AppBT747.c.stopErase();
     }
 
     /**

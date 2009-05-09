@@ -175,7 +175,10 @@ public class BT747cmd implements bt747.model.ModelListener {
         JavaLibBridge
                 .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
         // Set the serial port class instance to use (also system specific).
-        GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        if (!GPSrxtx.hasDefaultPortInstance()) {
+            GPSrxtx
+                    .setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        }
     }
 
     /**
