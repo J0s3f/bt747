@@ -202,6 +202,7 @@
           -keep public class * extends gps.connection.GPSPort
 	      -keep public class * {
 			public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
+			public static boolean hasDefaultPortInstance();
 		  }
 	      -keep public class bt747.Version { *; }
           -keepclasseswithmembers public class * {
@@ -446,6 +447,7 @@
               -keep public class * extends gps.connection.GPSPort
               -keep public class * {
                 public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
+        	    public static boolean hasDefaultPortInstance();
               }
               -keep public class bt747.Version { *; }
             </proguard>
@@ -577,6 +579,7 @@
         }
                         -keep public class * {
 	                       public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
+			               public static boolean hasDefaultPortInstance();
 	                    }
                         -keep public class gps.connection.GPSPort  { *; }
                </proguard>
@@ -704,6 +707,7 @@
                 -keep public class * extends gps.connection.GPSPort
     	        -keep public class * {
     	          public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
+			      public static boolean hasDefaultPortInstance();
     	        }
 			    -keep public class bt747.Version { *; }
                 -keep public interface bt747.interfaces.* {

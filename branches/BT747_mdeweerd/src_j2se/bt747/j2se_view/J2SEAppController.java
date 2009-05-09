@@ -15,8 +15,6 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
-import gps.connection.GPSPort;
-import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.out.AllWayPointStyles;
