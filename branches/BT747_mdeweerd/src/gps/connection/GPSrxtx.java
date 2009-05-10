@@ -29,17 +29,21 @@ import bt747.sys.interfaces.BT747Semaphore;
  */
 public final class GPSrxtx {
     private static GPSPort defaultGpsPort;
-    
+
     final private GPSPort gpsPort;
-    
+
     /**
      * 
      */
     public GPSrxtx() {
         this(defaultGpsPort);
     }
-    
+
     public GPSrxtx(final GPSPort port) {
+        if (port == null) {
+            Generic
+                    .debug("GPSrxtPort instance is null - review initialisation");
+        }
         gpsPort = port;
     }
 
@@ -69,10 +73,11 @@ public final class GPSrxtx {
     private final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    public static final void setDefaultGpsPortInstance(final GPSPort portInstance) {
+    public static final void setDefaultGpsPortInstance(
+            final GPSPort portInstance) {
         GPSrxtx.defaultGpsPort = portInstance;
     }
-    
+
     public static final boolean hasDefaultPortInstance() {
         return GPSrxtx.defaultGpsPort != null;
     }
@@ -189,7 +194,8 @@ public final class GPSrxtx {
 
         if (defaultGpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
-            defaultGpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
+            defaultGpsPort
+                    .writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
         }
 
         final Object result = state.getResponse(this);
@@ -295,8 +301,8 @@ public final class GPSrxtx {
 
                             // gpsPort.writeDebug("\r\nC2:" + max + ":");
                             if (max > 0) {
-                                bytesRead = gpsPort.readBytes(
-                                        read_buf, 0, max);
+                                bytesRead = gpsPort.readBytes(read_buf, 0,
+                                        max);
                                 // if (bytesRead != 0) {
                                 // String sb = new String(read_buf, 0,
                                 // bytesRead);
@@ -323,8 +329,7 @@ public final class GPSrxtx {
                 } else {
                     if (gpsPort.debugActive()) {
                         final String q = "(" + Generic.getTimeStamp() + ")";
-                        gpsPort.writeDebug(q.getBytes(), 0, q
-                                .length());
+                        gpsPort.writeDebug(q.getBytes(), 0, q.length());
                         gpsPort.writeDebug(read_buf, 0, bytesRead);
                     }
                 }
