@@ -391,7 +391,7 @@ public final class Conv {
         /* @ -charint @ */
         int ilat, ilon;
         int ilat1, ilat2, ilon1, ilon2;
-
+        
         ilat = (int) Math.floor((90. + lat) / 10);
         ilon = (int) Math.floor((180. + lon) / 10);
 
