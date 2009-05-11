@@ -1,3 +1,6 @@
+Version 1.68.18
+* Fixed problem in filter.
+
 Version 1.68.17
 * Added message in case memory got corrupted and needs initialisation.
 
