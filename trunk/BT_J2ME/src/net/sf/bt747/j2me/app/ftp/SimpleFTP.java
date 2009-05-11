@@ -23,8 +23,6 @@ package net.sf.bt747.j2me.app.ftp;
  * 
  */
 
-import gov.nist.core.StringTokenizer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +30,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import javax.microedition.io.file.FileConnection;
+
+import org.j4me.logging.Log;
+
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
  * SimpleFTP is a simple package that implements a Java FTP client. With
@@ -153,7 +156,8 @@ public class SimpleFTP {
      * @param filename
      * @return
      */
-    public synchronized boolean retr(final OutputStream os, final String filename) throws IOException {
+    public synchronized boolean retr(final OutputStream os,
+            final String filename) throws IOException {
         final BufferedOutputStream output = new BufferedOutputStream(os);
 
         sendLine("PASV");
@@ -169,8 +173,9 @@ public class SimpleFTP {
         final int closing = response.indexOf(')', opening + 1);
         if (closing > 0) {
             final String dataLink = response.substring(opening + 1, closing);
-            final StringTokenizer tokenizer = new StringTokenizer(dataLink,
-                    ',');
+
+            final BT747StringTokenizer tokenizer = JavaLibBridge
+                    .getStringTokenizerInstance(dataLink, ',');
             try {
                 ip = tokenizer.nextToken() + "." + tokenizer.nextToken()
                         + "." + tokenizer.nextToken() + "."
@@ -189,18 +194,24 @@ public class SimpleFTP {
         final Socket dataSocket = new Socket(ip, port);
 
         response = readLine();
-        if (!response.startsWith("125 ")) {
+        if (!response.startsWith("150 ")) {
             // if (!response.startsWith("150 ")) {
             throw new IOException(
-                    "SimpleFTP was not allowed to retrieve the file: " + response);
+                    "SimpleFTP was not allowed to retrieve the file: "
+                            + response);
         }
 
-        final BufferedInputStream input = new BufferedInputStream(
-                dataSocket.getInputStream());
+        final BufferedInputStream input = new BufferedInputStream(dataSocket
+                .getInputStream());
         final byte[] buffer = new byte[4096];
         int bytesRead = 0;
+        int total = 0;
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
+            total += bytesRead;
+            if(Log.isDebugEnabled()) {
+                Log.debug("SimpleFTP total received bytes: " + total);
+            }
         }
         output.flush();
         output.close();
@@ -209,7 +220,7 @@ public class SimpleFTP {
         response = readLine();
         return response.startsWith("226 ");
     }
-    
+
     /**
      * Sends a file to be stored on the FTP server. Returns true if the file
      * transfer was successful. The file is sent in passive mode to avoid NAT
@@ -249,8 +260,8 @@ public class SimpleFTP {
         final int closing = response.indexOf(')', opening + 1);
         if (closing > 0) {
             final String dataLink = response.substring(opening + 1, closing);
-            final StringTokenizer tokenizer = new StringTokenizer(dataLink,
-                    ',');
+            final BT747StringTokenizer tokenizer = JavaLibBridge
+                    .getStringTokenizerInstance(dataLink, ',');
             try {
                 ip = tokenizer.nextToken() + "." + tokenizer.nextToken()
                         + "." + tokenizer.nextToken() + "."
@@ -279,8 +290,13 @@ public class SimpleFTP {
                 dataSocket.getOutputStream());
         final byte[] buffer = new byte[4096];
         int bytesRead = 0;
+        int total = 0;
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
+            total += bytesRead;
+            if(Log.isDebugEnabled()) {
+                Log.debug("SimpleFTP total sent bytes: " + total);
+            }
         }
         output.flush();
         output.close();
