@@ -120,7 +120,9 @@ public class J2SEController extends Controller {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public final void run() {
                 final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
-                byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
+                bt747.sys.Generic.debug("Getting data from <"+urlTxt+">");
+                final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
+                bt747.sys.Generic.debug("Finished getting data from <"+urlTxt+">");
                 setAgpsData(agpsData);
             }
         });

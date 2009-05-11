@@ -52,6 +52,10 @@ public final class MtkBinWriter {
         }
     }
 
+    public final static void doSetNmeaMode(final GPSrxtx context) {
+        doSetNmeaMode(context, context.getSpeed());
+    }
+
     /**
      * Sets the mtk bin mode.
      * 
@@ -67,4 +71,9 @@ public final class MtkBinWriter {
                     + baudrate);
         }
     }
+
+    public final static void doSetMtkBinMode(final GPSrxtx context) {
+        setMtkBinMode(context, context.getSpeed());
+    }
+
 }

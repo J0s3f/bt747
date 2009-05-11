@@ -3,13 +3,13 @@
  */
 package net.sf.bt747.gps.mtk.agps;
 
-import bt747.sys.Generic;
-
-import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.BT747Constants;
 import gps.connection.MtkBinWriter;
 import gps.mvc.DeviceOperationHandlerIF;
 import gps.mvc.GPSLinkHandler;
+import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+
+import bt747.sys.Generic;
 
 /**
  * @author Mario De Weerd
@@ -21,6 +21,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
 
     private boolean firstData;
     private boolean okForNext;
+    private int timesOutAt;
 
     /**
      * These methods are called one after the other - not in separate threads.
@@ -42,7 +43,6 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
 
                 firstData = false;
                 okForNext = true;
-                return false;
             } else {
                 // Must receive acknowledge for previous data.
                 switch (msg.getType()) {
@@ -57,15 +57,20 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
             // Check if data corresponds to sent data.
             // If not - handle error.
             // If timeout - handle error (send again?)
-            // If no more data to send, remove handler
-            return true; // Return true to remove handler.
+            return true; // Return true to indicate message has been
+            // treated and to skip other handlers.
         }
-        // TODO Auto-generated method stub
+        if (timesOutAt != 0 && Generic.getTimeStamp() > timesOutAt) {
+            nextDone = true; // Stop this mode.
+        }
+
         return false;
     }
 
     private static final int AGPS_PAYLOAD = 180;
     private boolean nextDone;
+
+    private static final int TIMEOUT = 6000; // MS
 
     /*
      * (non-Javadoc)
@@ -74,7 +79,11 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      */
     public boolean notifyRun(GPSLinkHandler handler) {
         if (nextDone) {
+            MtkBinWriter.doSetNmeaMode(handler.getGPSRxtx());
             return false; // End handler.
+        }
+        if (timesOutAt == 0) {
+            timesOutAt = Generic.getTimeStamp() + TIMEOUT;
         }
         if (okForNext) {// if ok to send data // Should check response.
             okForNext = false;
@@ -91,6 +100,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
             final MtkBinTransportMessageModel cmd = new MtkBinTransportMessageModel(
                     BT747Constants.PMTK_SET_EPO_DATA, payload);
             MtkBinWriter.sendCmd(handler.getGPSRxtx(), cmd);
+            timesOutAt = Generic.getTimeStamp() + TIMEOUT;
         }
         return true; // Continue to run.
     }
@@ -106,6 +116,11 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         nextDone = false;
         firstData = true;
         okForNext = false;
+        timesOutAt = 0;
+        if(data!=null) {
+            Generic.debug("Agps Data is null - problem");
+            nextDone = true;
+        }
     }
 
     private void done() {
