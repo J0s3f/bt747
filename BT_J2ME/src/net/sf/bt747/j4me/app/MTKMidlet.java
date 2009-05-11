@@ -1,5 +1,7 @@
 package net.sf.bt747.j4me.app;
 
+import gps.connection.GPSrxtx;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -29,6 +31,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     static {
         JavaLibBridge.setJavaLibImplementation(new J2MEJavaTranslations());
+        GPSrxtx.setDefaultGpsPortInstance(BluetoothGPS.getInstance());
     }
 
     private static AppModel m;
