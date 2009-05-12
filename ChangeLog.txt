@@ -1,4 +1,4 @@
-Version 1.68.18
+Version 1.68.18-.19
 * Fixed problem in filter.
 
 Version 1.68.17

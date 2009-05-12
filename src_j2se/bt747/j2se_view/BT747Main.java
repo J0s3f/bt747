@@ -1134,7 +1134,7 @@ public class BT747Main extends javax.swing.JFrame implements
         }
         try {
             c.setBaudRate(Integer.parseInt((String) cbSerialSpeed
-                    .getSelectedItem()));
+                    .getSelectedItem().toString()));
         } catch (final Exception e) {
 
         }

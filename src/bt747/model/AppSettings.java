@@ -1225,7 +1225,7 @@ public class AppSettings {
         final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             final ModelListener l = (ModelListener) it.next();
-            final ModelEvent e = new ModelEvent(type, l);
+            final ModelEvent e = new ModelEvent(type, null);
             l.modelEvent(e);
         }
     }
