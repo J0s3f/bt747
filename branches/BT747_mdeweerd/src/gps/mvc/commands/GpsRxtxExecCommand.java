@@ -3,7 +3,7 @@
  */
 package gps.mvc.commands;
 
-import gps.mvc.GPSLinkHandler;
+import gps.connection.GPSrxtx;
 
 /**
  * A {@link GPSLinkCommand} can be put on the command queue where the
@@ -18,12 +18,12 @@ import gps.mvc.GPSLinkHandler;
  * @author Mario De Weerd
  * 
  */
-public interface GpsLinkExecCommand {
+public interface GpsRxtxExecCommand {
     /**
      * Do what needs to be done for the specific command.
      * 
      * @param context
      *                A reference to the link on which this command operates.
      */
-    public void execute(final GPSLinkHandler context);
+    public void execute(final GPSrxtx context);
 }

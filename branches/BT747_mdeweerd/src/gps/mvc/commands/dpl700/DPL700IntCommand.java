@@ -6,13 +6,13 @@ package gps.mvc.commands.dpl700;
 import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.mvc.GPSLinkHandler;
-import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsRxtxExecCommand;
 
 /**
  * @author Mario De Weerd
  *
  */
-public class DPL700IntCommand implements GpsLinkExecCommand {
+public class DPL700IntCommand implements GpsRxtxExecCommand {
 
     private final int cmd;
     private final int bufSize;
@@ -26,11 +26,10 @@ public class DPL700IntCommand implements GpsLinkExecCommand {
     }
     
     /* (non-Javadoc)
-     * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.mvc.GPSLinkHandler)
+     * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.mvc.GPSrxtx)
      */
-    public final void execute(final GPSLinkHandler context) {
-        final GPSrxtx gpsRxTx = context.getGPSRxtx();
-        DPL700Writer.sendCmd(gpsRxTx, cmd, bufSize);
+    public final void execute(final GPSrxtx context) {
+        DPL700Writer.sendCmd(context, cmd, bufSize);
     }
 
 }

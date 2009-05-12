@@ -38,15 +38,15 @@ public class MtkBinDecoderState implements DecoderStateInterface {
     /** Last byte of transport message. */
     private static final byte endByte1 = (byte) 0x0A;
 
-    private int state = HEADER0_STATE;
+    private int state = MtkBinDecoderState.HEADER0_STATE;
 
     /*
      * (non-Javadoc)
      * 
      * @see gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
      */
-    public void enterState(GPSrxtx context) {
-        state = HEADER0_STATE;
+    public void enterState(final GPSrxtx context) {
+        state = MtkBinDecoderState.HEADER0_STATE;
     }
 
     /*
@@ -54,7 +54,7 @@ public class MtkBinDecoderState implements DecoderStateInterface {
      * 
      * @see gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
      */
-    public void exitState(GPSrxtx context) {
+    public void exitState(final GPSrxtx context) {
         // TODO Auto-generated method stub
 
     }
@@ -71,95 +71,100 @@ public class MtkBinDecoderState implements DecoderStateInterface {
      * @see gps.connection.DecoderStateInterface#getResponse(gps.connection.GPSrxtx)
      */
     public final Object getResponse(final GPSrxtx context) {
-        if (state == RESPONSE_OK_STATE) {
-            state = HEADER0_STATE;
+        if (state == MtkBinDecoderState.RESPONSE_OK_STATE) {
+            state = MtkBinDecoderState.HEADER0_STATE;
         }
-        while (!context.isReadBufferEmpty() && state != RESPONSE_OK_STATE) {
+        while (!context.isReadBufferEmpty()
+                && (state != MtkBinDecoderState.RESPONSE_OK_STATE)) {
             final byte c = (byte) context.getReadBufferChar();
+            // System.err.print(String.format("%02x", (int) c));
             checksum ^= c;
             switch (state) {
             default:
             case HEADER0_STATE:
-                if (c == startByte0) {
-                    state = HEADER1_STATE;
+                if (c == MtkBinDecoderState.startByte0) {
+                    state = MtkBinDecoderState.HEADER1_STATE;
+                } else if (c == MtkBinDecoderState.endByte1) {
+                    state = MtkBinDecoderState.HEADER0_STATE;
                 } else {
-                    state = RECOVER_STATE;
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 }
                 break;
             case HEADER1_STATE:
-                if (c == startByte1) {
-                    state = LEN0_STATE;
+                if (c == MtkBinDecoderState.startByte1) {
+                    state = MtkBinDecoderState.LEN0_STATE;
                 } else {
-                    state = RECOVER_STATE;
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 }
                 break;
             case LEN0_STATE:
                 len = c & 0xFF;
                 checksum = c; // Checksum calculation starts with this byte.
-                state = LEN1_STATE;
+                state = MtkBinDecoderState.LEN1_STATE;
                 break;
             case LEN1_STATE:
                 len |= ((c) & 0xFF) << 8;
                 idx = 0;
-                if (len < 9) {  // 2 header + 2 trailer + 2 len + 2 type + 1 checksum = 9 bytes
-                    state = RECOVER_STATE;
+                if (len < 9) { // 2 header + 2 trailer + 2 len + 2 type + 1
+                                // checksum = 9 bytes
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 } else {
                     len -= 9;
                 }
                 value = new byte[len];
-                state = TYPE0_STATE;
+                state = MtkBinDecoderState.TYPE0_STATE;
                 break;
             case TYPE0_STATE:
                 type = c & 0xFF;
-                state = TYPE1_STATE;
+                state = MtkBinDecoderState.TYPE1_STATE;
                 break;
             case TYPE1_STATE:
                 type |= (c & 0xFF) << 8;
                 if (len <= 0) {
-                    state = END0_STATE;
+                    state = MtkBinDecoderState.END0_STATE;
                 } else {
-                    state = PAYLOAD_STATE;
+                    state = MtkBinDecoderState.PAYLOAD_STATE;
                 }
                 break;
             case PAYLOAD_STATE:
                 value[idx++] = c;
                 if (--len <= 0) {
                     // All data read from the link.
-                    state = CHECKSUM_STATE;
+                    state = MtkBinDecoderState.CHECKSUM_STATE;
                 }
                 break;
             case CHECKSUM_STATE:
                 // Checksum value should be 0 because Xored with itself.
                 if (checksum != 0) {
                     // Error - try to recover
-                    state = RECOVER_STATE;
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 } else {
-                    state = END0_STATE;
+                    state = MtkBinDecoderState.END0_STATE;
                 }
                 break;
             case END0_STATE:
-                if (c != endByte0) {
-                    state = RECOVER_STATE;
+                if (c != MtkBinDecoderState.endByte0) {
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 } else {
-                    state = END1_STATE;
+                    state = MtkBinDecoderState.END1_STATE;
                 }
                 break;
             case END1_STATE:
-                if (c != endByte1) {
-                    state = RECOVER_STATE;
+                if (c != MtkBinDecoderState.endByte1) {
+                    state = MtkBinDecoderState.RECOVER_STATE;
                 } else {
-                    state = RESPONSE_OK_STATE;
+                    state = MtkBinDecoderState.RESPONSE_OK_STATE;
                 }
                 break;
             case RECOVER_STATE:
-                if (c == endByte1) {
-                    state = HEADER0_STATE;
+                if (c == MtkBinDecoderState.endByte1) {
+                    state = MtkBinDecoderState.HEADER0_STATE;
                 }
                 break;
             }
         }
-        if (state == RESPONSE_OK_STATE) {
-            state = HEADER0_STATE;
+        if (state == MtkBinDecoderState.RESPONSE_OK_STATE) {
+            state = MtkBinDecoderState.HEADER0_STATE;
             return new MtkBinTransportMessageModel(type, value);
         }
         return null;

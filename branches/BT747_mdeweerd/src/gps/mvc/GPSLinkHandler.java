@@ -18,7 +18,7 @@ import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEADecoderState;
 import gps.connection.NMEAWriter;
-import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsRxtxExecCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -163,9 +163,9 @@ public final class GPSLinkHandler {
                     sentCmds.addElement(cmd);
                 }
                 NMEAWriter.sendPacket(gpsRxTx, nmeaCmd);
-            } else if (cmd instanceof GpsLinkExecCommand) {
-                GpsLinkExecCommand linkCmd = (GpsLinkExecCommand) cmd;
-                linkCmd.execute(this);
+            } else if (cmd instanceof GpsRxtxExecCommand) {
+                GpsRxtxExecCommand linkCmd = (GpsRxtxExecCommand) cmd;
+                linkCmd.execute(this.getGPSRxtx());
             }
         } catch (final Exception e) {
             Generic.debug("doSendCmd", e);

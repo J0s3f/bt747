@@ -50,6 +50,7 @@ public final class AgpsPanel extends javax.swing.JPanel
         m = c.getModel();
         m.addListener(this);
 
+        updateConnected();
         updateAppURL();
     }
 
@@ -64,12 +65,12 @@ public final class AgpsPanel extends javax.swing.JPanel
         case ModelEvent.CONNECTED:
         case ModelEvent.DISCONNECTED:
             updateConnected();
+            break;
         case ModelEvent.SETTING_CHANGE:
             switch (Integer.parseInt((String)e.getArg())) {
             case AppSettings.AGPSURL:
                 txtAgpsUrl.setText(m.getStringOpt(AppSettings.AGPSURL));
                 break;
-
             default:
                 break;
             }

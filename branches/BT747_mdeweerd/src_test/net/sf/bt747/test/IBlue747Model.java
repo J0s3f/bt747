@@ -20,6 +20,7 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEAWriter;
 import gps.convert.Conv;
+import gps.mvc.commands.GpsRxtxExecCommand;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import net.sf.bt747.test.models.mtk.commands.Acknowledge;
+import net.sf.bt747.test.models.mtk.commands.EpoReply;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -111,6 +114,7 @@ public class IBlue747Model {
                     if (gpsRxTx.isConnected()) { // gpsRxTx.getGpsPort().readCheck()
                         final Object lastResponse = gpsRxTx.getResponse();
                         if (lastResponse != null) {
+                            Generic.debug("Model received:" + lastResponse.toString());
                             analyseResponse(lastResponse);
                         }
                     } else {
@@ -166,9 +170,21 @@ public class IBlue747Model {
     }
 
     private final void analyseMtkBinData(final MtkBinTransportMessageModel msg) {
+        GpsRxtxExecCommand reply = null;
         switch (msg.getType()) {
+        case BT747Constants.PMTK_SET_EPO_DATA:
+            Generic.debug("Model received AGPS DATA" + msg.toString());
+            reply = new EpoReply(msg);
+            break;
+        case BT747Constants.PMTK_SET_BIN_MODE:
+            // TODO: should look at payload too .
+            setDeviceMode(DEVICE_MODE_NMEA);
+            break;
         default:
 
+        }
+        if(reply!=null) {
+            reply.execute(gpsRxTx);
         }
     }
 
@@ -179,7 +195,7 @@ public class IBlue747Model {
     private final MtkDataModel mtkData = new MtkDataModel();
 
     public void replyMTK_Ack(final String[] p_nmea) {
-        switch(device_mode) {
+        switch (device_mode) {
         case DEVICE_MODE_NMEA:
             try {
                 sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
@@ -189,7 +205,7 @@ public class IBlue747Model {
                 Generic.debug("Send failed ", e);
             }
         case DEVICE_MODE_MTKBIN:
-            
+
         }
     }
 
@@ -344,7 +360,7 @@ public class IBlue747Model {
         // waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
         final StringBuffer nmea = new StringBuffer();
         Object response = null;
-        Object acknowledge = null;
+        Acknowledge acknowledge = null;
         for (final String s : p_nmea) {
             nmea.append(s);
             nmea.append(',');
@@ -356,7 +372,7 @@ public class IBlue747Model {
             z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
 
             if (z_Cmd != BT747Constants.PMTK_CMD_LOG) {
-                acknowledge = p_nmea;
+                acknowledge = new Acknowledge(p_nmea);
             }
 
             z_Result = -1; // Suppose cmd not treated
@@ -374,6 +390,9 @@ public class IBlue747Model {
             case BT747Constants.PMTK_CMD_COLD_START: // CMD 103
             case BT747Constants.PMTK_CMD_FULL_COLD_START: // CMD 104
             case BT747Constants.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
+            case BT747Constants.PMTK_SET_BIN_MODE: // CMD 253
+                setDeviceMode(IBlue747Model.DEVICE_MODE_MTKBIN);
+                break;
             case BT747Constants.PMTK_API_SET_FIX_CTL: // CMD 300
             case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
             case BT747Constants.PMTK_API_SET_SBAS: // CMD 313
@@ -426,10 +445,9 @@ public class IBlue747Model {
             case BT747Constants.PMTK_Q_VERSION:
                 break;
             case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
-                setDeviceMode(IBlue747Model.DEVICE_MODE_MTKBIN);
                 break;
             default:
-                System.err.println("Not supported:" + z_Cmd);
+                System.err.println("Not supported in model:" + z_Cmd);
             } // End switch
         } else if (p_nmea[0].startsWith("PTSI")) {
             z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
@@ -448,15 +466,12 @@ public class IBlue747Model {
             }
         } // End if
         if (acknowledge != null) {
-            if (acknowledge instanceof String[]) {
-                replyMTK_Ack((String[]) acknowledge);
-            }
+           acknowledge.execute(gpsRxTx);
         }
         if (response != null) {
             if (response instanceof String) {
                 final String resp = (String) response;
                 sendPacket(resp);
-
             }
         }
         return z_Result;

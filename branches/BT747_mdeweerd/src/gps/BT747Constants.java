@@ -264,6 +264,7 @@ public final class BT747Constants { // dev as in device
 
     /* Special requests * SW ? */
     public static final int PMTK_Q_DGPS_INFO = 602;
+    /** Query device version (604  0x25C) */
     public static final int PMTK_Q_VERSION = 604;
     /**
      * Requests release data 605.

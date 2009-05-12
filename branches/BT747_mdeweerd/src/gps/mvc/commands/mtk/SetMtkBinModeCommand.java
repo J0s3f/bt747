@@ -5,21 +5,19 @@ package gps.mvc.commands.mtk;
 
 import gps.connection.GPSrxtx;
 import gps.connection.MtkBinWriter;
-import gps.mvc.GPSLinkHandler;
-import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsRxtxExecCommand;
 
 /**
  * @author Mario
  *
  */
-public class SetMtkBinModeCommand implements GpsLinkExecCommand {
+public class SetMtkBinModeCommand implements GpsRxtxExecCommand {
 
     /* (non-Javadoc)
-     * @see gps.mvc.commands.GpsLinkCommand#execute(gps.mvc.GPSLinkHandler)
+     * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.connection.GPSrxtx)
      */
-    public void execute(GPSLinkHandler context) {
-        final GPSrxtx gpsRxTx = context.getGPSRxtx(); 
-        MtkBinWriter.setMtkBinMode(gpsRxTx, 115200);
+    public void execute(GPSrxtx context) {
+        MtkBinWriter.setMtkBinMode(context, context.getSpeed());
     }
 
 }
