@@ -114,7 +114,7 @@ public class IBlue747Model {
                     if (gpsRxTx.isConnected()) { // gpsRxTx.getGpsPort().readCheck()
                         final Object lastResponse = gpsRxTx.getResponse();
                         if (lastResponse != null) {
-                            Generic.debug("Model received:" + lastResponse.toString());
+                            Generic.debug("Model received:" + lastResponse);
                             analyseResponse(lastResponse);
                         }
                     } else {
@@ -177,6 +177,7 @@ public class IBlue747Model {
             reply = new EpoReply(msg);
             break;
         case BT747Constants.PMTK_SET_BIN_MODE:
+            Generic.debug("Model received SET BIN MODE" + msg.toString());
             // TODO: should look at payload too .
             setDeviceMode(DEVICE_MODE_NMEA);
             break;
