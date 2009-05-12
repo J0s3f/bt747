@@ -3,6 +3,8 @@
  */
 package gps.connection;
 
+import gps.mvc.GPSLinkHandler;
+
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
@@ -50,4 +52,10 @@ public final class NMEAWriter {
             Generic.debug("Not connected: skipped " + packetNoCheckSum);
         }
     }
+    
+    public final static void sendPacket(final GPSLinkHandler context,
+            final String packetNoCheckSum) {
+        sendPacket(context.getGPSRxtx(), packetNoCheckSum);
+    }
+
 }

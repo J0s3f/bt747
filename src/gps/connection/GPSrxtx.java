@@ -54,14 +54,14 @@ public final class GPSrxtx {
             .getInstance(DecoderStateFactory.NMEA_STATE);
 
     /** Called by state or other means to change state. */
-    protected final void newState(final int newState) {
+    public final void newState(final int newState) {
         state.exitState(this);
         state = DecoderStateFactory.getInstance(newState);
         state.enterState(this);
     }
 
     /** Returns the current state which is part of the context. */
-    protected final Object getState() {
+    public final Object getState() {
         return state;
     }
 

@@ -1157,8 +1157,8 @@ public class BT747Main extends javax.swing.JFrame implements
             // Ignore exception
         }
         try {
-            c.setBaudRate(Integer.parseInt((String) cbSerialSpeed
-                    .getSelectedItem()));
+            c.setBaudRate(Integer.parseInt(cbSerialSpeed
+                    .getSelectedItem().toString()));
         } catch (final Exception e) {
 
         }

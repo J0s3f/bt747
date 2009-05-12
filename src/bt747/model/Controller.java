@@ -43,7 +43,7 @@ import gps.log.out.WayPointStyleSet;
 import gps.mvc.DeviceOperationHandlerIF;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
-import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsRxtxExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
@@ -906,7 +906,7 @@ public class Controller implements ModelListener {
      * @param cmd
      *                A string will be interpreted as a NMEA packet to send.<br>
      *                Otherwise the class must be an implementation of
-     *                {@link GpsLinkExecCommand} or {@link GpsLinkNmeaCommand}.
+     *                {@link GpsRxtxExecCommand} or {@link GpsLinkNmeaCommand}.
      * 
      */
     public final void sendCmd(final Object cmd) {
