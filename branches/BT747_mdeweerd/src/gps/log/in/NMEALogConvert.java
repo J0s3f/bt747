@@ -64,6 +64,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
         int recCount;
         int fileSize;
         int curLogFormat;
+        int prevDateTime = 0;
 
         try {
 
@@ -206,6 +207,11 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                                     // New data is for different time/date -
                                     // write it.
                                     gpsRec.recCount = ++recCount;
+                                    if (oldDateTime == 0 && prevDateTime != 0) {
+                                        gpsRec.utc += prevDateTime * 24 * 3600;
+                                    } else {
+                                        prevDateTime = oldDateTime;
+                                    }
                                     finalizeRecord(gpsFile, gpsRec,
                                             curLogFormat);
                                     gpsRec = gpsNewRec;
@@ -226,6 +232,12 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
             if ((curLogFormat != 0)) {
                 // Write the last record
                 gpsRec.recCount = ++recCount;
+                final int oldClockTime = gpsRec.utc % (24 * 3600);
+                final int oldDateTime = (gpsRec.utc - oldClockTime)
+                        / (24 * 3600);
+                if (oldDateTime == 0 && prevDateTime != 0) {
+                    gpsRec.utc += prevDateTime * 3600 * 24; // gpsRec.toString()
+                }
                 finalizeRecord(gpsFile, gpsRec, curLogFormat);
             }
 

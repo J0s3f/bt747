@@ -114,14 +114,25 @@ public class IBlue747Model {
                     if (gpsRxTx.isConnected()) { // gpsRxTx.getGpsPort().readCheck()
                         final Object lastResponse = gpsRxTx.getResponse();
                         if (lastResponse != null) {
-                            Generic.debug("Model received:" + lastResponse);
+                            if(lastResponse instanceof String[]) {
+                                final String[] resp = (String[]) lastResponse;
+                                final StringBuffer sb = new StringBuffer(255);
+                                for(String s: resp) {
+                                    sb.append(s);
+                                    sb.append(',');
+                                }
+                                Generic.debug("Model received:" + sb.toString());
+                            } else {
+                                Generic.debug("Model received:" + lastResponse);    
+                            }
+                            
                             analyseResponse(lastResponse);
                         }
                     } else {
                         gpsRxTx.setFreeTextPortAndOpen("COM20");
                     }
                 } catch (final Exception e) {
-                    // TODO: handle exception
+                    Generic.debug("Model run loop problem", e);
                 }
             }
         };
@@ -190,7 +201,7 @@ public class IBlue747Model {
     }
 
     private static class MtkDataModel {
-        protected int logStatus = 1284;
+        protected int logStatus = 0x104;
     }
 
     private final MtkDataModel mtkData = new MtkDataModel();

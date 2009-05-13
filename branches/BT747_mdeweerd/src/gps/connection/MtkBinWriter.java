@@ -53,6 +53,7 @@ public final class MtkBinWriter {
             payload[2] = (byte) (baudrate >> 8);
             payload[3] = (byte) (baudrate >> 16);
             payload[4] = (byte) (baudrate >> 24);
+            context.newState(DecoderStateFactory.NMEA_STATE);
             sendCmd(context, new MtkBinTransportMessageModel(
                     BT747Constants.PMTK_SET_BIN_MODE, payload));
         }

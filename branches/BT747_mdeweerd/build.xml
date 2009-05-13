@@ -1744,10 +1744,11 @@
 			               match="DATE = [^\s]*;"
 			               replace='DATE = "${DATE_DE}";'
 			/>
+			<!-- Modification of version during development -->
 			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="VERSION_NUMBER = [^\s]*;"
-			               replace='VERSION_NUMBER = "${build_version}";'
+			               replace='VERSION_NUMBER = "${build_version}.${build.current.revision}";'
 			/>
 
 
@@ -1778,9 +1779,10 @@
 
 			<copy file="dev/package.bat" tofile="package.bat" />
 			<copy file="dev/upload.bat" tofile="upload.bat" />
+			<!-- Changed version reference during development -->
 			<replaceregexp file="package.bat"
 			               match="SET DT=[^\s]*"
-			               replace='SET DT=${build_version}'
+			               replace='SET DT=${build_version}.${build.current.revision}'
 			/>
 		</sequential>
 	</macrodef>
