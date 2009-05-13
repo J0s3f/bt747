@@ -48,6 +48,9 @@ Application
 
 Device
 * Add AGPS capability.
+   Add button to select local file for AGPS data.
+   Add functionality to choose selected data range
+   Show data range of data in GUI.
 * Add SIRFIII support.
 * Detect that a device has bad blocks.  Skip the blocks/propose to repair.
   [Does not seem to happen that often]

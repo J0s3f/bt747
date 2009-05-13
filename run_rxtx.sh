@@ -26,6 +26,11 @@ else
  if [ $ARCH = 'amd64' ] ; then
    # Substitute for equivalent architecture.
    ARCH=x86_64
+   # Use new library if available.
+   TSTRXTXPATH=${ROOT_DIR}/lib/rxtx-2.2pre2-bins
+   if [ -d ${TSTRXTXPATH} ] ; then
+     RXTXPATH = ${TSTRXTXPATH}
+   fi
  fi
  TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
  if [ -r ${TMPRXTXPATH} ] ; then

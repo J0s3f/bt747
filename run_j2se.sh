@@ -20,13 +20,18 @@ CLASSPATH=${ROOT_DIR}/dist/BT747_j2se.jar:$CLASSPATH
  ########################
  # Finding RXTX library
  RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
- RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
- # ARCH=`arch`  # The old way
+  # ARCH=`arch`  # The old way
  ARCH=`$JAVA -jar ${ROOT_DIR}/dist/BT747_j2se.jar arch`
  if [ $ARCH = 'amd64' ] ; then
    # Substitute for equivalent architecture.
    ARCH=x86_64
+   # Use new library if available.
+   TSTRXTXPATH=${ROOT_DIR}/lib/rxtx-2.2pre2-bins
+   if [ -d ${TSTRXTXPATH} ] ; then
+     RXTXPATH = ${TSTRXTXPATH}
+   fi
  fi
+ RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
  RXTXJAR=${RXTXPATH}/RXTXcomm.jar
  if [ -r ${TMPRXTXPATH} ] ; then
