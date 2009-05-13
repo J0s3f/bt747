@@ -1,3 +1,4 @@
+# This script is used to build jars for the webstart.
 CDIR=$PWD
 (cd ../../.. ; ./sign.bat $CDIR/*.jar)
 exit
