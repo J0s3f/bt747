@@ -35,12 +35,12 @@ To run BT747 on your desktop system, the following generic steps are required.
 3. Launch the appropriate script for your system and for the program version:
 
    Desktop Like Version:
-    - Windows: run_j2se.bat
+    - Windows: run_j2se.bat [On 64 bit Java: run_j2se64.bat]
     - MacOSX : bt747_macosX_j2se.command
     - Linux  : run_j2se.sh
     
    PDA Like Version:
-    - Windows: run_rxtx.bat
+    - Windows: run_rxtx.bat  [No 64 bit version startup script added]
     - MacOSX : bt747_maxosX.command
     - Linux  : run_rxtx.sh
 
