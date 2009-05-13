@@ -30,6 +30,6 @@ del %PACK_DIR%\BT_J2ME_%DT%.zip
 mkdir %PACK_DIR%
 cp %FILES% dist
 call build_cod.bat
-zip -9 -r %PACK_DIR%/BT_J2ME_%DT%.zip dist -xi \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
+zip -9 -r %PACK_DIR%/BT_J2ME_%DT%.zip dist -x nbproject/private/\* \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
 bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip"
 ENDLOCAL
