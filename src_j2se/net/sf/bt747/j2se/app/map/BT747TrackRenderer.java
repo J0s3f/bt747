@@ -102,6 +102,10 @@ public class BT747TrackRenderer implements TrackRenderer {
             double vpX = 0.0d;
             double vpY = 0.0d;
             for (final GPSRecord tp : track) {
+                if (!tp.hasPosition()) {
+                    // this trackpoint has no valid position - next position.
+                    continue;
+                }
                 final Point2D point = map.getTileFactory().geoToPixel(
                         new GeoPosition(tp.latitude, tp.longitude),
                         map.getZoom());
