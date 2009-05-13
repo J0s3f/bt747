@@ -276,6 +276,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         if (trks != null && trks.size() != 0) {
             for (final List<GPSRecord> trk : trks) {
                 for (final GPSRecord r : trk) {
+                    if(!r.hasPosition()) {
+                        continue;
+                    }
                     if (r.latitude < minlat) {
                         minlat = r.latitude;
                     }
