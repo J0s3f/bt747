@@ -3,15 +3,10 @@
  */
 package gps.mvc;
 
-import gps.BT747Constants;
-import gps.GpsEvent;
 import gps.connection.GPSrxtx;
-import gps.log.GPSRecord;
-import gps.log.in.CommonIn;
 
+import bt747.sys.BT747Exception;
 import bt747.sys.Generic;
-import bt747.sys.JavaLibBridge;
-import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -47,17 +42,17 @@ public class Controller implements BT747Thread {
     public final Model getModel() {
         return gpsM;
     }
-    
+
     public final MtkController getMtkController() {
         return mtkC;
     }
 
     private boolean eraseRequested;
-    
+
     public final void setGpsDecode(final boolean gpsDecode) {
         gpsM.setGpsDecode(gpsDecode);
     }
-    
+
     /**
      * Check if the data is available and if it is not, requests it.
      * 
@@ -106,7 +101,6 @@ public class Controller implements BT747Thread {
         }
     }
 
-    
     public final void reqDeviceInfo() {
         setDataNeeded(MtkModel.DATA_MTK_RELEASE);
         setDataNeeded(MtkModel.DATA_MTK_VERSION);
@@ -141,7 +135,6 @@ public class Controller implements BT747Thread {
         setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
         mtkC.reqLogOverwrite();
     }
-
 
     /**
      * Erase the log.
@@ -226,7 +219,12 @@ public class Controller implements BT747Thread {
                     // local value
                     final DeviceOperationHandlerIF h = operationHandler;
                     if (h != null) {
-                        if (!h.notifyRun(handler)) {
+                        try {
+                            if (!h.notifyRun(handler)) {
+                                setDeviceOperationHandler(null);
+                            }
+                        } catch (BT747Exception e) {
+                            Generic.debug("Handler: ", e);
                             setDeviceOperationHandler(null);
                         }
                     }

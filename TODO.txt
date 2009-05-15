@@ -62,6 +62,9 @@ Tracks
 
 Tagging
 * Allow tagging using the exiftool.
+* Allow tagging of other files by renaming them.
+  As a coordinate format:
+   decimal coordinates an hemispheres separated by underlines.
 
 Map
 * Add scale to map.

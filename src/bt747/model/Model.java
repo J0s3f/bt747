@@ -32,7 +32,7 @@ import bt747.sys.JavaLibBridge;
  * @author Mario De Weerd
  * 
  */
-public class Model extends AppSettings implements GPSListener {
+public class Model extends AppSettings implements GPSListener, EventPoster {
 
     /**
      * The gpsModel communicates with the GPS device and stores some

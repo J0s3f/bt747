@@ -27,7 +27,7 @@ public class J2SEAGPS {
         return getBytesFromUrl(TRANS_AGPS_7d);
     }
 
-    public static final byte[] getBytesFromUrl(String urlString) {
+    public static final byte[] getBytesFromUrl(final String urlString) {
         byte[] result = null;
         try {
             final URL url = new URL(urlString);

@@ -20,7 +20,7 @@ package bt747.sys.interfaces;
  * @author Mario De Weerd
  * 
  */
-public interface BT747File {
+public interface BT747File extends BT747InputStream, BT747OutputStream {
 
     /**
      * Get the current file size.
@@ -71,32 +71,6 @@ public interface BT747File {
      * @return true when open.
      */
     boolean isOpen();
-
-    /**
-     * Write bytes from byte buffer to file.
-     * 
-     * @param b
-     *                Byte buffer.
-     * @param off
-     *                Start offset in buffer to start writing to file.
-     * @param len
-     *                Number of bytes to write to file.
-     * @return number of bytes written.
-     */
-    int writeBytes(final byte[] b, final int off, final int len);
-
-    /**
-     * Read bytes from file to buffer.
-     * 
-     * @param b
-     *                Byte buffer.
-     * @param off
-     *                Start offset in buffer to start reading from file.
-     * @param len
-     *                Number of bytes to read from file.
-     * @return number of bytes read.
-     */
-    int readBytes(final byte[] b, final int off, final int len);
 
     /**
      * Get the file's path.
