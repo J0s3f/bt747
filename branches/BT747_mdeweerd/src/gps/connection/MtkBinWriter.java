@@ -44,23 +44,23 @@ public final class MtkBinWriter {
      * @param context
      * @param baudrate
      */
-    public final static void doSetNmeaMode(final GPSrxtx context,
+    public final static void doSetNmeaMode(final GPSrxtx gpsRxtx,
             final int baudrate) {
-        if (context.getState() instanceof MtkBinDecoderState) {
+        if (gpsRxtx.getState() instanceof MtkBinDecoderState) {
             final byte[] payload = new byte[5];
             payload[0] = 0;
             payload[1] = (byte) (baudrate & 0xFF);
             payload[2] = (byte) (baudrate >> 8);
             payload[3] = (byte) (baudrate >> 16);
             payload[4] = (byte) (baudrate >> 24);
-            context.newState(DecoderStateFactory.NMEA_STATE);
-            sendCmd(context, new MtkBinTransportMessageModel(
+            gpsRxtx.newState(DecoderStateFactory.NMEA_STATE);
+            sendCmd(gpsRxtx, new MtkBinTransportMessageModel(
                     BT747Constants.PMTK_SET_BIN_MODE, payload));
         }
     }
 
-    public final static void doSetNmeaMode(final GPSrxtx context) {
-        doSetNmeaMode(context, context.getSpeed());
+    public final static void doSetNmeaMode(final GPSrxtx gpsRxtx) {
+        doSetNmeaMode(gpsRxtx, gpsRxtx.getSpeed());
     }
 
     /**

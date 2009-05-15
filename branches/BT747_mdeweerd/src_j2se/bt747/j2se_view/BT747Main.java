@@ -42,6 +42,7 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.BT747Int;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
@@ -510,6 +511,12 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.LOG_DOWNLOAD_DONE:
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             progressBarUpdate();
+            break;
+        case ModelEvent.AGPS_UPLOAD_DONE:
+            agpsProgressBarDone();
+            break;
+        case ModelEvent.AGPS_UPLOAD_PERCENT:
+            agpsProgressBarUpdate(((BT747Int) e.getArg()).getValue());
             break;
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
@@ -1318,6 +1325,20 @@ public class BT747Main extends javax.swing.JFrame implements
         // this.paintAll(this.getGraphics());
     }
 
+    
+    private final void agpsProgressBarUpdate(final int percent) {
+        DownloadProgressBar.setVisible(true);
+        //DownloadProgressLabel.setVisible(true);
+        DownloadProgressBar.setMinimum(0);
+        DownloadProgressBar.setMaximum(100);
+        DownloadProgressBar.setValue(percent);
+    }
+    
+    private final void agpsProgressBarDone() {
+        DownloadProgressBar.setVisible(false);
+        DownloadProgressLabel.setVisible(false);
+    }
+    
     private void openPort(final String s) {
         boolean foundPort = false;
         int port = 0;

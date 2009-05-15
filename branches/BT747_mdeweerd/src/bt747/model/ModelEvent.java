@@ -52,6 +52,11 @@ public class ModelEvent extends GpsEvent {
      * 
      */
     public static final int UPDATE_LOG_FILE_LIST = 271;
+    /** Notifies a change in the AGPS upload (start/stop) */
+    public static final int AGPS_UPLOAD_DONE = 272;
+    /** Notifies a change in the AGPS advancement. */
+    public static final int AGPS_UPLOAD_PERCENT = 273;
+
 
     public ModelEvent(final int type, final Object arg) {
         super(type, arg);

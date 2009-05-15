@@ -5,6 +5,7 @@ package net.sf.bt747.gps.mtk.agps;
 
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747InputStream;
 
 /**
  * @author Mario
@@ -13,6 +14,67 @@ import bt747.sys.interfaces.BT747Hashtable;
 public class AgpsModel {
     private final BT747Hashtable table = JavaLibBridge
             .getHashtableInstance(14 * 4);
+
+    public final BT747InputStream getInputStream() {
+        return new AgpsStream(table, 0);
+
+    }
+
+    private static class AgpsStream implements BT747InputStream {
+
+        private final BT747Hashtable table;
+        private final int currentPos;
+        private final int bytesToGo;
+
+        /**
+         * 
+         */
+        public AgpsStream(final BT747Hashtable table, final int startTime) {
+            this.table = table;
+            currentPos = 0;
+            bytesToGo = 0;
+            initData(startTime);
+        }
+
+        // TODO: Implement this.
+        private byte[] initData(final int startTime) {
+            byte[] result;
+
+            // Determine size of selected data.
+            // Get references to data
+            final BT747Hashtable iter = table.iterator();
+            int size = 0;
+            while (iter.hasNext()) {
+                final AgpsPeriodModel p = (AgpsPeriodModel) iter.get(iter
+                        .nextKey());
+                if (p.getTime() >= startTime) {
+                    size += p.getSize();
+                }
+            }
+
+            // Sort data according to time and satnbr.
+
+            // put data in buffer.
+            result = new byte[sizeOfDataAfter(table, startTime)];
+            int idx = 0;
+            // idx = p.fillBuffer(result, idx, startIdx, endIdx);
+            return result;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see bt747.sys.interfaces.BT747InputStream#readBytes(byte[], int,
+         *      int)
+         */
+        public final int readBytes(byte[] b, int off, int len) {
+            if(bytesToGo>=0) {
+                // TODO: fill buffer;
+                // return bytes filled.
+            }
+            return -1;
+        }
+    }
 
     public void addData(final byte[] buffer) {
         int idx;
@@ -31,38 +93,13 @@ public class AgpsModel {
             idx += 60;
         }
     }
-    
-    // TODO: Implement this.
-    public byte[] getData(final int startTime) {
-        byte[] result;
 
-        // Determine size of selected data.
-        // Get references to data
+    private static int sizeOfDataAfter(BT747Hashtable table, final int time) {
         final BT747Hashtable iter = table.iterator();
         int size = 0;
         while (iter.hasNext()) {
-            final AgpsPeriodModel p = (AgpsPeriodModel) iter
-                    .get(iter.nextKey());
-            if (p.getTime() >= startTime) {
-                size += p.getSize();
-            }
-        }
-        
-        // Sort data according to time and satnbr.
-
-        // put data in buffer.
-        result = new byte[sizeOfDataAfter(startTime)];
-        int idx = 0;
-        //idx = p.fillBuffer(result, idx, startIdx, endIdx);        
-        return result;
-    }
-
-    public int sizeOfDataAfter(final int time) {
-        final BT747Hashtable iter = table.iterator();
-        int size = 0;
-        while (iter.hasNext()) {
-            final AgpsPeriodModel p = (AgpsPeriodModel) iter
-                    .get(iter.nextKey());
+            final AgpsPeriodModel p = (AgpsPeriodModel) iter.get(iter
+                    .nextKey());
             if (p.getTime() >= time) {
                 size += p.getSize();
             }

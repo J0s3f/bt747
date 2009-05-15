@@ -1718,7 +1718,7 @@ public class Controller implements ModelListener {
     
     public final void setAgpsData(byte[] agpsData) {
         // Initialise the handler (will respond/send data).
-        AgpsUploadHandler handler = new AgpsUploadHandler();
+        AgpsUploadHandler handler = new AgpsUploadHandler(m);
         handler.setAgpsData(agpsData);
         
         //TODO: Move part of this to the MtkController.
