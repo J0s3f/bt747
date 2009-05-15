@@ -574,9 +574,9 @@
             -keep public interface bt747.sys.interfaces.* {
                 public *;
 			}
-        -keep public class bt747.interfaces.* {
-            public *;
-        }
+		    -keep public class bt747.sys.interfaces.* {
+		                public *;
+		    }
                         -keep public class * {
 	                       public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
 			               public static boolean hasDefaultPortInstance();
@@ -713,6 +713,10 @@
                 -keep public interface bt747.interfaces.* {
 			        public *;
 			    }
+	         -keep public class bt747.sys.interfaces.* {
+	                        public *;
+	            }
+
             -keep public class net.sf.bt747.j2se.filefilters.* { *; }
             -keep public class net.sf.bt747.j2se.map.* { *; }
 		        -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
