@@ -5,8 +5,8 @@ package gps.mvc;
 
 import gps.connection.GPSrxtx;
 
-import bt747.sys.BT747Exception;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Thread;
 
 /**

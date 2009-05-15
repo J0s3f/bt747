@@ -3,7 +3,7 @@
  */
 package gps.mvc;
 
-import bt747.sys.BT747Exception;
+import bt747.sys.interfaces.BT747Exception;
 
 /**
  * Defines the interface for a coordinated operation that is managed with the
