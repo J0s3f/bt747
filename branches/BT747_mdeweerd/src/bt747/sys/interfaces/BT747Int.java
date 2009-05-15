@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bt747.sys;
+package bt747.sys.interfaces;
 
 /**
  * Wrapper class of an integer so that it can be an object.

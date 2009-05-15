@@ -11,11 +11,11 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 import bt747.model.EventPoster;
 import bt747.model.ModelEvent;
-import bt747.sys.BT747Exception;
-import bt747.sys.BT747Int;
 import bt747.sys.ByteDataStream;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747InputStream;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  * Serial handler for AGPS data upload.

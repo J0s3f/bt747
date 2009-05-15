@@ -42,9 +42,9 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.BT747Int;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  * J2SE Implementation (GUI) of BT747.

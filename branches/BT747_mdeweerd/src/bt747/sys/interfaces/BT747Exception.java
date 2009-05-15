@@ -1,7 +1,9 @@
 /**
  * 
  */
-package bt747.sys;
+package bt747.sys.interfaces;
+
+import bt747.sys.Generic;
 
 
 /**
