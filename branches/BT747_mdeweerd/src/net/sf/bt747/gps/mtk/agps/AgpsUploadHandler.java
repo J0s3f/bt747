@@ -88,7 +88,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                     break;
                 case 2:
                     errorCnt = 0;
-                    sendNextOK = true;
+
                     // Check if data corresponds to sent data.
                     final byte[] p = msg.getPayLoad();
                     final int pkt = p[0] & 0xFF + ((p[1] & 0xFF) << 8);
@@ -99,11 +99,14 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                         Generic
                                 .debug("Error packet from device during AGPS upload.");
                     }
-//                    if (pkt != nxtPacketIdx - 1) {
-//                        // Do not care for now - the device sometimes sends a double confirmation.
-//                        // Let the timeout happen // or wait for the actual confirmation.
-//                    }
-                    // If not - handle error.
+                    if (pkt == nxtPacketIdx -1) {
+                        sendNextOK = true;
+                    }
+                    // else : Do not care for now - the device sometimes sends
+                    // a double confirmation.
+                    // Let the timeout happen or wait for the actual
+                    // confirmation.
+
                     break;
                 default:
                     break;
@@ -243,7 +246,9 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         }
     }
 
-    /** Notify model listeners that we advanced in the upload. 
+    /**
+     * Notify model listeners that we advanced in the upload.
+     * 
      * @param percent
      */
     private final void notifyPercent(final int percent) {
