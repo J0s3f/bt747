@@ -47,10 +47,13 @@ public class IBlue747Model {
         IBlue747Model.modelPort = port;
     }
 
+    /**
+     * The logger's format.
+     */
     private int logFormat = 0x000215FF;// 0x3E;
 
     enum Model {
-        ML7
+        ML7, QST1300
     };
 
     private Model model = Model.ML7;
@@ -75,26 +78,19 @@ public class IBlue747Model {
 
     }
 
-    public static void main(final String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            // Model m = new Model();
-            // Controller c = new Controller(m);
-
-            public void run() {
-                (new IBlue747Model()).onStart();
-            }
-        });
-        Generic.setDebugLevel(1);
-    }
-
     /**
      * 
      */
     public IBlue747Model() {
     }
 
+    /**
+     * Main entry code of class.
+     * 
+     * Should be called after instantiation.
+     * 
+     * 
+     */
     public void onStart() {
         if (IBlue747Model.modelPort != null) {
             gpsRxTx = new GPSrxtx(IBlue747Model.modelPort);
@@ -114,18 +110,20 @@ public class IBlue747Model {
                     if (gpsRxTx.isConnected()) { // gpsRxTx.getGpsPort().readCheck()
                         final Object lastResponse = gpsRxTx.getResponse();
                         if (lastResponse != null) {
-                            if(lastResponse instanceof String[]) {
+                            if (lastResponse instanceof String[]) {
                                 final String[] resp = (String[]) lastResponse;
                                 final StringBuffer sb = new StringBuffer(255);
-                                for(String s: resp) {
+                                for (String s : resp) {
                                     sb.append(s);
                                     sb.append(',');
                                 }
-                                Generic.debug("Model received:" + sb.toString());
+                                Generic.debug("Model received:"
+                                        + sb.toString());
                             } else {
-                                Generic.debug("Model received:" + lastResponse);    
+                                Generic.debug("Model received:"
+                                        + lastResponse);
                             }
-                            
+
                             analyseResponse(lastResponse);
                         }
                     } else {
@@ -140,25 +138,30 @@ public class IBlue747Model {
         tm.scheduleAtFixedRate(t, 100, 100);
     }
 
-    public static final int DEVICE_MODE_NMEA = 0;
-    public static final int DEVICE_MODE_MTKBIN = 1;
-    private int device_mode = IBlue747Model.DEVICE_MODE_NMEA;
+    /**
+     * Possible communication modes the device is in.
+     * 
+     * @author Mario
+     * 
+     */
+    enum DeviceMode {
+        DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN
+    };
 
     /**
-     * Set the communication mode of the device. The device can commumnicate
-     * in NMEA mode or MTKBIN mode.
-     * 
-     * The mode value must be one of:
-     * <ul>
-     * <li>{@link #DEVICE_MODE_NMEA}</li>
-     * <li> {@link #DEVICE_MODE_NMEA}</li>
-     * </ul>
+     * The curent communication mode of the device.
+     */
+    private DeviceMode deviceMode = DeviceMode.DEVICE_MODE_NMEA;
+
+    /**
+     * Set the communication mode of the device. The device can communicate in
+     * NMEA mode or MTKBIN mode.
      * 
      * @param mode
      */
-    private final void setDeviceMode(final int mode) {
-        if (device_mode != mode) {
-            device_mode = mode;
+    private final void setDeviceMode(final DeviceMode mode) {
+        if (deviceMode != mode) {
+            deviceMode = mode;
             switch (mode) {
             case DEVICE_MODE_NMEA:
                 gpsRxTx.newState(DecoderStateFactory.NMEA_STATE);
@@ -172,6 +175,12 @@ public class IBlue747Model {
         }
     }
 
+    /**
+     * Analyzes data receive on the serial link. The data is already in a
+     * specific format.
+     * 
+     * @param response
+     */
     private final void analyseResponse(final Object response) {
         if (response instanceof MtkBinTransportMessageModel) {
             analyseMtkBinData((MtkBinTransportMessageModel) response);
@@ -180,23 +189,35 @@ public class IBlue747Model {
         }
     }
 
+    private GpsRxtxExecCommand previousEPOReply = null;
+    /**
+     * Analyze and respond to binary MTK data.
+     * 
+     * @param msg
+     */
     private final void analyseMtkBinData(final MtkBinTransportMessageModel msg) {
         GpsRxtxExecCommand reply = null;
         switch (msg.getType()) {
         case BT747Constants.PMTK_SET_EPO_DATA:
             Generic.debug("Model received AGPS DATA" + msg.toString());
+            final EpoReply r = new EpoReply(msg);
             reply = new EpoReply(msg);
+            if(r.getPacketNbr()==0x101) {
+                // Reply as some devices do ...
+                previousEPOReply.execute(gpsRxTx);
+            }
             break;
         case BT747Constants.PMTK_SET_BIN_MODE:
             Generic.debug("Model received SET BIN MODE" + msg.toString());
             // TODO: should look at payload too .
-            setDeviceMode(DEVICE_MODE_NMEA);
+            setDeviceMode(DeviceMode.DEVICE_MODE_NMEA);
             break;
         default:
 
         }
-        if(reply!=null) {
+        if (reply != null) {
             reply.execute(gpsRxTx);
+            previousEPOReply = reply;
         }
     }
 
@@ -207,7 +228,7 @@ public class IBlue747Model {
     private final MtkDataModel mtkData = new MtkDataModel();
 
     public void replyMTK_Ack(final String[] p_nmea) {
-        switch (device_mode) {
+        switch (deviceMode) {
         case DEVICE_MODE_NMEA:
             try {
                 sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
@@ -403,7 +424,7 @@ public class IBlue747Model {
             case BT747Constants.PMTK_CMD_FULL_COLD_START: // CMD 104
             case BT747Constants.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
             case BT747Constants.PMTK_SET_BIN_MODE: // CMD 253
-                setDeviceMode(IBlue747Model.DEVICE_MODE_MTKBIN);
+                setDeviceMode(DeviceMode.DEVICE_MODE_MTKBIN);
                 break;
             case BT747Constants.PMTK_API_SET_FIX_CTL: // CMD 300
             case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
@@ -446,6 +467,7 @@ public class IBlue747Model {
                 case ML7:
                     response = "PMTK705,M-core_2.02,231B,,1.0";
                     break;
+                case QST1300:
                 default:
                     response = "PMTK" + BT747Constants.PMTK_DT_RELEASE + ","
                             + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
@@ -478,7 +500,7 @@ public class IBlue747Model {
             }
         } // End if
         if (acknowledge != null) {
-           acknowledge.execute(gpsRxTx);
+            acknowledge.execute(gpsRxTx);
         }
         if (response != null) {
             if (response instanceof String) {
@@ -494,21 +516,22 @@ public class IBlue747Model {
         NMEAWriter.sendPacket(gpsRxTx, p);
     }
 
-    public String[] lastResponse;
+    /**
+     * This class's main in case it is run independently.
+     * 
+     * @param args
+     */
+    public static void main(final String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
 
-    // public void onEvent(Event e) {
-    // switch (e.type) {
-    // case ControlEvent.TIMER:
-    // if (m_GPSrxtx.isConnected()) {
-    // lastResponse = m_GPSrxtx.getResponse();
-    // if (lastResponse != null) {
-    // analyseNMEA(lastResponse);
-    // }
-    // } else {
-    // }
-    // break;
-    //
-    // }
-    // }
+            // Model m = new Model();
+            // Controller c = new Controller(m);
+
+            public void run() {
+                (new IBlue747Model()).onStart();
+            }
+        });
+        Generic.setDebugLevel(1);
+    }
 
 }
