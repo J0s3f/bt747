@@ -99,10 +99,10 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                         Generic
                                 .debug("Error packet from device during AGPS upload.");
                     }
-                    if (pkt != nxtPacketIdx - 1) {
-                        // Fake a timeout
-                        timesOutAt = Generic.getTimeStamp() - 1;
-                    }
+//                    if (pkt != nxtPacketIdx - 1) {
+//                        // Do not care for now - the device sometimes sends a double confirmation.
+//                        // Let the timeout happen // or wait for the actual confirmation.
+//                    }
                     // If not - handle error.
                     break;
                 default:

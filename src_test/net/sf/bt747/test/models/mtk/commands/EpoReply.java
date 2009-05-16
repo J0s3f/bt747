@@ -18,10 +18,10 @@ public class EpoReply implements GpsRxtxExecCommand {
 
     private byte[] payload = new byte[4];
 
-    public EpoReply(MtkBinTransportMessageModel msg) {
-        byte[] msgPayload = msg.getPayLoad();
-        payload[0] = (byte) msgPayload[0];
-        payload[1] = (byte) msgPayload[1];
+    public EpoReply(final MtkBinTransportMessageModel msg) {
+        final byte[] msgPayload = msg.getPayLoad();
+        payload[0] = msgPayload[0];
+        payload[1] = msgPayload[1];
         payload[2] = (byte) 1;
         // final int main = Integer.parseInt(nmea[0].substring(4));
         // this.status = status;
@@ -33,9 +33,9 @@ public class EpoReply implements GpsRxtxExecCommand {
         // }
     }
 
-    // public EpoReply(final String[] nmea) {
-    // this(nmea, BT747Constants.PMTK_ACK_SUCCEEDED);
-    // }
+    public final int getPacketNbr() {
+        return payload[0] & 0xFF + ((payload[1] & 0xFF) << 8);
+    }
 
     /*
      * (non-Javadoc)
