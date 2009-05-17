@@ -91,7 +91,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
 
                     // Check if data corresponds to sent data.
                     final byte[] p = msg.getPayLoad();
-                    final int pkt = p[0] & 0xFF + ((p[1] & 0xFF) << 8);
+                    final int pkt = (p[0] & 0xFF) + ((p[1] & 0xFF) << 8);
                     final int rsp = p[2];
                     if (rsp != 1) {
                         // Exceed error count to force stop.
@@ -99,7 +99,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                         Generic
                                 .debug("Error packet from device during AGPS upload.");
                     }
-                    if (pkt == nxtPacketIdx -1) {
+                    if (pkt >= nxtPacketIdx -1) {
                         sendNextOK = true;
                     }
                     // else : Do not care for now - the device sometimes sends

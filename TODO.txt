@@ -8,6 +8,10 @@ PROBLEMS
   
 * Check the autolog functionality and integrate it in BT747.
 
+COSMETIC IMPROVEMENTS
+* Remove all GUI data when the input file is changed.
+  Potentially make this configureable.
+
 IMPROVEMENTS
 (Things not very visible to the user).
 * Detect power up/rest of device (Initial PMTK010) and use it to rerequest all the values.
