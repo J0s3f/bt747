@@ -264,8 +264,10 @@ public final class BT747Constants { // dev as in device
 
     /* Special requests * SW ? */
     public static final int PMTK_Q_DGPS_INFO = 602;
-    /** Query device version (604  0x25C) */
+    /** Query device version (604 0x25C) */
     public static final int PMTK_Q_VERSION = 604;
+    /** Get EPO date range (607 0x261) */
+    public static final int PMTK_Q_EPO_INFO = 607;
     /**
      * Requests release data 605.
      */
@@ -274,7 +276,23 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_DT_DGPS_INFO = 702;
     public static final int PMTK_DT_VERSION = 704;
     public static final int PMTK_DT_RELEASE = 705;
-    /** Send EPO data to device (722  0x2D2) */
+    /**
+     * Response to EPO_INFO query.<br>
+     * Answer Example<br>
+     * $PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000*1C<br><ol>
+     * <li>$PMTK707 = AGPS Status</li>
+     * <li>28 = Number of the effective data?</li>
+     * <li>1511 = GPS Weeks of validity start</li>
+     * <li>518400 = GPS Seconds of validity start</li>
+     * <li>1512 = GPS Weeks of validity end</li>
+     * <li>496800 = GPS Seconds of validity end</li>
+     * <li>1511 = GPS Weeks of ??1</li>
+     * <li>540000 = GPS Seconds of ??1</li>
+     * <li>1511 = GPS Weeks of ??2</li>
+     * <li>540000 = GPS Seconds of ??2</li></ol>
+     */
+    public static final int PMTK_DT_EPO_INFO = 707;
+    /** Send EPO data to device (722 0x2D2) */
     public static final int PMTK_SET_EPO_DATA = 722;
 
     /**
@@ -359,7 +377,7 @@ public final class BT747Constants { // dev as in device
     public static final String PMTK_SET_NMEA_BAUD_RATE_STR = ""
             + BT747Constants.PMTK_SET_NMEA_BAUD_RATE;
     public static final String PMTK_SET_BIN_MODE_STR = ""
-            + + BT747Constants.PMTK_SET_BIN_MODE;
+            + +BT747Constants.PMTK_SET_BIN_MODE;
     public static final String PMTK_API_SET_FIX_CTL_STR = ""
             + BT747Constants.PMTK_API_SET_FIX_CTL;
     public static final String PMTK_API_SET_DGPS_MODE_STR = ""
@@ -637,10 +655,10 @@ public final class BT747Constants { // dev as in device
             mdStr = "757/ZI v1";
             // logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
-// Not needed because other detection works
-//        case 0x0415:
-//            mdStr = "NCS-NAVI 150+";
-//            break;
+        // Not needed because other detection works
+        // case 0x0415:
+        // mdStr = "NCS-NAVI 150+";
+        // break;
         case 0x231B:
             mdStr = "ML7";
             break;
@@ -716,10 +734,11 @@ public final class BT747Constants { // dev as in device
             "ZDA", // 17 // GPZDA interval - Time & Date
             "MCHN", // 18 // PMTKCHN interval - GPS channel status
     };
-    
+
     public static final String getNmeaDescription(final int idx) {
         return NMEA_STRINGS[idx];
     }
+
     /** GPGLL interval - Geographic Position - Latitude longitude. */
     public static final int NMEA_SEN_GLL_IDX = 0;
     /** GPRMC interval - Recommended Min. specic - GNSS sentence. */
