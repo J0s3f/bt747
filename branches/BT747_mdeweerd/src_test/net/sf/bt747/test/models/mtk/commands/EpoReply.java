@@ -34,7 +34,7 @@ public class EpoReply implements GpsRxtxExecCommand {
     }
 
     public final int getPacketNbr() {
-        return payload[0] & 0xFF + ((payload[1] & 0xFF) << 8);
+        return (payload[0] & 0xFF) + ((payload[1] & 0xFF) << 8);
     }
 
     /*

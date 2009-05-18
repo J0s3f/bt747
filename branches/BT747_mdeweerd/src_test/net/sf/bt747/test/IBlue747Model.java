@@ -53,10 +53,10 @@ public class IBlue747Model {
     private int logFormat = 0x000215FF;// 0x3E;
 
     enum Model {
-        ML7, QST1300
+        ML7, QST1300, BT747PLUS
     };
 
-    private Model model = Model.ML7;
+    private Model model = Model.BT747PLUS;
 
     private GPSrxtx gpsRxTx = null;
 
@@ -254,6 +254,10 @@ public class IBlue747Model {
 
     // PMTK182,3,7,2 seems to interrupt the log transfer ...
 
+    /** Respond to log specific functionality (PMTK182).
+     * @param p_nmea
+     * @return
+     */
     public int replyLogNmea(final String[] p_nmea) {
         try {
             replyMTK_Log_Ack(p_nmea);
@@ -459,24 +463,48 @@ public class IBlue747Model {
                 break;
             // break;
             case BT747Constants.PMTK_Q_RELEASE: // CMD 605
+                String coreVersion = "";
+                String modelNumber = "";
+                String modelRef = null;
+                String swVersion = "1.0";
                 // m_sendPacket("PMTK" +
                 // BT747Constants.PMTK_DT_RELEASE
                 // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
                 // + "TSI_747A+" + "," + "1.0");
+                model = Model.BT747PLUS;
                 switch (model) {
+                case BT747PLUS:
+                    coreVersion = "AXN_1.0-B_1.3_C01";
+                    modelNumber = "0001";
+                    modelRef = "TSI_747A+";
+                    swVersion = "1.0";
+                    break;
                 case ML7:
-                    response = "PMTK705,M-core_2.02,231B,,1.0";
+                    coreVersion = "M-core_2.02";
+                    modelNumber = "231B";
+                    modelRef = "";
+                    swVersion = "1.0";
                     break;
                 case QST1300:
                 default:
-                    response = "PMTK" + BT747Constants.PMTK_DT_RELEASE + ","
-                            + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
-                            + "QST1300" + "," + "1.0";
+                    coreVersion = "AXN_1.0-B_1.3_C01";
+                modelNumber = "8805";
+                modelRef = "QST1300";
+                swVersion = "1.0";
 
                     // AXN_0.3-B_1.3_C01
                     break;
                 }
+                if(modelRef!=null) {
+                    response = "PMTK" + BT747Constants.PMTK_DT_RELEASE + ","
+                    + coreVersion + "," + modelNumber + ","
+                    + modelRef + "," + swVersion; 
+                }
+                break;
             case BT747Constants.PMTK_Q_VERSION:
+                break;
+            case BT747Constants.PMTK_Q_EPO_INFO:
+                response = "$PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000";
                 break;
             case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
                 break;
@@ -506,7 +534,13 @@ public class IBlue747Model {
             if (response instanceof String) {
                 final String resp = (String) response;
                 sendPacket(resp);
+                if(z_Result == -1) {
+                    z_Result = 0;
+                }
             }
+        }
+        if(z_Result<0) {
+            Generic.debug("No response from model to " + nmea.toString());
         }
         return z_Result;
     } // End method
