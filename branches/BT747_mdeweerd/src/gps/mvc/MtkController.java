@@ -3,14 +3,15 @@
  */
 package gps.mvc;
 
-import bt747.sys.JavaLibBridge;
-import bt747.sys.interfaces.BT747StringTokenizer;
-
 import gps.BT747Constants;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+
+import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
  * Controller for MTK based device (Transystem Type logger currently
@@ -25,14 +26,17 @@ public class MtkController {
     private MtkModel m;
     private final MTKLogDownloadHandler mtkLogHandler;
 
+    /** Default prefix to MTK command. */
+    private static final String PMTK = "PMTK";
+
     MtkController(final MtkModel m) {
         this.m = m;
         mtkLogHandler = new MTKLogDownloadHandler(this, m);
         // TODO: Log handler should be split in model and controller
-        //   or use current model for data.
+        // or use current model for data.
         m.setLogHandler(mtkLogHandler);
     }
-    
+
     public final MtkModel getMtkModel() {
         return m;
     }
@@ -73,7 +77,6 @@ public class MtkController {
         m.getHandler().doSendCmd(cmd);
     }
 
-    
     /**
      * Set the logging format of the device. <br>
      * Best followed by eraseLog.
@@ -92,123 +95,148 @@ public class MtkController {
             logFmt &= ~((1 << BT747Constants.FMT_ELEVATION_IDX)
                     | (1 << BT747Constants.FMT_AZIMUTH_IDX) | (1 << BT747Constants.FMT_SNR_IDX));
         }
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR + ","
                 + JavaLibBridge.unsigned2hex(logFmt, 8));
         m.setChanged(MtkModel.DATA_LOG_FORMAT);
     }
 
-    public final void doHotStart() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_HOT_START_STR);
+    /** To perform a hot start on the device. */
+    public final static int CMD_HOTSTART = 0;
+    /** To perform a warm start on the device. */
+    public final static int CMD_WARMSTART = 1;
+    /** To perform a cold start on the device. */
+    public final static int CMD_COLDSTART = 2;
+    /** To perform a full cold start on the device. */
+    public final static int CMD_FULLCOLDSTART = 3;
+
+    public final void cmd(final int cmd) {
+        String nmeaCmd = null;
+        switch (cmd) {
+        case CMD_HOTSTART:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_CMD_HOT_START_STR;
+            break;
+        case CMD_WARMSTART:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_CMD_WARM_START_STR;
+            break;
+        case CMD_COLDSTART:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_CMD_COLD_START_STR;
+            break;
+        case CMD_FULLCOLDSTART:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_CMD_FULL_COLD_START_STR;
+            break;
+        default:
+            break;
+        }
+        if (nmeaCmd != null) {
+            sendCmd(nmeaCmd);
+        }
     }
 
-    public final void doWarmStart() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_WARM_START_STR);
-    }
-
-    public final void doColdStart() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_COLD_START_STR);
-    }
-
-    public final void doFullColdStart() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_FULL_COLD_START_STR);
-    }
-
-    protected final void reqDeviceVersion() {
-        sendCmd("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
-    }
-
-    protected final void reqDeviceRelease() {
-        sendCmd("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
-    }
-
-
-    /**
-     * Must be accessed through {@link #DATA_FLASH_TYPE}
-     */
-    protected final void reqFlashManuID() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
-    }
-
-    /**
-     * Request the current log format from the device.<br>
-     * Must use {@link #setDataNeeded(int)} and {@link #DATA_LOG_FORMAT}.
-     */
-    protected final void reqLogFormat() {
-        // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_FORMAT_STR);
-    }
-
-    /**
-     * Request the current log status from the device.<br>
-     * Must use {@link #setDataNeeded(int)} and {@link #DATA_LOG_STATUS}.
-     */
-    protected final void reqLogStatus() {
-
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_LOG_STATUS_STR);
-    }
-
-    /**
-     * Requests the amount of memory currently used.<br>
-     * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_USED}.
-     */
-    protected final void reqLogMemUsed() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_MEM_USED_STR);
-    }
-
-    /**
-     * Requests the number of points logged in memory.<br>
-     * Must use {@link #setDataNeeded(int)} and {@link #DATA_MEM_PTS_LOGGED}.
-     */
-    protected final void reqLogMemPtsLogged() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR);
-    }
-
-    protected final void reqMtkLogVersion() {
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_VERSION_STR);
-    }
-
-    public final void reqLogReasonStatus() {
-        /* Get log distance interval */
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR);
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR);
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR);
-
-    }
-
-    public final void reqLogFlashStatus() {
-        /* Get flash status - immediate (not in output buffer) */
-        /* Needed for erase */
-        doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_FLASH_STAT_STR);
-    }
-
-    public final void reqLogFlashSectorStatus() {
-        /* Get flash status - immediate (not in output buffer) */
-        /* Needed for erase */
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_FLASH_SECTORS_STR);
+    protected final void reqData(final int dataType) {
+        String nmeaCmd = null;
+        switch (dataType) {
+        case MtkModel.DATA_DEVICE_RELEASE:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_VERSION_STR;
+            break;
+        case MtkModel.DATA_DEVICE_VERSION:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_RELEASE_STR;
+            break;
+        case MtkModel.DATA_FLASH_TYPE:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F";
+            break;
+        case MtkModel.DATA_LOG_FORMAT:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_FORMAT_STR;
+            break;
+        case MtkModel.DATA_LOG_STATUS:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_LOG_STATUS_STR;
+            break;
+        case MtkModel.DATA_MEM_USED:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_MEM_USED_STR;
+            break;
+        case MtkModel.DATA_MEM_PTS_LOGGED:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR;
+            break;
+        case MtkModel.DATA_LOG_VERSION:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_VERSION_STR;
+            break;
+        case MtkModel.DATA_MTK_VERSION:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_VERSION_STR;
+            break;
+        case MtkModel.DATA_MTK_RELEASE:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_RELEASE_STR;
+            break;
+        case MtkModel.DATA_INITIAL_LOG:
+            /**
+             * Request the initial log mode (the first value logged in
+             * memory). Will be analyzed in {@link #analyseLogNmea(String[])}.<br>
+             * Must be accessed through {@link #DATA_INITIAL_LOG}
+             */
+            // 6 is the log mode offset in the log,
+            // 2 is the size
+            // Required to know if log is in overwrite mode.
+            mtkLogHandler.readLog(6, 2);
+            return;
+        case MtkModel.DATA_LOG_TIME_INTERVAL:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR;
+            break;
+        case MtkModel.DATA_LOG_SPEED_INTERVAL:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR;
+            break;
+        case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR;
+            break;
+        case MtkModel.DATA_LOG_FLASH_STATUS:
+            /* Needed for erase */
+            /* Immediate sending! */
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_FLASH_STAT_STR;
+            doSendCmd(nmeaCmd);
+            return;
+        case MtkModel.DATA_LOG_FLASH_SECTOR_STATUS:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_FLASH_SECTORS_STR;
+            break;
+        case MtkModel.DATA_FIX_PERIOD:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_FIX_CTL;
+            break;
+        case MtkModel.DATA_AGPS_STORED_RANGE:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_EPO_INFO;
+            break;
+        default:
+            break;
+        }
+        if (nmeaCmd != null) {
+            sendCmd(nmeaCmd);
+        } else {
+            Generic.debug("Serious: (in MtkController) Unknown data type #"
+                    + dataType);
+        }
     }
 
     public final void setLogTimeInterval(final int value) {
@@ -216,7 +244,7 @@ public class MtkController {
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
         }
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
@@ -230,7 +258,7 @@ public class MtkController {
         }
 
         /* Get log distance interval */
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
                 + z_value);
@@ -244,7 +272,7 @@ public class MtkController {
             z_value = 1;
         }
         /* Get log distance interval */
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR + ","
                 + (z_value * 10));
@@ -259,19 +287,13 @@ public class MtkController {
         }
 
         /* Set log distance interval */
-        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + "," + z_value
-                + ",0,0,0.0,0.0");
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_SET_FIX_CTL
+                + "," + z_value + ",0,0,0.0,0.0");
     }
 
-    public final void reqFixInterval() {
-        // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_FIX_CTL);
-    }
-
-    
     public final void setLogOverwrite(final boolean set) {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_REC_METHOD_STR + ","
                 + (set ? "1" : "2"));
@@ -279,72 +301,75 @@ public class MtkController {
 
     public final void reqLogOverwrite() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_Q + ","
                 + BT747Constants.PMTK_LOG_REC_METHOD_STR);
     }
 
     public final void setSBASTestEnabled(final boolean set) {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
+        sendCmd(MtkController.PMTK
+                + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
                 + (set ? "0" : "1"));
     }
 
     public final void reqSBASTestEnabled() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
     }
 
     public final void setSBASEnabled(final boolean set) {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_SBAS_STR + ","
-                + (set ? "1" : "0"));
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_SET_SBAS_STR
+                + "," + (set ? "1" : "0"));
     }
 
     public final void reqSBASEnabled() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_SBAS_STR);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_SBAS_STR);
     }
 
     public final void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
+        sendCmd(MtkController.PMTK
+                + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
                 + (set ? "1" : "0"));
     }
 
     public final void reqPowerSaveEnabled() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
+        sendCmd(MtkController.PMTK
+                + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
     }
 
     public final void setDGPSMode(final int mode) {
         // Request log format from device
         if ((mode >= 0) && (mode <= 2)) {
-            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
-                    + mode);
+            sendCmd(MtkController.PMTK
+                    + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + "," + mode);
         }
     }
 
     public final void reqDGPSMode() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
     }
 
     public final void setDatumMode(final int mode) {
         // Request log format from device
         if ((mode >= 0) && (mode <= 2)) {
-            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
-                    + mode);
+            sendCmd(MtkController.PMTK
+                    + BT747Constants.PMTK_API_SET_DATUM_STR + "," + mode);
         }
     }
 
     public final void reqDatumMode() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_DATUM_STR);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_DATUM_STR);
     }
 
     public final void reqNMEAPeriods() {
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
     }
 
     public final void reqHoluxName() {
@@ -366,7 +391,7 @@ public class MtkController {
      * Requests the current mac address for bluetooth (Holux 241 devices).
      */
     public final void reqBtMacAddr() {
-        sendCmd("PMTK" + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
     }
 
     /**
@@ -385,7 +410,8 @@ public class MtkController {
         }
 
         if (myMacAddr.length() == 12) {
-            sendCmd("PMTK" + BT747Constants.PMTK_API_SET_BT_MAC_ADDR + ","
+            sendCmd(MtkController.PMTK
+                    + BT747Constants.PMTK_API_SET_BT_MAC_ADDR + ","
                     + myMacAddr.substring(0, 6) + ","
                     + myMacAddr.substring(6, 12));
             reqBtMacAddr();
@@ -395,7 +421,8 @@ public class MtkController {
     public final void setNMEAPeriods(final int[] periods) {
         final StringBuffer sb = new StringBuffer(255);
         sb.setLength(0);
-        sb.append("PMTK" + BT747Constants.PMTK_API_SET_NMEA_OUTPUT);
+        sb.append(MtkController.PMTK
+                + BT747Constants.PMTK_API_SET_NMEA_OUTPUT);
         for (int i = 0; i < periods.length; i++) {
             sb.append(',');
             sb.append(periods[i]);
@@ -424,7 +451,7 @@ public class MtkController {
             final int GSV_Period, final int GGA_Period, final int ZDA_Period,
             final int MCHN_Period) {
         // Request log format from device
-        sendCmd("PMTK"
+        sendCmd(MtkController.PMTK
                 + BT747Constants.PMTK_API_SET_USER_OPTION
                 + ","
                 + "0" // Lock:
@@ -439,26 +466,24 @@ public class MtkController {
 
     public final void reqFlashUserOption() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
+        sendCmd(MtkController.PMTK
+                + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
     }
 
-
-    
     public final void logImmediate(final int value) {
         if (!m.isLoggingActive()) {
             startLog();
         }
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_USER + ","
                 + JavaLibBridge.unsigned2hex(value, 4));
     }
 
-    
     /** Activate the logging by the device. */
     public final void startLog() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_ON);
         m.setLoggingActive(true); // This should be the result of
         // the action.
@@ -468,34 +493,21 @@ public class MtkController {
     /** Stop the automatic logging of the device. */
     public final void stopLog() {
         // Request log format from device
-        sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_OFF);
         m.setLoggingActive(false); // This should be the result of
         // the action.
         // The device will eventually tell the new status
     }
-    
 
     public final void setAutoLog(final boolean enable) {
         if (enable) {
-            sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+            sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ENABLE);
         } else {
-            sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
+            sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_DISABLE);
         }
-    }
-    
-    /**
-     * Request the initial log mode (the first value logged in memory). Will
-     * be analyzed in {@link #analyseLogNmea(String[])}.<br>
-     * Must be accessed through {@link #DATA_INITIAL_LOG}
-     */
-    public final void reqInitialLogMode() {
-        mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the
-        // log,
-        // 2 is the size
-        // Required to know if log is in overwrite mode.
     }
 
     public final void setLogRequestAhead(final int logRequestAhead) {

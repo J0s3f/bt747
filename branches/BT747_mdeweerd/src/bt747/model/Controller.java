@@ -996,7 +996,7 @@ public class Controller implements ModelListener {
             // fail.
             getGpsC().reqStatus();
             getGpsC().setDataNeeded(MtkModel.DATA_FLASH_TYPE);
-            reqLogFormat();
+            getGpsC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
             getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             getGpsC().initConnection();
@@ -1409,7 +1409,10 @@ public class Controller implements ModelListener {
      *       {@link Model#getLogSpeedInterval()}
      */
     public final void reqLogReasonStatus() {
-        mtkC().reqLogReasonStatus();
+        final gps.mvc.Controller r = getGpsC();
+        r.setDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        r.setDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        r.setDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
     }
 
     /**
@@ -1418,7 +1421,8 @@ public class Controller implements ModelListener {
      * 
      */
     public final void reqFixInterval() {
-        mtkC().reqFixInterval();
+        final gps.mvc.Controller r = getGpsC();
+        r.setDataNeeded(MtkModel.DATA_FIX_PERIOD);
     }
 
     /**
@@ -1470,22 +1474,21 @@ public class Controller implements ModelListener {
         // TODO : request speed interval
     }
 
-    public final void doHotStart() {
-        mtkC().doHotStart();
+    /**
+     * Send a command to the MTK device.
+     * @param cmd
+     * Command type.  One of:<ul>
+     * <li>{@link MtkController#CMD_HOTSTART}</li>
+     * <li>{@link MtkController#CMD_COLDSTART}</li>
+     * <li>{@link MtkController#CMD_WARMSTART}</li>
+     * <li>{@link MtkController#CMD_FULLCOLDSTART}</li>
+     * </ul>
+     */
+    public final void mtkCmd(final int cmd) {
+        final MtkController r = mtkC();
+        r.cmd(cmd);
     }
-
-    public final void doColdStart() {
-        mtkC().doColdStart();
-    }
-
-    public final void doWarmStart() {
-        mtkC().doWarmStart();
-    }
-
-    public final void doFullColdStart() {
-        mtkC().doFullColdStart();
-    }
-
+    
     public final boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
         // should do this through an event to the view.

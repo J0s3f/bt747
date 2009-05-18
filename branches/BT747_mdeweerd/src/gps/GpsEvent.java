@@ -17,6 +17,7 @@ package gps;
 import gps.log.GPSRecord;
 
 import bt747.model.Controller;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  * Event implementation for signaling the application.
@@ -125,6 +126,12 @@ public class GpsEvent {
      * device)
      */
     public static final int UPDATE_MTK_RELEASE = 36;
+
+    /**
+     * Indicates GPS data is available.<br>
+     * The argument is a {@link BT747Int} identifying the data type.
+     */
+    public static final int DATA_UPDATE = 37;
 
     /**
      * The event's type.

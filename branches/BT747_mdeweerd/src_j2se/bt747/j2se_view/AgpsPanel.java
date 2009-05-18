@@ -14,7 +14,9 @@
 // *** *********************************************************** ***
 package bt747.j2se_view;
 
-import gps.BT747Constants;
+import java.awt.Component;
+
+import gps.mvc.MtkModel;
 
 import javax.swing.JPanel;
 
@@ -22,7 +24,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  * 
@@ -74,15 +76,33 @@ public final class AgpsPanel extends javax.swing.JPanel
             default:
                 break;
             }
+            break;
+        case ModelEvent.DATA_UPDATE:
+            switch(((BT747Int)e.getArg()).getValue()) {
+            case MtkModel.DATA_AGPS_STORED_RANGE:
+                updateAgps();
+                break;
+            }
+            break;
         }
     }
 
-    private final void updateConnected() {
-        final JPanel[] panels = { agpsPanel };
-
-        for (final JPanel panel : panels) {
-            J2SEAppController.disablePanel(panel, m.isConnected());
+    private final void updateAgps() {
+        final Component[] components = { lbAgpsUrl, txtAgpsUrl };
+        final boolean hasAgps = m.mtkModel().hasAgps();
+        for (final Component panel : components) {
+            J2SEAppController.enableComponentHierarchy(panel, hasAgps);
         }
+        btUploadAgpsData.setEnabled(hasAgps && m.isConnected());
+    }
+
+    private final void updateConnected() {
+        final Component[] components = {};
+        for (final Component panel : components) {
+            J2SEAppController
+                    .enableComponentHierarchy(panel, m.isConnected());
+        }
+        updateAgps();
     }
 
 

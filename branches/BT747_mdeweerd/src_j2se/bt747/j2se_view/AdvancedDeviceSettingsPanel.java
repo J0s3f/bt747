@@ -78,7 +78,7 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel
                 pnNMEAOutput };
 
         for (final JPanel panel : panels) {
-            J2SEAppController.disablePanel(panel, m.isConnected());
+            J2SEAppController.enableComponentHierarchy(panel, m.isConnected());
         }
     }
 
