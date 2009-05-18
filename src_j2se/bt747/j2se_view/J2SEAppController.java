@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.out.AllWayPointStyles;
+import gps.mvc.MtkController;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -447,7 +448,7 @@ public final class J2SEAppController extends J2SEController {
                 null, null, 0);
 
         if (choice == JOptionPane.OK_OPTION) {
-            c.doFullColdStart();
+            c.mtkCmd(MtkController.CMD_FULLCOLDSTART);
         }
 
     }
@@ -908,21 +909,24 @@ public final class J2SEAppController extends J2SEController {
     }
 
     /**
-     * Disable a panel and its children.
+     * Enable(Disable) a panel and its children.
      * 
-     * @param panel
+     * @param parent
      * @param en
      */
-    public static final void disablePanel(final JPanel panel, final boolean en) {
+    public static final void enableComponentHierarchy(final Component parent, final boolean en) {
         Component[] l;
-        l = panel.getComponents();
-        for (final Component component : l) {
-            component.setEnabled(en);
-            if (component.getClass() == JPanel.class) {
-                disablePanel((JPanel) component, en);
+        if (parent instanceof JPanel) {
+            l = ((JPanel)parent).getComponents();
+            for (final Component component : l) {
+                component.setEnabled(en);
+                if (component.getClass() == JPanel.class) {
+                    enableComponentHierarchy((JPanel) component, en);
+                }
             }
+        } else {
+            parent.setEnabled(en);
         }
-
     }
 
     private boolean changeToMap = false;

@@ -150,7 +150,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         }
         btDownload.setEnabled(connected);
         for (final JPanel panel : panels) {
-            J2SEAppController.disablePanel(panel, connected);
+            J2SEAppController.enableComponentHierarchy(panel, connected);
         }
     }
 

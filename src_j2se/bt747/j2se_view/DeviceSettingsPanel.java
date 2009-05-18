@@ -16,6 +16,8 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+import gps.mvc.MtkController;
+import gps.mvc.MtkModel;
 
 import javax.swing.JPanel;
 
@@ -24,6 +26,7 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  *
@@ -87,16 +90,23 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
         int type = e.getType();
-        switch(type) {
-        case ModelEvent.UPDATE_FIX_PERIOD:
+        switch (type) {
+        case ModelEvent.DATA_UPDATE:
+            switch (((BT747Int) e.getArg()).getValue()) {
+            case MtkModel.DATA_LOG_FORMAT:
+            case MtkModel.DATA_LOG_TIME_INTERVAL:
+            case MtkModel.DATA_LOG_SPEED_INTERVAL:
+            case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
+            case MtkModel.DATA_FIX_PERIOD:
+
+                updateStoreButtons();
+                break;
+            }
+            break;
         case ModelEvent.UPDATE_DGPS_MODE:
         case ModelEvent.UPDATE_SBAS:
         case ModelEvent.UPDATE_SBAS_TEST:
         case ModelEvent.UPDATE_DATUM:
-        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
-        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
-        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
-        case ModelEvent.UPDATE_LOG_FORMAT:
         case ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD:
             updateStoreButtons();
             break;
@@ -104,6 +114,31 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
 
 
         switch (type) {
+        case ModelEvent.DATA_UPDATE:
+            switch (((BT747Int) e.getArg()).getValue()) {
+            case MtkModel.DATA_LOG_FORMAT:
+                updateLogFormatData();
+                break;
+            case MtkModel.DATA_LOG_TIME_INTERVAL:
+                ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
+                txtLogTimeInterval.setText(JavaLibBridge.toString(
+                        m.getLogTimeInterval() / 10., 1));
+                break;
+            case MtkModel.DATA_LOG_SPEED_INTERVAL:
+                ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
+                txtLogSpeedInterval.setText(""+m
+                        .getLogSpeedInterval());
+                break;
+            case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
+                ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
+                txtLogDistanceInterval.setText(JavaLibBridge.toString(m
+                        .getLogDistanceInterval() / 10., 1));
+                break;
+            case MtkModel.DATA_FIX_PERIOD:
+                txtFixPeriod.setText(""+m.getLogFixPeriod());
+                break;
+            }
+            break;
         case ModelEvent.CONNECTED:
             updateConnected(true);
             break;
@@ -141,32 +176,11 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             break;
             // TODO
             // cbDatumMode.select(m.getDatum());
-        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
-            ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-            txtLogTimeInterval.setText(JavaLibBridge.toString(
-                    m.getLogTimeInterval() / 10., 1));
-            break;
-        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
-            ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
-            txtLogSpeedInterval.setText(""+m
-                    .getLogSpeedInterval());
-            break;
-        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
-            ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
-            txtLogDistanceInterval.setText(JavaLibBridge.toString(m
-                    .getLogDistanceInterval() / 10., 1));
-            break;
-        case ModelEvent.UPDATE_FIX_PERIOD:
-            txtFixPeriod.setText(""+m.getLogFixPeriod());
-            break;
         case ModelEvent.UPDATE_HOLUX_NAME:
             txtHoluxName.setText(m.getHoluxName());
             /* Fall through */
         case ModelEvent.UPDATE_LOG_FLASH:
             updateEstimatedNbrRecords();
-            break;
-        case ModelEvent.UPDATE_LOG_FORMAT:
-            updateLogFormatData();
             break;
         case ModelEvent.UPDATE_LOG_REC_METHOD:
             cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 1
@@ -181,7 +195,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 pnHoluxSettings};
 
         for (JPanel panel : panels) {
-            J2SEAppController.disablePanel(panel,connected);
+            J2SEAppController.enableComponentHierarchy(panel,connected);
         }
         if(connected) {
             updateSatGuiItems();
@@ -1134,15 +1148,15 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doHotStart();
+        c.mtkCmd(MtkController.CMD_HOTSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doWarmStart();
+        c.mtkCmd(MtkController.CMD_WARMSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doColdStart();
+        c.mtkCmd(MtkController.CMD_COLDSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btFactoryResetDeviceActionPerformed(

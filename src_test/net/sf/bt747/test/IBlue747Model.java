@@ -53,10 +53,10 @@ public class IBlue747Model {
     private int logFormat = 0x000215FF;// 0x3E;
 
     enum Model {
-        ML7, QST1300, BT747PLUS
+        ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747
     };
 
-    private Model model = Model.BT747PLUS;
+    private Model model = Model.IBLUE747PLUS;
 
     private GPSrxtx gpsRxTx = null;
 
@@ -190,6 +190,7 @@ public class IBlue747Model {
     }
 
     private GpsRxtxExecCommand previousEPOReply = null;
+
     /**
      * Analyze and respond to binary MTK data.
      * 
@@ -202,7 +203,7 @@ public class IBlue747Model {
             Generic.debug("Model received AGPS DATA" + msg.toString());
             final EpoReply r = new EpoReply(msg);
             reply = new EpoReply(msg);
-            if(r.getPacketNbr()==0x101) {
+            if (r.getPacketNbr() == 0x101) {
                 // Reply as some devices do ...
                 previousEPOReply.execute(gpsRxTx);
             }
@@ -254,7 +255,9 @@ public class IBlue747Model {
 
     // PMTK182,3,7,2 seems to interrupt the log transfer ...
 
-    /** Respond to log specific functionality (PMTK182).
+    /**
+     * Respond to log specific functionality (PMTK182).
+     * 
      * @param p_nmea
      * @return
      */
@@ -427,6 +430,7 @@ public class IBlue747Model {
             case BT747Constants.PMTK_CMD_COLD_START: // CMD 103
             case BT747Constants.PMTK_CMD_FULL_COLD_START: // CMD 104
             case BT747Constants.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
+                break;
             case BT747Constants.PMTK_SET_BIN_MODE: // CMD 253
                 setDeviceMode(DeviceMode.DEVICE_MODE_MTKBIN);
                 break;
@@ -439,14 +443,19 @@ public class IBlue747Model {
             case BT747Constants.PMTK_API_SET_DATUM_ADVANCE: // CMD 331
             case BT747Constants.PMTK_API_SET_USER_OPTION: // CMD 390
             case BT747Constants.PMTK_API_Q_FIX_CTL: // CMD 400
+                response = "PMTK500,1000";
+                break;
             case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
+                break;
             case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
+                break;
             case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
                 response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
                 break;
             case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
             case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
             case BT747Constants.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
+                break;
             case BT747Constants.PMTK_API_Q_GET_USER_OPTION: // CMD 490
                 response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,9600";
                 break;
@@ -471,9 +480,15 @@ public class IBlue747Model {
                 // BT747Constants.PMTK_DT_RELEASE
                 // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
                 // + "TSI_747A+" + "," + "1.0");
-                model = Model.BT747PLUS;
-                switch (model) {
-                case BT747PLUS:
+                model = Model.QST1000X;
+                switch (model) {//
+                case IBLUE747:
+                    coreVersion = "M-core_1.8";
+                    modelNumber = "0011";
+                    modelRef = "";
+                    swVersion = "";
+                    break;
+                case IBLUE747PLUS:
                     coreVersion = "AXN_1.0-B_1.3_C01";
                     modelNumber = "0001";
                     modelRef = "TSI_747A+";
@@ -485,26 +500,50 @@ public class IBlue747Model {
                     modelRef = "";
                     swVersion = "1.0";
                     break;
+                case PHOTOMATE887:
+                    coreVersion = "AXN_1.0-B_1.3_C01";
+                    modelNumber = "0001";
+                    modelRef = "TSI_887";
+                    swVersion = "1.0";
+                    break;
+                case IBLUE821:
+                    coreVersion = "B-core_1.1";
+                    modelNumber = "0001";
+                    modelRef = "TSI_821";
+                    swVersion = "1.0";
+                    break;
+                case QST1000:
+                    coreVersion = "M-core_1.94";
+                    modelNumber = "001B";
+                    modelRef = "";
+                    swVersion = "";
+                    break;
+                case QST1000X:
+                    coreVersion = "AXN_1.0-B_1.3_C01";
+                    modelNumber = "0001";
+                    modelRef = "QST1000";
+                    swVersion = "1.0";
+                    break;
                 case QST1300:
                 default:
                     coreVersion = "AXN_1.0-B_1.3_C01";
-                modelNumber = "8805";
-                modelRef = "QST1300";
-                swVersion = "1.0";
+                    modelNumber = "8805";
+                    modelRef = "QST1300";
+                    swVersion = "1.0";
 
                     // AXN_0.3-B_1.3_C01
                     break;
                 }
-                if(modelRef!=null) {
+                if (modelRef != null) {
                     response = "PMTK" + BT747Constants.PMTK_DT_RELEASE + ","
-                    + coreVersion + "," + modelNumber + ","
-                    + modelRef + "," + swVersion; 
+                            + coreVersion + "," + modelNumber + ","
+                            + modelRef + "," + swVersion;
                 }
                 break;
             case BT747Constants.PMTK_Q_VERSION:
                 break;
             case BT747Constants.PMTK_Q_EPO_INFO:
-                response = "$PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000";
+                response = "PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000";
                 break;
             case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
                 break;
@@ -534,12 +573,12 @@ public class IBlue747Model {
             if (response instanceof String) {
                 final String resp = (String) response;
                 sendPacket(resp);
-                if(z_Result == -1) {
+                if (z_Result == -1) {
                     z_Result = 0;
                 }
             }
         }
-        if(z_Result<0) {
+        if (z_Result < 0) {
             Generic.debug("No response from model to " + nmea.toString());
         }
         return z_Result;

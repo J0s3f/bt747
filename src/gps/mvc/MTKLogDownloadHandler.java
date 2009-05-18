@@ -156,7 +156,7 @@ final class MTKLogDownloadHandler {
             if (context.disableLogging
                     && context.loggingIsActiveBeforeDownload) {
                 context.mtkC.stopLog();
-                context.mtkC.reqLogStatus();
+                context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
             }
         }
         context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
@@ -696,7 +696,7 @@ final class MTKLogDownloadHandler {
 
         if (context.loggingIsActiveBeforeDownload) {
             context.mtkC.startLog();
-            context.mtkC.reqLogStatus();
+            context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
         }
         context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
     }
@@ -744,8 +744,8 @@ final class MTKLogDownloadHandler {
     protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
         context.mtkC.stopLog(); // Stop logging for this operation
-        context.mtkC.reqLogStatus(); // Check status
-        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.reqData(MtkModel.DATA_LOG_STATUS); // Check status
+        context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get flash sector
                                                 // information
         // from
         // device
@@ -753,7 +753,7 @@ final class MTKLogDownloadHandler {
         context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
 
-        context.mtkC.reqLogStatus(); // Check status
+        context.mtkC.reqData(MtkModel.DATA_LOG_STATUS); // Check status
 
         context.forcedErase = true;
         eraseLog();
@@ -761,8 +761,8 @@ final class MTKLogDownloadHandler {
     }
 
     private void postRecoveryEraseLog() {
-        context.mtkC.reqLogStatus();
-        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
+        context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get flash sector
                                                 // information
         // from
         // device
@@ -770,11 +770,11 @@ final class MTKLogDownloadHandler {
         context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
-        context.mtkC.reqLogFlashSectorStatus(); // Get flash sector
+        context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get flash sector
                                                 // information
         // from
         // device
-        context.mtkC.reqLogStatus();
+        context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
     }
 
     private void waitEraseDone() {
@@ -816,7 +816,7 @@ final class MTKLogDownloadHandler {
             getNextLogPart();
         } else if (context.logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
             if (context.mtkM.getHandler().timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
-                context.mtkC.reqLogFlashStatus();
+                context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_STATUS);
             }
         }
     }

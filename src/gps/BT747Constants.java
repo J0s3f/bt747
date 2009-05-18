@@ -684,10 +684,14 @@ public final class BT747Constants { // dev as in device
             mdStr = "iBlue 757";
         } else if (device.startsWith("TSI_821")) {
             mdStr = "iBlue 821";
+        } else if (device.startsWith("TSI_887")) {
+            mdStr = "photoMate887";
         } else if (device.equals("QST1000P")) {
             mdStr = "Qstarz BT-1000P";
         } else if (device.equals("QST1000")) {
             mdStr = "Qstarz BT-1000X";
+        } else if (device.equals("QST1300")) {
+            mdStr = "Qstarz BT-1300";
         } else if (device.equals("GR-245")) {
             mdStr = "Holux GPSport 245";
         } else if (device.equals("R150+")) {

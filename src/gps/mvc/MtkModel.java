@@ -6,10 +6,14 @@ package gps.mvc;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.convert.Conv;
+import gps.log.out.CommonOut;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import net.sf.bt747.util.GpsConvert;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Int;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * Model for Mtk devices.
@@ -26,7 +30,7 @@ public class MtkModel {
     protected final void setLogHandler(MTKLogDownloadHandler handler) {
         mtkLogHandler = handler;
     }
-    
+
     // Next should be private.
 
     private int logFormat = 0;
@@ -114,6 +118,13 @@ public class MtkModel {
 
     private Model context;
 
+    private boolean hasAgps = false;
+    private int agpsDataCount = 0;
+    private BT747Time agpsStartTime;
+    private BT747Time agpsEndTime;
+    private BT747Time agpsStart2Time;
+    private BT747Time agpsEnd2Time;
+
     MtkModel(final Model context, final GPSLinkHandler handler) {
         this.handler = handler;
         this.context = context;
@@ -142,8 +153,8 @@ public class MtkModel {
         return ((dataOK & mask) == mask);
     }
 
-    private final boolean[] dataAvailable = new boolean[MtkModel.DATA_LAST_INDEX + 1];
-    private final int[] dataRequested = new int[MtkModel.DATA_LAST_INDEX + 1];
+    private final boolean[] dataAvailable = new boolean[MtkModel.DATA_MAX_INDEX + 1];
+    private final int[] dataRequested = new int[MtkModel.DATA_MAX_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
     true, // DATA_MEM_USED
             true, // DATA_MEM_PTS_LOGGED
@@ -164,7 +175,29 @@ public class MtkModel {
     public final static int DATA_INITIAL_LOG = 6;
     public final static int DATA_LOG_STATUS = 7;
     public final static int DATA_LOG_VERSION = 8;
-    protected final static int DATA_LAST_INDEX = 8; // The last possible index
+    protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
+                                                            // possible index
+
+    /** The device version. */
+    public final static int DATA_DEVICE_VERSION = 9;
+    /** The device release. */
+    public final static int DATA_DEVICE_RELEASE = 10;
+    /** The log time interval */
+    public final static int DATA_LOG_TIME_INTERVAL = 11;
+    /** The log speed interval */
+    public final static int DATA_LOG_SPEED_INTERVAL = 12;
+    /** The log distance interval */
+    public final static int DATA_LOG_DISTANCE_INTERVAL = 13;
+    /** The flash status - needed for erase. */
+    public final static int DATA_LOG_FLASH_STATUS = 14;
+    /** The flash sector status. */
+    public final static int DATA_LOG_FLASH_SECTOR_STATUS = 15;
+    /** The fix period. */
+    public final static int DATA_FIX_PERIOD = 16;
+    /** The store AGPS data range. */
+    public final static int DATA_AGPS_STORED_RANGE = 17;
+    
+    private final static int DATA_MAX_INDEX = 17;
 
     /**
      * Reset the availability of all values - e.g. after loss of connection.
@@ -175,6 +208,12 @@ public class MtkModel {
             dataAvailable[i] = false;
             dataRequested[i] = ts;
         }
+        hasAgps = false;
+        agpsDataCount = 0;
+        agpsStartTime = null;
+        agpsEndTime = null;
+        agpsStart2Time = null;
+        agpsEnd2Time = null;
     }
 
     private static final int DATA_TIMEOUT = 3500;
@@ -186,6 +225,10 @@ public class MtkModel {
 
     protected final boolean isDataNeedsRequest(final int ts,
             final int dataType) {
+        if(dataType>DATA_LAST_AUTO_INDEX) {
+            // Data beyond last automatic index is needed.
+            return true;
+        }
         if (!autofetch) {
             return false; // For debug.
         }
@@ -219,6 +262,7 @@ public class MtkModel {
         case DATA_MEM_USED:
             break;
         }
+        postEvent(GpsEvent.DATA_UPDATE, BT747Int.get(dataType));
     }
 
     public final boolean isDataAvailable(final int dataType) {
@@ -273,8 +317,7 @@ public class MtkModel {
                 if (sNmea.length == 4) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FLASH_STAT:
-                        mtkLogHandler
-                                .handleLogFlashStatReply(sNmea[3]);
+                        mtkLogHandler.handleLogFlashStatReply(sNmea[3]);
                         break;
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
@@ -286,16 +329,19 @@ public class MtkModel {
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
                         logTimeInterval = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= MtkModel.C_OK_TIME;
+                        setAvailable(MtkModel.DATA_LOG_TIME_INTERVAL);
                         postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
                         logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= MtkModel.C_OK_DIST;
+                        setAvailable(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
                         postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
                         logSpeedInterval = JavaLibBridge.toInt(sNmea[3]) / 10;
                         dataOK |= MtkModel.C_OK_SPEED;
+                        setAvailable(MtkModel.DATA_LOG_SPEED_INTERVAL);
                         postEvent(GpsEvent.UPDATE_LOG_SPEED_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
@@ -336,6 +382,7 @@ public class MtkModel {
                         postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
+                        setAvailable(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS);
                         postEvent(GpsEvent.UPDATE_LOG_FLASH_SECTORS);
                         break;
                     case BT747Constants.PMTK_LOG_VERSION: // 12:
@@ -374,8 +421,8 @@ public class MtkModel {
                 try {
                     // waba.sys.debugMsg("Before
                     // AnalyzeLog:"+p_nmea[3].length());
-                    mtkLogHandler.analyzeLogPart(Conv
-                            .hex2Int(sNmea[2]), sNmea[3]);
+                    mtkLogHandler.analyzeLogPart(Conv.hex2Int(sNmea[2]),
+                            sNmea[3]);
                 } catch (final Exception e) {
                     Generic.debug("analyzeLogNMEA", e);
 
@@ -425,6 +472,7 @@ public class MtkModel {
             case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
                 if (sNmea.length >= 2) {
                     logFixPeriod = JavaLibBridge.toInt(sNmea[1]);
+                    setAvailable(MtkModel.DATA_FIX_PERIOD);
                     postEvent(GpsEvent.UPDATE_FIX_PERIOD);
                 }
                 dataOK |= MtkModel.C_OK_FIX;
@@ -517,7 +565,25 @@ public class MtkModel {
                 setAvailable(MtkModel.DATA_MTK_RELEASE);
                 postEvent(GpsEvent.UPDATE_MTK_RELEASE);
                 break;
-
+            case BT747Constants.PMTK_DT_EPO_INFO:
+                if (sNmea.length >= 10) {
+                    hasAgps = true;
+                    agpsDataCount = JavaLibBridge.toInt(sNmea[1]);
+                    agpsStartTime = GpsConvert.toTime(JavaLibBridge
+                            .toInt(sNmea[2]), JavaLibBridge.toInt(sNmea[3]));
+                    agpsEndTime = GpsConvert.toTime(JavaLibBridge
+                            .toInt(sNmea[4]), JavaLibBridge.toInt(sNmea[5]));
+                    agpsStart2Time = GpsConvert.toTime(JavaLibBridge
+                            .toInt(sNmea[6]), JavaLibBridge.toInt(sNmea[7]));
+                    agpsEnd2Time = GpsConvert.toTime(JavaLibBridge
+                            .toInt(sNmea[8]), JavaLibBridge.toInt(sNmea[9]));
+                    Generic.debug("AGPS data for " + agpsDataCount
+                            + " blocks." + "\nFrom " + CommonOut.getDateTimeStr(agpsStartTime) + " to "
+                            + CommonOut.getDateTimeStr(agpsEndTime) + "\nOther dates: "
+                            + CommonOut.getDateTimeStr(agpsStart2Time) + " and " + CommonOut.getDateTimeStr(agpsEnd2Time));
+                    setAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
+                }
+                break;
             default:
                 break;
             } // End switch
@@ -738,7 +804,7 @@ public class MtkModel {
     public final int getNMEAPeriod(final int i) {
         return NMEA_periods[i];
     }
-    
+
     private boolean eraseOngoing = false;
 
     protected final boolean isEraseOngoing() {
@@ -756,7 +822,6 @@ public class MtkModel {
             }
         }
     }
-
 
     /**
      * Get the 'logging activation' status of the device.
@@ -777,7 +842,7 @@ public class MtkModel {
     public final boolean isLoggingDisabled() {
         return loggerIsDisabled;
     }
-    
+
     public final boolean isLoggerNeedsFormat() {
         return loggerNeedsInit;
     }
@@ -868,11 +933,35 @@ public class MtkModel {
     public final int getNextReadAddr() {
         return mtkLogHandler.getNextReadAddr();
     }
-    
+
     /**
      * @deprecated
      */
     public final MTKLogDownloadHandler getMtkLogHandler() {
         return mtkLogHandler;
+    }
+
+    public final int getAgpsDataCount() {
+        return this.agpsDataCount;
+    }
+
+    public final BT747Time getAgpsStartTime() {
+        return this.agpsStartTime;
+    }
+
+    public final BT747Time getAgpsEndTime() {
+        return this.agpsEndTime;
+    }
+
+    public final BT747Time getAgpsStart2Time() {
+        return this.agpsStart2Time;
+    }
+
+    public final BT747Time getAgpsEnd2Time() {
+        return this.agpsEnd2Time;
+    }
+    
+    public final boolean hasAgps() {
+        return this.hasAgps;
     }
 }

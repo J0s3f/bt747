@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package gps.mvc;
 
-import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
 import gps.connection.DPL700ResponseModel;
@@ -26,7 +25,6 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747HashSet;
-import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
  * Refactoring ongoing (split in Model and Controller).

@@ -3,6 +3,7 @@
  */
 package gps.mvc;
 
+import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
 import bt747.sys.Generic;
@@ -63,37 +64,7 @@ public class Controller implements BT747Thread {
         if (handler.isConnected()) {
             final int ts = Generic.getTimeStamp();
             if (mtkM.isDataNeedsRequest(ts, dataType)) {
-                switch (dataType) {
-                case MtkModel.DATA_MEM_USED:
-                    mtkC.reqLogMemUsed();
-                    break;
-                case MtkModel.DATA_MEM_PTS_LOGGED:
-                    mtkC.reqLogMemPtsLogged();
-                    break;
-                case MtkModel.DATA_FLASH_TYPE:
-                    mtkC.reqFlashManuID();
-                    break;
-                case MtkModel.DATA_LOG_FORMAT:
-                    mtkC.reqLogFormat();
-                    break;
-                case MtkModel.DATA_MTK_VERSION:
-                    mtkC.reqDeviceVersion();
-                    break;
-                case MtkModel.DATA_MTK_RELEASE:
-                    mtkC.reqDeviceRelease();
-                    break;
-                case MtkModel.DATA_INITIAL_LOG:
-                    mtkC.reqInitialLogMode();
-                    break;
-                case MtkModel.DATA_LOG_STATUS:
-                    mtkC.reqLogStatus();
-                    break;
-                case MtkModel.DATA_LOG_VERSION:
-                    mtkC.reqMtkLogVersion();
-                    break;
-                default:
-                    break;
-                }
+                mtkC.reqData(dataType);
             }
         }
         if (Generic.isDebug() && (Generic.getDebugLevel() >= 2)) {
@@ -123,10 +94,11 @@ public class Controller implements BT747Thread {
         // getDatumMode();
         // getFixInterval();
         mtkC.reqHoluxName(); // Mainly here to identify Holux device
+        setDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
     }
 
     public final void reqLogOnOffStatus() {
-        mtkC.reqLogStatus();
+        mtkC.reqData(MtkModel.DATA_LOG_STATUS);
     }
 
     private final void getLogCtrlInfo() {
@@ -184,7 +156,7 @@ public class Controller implements BT747Thread {
         int next = nextValueToCheck;
         setDataNeeded(next);
         next += 1;
-        if (next > MtkModel.DATA_LAST_INDEX) {
+        if (next > MtkModel.DATA_LAST_AUTO_INDEX) {
             next = 0;
         }
         nextValueToCheck = next;
@@ -192,7 +164,7 @@ public class Controller implements BT747Thread {
 
     private DeviceOperationHandlerIF operationHandler;
 
-    public void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
+    public final void setDeviceOperationHandler(final DeviceOperationHandlerIF h) {
         operationHandler = h;
     }
 

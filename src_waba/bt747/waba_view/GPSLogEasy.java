@@ -28,6 +28,7 @@ import waba.ui.Label;
 import waba.ui.MessageBox;
 
 import gps.BT747Constants;
+import gps.mvc.MtkController;
 
 import bt747.model.ModelEvent;
 
@@ -131,11 +132,11 @@ public final class GPSLogEasy extends Container implements ModelListener {
             } else if (event.target == btRestore) {
                 c.restoreSetting1();
             } else if (event.target == btHotStart) {
-                c.doHotStart();
+                c.mtkCmd(MtkController.CMD_HOTSTART);
             } else if (event.target == btColdStart) {
-                c.doColdStart();
+                c.mtkCmd(MtkController.CMD_COLDSTART);
             } else if (event.target == btWarmStart) {
-                c.doWarmStart();
+                c.mtkCmd(MtkController.CMD_WARMSTART);
             } else if (event.target == btFullColdStart) {
                 MessageBox mb;
                 String[] szExitButtonArray = { Txt.getString(Txt.YES), Txt.getString(Txt.NO) };
@@ -144,7 +145,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
                 mb.popupBlockingModal();
                 if (mb.getPressedButtonIndex() == 0) {
                     // Exit application
-                    c.doFullColdStart();
+                    c.mtkCmd(MtkController.CMD_FULLCOLDSTART);
                 }
             } else if (event.target == btForceErase) {
                 c.recoveryErase();
