@@ -70,6 +70,7 @@ Tagging
 * Allow tagging of other files by renaming them.
   As a coordinate format:
    decimal coordinates an hemispheres separated by underlines.
+* Reverse geocoding.
 
 Map
 * Add scale to map.
