@@ -553,13 +553,12 @@
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
 			            -keep public class gps.mvc.MtkModel { public static final int DATA_*;
-		                                                      public * has*();
-			public * DATA_*;
-			public * get*();
-			public * is*();
+		                                                      public boolean has*();
+			public *** get*();
+			public boolean is*();
 			}
 			            -keep public class gps.mvc.MtkController { public static final int CMD_*;
-			                                                       public *mtkCmd(*);}
+			                                                       public *** mtkCmd(...);}
                         -keep public class gps.GPSListener { *; }
                         -keep public class gps.log.* { *; }
 		                -keep public class gps.log.in.WindowedFile { *; }
