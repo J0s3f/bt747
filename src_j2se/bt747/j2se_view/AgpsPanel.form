@@ -16,19 +16,13 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="osmAccountPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="agpsPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-          </Group>
+          <Component id="agpsPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="osmAccountPanel" alignment="0" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
               <Component id="agpsPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="osmAccountPanel" min="-2" max="-2" attributes="0"/>

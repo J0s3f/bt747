@@ -16,6 +16,7 @@ package bt747.j2se_view;
 
 import java.awt.Component;
 
+import gps.log.out.CommonOut;
 import gps.mvc.MtkModel;
 
 import javax.swing.JPanel;
@@ -24,6 +25,7 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Int;
 
 /**
@@ -89,11 +91,28 @@ public final class AgpsPanel extends javax.swing.JPanel
 
     private final void updateAgps() {
         final Component[] components = { lbAgpsUrl, txtAgpsUrl };
-        final boolean hasAgps = m.mtkModel().hasAgps();
+        final MtkModel mtk = m.mtkModel();
+        final boolean hasAgps = mtk.hasAgps();
         for (final Component panel : components) {
             J2SEAppController.enableComponentHierarchy(panel, hasAgps);
         }
         btUploadAgpsData.setEnabled(hasAgps && m.isConnected());
+        if (mtk.hasAgps()) {
+            final String text1 = String.format(J2SEAppController
+                    .getString("AGPSINFO1"), mtk.getAgpsDataCount(),
+                    CommonOut.getDateTimeStr(mtk.getAgpsStartTime()),
+                    CommonOut.getDateTimeStr(mtk.getAgpsEndTime()));
+            final String text2 = String.format(J2SEAppController
+                    .getString("AGPSINFO2"), CommonOut.getDateTimeStr(mtk
+                    .getAgpsStart2Time()), CommonOut.getDateTimeStr(mtk
+                    .getAgpsEnd2Time()));
+            txtAgpsInfo1.setText(text1);
+            txtAgpsInfo2.setText(text2);
+        }
+        txtAgpsInfo1.setVisible(mtk.hasAgps());
+        txtAgpsInfo2.setVisible(mtk.hasAgps());
+        osmAccountPanel.setVisible(false);
+        btDownloadAgpsData.setVisible(false);
     }
 
     private final void updateConnected() {
@@ -233,16 +252,12 @@ public final class AgpsPanel extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
