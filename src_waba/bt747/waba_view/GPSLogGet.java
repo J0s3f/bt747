@@ -30,6 +30,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.mvc.MtkModel;
+
 import net.sf.bt747.waba.system.WabaDate;
 
 import bt747.Txt;
@@ -234,14 +236,14 @@ public final class GPSLogGet extends Container implements ModelListener {
 
     private final void reqLogInfo() {
         // Request device info for this control
-        c.reqLogStatus();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
         // Request log version from device
-        c.reqMtkLogVersion();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
         // Request mem size from device
-        c.reqLogMemUsed();
+        c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
         // Request number of log points
-        c.reqLogMemPtsLogged();
-        c.reqLogOverwrite();
+        c.setMtkDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
     }
 
     private final void updateButtons() {

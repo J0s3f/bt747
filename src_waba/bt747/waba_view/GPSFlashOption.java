@@ -26,6 +26,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.mvc.MtkModel;
+
 import bt747.model.ModelEvent;
 
 import bt747.Txt;
@@ -153,7 +155,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
             if (event.target == btSet) {
                 setSettings();
             } else if (event.target == this) {
-                c.reqFlashUserOption();
+                c.setMtkDataNeeded(MtkModel.DATA_FLASH_USER_OPTION);
             } else {
                 event.consumed = false;
             }

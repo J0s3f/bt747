@@ -16,6 +16,7 @@ package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
 import gps.connection.GPSrxtx;
+import gps.mvc.MtkModel;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -488,20 +489,22 @@ public class BT747Main extends javax.swing.JFrame implements
             updateConnectFunction(false);
             // TODO: Find the way to do this on tab entry.
             c.reqHoluxName();
-            c.reqFlashUserOption();
-            c.reqNMEAPeriods();
+            c.setMtkDataNeeded(MtkModel.DATA_FLASH_USER_OPTION);
+            c.setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
 
-            c.reqLogOverwrite();
-            c.reqLogStatus();
-            c.reqLogReasonStatus();
-            c.reqSBASEnabled();
-            c.reqSBASTestEnabled();
-            c.reqDGPSMode();
-            c.reqFixInterval();
-            c.reqBTAddr();
-            c.reqMtkLogVersion();
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
+            c.setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
+            c.setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
+            c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
+            c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
             c.reqDeviceInfo();
-            c.reqDatumMode();
+            c.setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
 
             break;
         case ModelEvent.DISCONNECTED:

@@ -27,6 +27,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.mvc.MtkModel;
+
 import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -145,7 +147,9 @@ public final class GPSLogReason extends Container implements ModelListener {
             c.setLogDistanceInterval(0);
         }
         c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
-        c.reqLogReasonStatus();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
     }
 
     public final void onEvent(final Event event) {
@@ -162,11 +166,13 @@ public final class GPSLogReason extends Container implements ModelListener {
             } else if (event.target == btSet) {
                 setSettings();
             } else if (event.target == this) {
-                c.reqLogReasonStatus();
-                c.reqFixInterval();
-                c.reqSBASEnabled();
-                c.reqSBASTestEnabled();
-                c.reqDGPSMode();
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+                c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
+                c.setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
+                c.setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
+                c.setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
             } else if (event.target == chkSBASOnOff) {
                 c.setSBASEnabled(chkSBASOnOff.getChecked());
             } else if (event.target == chkSBASTestOnOff) {
