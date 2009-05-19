@@ -763,70 +763,11 @@ public class Controller implements ModelListener {
     };
 
     /**
-     * Request the Logger Version data from the device.<br>
-     * Once retrieved an event {@link gps.GpsEvent#UPDATE_LOG_VERSION} will be
-     * generated so that {@link Model#getMtkLogVersion()} can be used to
-     * retrieve the actual value.
-     * 
-     */
-    public final void reqMtkLogVersion() {
-        setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
-    }
-
-    /**
-     * Request the amount of memory in use from the device.
-     */
-    public final void reqLogMemUsed() {
-        setMtkDataNeeded(MtkModel.DATA_MEM_USED);
-    }
-
-    public final void reqInitialLogMode() {
-        setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
-    }
-
-    /**
-     * Request the number of points logged in memory.
-     */
-    public final void reqLogMemPtsLogged() {
-        setMtkDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
-    }
-
-    /**
-     * Request the log overwrite status from the device.<br>
-     * {@link Model#isLogFullOverwrite()} must be used on a {link
-     * {@link gps.GpsEvent#UPDATE_LOG_REC_METHOD} event to get the data.
-     */
-    public final void reqLogOverwrite() {
-        setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
-    }
-
-    /**
      * Request a set of device information from the GPS device that can be
      * after specific {@link GpsEvent} events.
      */
     public final void reqDeviceInfo() {
         getGpsC().reqDeviceInfo();
-    }
-
-    /**
-     * Request the status register from the device.<br>
-     * After the associated {@link gps.GpsEvent#UPDATE_LOG_LOG_STATUS} event
-     * one can retrieve the data using:<br> - {@link Model#isLoggingActive()}
-     * <br> - {@link GPSstate#loggerIsFull} (not currently public)<br> -
-     * {@link GPSstate#loggerNeedsInit} (not currently public)<br> -
-     * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
-     */
-    public final void reqLogStatus() {
-        setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
-    }
-
-    /**
-     * Request the current log format from the device.<br>
-     * After the associated {@link gps.GpsEvent#UPDATE_LOG_FORMAT} event one
-     * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
-     */
-    public final void reqLogFormat() {
-        setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -863,7 +804,7 @@ public class Controller implements ModelListener {
      */
     public final void setLogFormat(final int newLogFormat) {
         mtkC().setLogFormat(newLogFormat);
-        reqLogFormat();
+        setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -1222,21 +1163,6 @@ public class Controller implements ModelListener {
         mtkC().setFlashUserOption(lock, updateRate, baudRate, periodGLL,
                 periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
                 periodZDA, periodMCHN);
-        reqFlashUserOption();
-    }
-
-    /**
-     * Request the flash user settings from the device. Following the relevant
-     * event, the settings must be retrieved using
-     * {@link Model#getDtUpdateRate()}<br> - {@link Model#getDtGLL_Period()}<br> -
-     * {@link Model#getDtRMC_Period()}<br> - {@link Model#getDtVTG_Period()}<br> -
-     * {@link Model#getDtGSA_Period()}<br> - {@link Model#getDtGSV_Period()}<br> -
-     * {@link Model#getDtGGA_Period()}<br> - {@link Model#getDtZDA_Period()}<br> -
-     * {@link Model#getDtMCHN_Period()}<br> - {@link Model#getDtBaudRate()}<br> -
-     * {@link Model#getDtUserOptionTimesLeft()}<br> -
-     * 
-     */
-    public final void reqFlashUserOption() {
         setMtkDataNeeded(MtkModel.DATA_FLASH_USER_OPTION);
     }
 
@@ -1248,13 +1174,6 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * Request the bluetooth Mac Address from the device.
-     */
-    public final void reqBTAddr() {
-        setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
-    }
-
-    /**
      * Sets the MAC address for bluetooth (for devices that support it).
      * 
      * @param btMacAddr
@@ -1263,7 +1182,7 @@ public class Controller implements ModelListener {
      */
     public final void setBTMacAddr(final String btMacAddr) {
         mtkC().setBtMacAddr(btMacAddr);
-        reqBTAddr();
+        setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
     }
 
     /**
@@ -1275,13 +1194,6 @@ public class Controller implements ModelListener {
     public final void setHoluxName(final String holuxName) {
         mtkC().setHoluxName(holuxName);
         reqHoluxName();
-    }
-
-    /**
-     * Request the current NMEA period settings of the device.
-     */
-    public final void reqNMEAPeriods() {
-        setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
     /**
@@ -1306,7 +1218,7 @@ public class Controller implements ModelListener {
      */
     public final void setNMEAPeriods(final int[] periods) {
         mtkC().setNMEAPeriods(periods);
-        reqNMEAPeriods();
+        setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
     /**
@@ -1324,15 +1236,6 @@ public class Controller implements ModelListener {
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
         mtkC().setSBASTestEnabled(isSBASTestEnabled);
-        reqSBASTestEnabled();
-    }
-
-    /**
-     * Request the current status of SBAS (DGPS) satellites in test enable
-     * setting. Actual value to be retrieved later with
-     * {@link Model#isSBASTestEnabled()}.
-     */
-    public final void reqSBASTestEnabled() {
         setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
     }
 
@@ -1344,23 +1247,7 @@ public class Controller implements ModelListener {
      */
     public final void setSBASEnabled(final boolean set) {
         mtkC().setSBASEnabled(set);
-        reqSBASEnabled();
-    }
-
-    /**
-     * Request the current status of SBAS (DGPS) enable setting. Actual value
-     * to be retrieved later with {@link Model#isSBASEnabled()}.
-     */
-    public final void reqSBASEnabled() {
         setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
-    }
-
-    /**
-     * Request the GPS's Datum mode. To be retrieved later using
-     * {@link Model#getDatum()}.
-     */
-    public final void reqDatumMode() {
-        setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
     }
 
     /**
@@ -1371,7 +1258,7 @@ public class Controller implements ModelListener {
      */
     public final void setDatumMode(final int mode) {
         mtkC().setDatumMode(mode);
-        reqDatumMode();
+        setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
     }
 
     /**
@@ -1382,14 +1269,6 @@ public class Controller implements ModelListener {
      */
     public final void setDGPSMode(final int mode) {
         mtkC().setDGPSMode(mode);
-        reqDGPSMode();
-    }
-
-    /**
-     * Request the current DGPS mode in use. Get actual setting with
-     * {@link Model#getDgpsMode()} later.
-     */
-    public final void reqDGPSMode() {
         setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
     }
 
@@ -1401,38 +1280,7 @@ public class Controller implements ModelListener {
      */
     public final void setPowerSaveEnabled(final boolean set) {
         mtkC().setPowerSaveEnabled(set);
-        reqPowerSaveEnabled();
-    }
-
-    /**
-     * Request the power save mode setting of the device. Need to get the
-     * actual setting later with {@link Model#isPowerSaveEnabled()}.
-     */
-    public final void reqPowerSaveEnabled() {
         setMtkDataNeeded(MtkModel.DATA_POWERSAVE_STATUS);
-    }
-
-    /**
-     * Request the log condition (reason) settings of the device. Need to get
-     * actual values through:<br>
-     * {@link Model#getLogTimeInterval()
-     * 
-     * @link Model#getLogDistanceInterval()} <br>
-     *       {@link Model#getLogSpeedInterval()}
-     */
-    public final void reqLogReasonStatus() {
-        setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
-        setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
-        setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
-    }
-
-    /**
-     * Request the fix interval setting from the device. Need to get the
-     * actual value through {@link Model#getLogFixPeriod()}.
-     * 
-     */
-    public final void reqFixInterval() {
-        setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
     }
 
     /**
@@ -1465,7 +1313,7 @@ public class Controller implements ModelListener {
     public final void setFixInterval(final int value) {
         if (value != 0) {
             mtkC().setFixInterval(value);
-            reqFixInterval();
+            setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
         }
     }
 
@@ -1576,14 +1424,16 @@ public class Controller implements ModelListener {
     }
 
     public final void reqSettingsForStorage() {
-        reqLogReasonStatus();
-        reqLogFormat();
-        reqFixInterval();
-        reqSBASEnabled();
-        reqSBASTestEnabled();
-        reqDGPSMode();
-        reqLogOverwrite();
-        reqNMEAPeriods();
+        setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
+        setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
+        setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
+        setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
+        setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
+        setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
+        setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
     public final void setFilterMinRecCount(final int i) {

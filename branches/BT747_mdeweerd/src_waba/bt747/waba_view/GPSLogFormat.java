@@ -26,6 +26,7 @@ import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.BT747Constants;
+import gps.mvc.MtkModel;
 
 import bt747.Txt;
 import bt747.model.Model;
@@ -167,7 +168,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
             } else if (event.target == btErase) {
                 c.eraseLogWithDialogs();
             } else if (event.target == this) {
-                c.reqLogFormat();
+                c.setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
                 updateLogFormat(m.getLogFormat());
                 event.consumed = true;
             } else {

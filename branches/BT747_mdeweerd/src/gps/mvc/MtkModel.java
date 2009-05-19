@@ -6,7 +6,6 @@ package gps.mvc;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.convert.Conv;
-import gps.log.out.CommonOut;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import net.sf.bt747.util.GpsConvert;
 
@@ -125,7 +124,7 @@ public class MtkModel {
     private BT747Time agpsStart2Time;
     private BT747Time agpsEnd2Time;
 
-    MtkModel(final Model context, final GPSLinkHandler handler) {
+    public MtkModel(final Model context, final GPSLinkHandler handler) {
         this.handler = handler;
         this.context = context;
     }
@@ -167,13 +166,25 @@ public class MtkModel {
             false, // DATA_LOG_VERSION
     };
     public final static int DATA_FLASH_TYPE = 0;
+    /** The number of positions logged in logger memory. */
     public final static int DATA_MEM_PTS_LOGGED = 1;
+    /** Amount of memory used by the device. */
     public final static int DATA_MEM_USED = 2;
+    /** Current device log format. Get value through {@link #getLogFormat()} */
     public final static int DATA_LOG_FORMAT = 3;
     public final static int DATA_MTK_VERSION = 4;
     public final static int DATA_MTK_RELEASE = 5;
+    /** Some information from the log regarding the initial log format. */
     public final static int DATA_INITIAL_LOG = 6;
+    /**
+     * Get logger status.<br>
+     * Retrieve actual values through getters: one can retrieve the data
+     * using:<br> - {@link #isLoggingActive()} <br> - {@link #loggerIsFull}
+     * (not currently public)<br> - {@link #isLoggerNeedsFormat()} <br> -
+     * {@link #isLoggingDisabled()} (not currently public)<br>
+     */
     public final static int DATA_LOG_STATUS = 7;
+    /** The Logger Version. Get value using {@link #getMtkLogVersion()}. */
     public final static int DATA_LOG_VERSION = 8;
     protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
     // possible index
@@ -182,39 +193,81 @@ public class MtkModel {
     public final static int DATA_DEVICE_VERSION = 9;
     /** The device release. */
     public final static int DATA_DEVICE_RELEASE = 10;
-    /** The log time interval */
+    /**
+     * The log time interval.<br>
+     * Get value through {@link #getLogTimeInterval()}.
+     */
     public final static int DATA_LOG_TIME_INTERVAL = 11;
-    /** The log speed interval */
+    /**
+     * The log speed interval.<br>
+     * Get value through
+     * 
+     * {@link #getLogSpeedInterval()}.
+     */
     public final static int DATA_LOG_SPEED_INTERVAL = 12;
-    /** The log distance interval */
+    /**
+     * The log distance interval.<br>
+     * Get value through {@link #getLogDistanceInterval()}.
+     */
     public final static int DATA_LOG_DISTANCE_INTERVAL = 13;
     /** The flash status - needed for erase. */
     public final static int DATA_LOG_FLASH_STATUS = 14;
     /** The flash sector status. */
     public final static int DATA_LOG_FLASH_SECTOR_STATUS = 15;
-    /** The fix period. */
+    /**
+     * The fix period.<br>
+     * Need to get the actual value through {@link #getLogFixPeriod()}.
+     */
     public final static int DATA_FIX_PERIOD = 16;
     /** The stored AGPS data range. */
     public final static int DATA_AGPS_STORED_RANGE = 17;
-    /** Indicates if data is in overwrite or stop mode. */
+    /**
+     * Indicates if data is in overwrite or stop mode. Use
+     * {@link #isLogFullOverwrite()} to get the data.
+     */
     public final static int DATA_LOG_OVERWRITE_STATUS = 18;
-    /** Indicates if SBAS test satellites are used. */
+    /**
+     * Indicates if SBAS test satellites are used.<br>
+     * Actual value to be retrieved through {@link #isSBASTestEnabled()}.
+     */
     public final static int DATA_SBAS_TEST_STATUS = 19;
-    /** Indicates if SBAS satellites are used. */
+    /**
+     * Indicates if SBAS satellites are used.<br>
+     * Actual value to be retrieved later with {@link #isSBASEnabled()}.
+     */
     public final static int DATA_SBAS_STATUS = 20;
-    /** Indicates the power save status (for testing only). */
+    /**
+     * Indicates the power save status (for testing only).<br>
+     * Need to get the actual setting later with {@link #isPowerSaveEnabled()}.
+     */
     public final static int DATA_POWERSAVE_STATUS = 21;
-    /** The DATUM used by the logger. */
+    /**
+     * The DATUM used by the logger.<br>
+     * To be retrieved using {@link #getDatum()}.
+     */
     public final static int DATA_DATUM_MODE = 22;
     /** The NMEA output period. */
     public final static int DATA_NMEA_OUTPUT_PERIODS = 23;
-    /** The DGPS usage mode. */
+    /**
+     * The DGPS usage mode.<br>
+     * Get actual setting with {@link #getDgpsMode()} later.
+     */
     public final static int DATA_DGPS_MODE = 24;
     /** The device's BT mac address. */
     public final static int DATA_BT_MAC_ADDR = 25;
-    /** The User Configurable Options stored in flash. */
+    /**
+     * The User Configurable Options stored in flash.<br>
+     * 
+     * Request the flash user settings from the device. Following the relevant
+     * event, the settings must be retrieved using {@link #getDtUpdateRate()}<br> -
+     * {@link #getDtGLL_Period()}<br> - {@link #getDtRMC_Period()}<br> -
+     * {@link #getDtVTG_Period()}<br> - {@link #getDtGSA_Period()}<br> -
+     * {@link #getDtGSV_Period()}<br> - {@link #getDtGGA_Period()}<br> -
+     * {@link #getDtZDA_Period()}<br> - {@link #getDtMCHN_Period()}<br> -
+     * {@link #getDtBaudRate()}<br> - {@link #getDtUserOptionTimesLeft()}<br> -
+     */
     public final static int DATA_FLASH_USER_OPTION = 26;
-    
+
     private final static int DATA_MAX_INDEX = 26;
 
     /**
@@ -634,7 +687,7 @@ public class MtkModel {
     } // End method
 
     protected final void postEvent(final int eventNbr) {
-        context.postEvent(eventNbr);
+        context.postGpsEvent(eventNbr, null);
     }
 
     protected final void postEvent(final int eventNbr, final Object o) {

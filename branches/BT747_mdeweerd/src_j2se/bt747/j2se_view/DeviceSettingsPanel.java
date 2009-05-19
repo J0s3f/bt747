@@ -71,14 +71,16 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     }
 
     private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_DeviceSettingsPanelFocusGained
-        c.reqLogOverwrite();
-        c.reqLogReasonStatus();
-        c.reqSBASEnabled();
-        c.reqSBASTestEnabled();
-        c.reqFixInterval();
-        c.reqBTAddr();
-        c.reqMtkLogVersion();
-        c.reqDatumMode();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
+        c.setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
+        c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
+        c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
+        c.setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
     }// GEN-LAST:event_DeviceSettingsPanelFocusGained
 
 

@@ -26,6 +26,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.mvc.MtkModel;
+
 import bt747.model.ModelEvent;
 
 import bt747.Txt;
@@ -101,7 +103,7 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
         case ControlEvent.PRESSED:
             if (event.target == this) {
                 c.reqHoluxName();
-                c.reqBTAddr();
+                c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
                 event.consumed = true;
             } else if (event.target == btSet) {
                 doSet();

@@ -3,7 +3,6 @@
  */
 package gps.mvc;
 
-import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
 import bt747.sys.Generic;

@@ -28,6 +28,8 @@ import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.BT747Constants;
+import gps.mvc.MtkModel;
+
 import bt747.model.ModelEvent;
 
 import bt747.Txt;
@@ -112,7 +114,7 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
-                c.reqNMEAPeriods();
+                c.setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
                 event.consumed = true;
             } else if (event.target == btSet) {
                 setPeriods();

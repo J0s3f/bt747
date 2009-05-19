@@ -24,6 +24,7 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.mvc.MtkModel;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -702,9 +703,9 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (m.isConnected()) {
             // Connection is made.
             c.reqDeviceInfo();
-            c.reqLogMemUsed();
-            c.reqInitialLogMode();
-            c.reqMtkLogVersion();
+            c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
+            c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
 
             // c.req
             // c.reqMtkLogVersion();

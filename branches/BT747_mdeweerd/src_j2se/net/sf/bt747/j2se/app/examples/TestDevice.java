@@ -28,6 +28,7 @@ package net.sf.bt747.j2se.app.examples;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
+import gps.mvc.MtkModel;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
@@ -189,7 +190,7 @@ public class TestDevice implements bt747.model.ModelListener {
          * at least for the response to this one and get the communication of
          * the previous ones in the serial protocol monitor.
          */
-        c.reqDGPSMode();
+        c.setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
 
         getOutstandingCmds();
         System.exit(0); // Testing just part of it so cowardly exiting
