@@ -11,6 +11,7 @@ PROBLEMS
 COSMETIC IMPROVEMENTS
 * Remove all GUI data when the input file is changed.
   Potentially make this configureable.
+* Show #position logged instead of memory.
 
 IMPROVEMENTS
 (Things not very visible to the user).
