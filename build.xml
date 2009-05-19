@@ -545,7 +545,7 @@
 			              !bt747/gps/connection/GPSWabaPort.class)
                         -optimizationpasses 2
                         -keep public class bt747.sys.JavaLibBridge { *; }
-			            -keep public class bt747.sys.I18N { public *(...); }
+			            -keep public class bt747.sys.I18N { public *** *(...); }
 			            -keep public class bt747.sys.Settings { *; }
 			            -keep public class bt747.sys.File { *; }
 			            -keep public class gps.log.out.CommonOut { *; }
