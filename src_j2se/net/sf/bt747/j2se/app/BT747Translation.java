@@ -23,7 +23,7 @@ public class BT747Translation implements BT747I18N {
     private static void initStaticsFirstTime() {
         if (BT747Translation.bundle == null) {
             BT747Translation.bundle = java.util.ResourceBundle
-                    .getBundle("net/sf/bt747/j2se/app/resources/BT747Base");
+                    .getBundle("net/sf/bt747/j2se/app/resources/BT747base");
         }
     }
 
