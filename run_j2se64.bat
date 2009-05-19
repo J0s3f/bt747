@@ -4,7 +4,7 @@ set       MYROOTPATH=%~dp0
 set           MYDIST=%MYROOTPATH%dist
 set            MYLIB=%MYROOTPATH%lib
 set         RXTXPATH=%MYLIB%\rxtx-2.2pre2-bins
-set MYSYSTEMRXTXBINS=%RXTXPATH%\win32
+set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\win64
 set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
 set        CLASSPATH=%MYDIST%\BT747_j2se.jar;%MYLIB%\swingx-ws.jar;%MYLIB%\swingx.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-2.4.1.jar;%CLASSPATH%
 
