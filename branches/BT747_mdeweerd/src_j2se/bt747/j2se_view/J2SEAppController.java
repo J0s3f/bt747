@@ -48,6 +48,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import net.sf.bt747.j2se.app.BT747Translation;
+
 import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
@@ -55,6 +57,7 @@ import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
+import bt747.sys.I18N;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -171,6 +174,7 @@ public final class J2SEAppController extends J2SEController {
     private static String[] C_CANCEL_OR_CONFIRM_ERASE;
 
     private void initStaticsFirstTime() {
+        I18N.setI18N(BT747Translation.getInstance());
         if (bundle == null) {
             bundle = java.util.ResourceBundle
                     .getBundle("bt747/j2se_view/Bundle");

@@ -21,6 +21,7 @@ import gps.tracks.Track;
 import gps.tracks.Trackpoint;
 
 import bt747.Version;
+import bt747.sys.I18N;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Vector;
@@ -163,48 +164,47 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "<div id=\"footer\">\n"
                         + "\n"
                         + "<form style=\"display:inline\" action=\"javascript:gotoAddr()\">\n"
-                        + "<input type=\"submit\" value=\"Go To\" />\n"
+                        + "<input type=\"submit\" value=\"");
+        l_header.append(I18N.i18n("Go To"));
+        l_header
+                .append("\" />\n"
                         // Next line allows confirmation of input with enter
                         + "<input type=\"submit\" value=\"\" style=\"display:none\" />\n"
                         + "<input size=\"30\" type=\"text\" name=\"adr\" id=\"adr\" />\n"
-                        + "</form>\n"
-                        + "<input type=\"submit\" value=\"Init\" onclick=\"initial()\"/>"
-                        + "<span id=\"latlon\">Click on map to get position."
-                        + "  </span>Tracks: \n"
-                        + "<script type=\"text/javascript\">\n"
-                        // call the info window opener for the given index
-                        + "if (GBrowserIsCompatible()) {\n"
-                        + " geocoder = new GClientGeocoder();\n"
-                        + " preva = \"none\";\n"
-                        + " function showaddr(latlng) {\n"
-                        + "  if (latlng) {\n"
-                        + "   geocoder.getLocations(latlng, function(adrs) {\n"
-                        + "    if(adrs.Status.code == 200) {\n"
-                        + "     adr=adrs.Placemark[0];\n"
-                        + "     var txt=adr.address;\n"
-                        + "     if(txt==preva) {\n"
-                        + "      map.openInfoWindow(latlng, txt);\n"
-                        + "     } else {\n"
-                        + "      preva = txt;\n"
-                        + "     }\n"
-                        + "    }\n"
-                        + "   });\n"
-                        + "  }\n"
-                        + " }\n"
-                        + "\n"
-                        + "function latlonTxt(latlon) {\n"
-                        + " if(latlon) {\n"
-                        + "     var s=\'<b>Last click: \'+ latlon.toUrlValue()+\' </b>\';\n"
-                        + "  showaddr(latlon);"
-                        + "  document.getElementById(\"latlon\").innerHTML = s;\n"
-                        + " }\n"
-                        + "}\n"
-                        + "function latlonFunc() {\n"
-                        + " return function(overlay,latlon) {latlonTxt(latlon);}\n"
-                        + "}\n"
-                        + "function gotoPt(pt) {\n"
-                        + " if(!pt){\n"
-                        + "  document.getElementById(\"latlon\").innerHTML=\"Location not found\";\n"
+                        + "</form>\n" + "<input type=\"submit\" value=\"");
+        l_header.append(I18N.i18n("Init"));
+        l_header
+                .append("\" onclick=\"initial()\"/>" + "<span id=\"latlon\">");
+        l_header.append(I18N.i18n("Click on map to get position."));
+        l_header.append("  </span>");
+        l_header.append(I18N.i18n("Tracks"));
+        l_header.append(": \n"
+                + "<script type=\"text/javascript\">\n"
+                // call the info window opener for the given index
+                + "if (GBrowserIsCompatible()) {\n"
+                + " geocoder = new GClientGeocoder();\n"
+                + " preva = \"none\";\n" + " function showaddr(latlng) {\n"
+                + "  if (latlng) {\n"
+                + "   geocoder.getLocations(latlng, function(adrs) {\n"
+                + "    if(adrs.Status.code == 200) {\n"
+                + "     adr=adrs.Placemark[0];\n"
+                + "     var txt=adr.address;\n" + "     if(txt==preva) {\n"
+                + "      map.openInfoWindow(latlng, txt);\n"
+                + "     } else {\n" + "      preva = txt;\n" + "     }\n"
+                + "    }\n" + "   });\n" + "  }\n" + " }\n" + "\n"
+                + "function latlonTxt(latlon) {\n" + " if(latlon) {\n"
+                + "     var s=\'<b>");
+        l_header.append(I18N.i18n("Last click"));
+        l_header.append(": \'+ latlon.toUrlValue()+\' </b>\';\n"
+                + "  showaddr(latlon);"
+                + "  document.getElementById(\"latlon\").innerHTML = s;\n"
+                + " }\n" + "}\n" + "function latlonFunc() {\n"
+                + " return function(overlay,latlon) {latlonTxt(latlon);}\n"
+                + "}\n" + "function gotoPt(pt) {\n" + " if(!pt){\n"
+                + "  document.getElementById(\"latlon\").innerHTML=\"");
+        l_header.append(I18N.i18n("Location not found"));
+        l_header
+                .append("\";\n"
                         + " } else {\n"
                         + "  map.setCenter(pt);latlonTxt(pt);\n"
                         + " }\n"
@@ -392,7 +392,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         resetTrack();
     }
 
-    private final BT747Hashtable icons = JavaLibBridge.getHashtableInstance(10);
+    private final BT747Hashtable icons = JavaLibBridge
+            .getHashtableInstance(10);
 
     /*
      * (non-Javadoc)

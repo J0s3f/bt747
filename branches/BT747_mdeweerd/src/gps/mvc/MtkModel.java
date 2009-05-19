@@ -595,14 +595,6 @@ public class MtkModel {
                             .toInt(sNmea[6]), JavaLibBridge.toInt(sNmea[7]));
                     agpsEnd2Time = GpsConvert.toTime(JavaLibBridge
                             .toInt(sNmea[8]), JavaLibBridge.toInt(sNmea[9]));
-                    Generic.debug("AGPS data for " + agpsDataCount
-                            + " blocks." + "\nFrom "
-                            + CommonOut.getDateTimeStr(agpsStartTime)
-                            + " to " + CommonOut.getDateTimeStr(agpsEndTime)
-                            + "\nOther dates: "
-                            + CommonOut.getDateTimeStr(agpsStart2Time)
-                            + " and "
-                            + CommonOut.getDateTimeStr(agpsEnd2Time));
                     setAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
                 }
                 break;
