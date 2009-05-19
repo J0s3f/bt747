@@ -98,7 +98,7 @@ public class Controller implements ModelListener {
     }
 
     public void setModel(final Model model) {
-        if(m!=null) {
+        if (m != null) {
             m.removeListener(this);
         }
         m = model;
@@ -108,7 +108,7 @@ public class Controller implements ModelListener {
     public Model getModel() {
         return m;
     }
-    
+
     private final gps.mvc.Controller getGpsC() {
         return m.gpsC();
     }
@@ -117,13 +117,15 @@ public class Controller implements ModelListener {
         return m.gpsOldC();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
     public void modelEvent(final ModelEvent e) {
-        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
             // TODO: Possibly move this to the mtkController.
-            if(m.mtkModel().isLoggingDisabled()) {
+            if (m.mtkModel().isLoggingDisabled()) {
                 setAutoLog(true);
             }
         }
@@ -137,7 +139,7 @@ public class Controller implements ModelListener {
     private final MtkController mtkC() {
         return getGpsC().getMtkController();
     }
-    
+
     /**
      * Called when the Controller starts. Used for initialization.
      */
@@ -739,6 +741,16 @@ public class Controller implements ModelListener {
     }
 
     /**
+     * Indicates that some data is needed from the MtkDevice. This will
+     * eventually issue a request to the device.
+     * 
+     * @param dataType
+     */
+    public final void setMtkDataNeeded(final int dataType) {
+        getGpsC().setDataNeeded(dataType);
+    }
+
+    /**
      * Set log overwrite mode on the device.
      * 
      * @param isOverWriteLog
@@ -747,7 +759,7 @@ public class Controller implements ModelListener {
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
         mtkC().setLogOverwrite(isOverWriteLog);
-        mtkC().reqLogOverwrite();
+        setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
     };
 
     /**
@@ -758,25 +770,25 @@ public class Controller implements ModelListener {
      * 
      */
     public final void reqMtkLogVersion() {
-        getGpsC().setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        getGpsC().setDataNeeded(MtkModel.DATA_MEM_USED);
+        setMtkDataNeeded(MtkModel.DATA_MEM_USED);
     }
 
     public final void reqInitialLogMode() {
-        getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
+        setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        getGpsC().setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
+        setMtkDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -785,7 +797,7 @@ public class Controller implements ModelListener {
      * {@link gps.GpsEvent#UPDATE_LOG_REC_METHOD} event to get the data.
      */
     public final void reqLogOverwrite() {
-        mtkC().reqLogOverwrite();
+        setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
     }
 
     /**
@@ -805,7 +817,7 @@ public class Controller implements ModelListener {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        getGpsC().setDataNeeded(MtkModel.DATA_LOG_STATUS);
+        setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
     }
 
     /**
@@ -814,7 +826,7 @@ public class Controller implements ModelListener {
      * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        getGpsC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
+        setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
     }
 
     /**
@@ -992,12 +1004,12 @@ public class Controller implements ModelListener {
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
+            setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
             // fail.
             getGpsC().reqStatus();
-            getGpsC().setDataNeeded(MtkModel.DATA_FLASH_TYPE);
-            getGpsC().setDataNeeded(MtkModel.DATA_LOG_FORMAT);
-            getGpsC().setDataNeeded(MtkModel.DATA_INITIAL_LOG);
+            setMtkDataNeeded(MtkModel.DATA_FLASH_TYPE);
+            setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
+            setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             getGpsC().initConnection();
             // Remember defaults
@@ -1207,9 +1219,9 @@ public class Controller implements ModelListener {
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
-        mtkC().setFlashUserOption(lock, updateRate, baudRate,
-                periodGLL, periodRMC, periodVTG, periodGSA, periodGSV,
-                periodGGA, periodZDA, periodMCHN);
+        mtkC().setFlashUserOption(lock, updateRate, baudRate, periodGLL,
+                periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
+                periodZDA, periodMCHN);
         reqFlashUserOption();
     }
 
@@ -1225,7 +1237,7 @@ public class Controller implements ModelListener {
      * 
      */
     public final void reqFlashUserOption() {
-        mtkC().reqFlashUserOption();
+        setMtkDataNeeded(MtkModel.DATA_FLASH_USER_OPTION);
     }
 
     /**
@@ -1239,7 +1251,7 @@ public class Controller implements ModelListener {
      * Request the bluetooth Mac Address from the device.
      */
     public final void reqBTAddr() {
-        mtkC().reqBtMacAddr();
+        setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
     }
 
     /**
@@ -1269,7 +1281,7 @@ public class Controller implements ModelListener {
      * Request the current NMEA period settings of the device.
      */
     public final void reqNMEAPeriods() {
-        mtkC().reqNMEAPeriods();
+        setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
     /**
@@ -1321,7 +1333,7 @@ public class Controller implements ModelListener {
      * {@link Model#isSBASTestEnabled()}.
      */
     public final void reqSBASTestEnabled() {
-        mtkC().reqSBASTestEnabled();
+        setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
     }
 
     /**
@@ -1340,7 +1352,7 @@ public class Controller implements ModelListener {
      * to be retrieved later with {@link Model#isSBASEnabled()}.
      */
     public final void reqSBASEnabled() {
-        mtkC().reqSBASEnabled();
+        setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
     }
 
     /**
@@ -1348,7 +1360,7 @@ public class Controller implements ModelListener {
      * {@link Model#getDatum()}.
      */
     public final void reqDatumMode() {
-        mtkC().reqDatumMode();
+        setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
     }
 
     /**
@@ -1378,7 +1390,7 @@ public class Controller implements ModelListener {
      * {@link Model#getDgpsMode()} later.
      */
     public final void reqDGPSMode() {
-        mtkC().reqDGPSMode();
+        setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
     }
 
     /**
@@ -1397,7 +1409,7 @@ public class Controller implements ModelListener {
      * actual setting later with {@link Model#isPowerSaveEnabled()}.
      */
     public final void reqPowerSaveEnabled() {
-        mtkC().reqPowerSaveEnabled();
+        setMtkDataNeeded(MtkModel.DATA_POWERSAVE_STATUS);
     }
 
     /**
@@ -1409,10 +1421,9 @@ public class Controller implements ModelListener {
      *       {@link Model#getLogSpeedInterval()}
      */
     public final void reqLogReasonStatus() {
-        final gps.mvc.Controller r = getGpsC();
-        r.setDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
-        r.setDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
-        r.setDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
     }
 
     /**
@@ -1421,8 +1432,7 @@ public class Controller implements ModelListener {
      * 
      */
     public final void reqFixInterval() {
-        final gps.mvc.Controller r = getGpsC();
-        r.setDataNeeded(MtkModel.DATA_FIX_PERIOD);
+        setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
     }
 
     /**
@@ -1476,19 +1486,21 @@ public class Controller implements ModelListener {
 
     /**
      * Send a command to the MTK device.
+     * 
      * @param cmd
-     * Command type.  One of:<ul>
-     * <li>{@link MtkController#CMD_HOTSTART}</li>
-     * <li>{@link MtkController#CMD_COLDSTART}</li>
-     * <li>{@link MtkController#CMD_WARMSTART}</li>
-     * <li>{@link MtkController#CMD_FULLCOLDSTART}</li>
-     * </ul>
+     *                Command type. One of:
+     *                <ul>
+     *                <li>{@link MtkController#CMD_HOTSTART}</li>
+     *                <li>{@link MtkController#CMD_COLDSTART}</li>
+     *                <li>{@link MtkController#CMD_WARMSTART}</li>
+     *                <li>{@link MtkController#CMD_FULLCOLDSTART}</li>
+     *                </ul>
      */
     public final void mtkCmd(final int cmd) {
         final MtkController r = mtkC();
         r.cmd(cmd);
     }
-    
+
     public final boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
         // should do this through an event to the view.
@@ -1714,17 +1726,17 @@ public class Controller implements ModelListener {
         final LogFileInfo loginfo = new LogFileInfo(path, card);
         Controller.logFiles.addElement(loginfo);
     }
-    
+
     public final void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
         getGpsC().setDeviceOperationHandler(h);
     }
-    
+
     public final void setAgpsData(byte[] agpsData) {
         // Initialise the handler (will respond/send data).
         AgpsUploadHandler handler = new AgpsUploadHandler(m);
         handler.setAgpsData(agpsData);
-        
-        //TODO: Move part of this to the MtkController.
+
+        // TODO: Move part of this to the MtkController.
         // Set the handler
         setDeviceOperationHandler(handler);
         // Enter binary sending so that the handler can do his work.

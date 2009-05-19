@@ -228,6 +228,42 @@ public class MtkController {
         case MtkModel.DATA_AGPS_STORED_RANGE:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_EPO_INFO;
             break;
+        case MtkModel.DATA_LOG_OVERWRITE_STATUS:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_Q + ","
+                    + BT747Constants.PMTK_LOG_REC_METHOD_STR;
+            break;
+        case MtkModel.DATA_SBAS_TEST_STATUS:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_SBAS_TEST_STR;
+            break;
+        case MtkModel.DATA_SBAS_STATUS:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_SBAS_STR;
+            ;
+            break;
+        case MtkModel.DATA_POWERSAVE_STATUS:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR;
+            break;
+        case MtkModel.DATA_DATUM_MODE:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_DATUM_STR;
+            break;
+        case MtkModel.DATA_NMEA_OUTPUT_PERIODS:
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_NMEA_OUTPUT;
+            break;
+
+        case MtkModel.DATA_DGPS_MODE:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_DGPS_MODE_STR;
+            break;
+        case MtkModel.DATA_BT_MAC_ADDR:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_BT_MAC_ADDR;
+            break;
+        case MtkModel.DATA_FLASH_USER_OPTION:
+            nmeaCmd = MtkController.PMTK
+            + BT747Constants.PMTK_API_GET_USER_OPTION_STR;
+            break;
         default:
             break;
         }
@@ -237,6 +273,11 @@ public class MtkController {
             Generic.debug("Serious: (in MtkController) Unknown data type #"
                     + dataType);
         }
+    }
+
+    public final void reqHoluxName() {
+        sendCmd(BT747Constants.HOLUX_MAIN_CMD
+                + BT747Constants.HOLUX_API_Q_NAME);
     }
 
     public final void setLogTimeInterval(final int value) {
@@ -299,23 +340,11 @@ public class MtkController {
                 + (set ? "1" : "2"));
     }
 
-    public final void reqLogOverwrite() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_Q + ","
-                + BT747Constants.PMTK_LOG_REC_METHOD_STR);
-    }
-
     public final void setSBASTestEnabled(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK
                 + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
                 + (set ? "0" : "1"));
-    }
-
-    public final void reqSBASTestEnabled() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
     }
 
     public final void setSBASEnabled(final boolean set) {
@@ -324,22 +353,11 @@ public class MtkController {
                 + "," + (set ? "1" : "0"));
     }
 
-    public final void reqSBASEnabled() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_SBAS_STR);
-    }
-
     public final void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK
                 + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
                 + (set ? "1" : "0"));
-    }
-
-    public final void reqPowerSaveEnabled() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK
-                + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
     }
 
     public final void setDGPSMode(final int mode) {
@@ -350,31 +368,12 @@ public class MtkController {
         }
     }
 
-    public final void reqDGPSMode() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
-    }
-
     public final void setDatumMode(final int mode) {
         // Request log format from device
         if ((mode >= 0) && (mode <= 2)) {
             sendCmd(MtkController.PMTK
                     + BT747Constants.PMTK_API_SET_DATUM_STR + "," + mode);
         }
-    }
-
-    public final void reqDatumMode() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_DATUM_STR);
-    }
-
-    public final void reqNMEAPeriods() {
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
-    }
-
-    public final void reqHoluxName() {
-        sendCmd(BT747Constants.HOLUX_MAIN_CMD
-                + BT747Constants.HOLUX_API_Q_NAME);
     }
 
     /**
@@ -385,13 +384,6 @@ public class MtkController {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
         reqHoluxName();
-    }
-
-    /**
-     * Requests the current mac address for bluetooth (Holux 241 devices).
-     */
-    public final void reqBtMacAddr() {
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
     }
 
     /**
@@ -414,7 +406,7 @@ public class MtkController {
                     + BT747Constants.PMTK_API_SET_BT_MAC_ADDR + ","
                     + myMacAddr.substring(0, 6) + ","
                     + myMacAddr.substring(6, 12));
-            reqBtMacAddr();
+            reqData(MtkModel.DATA_BT_MAC_ADDR);
         }
     }
 
@@ -442,7 +434,7 @@ public class MtkController {
         periods[BT747Constants.NMEA_SEN_GSV_IDX] = 1;
         periods[BT747Constants.NMEA_SEN_MDBG_IDX] = 1;
         setNMEAPeriods(periods);
-        reqNMEAPeriods();
+        reqData(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
     public final void setFlashUserOption(final boolean lock,
@@ -462,12 +454,6 @@ public class MtkController {
                 + "," + GSA_Period + "," + GSV_Period + "," + GGA_Period
                 + "," + ZDA_Period + "," + MCHN_Period);
 
-    }
-
-    public final void reqFlashUserOption() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK
-                + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
     }
 
     public final void logImmediate(final int value) {
