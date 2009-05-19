@@ -176,7 +176,7 @@ public class MtkModel {
     public final static int DATA_LOG_STATUS = 7;
     public final static int DATA_LOG_VERSION = 8;
     protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
-                                                            // possible index
+    // possible index
 
     /** The device version. */
     public final static int DATA_DEVICE_VERSION = 9;
@@ -194,10 +194,28 @@ public class MtkModel {
     public final static int DATA_LOG_FLASH_SECTOR_STATUS = 15;
     /** The fix period. */
     public final static int DATA_FIX_PERIOD = 16;
-    /** The store AGPS data range. */
+    /** The stored AGPS data range. */
     public final static int DATA_AGPS_STORED_RANGE = 17;
+    /** Indicates if data is in overwrite or stop mode. */
+    public final static int DATA_LOG_OVERWRITE_STATUS = 18;
+    /** Indicates if SBAS test satellites are used. */
+    public final static int DATA_SBAS_TEST_STATUS = 19;
+    /** Indicates if SBAS satellites are used. */
+    public final static int DATA_SBAS_STATUS = 20;
+    /** Indicates the power save status (for testing only). */
+    public final static int DATA_POWERSAVE_STATUS = 21;
+    /** The DATUM used by the logger. */
+    public final static int DATA_DATUM_MODE = 22;
+    /** The NMEA output period. */
+    public final static int DATA_NMEA_OUTPUT_PERIODS = 23;
+    /** The DGPS usage mode. */
+    public final static int DATA_DGPS_MODE = 24;
+    /** The device's BT mac address. */
+    public final static int DATA_BT_MAC_ADDR = 25;
+    /** The User Configurable Options stored in flash. */
+    public final static int DATA_FLASH_USER_OPTION = 26;
     
-    private final static int DATA_MAX_INDEX = 17;
+    private final static int DATA_MAX_INDEX = 26;
 
     /**
      * Reset the availability of all values - e.g. after loss of connection.
@@ -225,7 +243,7 @@ public class MtkModel {
 
     protected final boolean isDataNeedsRequest(final int ts,
             final int dataType) {
-        if(dataType>DATA_LAST_AUTO_INDEX) {
+        if (dataType > DATA_LAST_AUTO_INDEX) {
             // Data beyond last automatic index is needed.
             return true;
         }
@@ -578,9 +596,13 @@ public class MtkModel {
                     agpsEnd2Time = GpsConvert.toTime(JavaLibBridge
                             .toInt(sNmea[8]), JavaLibBridge.toInt(sNmea[9]));
                     Generic.debug("AGPS data for " + agpsDataCount
-                            + " blocks." + "\nFrom " + CommonOut.getDateTimeStr(agpsStartTime) + " to "
-                            + CommonOut.getDateTimeStr(agpsEndTime) + "\nOther dates: "
-                            + CommonOut.getDateTimeStr(agpsStart2Time) + " and " + CommonOut.getDateTimeStr(agpsEnd2Time));
+                            + " blocks." + "\nFrom "
+                            + CommonOut.getDateTimeStr(agpsStartTime)
+                            + " to " + CommonOut.getDateTimeStr(agpsEndTime)
+                            + "\nOther dates: "
+                            + CommonOut.getDateTimeStr(agpsStart2Time)
+                            + " and "
+                            + CommonOut.getDateTimeStr(agpsEnd2Time));
                     setAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
                 }
                 break;
@@ -960,7 +982,7 @@ public class MtkModel {
     public final BT747Time getAgpsEnd2Time() {
         return this.agpsEnd2Time;
     }
-    
+
     public final boolean hasAgps() {
         return this.hasAgps;
     }

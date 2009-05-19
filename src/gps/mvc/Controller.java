@@ -105,7 +105,7 @@ public class Controller implements BT747Thread {
         setDataNeeded(MtkModel.DATA_LOG_VERSION);
         setDataNeeded(MtkModel.DATA_MEM_USED);
         setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
-        mtkC.reqLogOverwrite();
+        mtkC.reqData(MtkModel.DATA_LOG_OVERWRITE_STATUS);
     }
 
     /**
