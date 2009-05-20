@@ -38,7 +38,7 @@ public class MapFactoryInfos {
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
-            "osmcycle", 7, 18, 19, 256, true, true,
+            "osmcycle", 4, 18, 19, 256, true, true,
             "http://www.thunderflames.org/tiles/cycle", "x", "y", "z",
             "OpenCycleMap.org - Creative Commons-by-SA License",
             "http://www.opencylemap.org") {
