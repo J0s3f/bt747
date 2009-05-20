@@ -38,7 +38,7 @@ public class MapFactoryInfos {
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
-            "osmcycle", 1, 15, 19, 256, true, true,
+            "osmcycle", 7, 18, 19, 256, true, true,
             "http://www.thunderflames.org/tiles/cycle", "x", "y", "z",
             "OpenCycleMap.org - Creative Commons-by-SA License",
             "http://www.opencylemap.org") {
@@ -49,7 +49,7 @@ public class MapFactoryInfos {
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSMARENDER = new MyTileFactoryInfo(
-            "osmarender", 1, 18, 19, 256, true, true,
+            "osmarender", 2, 18, 19, 256, true, true,
             "http://tah.openstreetmap.org/Tiles/tile", "x", "y", "z",
             "Open Street Map (Osmarender)",
             "http://www.openstreetmap.org/?layers=0B00FTF") {
@@ -92,66 +92,67 @@ public class MapFactoryInfos {
 
     };
 
-    public final static MyTileFactoryInfo tfiDigitalGlobe = new WmsEPSG4326TileFactoryInfo(
-            "dig256", 1, 18, 19, 256, true, true,
-            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
-            "Digital Globe", "http://www.digitalglobe.com") {
+    // No longer works.
+//    public final static MyTileFactoryInfo tfiDigitalGlobe = new WmsEPSG4326TileFactoryInfo(
+//            "dig256", 1, 18, 19, 256, true, true,
+//            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
+//            "Digital Globe", "http://www.digitalglobe.com") {
+//
+//        public String getLayer() {
+//            return "GlobeXplorer%20Image";
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         * 
+//         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+//         */
+//        @Override
+//        public String getFormat() {
+//            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+//        }
+//
+//    };
 
-        public String getLayer() {
-            return "GlobeXplorer%20Image";
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
-         */
-        @Override
-        public String getFormat() {
-            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
-        }
-
-    };
-
-    public final static MyTileFactoryInfo tfiDigitalGlobe128 = new WmsEPSG4326TileFactoryInfo(
-            "dig128", 4, 18, 19, 128, true, true,
-            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
-            "Digital Globe", "http://www.digitalglobe.com") {
-        public String getLayer() {
-            return "GlobeXplorer%20Image";
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
-         */
-        @Override
-        public String getFormat() {
-            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
-        }
-
-    };
-
-    public final static MyTileFactoryInfo tfiDigitalGlobe512 = new WmsEPSG4326TileFactoryInfo(
-            "dig512", 1, 18, 19, 512, true, true,
-            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
-            "Digital Globe", "http://www.digitalglobe.com") {
-        public String getLayer() {
-            return "GlobeXplorer%20Image";
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
-         */
-        @Override
-        public String getFormat() {
-            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
-        }
-
-    };
+//    public final static MyTileFactoryInfo tfiDigitalGlobe128 = new WmsEPSG4326TileFactoryInfo(
+//            "dig128", 4, 18, 19, 128, true, true,
+//            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
+//            "Digital Globe", "http://www.digitalglobe.com") {
+//        public String getLayer() {
+//            return "GlobeXplorer%20Image";
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         * 
+//         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+//         */
+//        @Override
+//        public String getFormat() {
+//            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+//        }
+//
+//    };
+//
+//    public final static MyTileFactoryInfo tfiDigitalGlobe512 = new WmsEPSG4326TileFactoryInfo(
+//            "dig512", 1, 18, 19, 512, true, true,
+//            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
+//            "Digital Globe", "http://www.digitalglobe.com") {
+//        public String getLayer() {
+//            return "GlobeXplorer%20Image";
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         * 
+//         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+//         */
+//        @Override
+//        public String getFormat() {
+//            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+//        }
+//
+//    };
 
     // Next list of maps unverified.
 
