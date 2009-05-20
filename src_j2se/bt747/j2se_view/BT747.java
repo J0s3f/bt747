@@ -19,7 +19,6 @@
 //********************************************************************                              
 package bt747.j2se_view;
 
-import bt747.model.Model;
 /**
  * Main class (application entry) An empty wrapper to maintain compatibility
  * after moving classes into specific package.

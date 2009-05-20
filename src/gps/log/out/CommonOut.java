@@ -86,7 +86,7 @@ public final class CommonOut {
             final GPSRecord s, final GPSRecord activeFields,
             final GPSRecord selectedFields, final BT747Time t,
             final boolean recordNbrInLogs, final boolean imperial) {
-        rec.append("<table>");
+        rec.append("<table width=400>");
 
         if (recordNbrInLogs && s.hasRecCount()) {
             rec.append("<tr><td>"); // Table row and first column start
@@ -230,14 +230,14 @@ public final class CommonOut {
             rec.append(I18N.i18n("HEADING"));
             rec.append(":</td><td>"); // Column split
             rec.append(JavaLibBridge.toString(s.heading));
-            rec.append("</td></tr>"); // Column end and end row.
+            rec.append("&#176;</td></tr>"); // Column end and end row.
         }
         if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("DSTA"));
             rec.append(":</td><td>"); // Column split
             rec.append(s.dsta);
-            rec.append("</td><td>"); // Column split
+            rec.append("</td></tr>"); // Column end and end row.
         }
         if ((activeFields.hasDage()) && (selectedFields.hasDage())) {
             rec.append("<tr><td>"); // Table row and first column start

@@ -402,9 +402,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         case Cycle:
             info = MapFactoryInfos.tfiOSM_OSM_CYCLE;
             break;
-        case Map4:
-            info = MapFactoryInfos.tfiDigitalGlobe512;
-            break;
+//        case Map4:
+//            info = MapFactoryInfos.tfiDigitalGlobe512;
+//            break;
         case OpenStreetMap:
         default:
             info = MapFactoryInfos.tfiOpenStreetMap;

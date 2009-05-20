@@ -269,6 +269,7 @@ public class BT747Main extends javax.swing.JFrame implements
         new FileDrop(this, dl);
 
         pnMap.init(c);
+        mMap4.setVisible(false);
         pnFilesToTagPanel.init(c);
         pnAdvancedSettingsPanel.init(c);
         pnDeviceSettingsPanel.init(c);
@@ -306,13 +307,13 @@ public class BT747Main extends javax.swing.JFrame implements
         Generic.debug("BT747 " + Version.VERSION_NUMBER + " Build:"
                 + Version.BUILD_STR);
         Generic.debug(java.lang.System.getProperty("os.name")); // NOI18N
-        //infoTextArea.append("\n"); // NOI18N
+        // infoTextArea.append("\n"); // NOI18N
         Generic.debug(java.lang.System.getProperty("os.arch")); // NOI18N
-        //infoTextArea.append("\n"); // NOI18N
+        // infoTextArea.append("\n"); // NOI18N
         Generic.debug(java.lang.System.getProperty("os.version")); // NOI18N
-        //infoTextArea.append("\n"); // NOI18N
+        // infoTextArea.append("\n"); // NOI18N
         Generic.debug(java.lang.System.getProperty("java.version")); // NOI18N
-        //infoTextArea.append("\n"); // NOI18N
+        // infoTextArea.append("\n"); // NOI18N
         Generic.debug(J2SEAppController.lookAndFeelMsg);
 
         progressBarUpdate();
@@ -431,8 +432,11 @@ public class BT747Main extends javax.swing.JFrame implements
             int idx;
             idx = m.getIntOpt(Model.MAPTYPE);
             MapType mt = MapType.OpenStreetMap;
-            if (idx < MapType.values().length) {
-                mt = MapType.values()[idx];
+            if (MapType.values()[idx] != MapType.Map4) {
+                // Map4 no longer supported.
+                if (idx < MapType.values().length) {
+                    mt = MapType.values()[idx];
+                }
             }
             miMapnik.setSelected(mt == MapType.OpenStreetMap);
             miOsmarender.setSelected(mt == MapType.OsmaRender);
@@ -495,8 +499,8 @@ public class BT747Main extends javax.swing.JFrame implements
             c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
-                c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
-                c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
             c.setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
             c.setMtkDataNeeded(MtkModel.DATA_DGPS_MODE);
@@ -1328,7 +1332,6 @@ public class BT747Main extends javax.swing.JFrame implements
         // this.paintAll(this.getGraphics());
     }
 
-    
     private final void agpsProgressBarUpdate(final int percent) {
         DownloadProgressBar.setVisible(true);
         //DownloadProgressLabel.setVisible(true);
@@ -1336,12 +1339,12 @@ public class BT747Main extends javax.swing.JFrame implements
         DownloadProgressBar.setMaximum(100);
         DownloadProgressBar.setValue(percent);
     }
-    
+
     private final void agpsProgressBarDone() {
         DownloadProgressBar.setVisible(false);
         DownloadProgressLabel.setVisible(false);
     }
-    
+
     private void openPort(final String s) {
         boolean foundPort = false;
         int port = 0;
