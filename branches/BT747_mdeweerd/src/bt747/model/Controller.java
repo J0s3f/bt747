@@ -123,13 +123,17 @@ public class Controller implements ModelListener {
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
     public void modelEvent(final ModelEvent e) {
-        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+        switch (e.getType()) {
+        case ModelEvent.UPDATE_LOG_LOG_STATUS:
             // TODO: Possibly move this to the mtkController.
             if (m.mtkModel().isLoggingDisabled()) {
                 setAutoLog(true);
             }
+            break;
+        case ModelEvent.AGPS_UPLOAD_DONE:
+            setMtkDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
+            break;
         }
-        // TODO Auto-generated method stub
     }
 
     public final void setAutoLog(final boolean enable) {
