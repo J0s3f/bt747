@@ -226,9 +226,15 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case ModelEvent.GPRMC:
             updateRMCData((GPSRecord) e.getArg());
             break;
+        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
         case ModelEvent.UPDATE_LOG_MEM_USED:
+            txtMemoryUsed.setToolTipText(m.logMemUsed()+getString("bytesused"));
             txtMemoryUsed.setText(m.logMemUsed() + " ("
                     + m.logMemUsedPercent() + "%)"); // NOI18N
+            txtMemoryUsed.setText(m.logNbrLogPts() + getString("pts") + " ("
+                    + m.logMemUsedPercent() + "%)"); // NOI18N
+            // TODO
+            // + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
             break;
         case ModelEvent.UPDATE_LOG_FLASH:
             txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? JavaLibBridge
@@ -283,18 +289,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case ModelEvent.CONNECTED:
         case ModelEvent.DISCONNECTED:
             updateConnected(m.isConnected());
-            break;
-        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
-            // TODO
-            // lbUsedMem.setText(Txt.MEM_USED +
-            // JavaLibBridge.toString(m.logMemUsed())
-            // + "("
-            // + JavaLibBridge.toString(m.logMemUsedPercent()) + "%)");
-            // m_UsedLabel.repaintNow();
-            // lbUsedRecords.setText(Txt.NBR_RECORDS
-            // + JavaLibBridge.toString(m.logNbrLogPts()) + " ("
-            // + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
-            // + Txt.MEM_FREE + ")");
             break;
         // case ModelEvent.LOGFILEPATH_UPDATE:
         // getRawLogFilePath();
