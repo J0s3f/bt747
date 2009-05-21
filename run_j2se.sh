@@ -28,7 +28,7 @@ CLASSPATH=${ROOT_DIR}/dist/BT747_j2se.jar:$CLASSPATH
    # Use new library if available.
    TSTRXTXPATH=${ROOT_DIR}/lib/rxtx-2.2pre2-bins
    if [ -d ${TSTRXTXPATH} ] ; then
-     RXTXPATH = ${TSTRXTXPATH}
+     RXTXPATH=${TSTRXTXPATH}
    fi
  fi
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
