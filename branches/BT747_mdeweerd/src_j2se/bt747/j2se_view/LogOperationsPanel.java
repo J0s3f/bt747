@@ -175,7 +175,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 txtGeoid.setText(String.format((Locale) null, "%.1f",
                         gps.geoid) // NOI18N
                         + getString("m")
-                        + getString(" (calc:")
+                        + " " +getString("(calc:")
                         + String
                                 .format((Locale) null, "%.1f", Conv
                                         .wgs84Separation(gps.latitude,

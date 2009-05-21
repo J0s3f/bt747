@@ -113,7 +113,7 @@ public final class CommonOut {
 
             if (s.voxStr == null && style != null) {
                 rec.append(" <b>(");
-                rec.append(style.getSymbolText());
+                rec.append(I18N.i18n(style.getSymbolText()));
                 rec.append(")</b>");
             }
             rec.append("</td></tr>"); // Column end and end row.
