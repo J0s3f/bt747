@@ -603,7 +603,8 @@ public final class J2SEAppController extends J2SEController {
                 preferencesFile = new FileInputStream(CONFIG_FILE_NAME);
                 readLength = preferencesFile.available();
                 if (readLength >= 100) {
-                    final byte[] appSettingsArray = new byte[AppSettings.SIZE];
+                    final int arrSize = Math.max(AppSettings.SIZE, readLength);
+                    final byte[] appSettingsArray = new byte[arrSize];
 
                     preferencesFile.read(appSettingsArray, 0, readLength);
                     Settings.setAppSettings(new String(appSettingsArray));
