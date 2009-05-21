@@ -1,6 +1,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.GpsEvent;
+import gps.mvc.MtkModel;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.logging.Log;
@@ -58,9 +59,11 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
         setupScreen();
         if (!isDataRequested) {
             isDataRequested = true;
-            c.reqLogReasonStatus(); // TODO: Should be done on actual initial
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL); // TODO: Should be done on actual initial
             // entry
-            c.reqFixInterval();
+            c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
             updateButtons();
         }
         m().addListener(this); // Does not matter if double addition.
@@ -91,8 +94,10 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
         c.setFixInterval((JavaLibBridge.toInt(tbFix.getString())));
         Log.debug("Log condition settings updated");
         // c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
-        c.reqLogReasonStatus();
-        c.reqFixInterval();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
     }
 
     protected void acceptNotify() {

@@ -16,6 +16,7 @@ package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
 import gps.Txt;
+import gps.mvc.MtkModel;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.logging.Log;
@@ -134,7 +135,7 @@ public final class LogFieldSelectScreen extends BT747Dialog {
 
     private void saveLogFormat() {
         c.setLogFormat(getSelectedLogFormat());
-        c.reqLogFormat();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
         // Log.debug("FileFieldFormat:" +
         // bt747.sys.JavaLibBridge.unsigned2hex(getSelectedLogFormat(), 8));
     }

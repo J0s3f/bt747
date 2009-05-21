@@ -1,6 +1,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.GpsEvent;
+import gps.mvc.MtkModel;
 
 import java.util.Date;
 
@@ -100,15 +101,17 @@ public final class LoggerStatusScreen extends BT747Dialog implements
     }
 
     private void reqLogInfo() {
-        c.reqLogReasonStatus();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
         // Request device info for this control
-        c.reqLogStatus();
+        c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
         // Request log version from device
         // c.reqMtkLogVersion();
         // Request mem size from device
-        c.reqLogMemUsed();
+        c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
         // Request number of log points
-        c.reqLogMemPtsLogged();
+        c.setMtkDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
         // c.reqLogOverwrite();
     }
 
