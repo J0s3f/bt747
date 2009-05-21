@@ -15,6 +15,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.GpsEvent;
+import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.util.Date;
@@ -269,8 +270,17 @@ public final class GpsPositionScreen extends
             longitude.setLabel(g.longitude, 6);
             NSAT.setLabel((g.nsat / 256)
                     + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
-            fvAltitude.setLabel(g.height, 1);
-            fvHdop.setLabel(g.hdop / 100., 2);
+            {
+                String mslStr;
+                mslStr = JavaLibBridge.toString(g.height, 1);
+                mslStr += "(calc: ";
+                mslStr += JavaLibBridge.toString( Conv
+                        .wgs84Separation(g.height + g.geoid - g.latitude,
+                                g.longitude),1);
+                mslStr += ")";
+                fvAltitude.setLabel(mslStr);
+            }
+            fvHdop.setLabel(g.height);
             fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
             updateValidColor(g.valid);
             repaint();

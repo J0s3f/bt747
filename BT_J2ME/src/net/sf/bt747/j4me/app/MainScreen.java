@@ -16,6 +16,7 @@ package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
 import gps.GpsEvent;
+import gps.mvc.MtkModel;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -611,8 +612,8 @@ public final class MainScreen extends Dialog implements ModelListener {
             setupScreen();
             break;
         case ModelEvent.CONNECTED:
-            c.reqLogFormat();
-            c.reqLogStatus();
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
             break;
         case GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             interruptedScreen = UIManager.getScreen();
