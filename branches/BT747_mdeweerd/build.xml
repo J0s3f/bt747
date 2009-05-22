@@ -353,6 +353,7 @@
             <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
             <fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
             <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
+        	<fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
             <fileset dir="${src_j2se.dir}" includes="**/BT747base*.properties" />
             <fileset dir="${src_j2se.dir}" includes="**/resources/*" />
             <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
@@ -554,6 +555,9 @@
 			            -keep public class gps.log.out.AllWayPointStyles { public static final int *; }
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
+			            -keep public class gps.convert.GeoidIF { *; }
+			-keep public class gps.convert.Conv { public *** setGeoidIF(...); }
+			-keep public class gps.convert.Geoid { }
 			            -keep public class gps.mvc.MtkModel { public static final int DATA_*;
 		                                                      public boolean has*();
 			public *** get*();

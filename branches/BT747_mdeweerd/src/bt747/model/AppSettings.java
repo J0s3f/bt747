@@ -262,10 +262,10 @@ public class AppSettings {
      */
     public static final int FILETIMEOFFSETOLD = 52;
 
-    /**
-     * AGPS external link.
-     */
+    /** AGPS external link. */
     public static final int AGPSURL = 53;
+    /** Whether precise GEOID calculation is to be used if available. */
+    public static final int IS_USE_PRECISE_GEOID = 54;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -462,7 +462,10 @@ public class AppSettings {
         case 38:
             setStringOpt(AppSettings.AGPSURL,
                     "ftp://login:passwd@siteURL.com/MTK7d.EPO");
-            setStringOpt(AppSettings.VERSION, "0.39");
+            /* fall through */
+        case 39:
+            setBooleanOpt(AppSettings.IS_USE_PRECISE_GEOID, true);
+            setStringOpt(AppSettings.VERSION, "0.40");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1468,8 +1471,11 @@ public class AppSettings {
     private static final int C_AGPSURL_IDX = AppSettings.C_FILETIMEOFFSET_IDX
             + AppSettings.C_FILETIMEOFFSET_SIZE;
     private static final int C_AGPSURL_SIZE = 256;
-    private static final int C_NEXT_IDX = AppSettings.C_AGPSURL_IDX
+    private static final int C_IS_USE_PRECISE_GEOID_IDX = AppSettings.C_AGPSURL_IDX
             + AppSettings.C_AGPSURL_SIZE;
+    private static final int C_IS_USE_PRECISE_GEOID_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_IS_USE_PRECISE_GEOID_IDX
+            + AppSettings.C_IS_USE_PRECISE_GEOID_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1628,6 +1634,8 @@ public class AppSettings {
                     AppSettings.C_FILETIMEOFFSETOLD_SIZE },
             { AppSettings.STRING, AppSettings.AGPSURL,
                     AppSettings.C_AGPSURL_IDX, AppSettings.C_AGPSURL_SIZE },
+                    { AppSettings.BOOL, AppSettings.IS_USE_PRECISE_GEOID,
+                        AppSettings.C_IS_USE_PRECISE_GEOID_IDX, AppSettings.C_IS_USE_PRECISE_GEOID_SIZE },
     // End of list
     };
 
