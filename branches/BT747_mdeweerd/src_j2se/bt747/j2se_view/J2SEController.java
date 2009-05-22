@@ -111,7 +111,7 @@ public class J2SEController extends Controller {
             geoidIF = gps.convert.Geoid.getInstance();
         }
         if (geoidIF != null) {
-            Conv.setGeiodIF(geoidIF);
+            Conv.setGeoidIF(geoidIF);
         }
     }
 
