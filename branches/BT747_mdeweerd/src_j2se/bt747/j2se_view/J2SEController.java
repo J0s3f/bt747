@@ -3,15 +3,13 @@
  */
 package bt747.j2se_view;
 
-import gps.log.GPSRecord;
+import gps.convert.Conv;
+import gps.convert.GeoidIF;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
-import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.JFrame;
 
 import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
@@ -19,6 +17,7 @@ import bt747.j2se_view.model.ImageData;
 import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
 
 /**
  * @author Mario
@@ -52,6 +51,7 @@ public class J2SEController extends Controller {
     public void setModel(final Model m) {
         super.setModel(m);
         this.m = m;
+        updateUseGeoid();
     }
 
     private static final class GPXHandlerFactory extends
@@ -75,6 +75,44 @@ public class J2SEController extends Controller {
 
     static {
         GPSInputConversionFactory.addHandler(new GPXHandlerFactory());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
+     */
+    @Override
+    public void modelEvent(ModelEvent e) {
+        super.modelEvent(e);
+        final int type = e.getType();
+        switch (type) {
+
+        case ModelEvent.SETTING_CHANGE:
+            final int arg = Integer.valueOf((String) e.getArg());
+            switch (arg) {
+            case Model.IS_USE_PRECISE_GEOID:
+
+                updateUseGeoid();
+
+                break;
+            }
+            break;
+        }
+
+    }
+
+    private void updateUseGeoid() {
+        GeoidIF geoidIF = null;
+        if (m.getBooleanOpt(Model.IS_USE_PRECISE_GEOID)) {
+            geoidIF = net.sf.bt747.j2se.app.utils.Geoid.getInstance();
+
+        } else {
+            geoidIF = gps.convert.Geoid.getInstance();
+        }
+        if (geoidIF != null) {
+            Conv.setGeiodIF(geoidIF);
+        }
     }
 
     /**
@@ -120,9 +158,10 @@ public class J2SEController extends Controller {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public final void run() {
                 final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
-                bt747.sys.Generic.debug("Getting data from <"+urlTxt+">");
+                bt747.sys.Generic.debug("Getting data from <" + urlTxt + ">");
                 final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
-                bt747.sys.Generic.debug("Finished getting data from <"+urlTxt+">");
+                bt747.sys.Generic.debug("Finished getting data from <"
+                        + urlTxt + ">");
                 setAgpsData(agpsData);
             }
         });
