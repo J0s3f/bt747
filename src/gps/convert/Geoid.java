@@ -7,7 +7,15 @@ package gps.convert;
  * @author Mario
  * 
  */
-public class Geoid implements GeoidIF {
+public final class Geoid implements GeoidIF {
+    public final static GeoidIF getInstance() {
+        return new Geoid();
+    }
+
+    private Geoid() {
+
+    }
+
     private static final int GEOID_ROW = 19;
     private static final int GEOID_COL = 37;
     private static final byte[] geoid_delta = {

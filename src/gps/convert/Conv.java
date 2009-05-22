@@ -312,7 +312,7 @@ public final class Conv {
     }
 
     /** The class to use for geoid calculation. */
-    private static GeoidIF geoid = new Geoid();
+    private static GeoidIF geoid = Geoid.getInstance();
 
     /**
      * Set the class to use for geoid calculation.

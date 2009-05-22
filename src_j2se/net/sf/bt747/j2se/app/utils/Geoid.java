@@ -6,9 +6,7 @@ package net.sf.bt747.j2se.app.utils;
 import gps.convert.Conv;
 import gps.convert.GeoidIF;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import bt747.sys.Generic;
 
@@ -23,13 +21,27 @@ public final class Geoid implements GeoidIF {
     private static final String GEOID_RESOURCE = "geoid1DEG.bin";
     private static final int SIZE = 360 * 179;
 
-    public final static void setThisGeoidIF() {
+    public final static GeoidIF getInstance() {
+        init();
+        if (geoid_delta != null) {
+            return new Geoid();
+        } else {
+            return null;
+        }
+    }
+
+    private Geoid() {
+
+    }
+
+    private final static void init() {
         try {
             if (geoid_delta == null) {
                 // Get the resource.
                 final InputStream is = Geoid.class
                         .getResourceAsStream(GEOID_RESOURCE);
-                System.err.println(Geoid.class.getResource(GEOID_RESOURCE).getPath());
+//                System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
+//                        .getPath());
                 if (is.available() != SIZE) {
                     Generic.debug(GEOID_RESOURCE + " is bad size - expected "
                             + SIZE + " got " + is.available());
@@ -37,35 +49,31 @@ public final class Geoid implements GeoidIF {
                     geoid_delta = new byte[SIZE];
                     is.read(geoid_delta);
                     is.close();
-//                    for (int i = SIZE - 1; i > 0; i--) {
-//                        geoid_delta[i] -= 120;
-//                    }
-//
-//                    final byte[] newGeoid = new byte[SIZE];
-//                    for (int lat = -89; lat <= 89; lat++) {
-//                        for (int lon = -180; lon < 180; lon++) {
-//                            newGeoid[(lon + 180) + (lat + 89) * 360] = geoid_delta[(89 - lat)
-//                                    * 360 + ((lon + 360) % 360)];
-//                        }
-//                    }
-//                    geoid_delta = newGeoid;
-                    
-//                    final OutputStream os = new FileOutputStream(
-//                            "c:/bt747/"+GEOID_RESOURCE, false);
-//                    os.write(geoid_delta);
-//                    os.flush();
-//                    os.close();
+                    // for (int i = SIZE - 1; i > 0; i--) {
+                    // geoid_delta[i] -= 120;
+                    // }
+                    //
+                    // final byte[] newGeoid = new byte[SIZE];
+                    // for (int lat = -89; lat <= 89; lat++) {
+                    // for (int lon = -180; lon < 180; lon++) {
+                    // newGeoid[(lon + 180) + (lat + 89) * 360] =
+                    // geoid_delta[(89 - lat)
+                    // * 360 + ((lon + 360) % 360)];
+                    // }
+                    // }
+                    // geoid_delta = newGeoid;
 
+                    // final OutputStream os = new FileOutputStream(
+                    // "c:/bt747/"+GEOID_RESOURCE, false);
+                    // os.write(geoid_delta);
+                    // os.flush();
+                    // os.close();
 
                 }
             }
         } catch (Exception e) {
             geoid_delta = null;
             Generic.debug("Geoid resource loading", e);
-        }
-        if (geoid_delta != null) {
-            // Can set this class as the GEOID handler.
-            Conv.setGeiodIF(new Geoid());
         }
     }
 

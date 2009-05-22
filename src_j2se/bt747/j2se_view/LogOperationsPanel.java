@@ -42,7 +42,6 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
-import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
 
