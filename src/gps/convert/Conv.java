@@ -319,7 +319,7 @@ public final class Conv {
      * 
      * @param geoidIF
      */
-    public static final void setGeiodIF(final GeoidIF geoidIF) {
+    public static final void setGeoidIF(final GeoidIF geoidIF) {
         Conv.geoid = geoidIF;
     }
 
