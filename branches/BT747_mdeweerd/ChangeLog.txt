@@ -1,3 +1,6 @@
+Version 2.X.1320+
+* Precise height setting was incorrectly applied - corrected.
+
 Version 1.68.15
 * Fixed problem when writing back files "in place" with no position.
   Not doing anything for these files.
