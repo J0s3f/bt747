@@ -1,7 +1,8 @@
-package net.sf.bt747.j4me.app;
+package net.sf.bt747.j4me.app.conn;
 
 import java.io.IOException;
 
+import net.sf.bt747.j4me.app.AppController;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
@@ -38,13 +39,15 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      * This lock is declared <c>protected static</c> because it is shared
      * throughout the package.
      */
-    protected static final Object BLUETOOTH_LOCK = new Object();
+    public static final Object BLUETOOTH_LOCK = new Object();
 
     /**
      * The screen that came before this one. If the user cancels this alert,
      * it will go back to this screen.
      */
     private final DeviceScreen previous;
+    
+    private DeviceScreen next;
 
     /**
      * Constructs the "Finding GPS Devices..." alert screen.
@@ -55,11 +58,13 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      *                is the screen that came before this one.
      */
     public FindingGPSDevicesAlert(final AppController c,
-            final DeviceScreen previous) {
+            final DeviceScreen previous,
+            final DeviceScreen next) {
         super("Finding GPS...", "Looking for nearby Bluetooth devices.");
 
         this.c = c;
         this.previous = previous;
+        this.next = next;
     }
 
     /**
@@ -77,7 +82,6 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      * @return the screen to show after this thread finishes.
      */
     protected final DeviceScreen doWork() {
-        DeviceScreen next;
         String[][] devices = null;
         String errorText = null;
 
@@ -85,7 +89,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
             // Stop any providers in case they were using Bluetooth and
             // therefore have
             // a lock on the Bluetooth socket.
-            final BluetoothGPS provider = c.getAppModel()
+            final BluetoothLocationProvider provider = c.getAppModel()
                     .getGpsBluetoothConnection();
 
             if (provider != null) {
@@ -133,14 +137,14 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
                         + " them to the user.");
 
                 final SelectGPSScreen selectGPS = new SelectGPSScreen(c,
-                        previous);
+                        previous,next);
                 selectGPS.setAvailableDevices(devices);
 
                 if (devices.length == 0) {
                     // No devices were found.
                     final String message = "No devices were found.\n"
                             + "Make sure your Bluetooth GPS device is on"
-                            + " and within 10 feet of you.";
+                            + " and within 3 meters (10 feet) of you.";
 
                     next = new ErrorAlert("Discovery Error", message,
                             selectGPS);

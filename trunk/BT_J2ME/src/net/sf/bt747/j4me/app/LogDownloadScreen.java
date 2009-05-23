@@ -18,6 +18,7 @@ import gps.GpsEvent;
 
 import javax.microedition.lcdui.Graphics;
 
+import net.sf.bt747.j4me.app.conn.InitializingGPSAlert;
 import net.sf.bt747.j4me.app.log.LogScreen;
 import net.sf.bt747.j4me.app.screens.DelayedDialog;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
