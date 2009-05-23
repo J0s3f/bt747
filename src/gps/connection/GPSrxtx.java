@@ -244,7 +244,7 @@ public final class GPSrxtx {
     }
 
     public final boolean isDebugConn() {
-        return isDebugConn();
+        return isGpsDebug;
     }
 
     private final Buffer buffer = new Buffer();

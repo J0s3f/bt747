@@ -127,6 +127,17 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
 
+        adjustHeightCombo();
+        cbAddTrackPointComment.setSelected(m
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
+        cbAddTrackPointName.setSelected(m
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
+
+        updateFileFormatData();
+        updateColorButtons();
+    }
+
+    private void adjustHeightCombo() {
         switch (m.getHeightConversionMode()) {
         case Model.HEIGHT_AUTOMATIC:
             cbHeightOverMeanSeaLevel.setSelectedIndex(2);
@@ -141,15 +152,9 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             cbHeightOverMeanSeaLevel.setSelectedIndex(3);
             break;
         }
-        cbAddTrackPointComment.setSelected(m
-                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
-        cbAddTrackPointName.setSelected(m
-                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
-
-        updateFileFormatData();
-        updateColorButtons();
     }
-
+    
+    
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
         switch (e.getType()) {
