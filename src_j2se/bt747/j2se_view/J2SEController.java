@@ -18,6 +18,7 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Generic;
 
 /**
  * @author Mario
@@ -110,6 +111,7 @@ public class J2SEController extends Controller {
         } else {
             geoidIF = gps.convert.Geoid.getInstance();
         }
+        //Generic.debug("Set geoid to "+geoidIF);
         if (geoidIF != null) {
             Conv.setGeoidIF(geoidIF);
         }

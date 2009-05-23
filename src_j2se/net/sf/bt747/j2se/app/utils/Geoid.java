@@ -17,17 +17,19 @@ import bt747.sys.Generic;
 public final class Geoid implements GeoidIF {
 
     private static byte[] geoid_delta;
+    private static GeoidIF instance;
 
     private static final String GEOID_RESOURCE = "geoid1DEG.bin";
     private static final int SIZE = 360 * 179;
 
     public final static GeoidIF getInstance() {
-        init();
-        if (geoid_delta != null) {
-            return new Geoid();
-        } else {
-            return null;
+        if (instance == null) {
+            init();
+            if (geoid_delta != null) {
+                instance = new Geoid();
+            }
         }
+        return instance;
     }
 
     private Geoid() {
@@ -40,8 +42,8 @@ public final class Geoid implements GeoidIF {
                 // Get the resource.
                 final InputStream is = Geoid.class
                         .getResourceAsStream(GEOID_RESOURCE);
-//                System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
-//                        .getPath());
+                // System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
+                // .getPath());
                 if (is.available() != SIZE) {
                     Generic.debug(GEOID_RESOURCE + " is bad size - expected "
                             + SIZE + " got " + is.available());
@@ -68,7 +70,7 @@ public final class Geoid implements GeoidIF {
                     // os.write(geoid_delta);
                     // os.flush();
                     // os.close();
-
+                    // Generic.debug(GEOID_RESOURCE + "loaded");
                 }
             }
         } catch (Exception e) {
