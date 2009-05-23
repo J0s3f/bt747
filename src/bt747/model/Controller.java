@@ -17,6 +17,7 @@ package bt747.model;
 import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
+import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
@@ -153,12 +154,15 @@ public class Controller implements ModelListener {
         mtkC().setLogRequestAhead(m.getIntOpt(AppSettings.LOGAHEAD));
 
         final int port = m.getIntOpt(AppSettings.PORTNBR);
-        if (port != Controller.NOT_A_PORT_NUMBER) {
-            // TODO: review this, especially with 'freetext port'
-            m.gpsRxTx().setDefaults(port, m.getIntOpt(AppSettings.BAUDRATE));
-        }
-        if (m.getBooleanOpt(AppSettings.OPENPORTATSTARTUP)) {
-            connectGPS();
+        if (GPSrxtx.hasDefaultPortInstance()) {
+            if (port != Controller.NOT_A_PORT_NUMBER) {
+                // TODO: review this, especially with 'freetext port'
+                m.gpsRxTx().setDefaults(port,
+                        m.getIntOpt(AppSettings.BAUDRATE));
+            }
+            if (m.getBooleanOpt(AppSettings.OPENPORTATSTARTUP)) {
+                connectGPS();
+            }
         }
     }
 
@@ -836,6 +840,7 @@ public class Controller implements ModelListener {
      */
     public final void connectGPS() {
         closeGPS();
+        Generic.debug("Freeport is "+m.getStringOpt(AppSettings.FREETEXTPORT));
         if (m.getStringOpt(AppSettings.FREETEXTPORT).length() != 0) {
             openFreeTextPort(m.getStringOpt(AppSettings.FREETEXTPORT));
         } else {
@@ -947,7 +952,7 @@ public class Controller implements ModelListener {
      * (since the connection was successful) and starts of the Model to do
      * port queries.
      */
-    protected void performOperationsAfterGPSConnect() {
+    public void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG); // First may
             // fail.

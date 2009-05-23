@@ -573,7 +573,7 @@ public final class J2SEAppController extends J2SEController {
      * 
      * @see bt747.model.Controller#performOperationsAfterGPSConnect()
      */
-    protected final void performOperationsAfterGPSConnect() {
+    public final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.setLoggingActive(false); // First command could fail, so

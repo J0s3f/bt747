@@ -30,7 +30,7 @@ import bt747.sys.interfaces.BT747Semaphore;
 public final class GPSrxtx {
     private static GPSPort defaultGpsPort;
 
-    final private GPSPort gpsPort;
+    private GPSPort gpsPort;
 
     /**
      * 
@@ -45,6 +45,8 @@ public final class GPSrxtx {
                     .debug("GPSrxtPort instance is null - review initialisation");
         }
         gpsPort = port;
+        updatePortDebug();
+        //Generic.setDebugLevel(1);
     }
 
     /** The decoding of the serial link is determined by state. */
@@ -75,6 +77,7 @@ public final class GPSrxtx {
 
     public static final void setDefaultGpsPortInstance(
             final GPSPort portInstance) {
+        Generic.debug("Setting GPS port");
         GPSrxtx.defaultGpsPort = portInstance;
     }
 
@@ -96,15 +99,22 @@ public final class GPSrxtx {
         gpsPort.setPort(port);
         gpsPort.setSpeed(speed);
     }
+    
+    private final int myOpenPort() {
+        if(gpsPort == null) {
+            gpsPort = defaultGpsPort;
+        }
+        return gpsPort.openPort();
+    }
 
     public final void setBluetoothAndOpen() {
         gpsPort.setBlueTooth();
-        gpsPort.openPort();
+        myOpenPort();
     }
 
     public final void setUSBAndOpen() {
         gpsPort.setUSB();
-        gpsPort.openPort();
+        myOpenPort();
     }
 
     public final void closePort() {
@@ -113,7 +123,7 @@ public final class GPSrxtx {
 
     public final void openPort() {
         closePort();
-        gpsPort.openPort();
+        myOpenPort();
     }
 
     /**
@@ -125,12 +135,21 @@ public final class GPSrxtx {
      */
     public final int setPortAndOpen(final int port) {
         gpsPort.setPort(port);
-        return gpsPort.openPort();
+        return myOpenPort();
     }
 
     public final int setFreeTextPortAndOpen(final String s) {
-        gpsPort.setFreeTextPort(s);
-        return gpsPort.openPort();
+        int result;
+        Generic.debug("Class"+gpsPort.getClass().getName());
+        if (gpsPort != null) {
+            gpsPort.setFreeTextPort(s);
+            result = myOpenPort();
+            Generic.debug("Port opened");
+        } else {
+            Generic.debug("Must set gpsPort handler");
+            result = -1;
+        }
+        return result;
     }
 
     public final String getFreeTextPort() {
@@ -203,17 +222,29 @@ public final class GPSrxtx {
         return result;
     }
 
+    private String debugCon = null;
+    private boolean isGpsDebug = false;
+
     public final void setDebugConn(final boolean gps_debug, final String s) {
-        gpsPort.setDebugFileName(s + "/gpsRawDebug.txt");
-        if (gps_debug) {
-            gpsPort.startDebug();
-        } else {
-            gpsPort.endDebug();
+        debugCon = s + "/gpsRawDebug.txt";
+        isGpsDebug = gps_debug;
+        updatePortDebug();
+    }
+
+    private final void updatePortDebug() {
+        if (gpsPort != null) {
+            gpsPort.setDebugFileName(debugCon);
+            if (isGpsDebug) {
+                gpsPort.startDebug();
+            } else {
+                gpsPort.endDebug();
+            }
         }
+
     }
 
     public final boolean isDebugConn() {
-        return gpsPort.debugActive();
+        return isDebugConn();
     }
 
     private final Buffer buffer = new Buffer();

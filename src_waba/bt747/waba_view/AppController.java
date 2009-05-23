@@ -247,7 +247,7 @@ public final class AppController extends Controller {
      * 
      * @see bt747.model.Controller#performOperationsAfterGPSConnect()
      */
-    protected final void performOperationsAfterGPSConnect() {
+    public final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.setLoggingActive(false); // First command could fail, so repeat.
@@ -312,7 +312,8 @@ public final class AppController extends Controller {
                     preferencesFile = new File(CONFIG_FILE_NAME, File.READ_ONLY);
                     readLength = preferencesFile.getSize();
                     if (readLength >= 100) {
-                        byte[] appSettingsArray = new byte[AppSettings.SIZE];
+                        final int len = Math.max(AppSettings.SIZE, readLength);
+                        byte[] appSettingsArray = new byte[len];
 
                         preferencesFile.readBytes(appSettingsArray, 0,
                                 readLength);

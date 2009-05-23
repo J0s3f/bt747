@@ -293,6 +293,17 @@ public class AppSettings {
                 Generic.debug("ASSERT:Problem with param index " + i);
             }
         }
+        
+        final int initialLen = Settings.getAppSettings().length();
+        if (initialLen < SIZE) {
+            final StringBuffer s = new StringBuffer(SIZE);
+            s.append(Settings.getAppSettings());
+            for (int i = SIZE - initialLen; i > 0; i--) {
+                // Fill buffer.
+                s.append(' ');
+            }
+            Settings.setAppSettings(s.toString());
+        }
 
         mVersion = getStringOpt(AppSettings.VERSION);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
