@@ -1,6 +1,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
+import gps.connection.GPSrxtx;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +14,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
+import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
 import net.sf.bt747.j4me.app.screens.FileManager;
 
 import org.j4me.logging.Log;
@@ -30,6 +32,9 @@ public class AppController extends Controller {
     public AppController(final AppModel m) {
         this.m = m;
         super.setModel(m);
+
+        BluetoothLocationProvider.setController(this);
+
         appInit();
         super.init();
         Log.info("Basedir set to:"
@@ -88,9 +93,9 @@ public class AppController extends Controller {
                         is.readBoolean();
                         is.readBoolean();
                     }
-            setPersistentDebug(true);
-            setUseConsoleFile(true);
-            setDebug(true);
+                    setPersistentDebug(true);
+                    setUseConsoleFile(true);
+                    setDebug(true);
                     /** fall through */
                 case -1:
                     // No other parameters

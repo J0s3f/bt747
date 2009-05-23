@@ -1,5 +1,7 @@
 package net.sf.bt747.j4me.app;
 
+import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
+
 import org.j4me.logging.Log;
 
 import bt747.model.Model;
@@ -21,7 +23,7 @@ public class AppModel extends Model {
      */
     private String gpsBluetoothURL;
 
-    private BluetoothGPS gpsBluetoothConnection;
+    private BluetoothLocationProvider gpsBluetoothConnection;
 
     public AppModel() {
         // Must still get settings.
@@ -30,7 +32,7 @@ public class AppModel extends Model {
     /**
      * @return the gpsBluetoothConnection
      */
-    public final BluetoothGPS getGpsBluetoothConnection() {
+    public final BluetoothLocationProvider getGpsBluetoothConnection() {
         return gpsBluetoothConnection;
     }
 
@@ -39,7 +41,7 @@ public class AppModel extends Model {
      *                the gpsBluetoothConnection to set
      */
     public final void setGpsBluetoothConnection(
-            final BluetoothGPS gpsBluetoothConnection) {
+            final BluetoothLocationProvider gpsBluetoothConnection) {
         this.gpsBluetoothConnection = gpsBluetoothConnection;
     }
 
@@ -118,5 +120,4 @@ public class AppModel extends Model {
     public int getSelectedOutputFormat() {
         return selectedOutputFormat;
     }
-
 }

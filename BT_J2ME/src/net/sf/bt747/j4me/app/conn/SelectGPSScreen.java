@@ -1,4 +1,6 @@
-package net.sf.bt747.j4me.app;
+package net.sf.bt747.j4me.app.conn;
+
+import net.sf.bt747.j4me.app.AppController;
 
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
@@ -21,6 +23,8 @@ public final class SelectGPSScreen extends Dialog {
      * The screen to return to if the user cancels this one.
      */
     private final DeviceScreen previous;
+    
+    private final DeviceScreen next;
 
     /**
      * Constructs the "Select GPS Device" screen.
@@ -30,11 +34,13 @@ public final class SelectGPSScreen extends Dialog {
      * @param previous
      *                is the screen to return to if this one is canceled.
      */
-    public SelectGPSScreen(final AppController c, final DeviceScreen previous) {
+    public SelectGPSScreen(final AppController c, final DeviceScreen previous,
+            final DeviceScreen next) {
         setTitle("Select GPS Device");
 
         this.c = c;
         this.previous = previous;
+        this.next = next;
     }
 
     /**
@@ -69,7 +75,7 @@ public final class SelectGPSScreen extends Dialog {
 
             public void onSelection() {
                 final FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert(
-                        c, previous);
+                        c, previous, next);
                 alert.show();
             }
         }));
@@ -156,7 +162,7 @@ public final class SelectGPSScreen extends Dialog {
             // alert.show();
 
             // Device is selected
-            previous.show();
+            next.show();
         }
     }
 }

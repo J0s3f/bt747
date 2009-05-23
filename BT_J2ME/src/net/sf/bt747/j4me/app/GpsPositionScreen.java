@@ -249,44 +249,49 @@ public final class GpsPositionScreen extends
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
     public final void modelEvent(final ModelEvent e) {
-        GPSRecord g;
-        switch (e.getType()) {
-        case GpsEvent.GPRMC:
-            // GPRMC string received. Taking GPRMC parameters from GPS record.
-            g = (GPSRecord) e.getArg();
-            latitude.setLabel(g.latitude, 6);
-            longitude.setLabel(g.longitude, 6);
-            fvTime.setLabel((g.utc) * 1000L + g.milisecond);
-            fvSpeed.setLabel(g.speed, 1);
-            fvCourse.setLabel(g.heading, 1);
-            updateValidColor(g.valid);
-            // Log.info("GPRMC");
-            repaint();
-            break;
-        case GpsEvent.GPGGA:
-            // GPGGA string received. Taking GPGGA parameters from GPS record.
-            g = (GPSRecord) e.getArg();
-            latitude.setLabel(g.latitude, 6);
-            longitude.setLabel(g.longitude, 6);
-            NSAT.setLabel((g.nsat / 256)
-                    + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
-            {
-                String mslStr;
-                mslStr = JavaLibBridge.toString(g.height, 1);
-                mslStr += "(calc: ";
-                mslStr += JavaLibBridge.toString( Conv
-                        .wgs84Separation(g.height + g.geoid - g.latitude,
-                                g.longitude),1);
-                mslStr += ")";
-                fvAltitude.setLabel(mslStr);
-            }
-            fvHdop.setLabel(g.height);
-            fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
-            updateValidColor(g.valid);
-            repaint();
-        default:
-            break;
-        }
+        final int type = e.getType();
 
+        switch (type) {
+        case GpsEvent.GPRMC:
+        case GpsEvent.GPGGA:
+            final GPSRecord g = (GPSRecord) e.getArg();
+            switch (type) {
+            case GpsEvent.GPRMC:
+                // GPRMC string received. Taking GPRMC parameters from GPS
+                // record.
+                latitude.setLabel(g.latitude, 6);
+                longitude.setLabel(g.longitude, 6);
+                fvTime.setLabel((g.utc) * 1000L + g.milisecond);
+                fvSpeed.setLabel(g.speed, 1);
+                fvCourse.setLabel(g.heading, 1);
+                updateValidColor(g.valid);
+                // Log.info("GPRMC");
+                repaint();
+                break;
+            case GpsEvent.GPGGA:
+                // GPGGA string received. Taking GPGGA parameters from GPS
+                // record.
+                latitude.setLabel(g.latitude, 6);
+                longitude.setLabel(g.longitude, 6);
+                NSAT.setLabel((g.nsat / 256)
+                        + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
+                {
+                    String mslStr;
+                    mslStr = JavaLibBridge.toString(g.height, 1);
+                    mslStr += "(calc: ";
+                    mslStr += JavaLibBridge.toString(Conv.wgs84Separation(
+                            g.height + g.geoid - g.latitude, g.longitude), 1);
+                    mslStr += ")";
+                    fvAltitude.setLabel(mslStr);
+                }
+                fvHdop.setLabel(g.hdop / 100, 2);
+                fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
+                updateValidColor(g.valid);
+                repaint();
+            default:
+                break;
+            }
+
+        }
     }
 }

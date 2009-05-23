@@ -2,6 +2,8 @@ package net.sf.bt747.j4me.app;
 
 import gps.connection.GPSrxtx;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -12,6 +14,7 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import net.sf.bt747.j2me.system.J2MEJavaTranslations;
+import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
 
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
@@ -31,27 +34,30 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     static {
         JavaLibBridge.setJavaLibImplementation(new J2MEJavaTranslations());
-        GPSrxtx.setDefaultGpsPortInstance(BluetoothGPS.getInstance());
     }
 
     private static AppModel m;
     private static AppController c;
-    
+
     private final static void setAppModel(final AppModel mm) {
         m = mm;
     }
 
-    private final static void setAppController(final AppController cc) {
+    private final static void setAppController(final AppController cc)
+            throws IOException {
         c = cc;
     }
 
     private volatile boolean ok = false;
+
+    private static MTKMidlet appSingleton;
 
     /**
      * Constructs the midlet. This is called before
      * &lt;code&gt;startApp&lt;/code&gt;.
      */
     public MTKMidlet() {
+        appSingleton = this;
         try {
             UIManager.init(this);
             MTKMidlet.setInstance(this);
@@ -75,7 +81,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     protected void pauseApp() {
     }
 
-    private Command commandExit;
+    protected Command commandExit;
 
     /**
      * Called when the application starts. Shows the first screen.
@@ -88,13 +94,33 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         }
         // Initialize the J4ME UI manager.
         try {
+//            Log.setLevel(Level.DEBUG);
+//            Log.info("Before appModel");
+            BluetoothLocationProvider provider = null;
+            try {
+                provider = BluetoothLocationProvider.getInstance();
+//                Log.info("Provider ok " + provider);
+            } catch (Exception e) {
+                Log.error("Getting provider.", e);
+            }
+            try {
+                if (provider != null) {
+                    GPSrxtx.setDefaultGpsPortInstance(provider);
+                }
+//                Log.info("Port instance ok" + provider);
+            } catch (Exception e) {
+                Log.error("Setting port instance.", e);
+            }
+
             setAppModel(new AppModel());
+//            Log.info("Before appController");
             setAppController(new AppController(MTKMidlet.m));
 
             final DeviceScreen main = new MainScreen(MTKMidlet.c, this);
             // Change the theme.
             // Show the first screen.
 
+            Log.info("Before main.show");
             // FindingGPSDevicesAlert creates a list of devices, then calls
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
@@ -102,18 +128,20 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
-        } catch (final Exception t) {
+        } catch (final IOException t) {
             displayThrowable(t, "MainScreen");
+            // throw t;
         }
     }
 
-    public final void displayThrowable(final Throwable t, final String n) {
+    public final static void displayThrowable(final Throwable t,
+            final String n) {
         if ((t != null) || (n != null)) {
             try {
                 try {
                     UIManager.getDisplay();
                 } catch (final Exception e) {
-                    UIManager.init(this);
+                    UIManager.init(appSingleton);
                     Log.setLevel(Level.DEBUG);
                     if (t != null) {
                         Log.warn("Exception thrown ", t);
@@ -131,16 +159,17 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             Form form;
 
             // fait un lien avec l'affichage
-            disp = Display.getDisplay(this);
+            disp = Display.getDisplay(appSingleton);
 
             // creation d'un objet formulaire sur lequel on peut placer des
             // composants
 
-            form = new Form("BT747 " + getAppProperty("MIDlet-Version")
+            form = new Form("BT747 "
+                    + appSingleton.getAppProperty("MIDlet-Version")
                     + " Exception");
 
             // creation d'un bouton pour sortir du programme
-            commandExit = new Command("Exit", Command.SCREEN, 1);
+            appSingleton.commandExit = new Command("Exit", Command.SCREEN, 1);
 
             // Next lines for future reference (must be deleted here)
             // javax.microedition.lcdui.DateField d;
@@ -167,11 +196,11 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
             // creation d'un champ de texte contenant notre Hello World
             // ajout des composants au formulaire
-            form.addCommand(commandExit);
+            form.addCommand(appSingleton.commandExit);
             form.append(tb);
             // tb.setLabel(t.getMessage());
             // tb.setString(t.getMessage());
-            form.setCommandListener(this);
+            form.setCommandListener(appSingleton);
 
             // affichage du formulaire
             disp.setCurrent(form);

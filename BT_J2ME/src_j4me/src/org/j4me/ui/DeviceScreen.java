@@ -575,6 +575,7 @@ public abstract class DeviceScreen {
      *                buttons.
      */
     protected void keyPressed(final int keyCode) {
+        
     }
 
     /**
@@ -1087,6 +1088,18 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         }
     }
 
+    private void startRepeatTimer(final int translatedKey) {
+        // Start a timer for generating key repeat events.
+        synchronized (this) // synchronize so we don't ever create more than
+        // one timer
+        {
+            stopRepeatTimer();
+            keyRepeatTimer = new Timer();
+            keyRepeatTimer.schedule(new KeyRepeater(translatedKey),
+                    CanvasWrapper.REPEAT_PERIOD, CanvasWrapper.REPEAT_PERIOD);
+        }
+    }
+
     /**
      * Called when the user presses any key. This method checks for joystick
      * movements which work the Yardage Anywhere cursor.
@@ -1125,15 +1138,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         // super.keyPressed and .keyReleased can cause platform-specific
         // and often undesirable behavior. For example on the Sony Ericsson
         // w810i they can turn on the music player or browser.
-
-        // Start a timer for generating key repeat events.
-        synchronized (this) // synchronize so we don't ever create more than
-        // one timer
-        {
-            keyRepeatTimer = new Timer();
-            keyRepeatTimer.schedule(new KeyRepeater(translatedKey),
-                    CanvasWrapper.REPEAT_PERIOD, CanvasWrapper.REPEAT_PERIOD);
-        }
+        startRepeatTimer(translatedKey);
     }
 
     /**

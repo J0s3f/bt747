@@ -23,6 +23,8 @@ import java.util.TimerTask;
 
 import javax.microedition.lcdui.Display;
 
+import net.sf.bt747.j4me.app.conn.FindingGPSDevicesAlert;
+import net.sf.bt747.j4me.app.conn.InitializingGPSAlert;
 import net.sf.bt747.j4me.app.log.LogScreen;
 import net.sf.bt747.j4me.app.screens.DelayedDialog;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
@@ -131,7 +133,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
-        findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
+        findingGPSDevicesAlert = new FindingGPSDevicesAlert(c, this,
                 initialiseGPSAlert);
         baseDirScreen = new PathSelectionScreen("Base directory", this, m()
                 .getStringOpt(AppSettings.OUTPUTDIRPATH), true) {

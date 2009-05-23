@@ -1,5 +1,7 @@
-package net.sf.bt747.j4me.app;
+package net.sf.bt747.j4me.app.conn;
 
+import net.sf.bt747.j4me.app.AppController;
+import net.sf.bt747.j4me.app.LoggerStatusScreen;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
@@ -55,14 +57,16 @@ public class InitializingGPSAlert extends ProgressAlert {
      * will set the next screen when it is done.
      */
     protected final DeviceScreen doWork() {
-        BluetoothGPS provider = null;
+        BluetoothLocationProvider provider = null;
 
-        DeviceScreen next = previous;
         final String deviceName = c.getAppModel().getBluetoothGPSName();
 
         final String text = "Connecting to the location provider.\n"
                 + "Using device:  " + deviceName;
+        
         setText(text);
+        
+        DeviceScreen next = previous;
 
         try {
             // Get the GPS provider.
@@ -76,7 +80,7 @@ public class InitializingGPSAlert extends ProgressAlert {
                 // switching
                 // to
                 // another.
-                final BluetoothGPS old = c.getAppModel()
+                final BluetoothLocationProvider old = c.getAppModel()
                         .getGpsBluetoothConnection();
 
                 if (old != null) {
@@ -84,7 +88,12 @@ public class InitializingGPSAlert extends ProgressAlert {
                 }
 
                 // Get the new provider.
-                provider = BluetoothGPS.getInstance();
+                try {
+                    provider = BluetoothLocationProvider.getInstance();
+                } catch (Exception e) {
+                    Log.error("Can not get BT provider", e);
+                    next = previous;
+                }
             }
 
             // Set the provider on the model.
@@ -93,6 +102,8 @@ public class InitializingGPSAlert extends ProgressAlert {
             // getProvider() method (which would throw it for GPS through
             // Bluetooth).
             c.getAppModel().setGpsBluetoothConnection(provider);
+            Log.info("Try to open port: "
+                    + c.getAppModel().getBluetoothGPSURL());
             c.openFreeTextPort(c.getAppModel().getBluetoothGPSURL());
             // c.connectGPS();
 
