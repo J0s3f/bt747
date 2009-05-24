@@ -64,15 +64,15 @@ public final class MainScreen extends Dialog implements ModelListener {
      * The different screens that we can go to from the main screen. J4ME
      * requires that those are all created when the menu is created.
      */
-    private final LogDownloadScreen downloadLogScreen;
-    private final DeviceScreen loggerInfoScreen;
-    private final LogScreen logScreen;
-    private final DebugConfigScreen debugConfigScreen;
-    private final InitializingGPSAlert initialiseGPSAlert;
-    private final FindingGPSDevicesAlert findingGPSDevicesAlert;
-    private final PathSelectionScreen baseDirScreen;
-    private final CreditsScreen creditsScreen;
-    private final DeviceScreen logFieldSelectScreen;
+    private LogDownloadScreen downloadLogScreen;
+    private DeviceScreen loggerInfoScreen;
+    private LogScreen logScreen;
+    private DebugConfigScreen debugConfigScreen;
+    private InitializingGPSAlert initialiseGPSAlert;
+    private FindingGPSDevicesAlert findingGPSDevicesAlert;
+    private PathSelectionScreen baseDirScreen;
+    private CreditsScreen creditsScreen;
+    private DeviceScreen logFieldSelectScreen;
 
     private final java.util.Timer tm = new Timer();
     private TimerTask ttLabels;
@@ -97,7 +97,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     /**
      * The left menu for this screen.
      */
-    final private Menu rootMenu;
+    private Menu rootMenu;
     /**
      * A reference to this object to use in local classes.
      */
@@ -124,113 +124,126 @@ public final class MainScreen extends Dialog implements ModelListener {
 
         // Add the menu buttons.
         setFullScreenMode(false);
+        
+        //initialSetupScreen();
+    }
 
-        setMenuText("Logger Menu", "App Menu");
+    private boolean initialScreenSetup = false;
+    public void initialSetupScreen() {
+        if (!initialScreenSetup) {
+            Log.debug("MainScreen initialSetupScreen taken");
+            initialScreenSetup = true;
+            setMenuText("Logger Menu", "App Menu");
+            
+            downloadLogScreen = new LogDownloadScreen(c, this);
+            loggerInfoScreen = new DelayedDialog(
+                    ScreenFactory.LOGGERSTATUSSCREEN, c, this, this);
+            logScreen = new LogScreen(this);
+            debugConfigScreen = new DebugConfigScreen(c, this);
+            initialiseGPSAlert = new InitializingGPSAlert(c, this);
+            findingGPSDevicesAlert = new FindingGPSDevicesAlert(c, this,
+                    initialiseGPSAlert);
+            baseDirScreen = new PathSelectionScreen("Base directory", this,
+                    m().getStringOpt(AppSettings.OUTPUTDIRPATH), true) {
+                protected void notifyPathSelected(final String path) {
+                    c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
+                    c.setPaths();
+                }
+            };
+            creditsScreen = new CreditsScreen(this);
+            logFieldSelectScreen = new DelayedDialog(
+                    ScreenFactory.LOGFIELDSELECTSCREEN, c, this, this);
 
-        downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(
-                ScreenFactory.LOGGERSTATUSSCREEN, c, this, this);
-        logScreen = new LogScreen(this);
-        debugConfigScreen = new DebugConfigScreen(c, this);
-        initialiseGPSAlert = new InitializingGPSAlert(c, this);
-        findingGPSDevicesAlert = new FindingGPSDevicesAlert(c, this,
-                initialiseGPSAlert);
-        baseDirScreen = new PathSelectionScreen("Base directory", this, m()
-                .getStringOpt(AppSettings.OUTPUTDIRPATH), true) {
-            protected void notifyPathSelected(final String path) {
-                c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
-                c.setPaths();
-            }
-        };
-        creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new DelayedDialog(
-                ScreenFactory.LOGFIELDSELECTSCREEN, c, this, this);
+            // Call here for debug
+            // c.doConvertLog(Model.GPX_LOGTYPE);
+            rootMenu = new Menu("Log", this);
+            // Reset the current location provider.
 
-        // Call here for debug
-        // c.doConvertLog(Model.GPX_LOGTYPE);
-        rootMenu = new Menu("Log", this);
-        // Reset the current location provider.
+            rootMenu.appendMenuOption(downloadLogScreen);
+            rootMenu.appendMenuOption(new MenuItem() {
+                private boolean logStatusShown = false;
 
-        rootMenu.appendMenuOption(downloadLogScreen);
-        rootMenu.appendMenuOption(new MenuItem() {
-            private boolean logStatusShown = false;
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#getText()
+                 */
+                public String getText() {
+                    logStatusShown = m().isLoggingActive();
+                    return logStatusShown ? "Logging is ON"
+                            : "Logging is OFF";
+                }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.j4me.ui.MenuItem#getText()
-             */
-            public String getText() {
-                logStatusShown = m().isLoggingActive();
-                return logStatusShown ? "Logging is ON" : "Logging is OFF";
-            }
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#onSelection()
+                 */
+                public void onSelection() {
+                    c.setLoggingActive(!logStatusShown);
+                    rootMenu.show();
+                }
+            });
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.j4me.ui.MenuItem#onSelection()
-             */
-            public void onSelection() {
-                c.setLoggingActive(!logStatusShown);
-                rootMenu.show();
-            }
-        });
+            rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
+            rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
+                    ScreenFactory.GPSPOSITIONSCREEN, c, this, this));
 
-        rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
-        rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
-                ScreenFactory.GPSPOSITIONSCREEN, c, this, this));
+            Menu subMenu;
+            subMenu = new Menu("App Settings", rootMenu);
+            subMenu.appendMenuOption("Working dir", baseDirScreen);
+            subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
+            subMenu.appendMenuOption("Download Settings", new DelayedDialog(
+                    ScreenFactory.LOGDOWNLOADCONFIGSCREEN, c, this, this));
+            subMenu.appendMenuOption("App log", logScreen);
+            rootMenu.appendSubmenu(subMenu);
 
-        Menu subMenu;
-        subMenu = new Menu("App Settings", rootMenu);
-        subMenu.appendMenuOption("Working dir", baseDirScreen);
-        subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
-        subMenu.appendMenuOption("Download Settings", new DelayedDialog(
-                ScreenFactory.LOGDOWNLOADCONFIGSCREEN, c, this, this));
-        subMenu.appendMenuOption("App log", logScreen);
-        rootMenu.appendSubmenu(subMenu);
+            subMenu = new Menu("Convert Menu", rootMenu);
+            subMenu.appendMenuOption("Select File Fields", new DelayedDialog(
+                    ScreenFactory.FILEFIELDSELECTSCREEN, c, rootMenu,
+                    rootMenu));
+            subMenu.appendMenuOption("Convert", new DelayedDialog(
+                    ScreenFactory.CONVERTTOSCREEN, c, rootMenu, rootMenu));
+            rootMenu.appendSubmenu(subMenu);
 
-        subMenu = new Menu("Convert Menu", rootMenu);
-        subMenu.appendMenuOption("Select File Fields", new DelayedDialog(
-                ScreenFactory.FILEFIELDSELECTSCREEN, c, rootMenu, rootMenu));
-        subMenu.appendMenuOption("Convert", new DelayedDialog(
-                ScreenFactory.CONVERTTOSCREEN, c, rootMenu, rootMenu));
-        rootMenu.appendSubmenu(subMenu);
+            subMenu = new Menu("Connection", rootMenu);
+            subMenu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
+            subMenu.appendMenuOption("Find and Connect",
+                    findingGPSDevicesAlert);
+            rootMenu.appendSubmenu(subMenu);
 
-        subMenu = new Menu("Connection", rootMenu);
-        subMenu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
-        subMenu.appendMenuOption("Find and Connect", findingGPSDevicesAlert);
-        rootMenu.appendSubmenu(subMenu);
+            subMenu = new Menu("Logger", rootMenu);
+            // private final LogConditionsConfigScreen
+            // logConditionsConfigScreen;
 
-        subMenu = new Menu("Logger", rootMenu);
-        // private final LogConditionsConfigScreen logConditionsConfigScreen;
+            subMenu.appendMenuOption("Log Conditions", new DelayedDialog(
+                    ScreenFactory.LOGCONDITIONSCONFIGSCREEN, c, this, this));
+            subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
+            subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
+            subMenu.appendMenuOption(new MenuItem() {
+                public final String getText() {
+                    return "Erase";
+                }
 
-        subMenu.appendMenuOption("Log Conditions", new DelayedDialog(
-                ScreenFactory.LOGCONDITIONSCONFIGSCREEN, c, this, this));
-        subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
-        subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
-        subMenu.appendMenuOption(new MenuItem() {
-            public final String getText() {
-                return "Erase";
-            }
+                public final void onSelection() {
+                    confirmScreenOption = ERASE_CONFIRM;
+                    confirmScreen = new ConfirmScreen(
+                            "Confirm erasal",
+                            "Do you confirm erasal of all data in memory ???\n"
+                                    + "If you did not download, YOU WILL REMOVE ALL DATA LOGGED BY THE LOGGER.",
+                            "Do you confirm erasal?\nYOU MIGHT LOOSE DATA.",
+                            myself);
+                    confirmScreen.show();
+                }
+            });
 
-            public final void onSelection() {
-                confirmScreenOption = ERASE_CONFIRM;
-                confirmScreen = new ConfirmScreen(
-                        "Confirm erasal",
-                        "Do you confirm erasal of all data in memory ???\n"
-                                + "If you did not download, YOU WILL REMOVE ALL DATA LOGGED BY THE LOGGER.",
-                        "Do you confirm erasal?\nYOU MIGHT LOOSE DATA.",
-                        myself);
-                confirmScreen.show();
-            }
-        });
+            rootMenu.appendSubmenu(subMenu);
 
-        rootMenu.appendSubmenu(subMenu);
+            rootMenu.appendMenuOption("AGPS", new DelayedDialog(
+                    ScreenFactory.AGPSSCREEN, c, this, this));
 
-        rootMenu.appendMenuOption("AGPS", new DelayedDialog(
-                ScreenFactory.AGPSSCREEN, c, this, this));
-
-        m().addListener(this);
+            m().addListener(this);
+        }
     }
 
     /**
@@ -244,6 +257,8 @@ public final class MainScreen extends Dialog implements ModelListener {
     private Label[] labels = null;
 
     private void setupScreen() {
+        Log.debug("MainScreen setupScreen");
+        initialSetupScreen();
         if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
             if (dataShown != MainScreen.SHOWN_WAYPOINTS_DATA) {
                 dataShown = MainScreen.SHOWN_WAYPOINTS_DATA;
@@ -312,7 +327,17 @@ public final class MainScreen extends Dialog implements ModelListener {
      * 
      * @see org.j4me.ui.DeviceScreen#show()
      */
+    public void showNotify() {
+        Log.debug("MainScreen showNotify");
+        setupScreen();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.j4me.ui.DeviceScreen#show()
+     */
     public void show() {
+        // TODO Auto-generated method stub
+        super.show();
         // When this screen is shown, we are no longer waiting for erasal end
         // whatever happens.
         waitErase = false;
@@ -371,17 +396,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                 }
                 confirmScreen = null;
             }
-            super.show();
         }
-    }
-
-    /**
-     * Called when this screen is going to be displayed.
-     * 
-     * @see DeviceScreen#showNotify()
-     */
-    public final void showNotify() {
-        setupScreen();
     }
 
     /**

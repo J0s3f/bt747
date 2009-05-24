@@ -128,7 +128,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
-        } catch (final Exception t) {
+        } catch (final IOException t) {
             displayThrowable(t, "MainScreen");
             // throw t;
         }

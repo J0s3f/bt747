@@ -30,7 +30,7 @@ public final class LogFieldSelectScreen extends BT747Dialog {
 
     private boolean screenSetup = false;
 
-    private void setupSreen() {
+    private void setupScreen() {
         if (!screenSetup) {
             screenSetup = true;
             deleteAll();
@@ -65,10 +65,9 @@ public final class LogFieldSelectScreen extends BT747Dialog {
         return logFormat;
     }
 
-    public void show() {
-        setupSreen();
+    public void showNotify() {
+        setupScreen();
         updateLogFormat(m().getLogFormat());
-        super.show();
     }
 
     protected void acceptNotify() {

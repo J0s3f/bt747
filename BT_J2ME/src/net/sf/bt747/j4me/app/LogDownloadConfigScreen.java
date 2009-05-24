@@ -47,10 +47,9 @@ public final class LogDownloadConfigScreen extends BT747Dialog {
         return c.getAppModel();
     }
 
-    public void show() {
+    public void showNotify() {
         Log.debug("Log download settings");
         setupScreen();
-        super.show();
     }
 
     private final void updateButtons() {
