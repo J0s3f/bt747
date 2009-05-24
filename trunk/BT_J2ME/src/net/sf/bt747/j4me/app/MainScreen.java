@@ -336,7 +336,6 @@ public final class MainScreen extends Dialog implements ModelListener {
      * @see org.j4me.ui.DeviceScreen#show()
      */
     public void show() {
-        // TODO Auto-generated method stub
         super.show();
         // When this screen is shown, we are no longer waiting for erasal end
         // whatever happens.
