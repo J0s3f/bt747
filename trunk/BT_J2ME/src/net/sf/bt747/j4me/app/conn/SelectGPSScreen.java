@@ -2,6 +2,7 @@ package net.sf.bt747.j4me.app.conn;
 
 import net.sf.bt747.j4me.app.AppController;
 
+import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.MenuItem;
@@ -23,7 +24,7 @@ public final class SelectGPSScreen extends Dialog {
      * The screen to return to if the user cancels this one.
      */
     private final DeviceScreen previous;
-    
+
     private final DeviceScreen next;
 
     /**
@@ -34,8 +35,8 @@ public final class SelectGPSScreen extends Dialog {
      * @param previous
      *                is the screen to return to if this one is canceled.
      */
-    public SelectGPSScreen(final AppController c, final DeviceScreen previous,
-            final DeviceScreen next) {
+    public SelectGPSScreen(final AppController c,
+            final DeviceScreen previous, final DeviceScreen next) {
         setTitle("Select GPS Device");
 
         this.c = c;
@@ -56,29 +57,45 @@ public final class SelectGPSScreen extends Dialog {
      */
     public final void setAvailableDevices(final String[][] devices) {
         // Add a menu option for each Bluetooth device.
-        deleteAll();
-
-        for (int i = 0; i < devices.length; i++) {
-            final String[] device = devices[i];
-            final String name = device[0];
-            final String address = device[1];
-
-            final GPSDeviceOption option = new GPSDeviceOption(name, address);
-            append(new MenuOption(option));
+        try {
+            deleteAll();
+        } catch (Exception e) {
+            Log.error("Exception during deleteAll()", e);
+            return;
         }
 
-        // Add a final option to "Try Again".
-        append(new MenuOption(new MenuItem() {
-            public String getText() {
-                return "Try Again";
-            }
+        try {
+            for (int i = 0; i < devices.length; i++) {
+                final String[] device = devices[i];
+                final String name = device[0];
+                final String address = device[1];
 
-            public void onSelection() {
-                final FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert(
-                        c, previous, next);
-                alert.show();
+                final GPSDeviceOption option = new GPSDeviceOption(name,
+                        address);
+                append(new MenuOption(option));
             }
-        }));
+        } catch (Exception e) {
+            Log.error("Exception while settings options", e);
+            return;
+        }
+
+        try {
+            // Add a final option to "Try Again".
+            append(new MenuOption(new MenuItem() {
+                public String getText() {
+                    return "Try Again";
+                }
+
+                public void onSelection() {
+                    final FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert(
+                            c, previous, next);
+                    alert.show();
+                }
+            }));
+        } catch (Exception e) {
+            Log.error("Exception while setting Try again");
+            return;
+        }
     }
 
     /**

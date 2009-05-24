@@ -34,7 +34,7 @@ public final class AgpsScreen extends BT747Dialog {
                     + "scheme://user:password@host:port/url-path;parameters"));
 
             tbAgpsUrl = new TextBox();
-            //tbAgpsUrl.setForAnyText();
+            // tbAgpsUrl.setForAnyText();
             tbAgpsUrl.setLabel("URL");
             append(tbAgpsUrl);
 
@@ -69,9 +69,10 @@ public final class AgpsScreen extends BT747Dialog {
         new Thread(new Runnable() {
             public void run() {
                 // Next line for debug (need to modify login and pass!).
-                //c.setStringOpt(AppSettings.AGPSURL,"ftp://bt747p:ass@ftpperso.free.fr/MTK7d.EPO");
+                // c.setStringOpt(AppSettings.AGPSURL,"ftp://bt747p:ass@ftpperso.free.fr/MTK7d.EPO");
                 final String url = m().getStringOpt(AppSettings.AGPSURL);
 
+                byte[] agpsData = null;
                 try {
                     if (url.startsWith("ftp://")) {
                         final int colonIdx = url.indexOf(':', 6);
@@ -99,8 +100,8 @@ public final class AgpsScreen extends BT747Dialog {
                         if (hostSlash > 0) {
                             final String hostname = hostUrl.substring(0,
                                     hostSlash);
-                            final String path = hostUrl.substring(
-                                    hostSlash+1);
+                            final String path = hostUrl
+                                    .substring(hostSlash + 1);
                             final int pathSlash = path.indexOf('/');
                             String dir;
                             String name;
@@ -123,10 +124,12 @@ public final class AgpsScreen extends BT747Dialog {
                                 ftp.connect(dir);
                             }
                             final ByteArrayOutputStream os = new ByteArrayOutputStream(
-                                    55 * 1024);
+                                    120 * 1024);
                             ftp.bin();
                             ftp.retr(os, name);
-                            c.setAgpsData(os.toByteArray());
+                            ftp.disconnect();
+                            agpsData = os.toByteArray();
+                            os.close();
                         }
                     } else {
                         // ServerSocketConnection
@@ -147,13 +150,21 @@ public final class AgpsScreen extends BT747Dialog {
                             }
                             // Copy buffer
                             for (int j = 0; i < b.length && j < n; j++, i++) {
-                                buf[i] = buf[j];
+                                b[i] = buf[j];
                             }
                         }
-                        c.setAgpsData(buf);
+                        is.close();
+                        agpsData = b;
+                        b = null;
+                        buf = null;
                     }
                 } catch (Exception e) {
                     Log.debug("Problem during APGS download", e);
+                }
+                if (agpsData != null) {
+                    Log.info("Got AGPS data");
+                    c.setAgpsData(agpsData);
+                    Log.info("AGPS upload initiated");
                 }
             }
         }).start();

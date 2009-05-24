@@ -46,7 +46,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      * it will go back to this screen.
      */
     private final DeviceScreen previous;
-    
+
     private DeviceScreen next;
 
     /**
@@ -58,8 +58,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      *                is the screen that came before this one.
      */
     public FindingGPSDevicesAlert(final AppController c,
-            final DeviceScreen previous,
-            final DeviceScreen next) {
+            final DeviceScreen previous, final DeviceScreen next) {
         super("Finding GPS...", "Looking for nearby Bluetooth devices.");
 
         this.c = c;
@@ -135,22 +134,36 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
                 Log.info("Found list of " + devices.length
                         + " available devices and presenting"
                         + " them to the user.");
+                SelectGPSScreen selectGPS = null;
+                try {
+                    selectGPS = new SelectGPSScreen(c, previous, next);
+                    try {
+                        selectGPS.setAvailableDevices(devices);
+                    } catch (final OutOfMemoryError e) {
+                        Log.error("Out of memory during setAvailableDevices",
+                                e);
+                        errorText = "This memory problem is currently misunderstood."
+                                + "Contact the author of the application.";
+                    }
+                } catch (final OutOfMemoryError e) {
+                    Log.error("Out of memory during selectGPS instantiation",
+                            e);
+                    errorText = "This memory problem is currently misunderstood."
+                            + "Contact the author of the application.";
+                }
+                if (selectGPS != null) {
+                    if (devices.length == 0) {
+                        // No devices were found.
+                        final String message = "No devices were found.\n"
+                                + "Make sure your Bluetooth GPS device is on"
+                                + " and within 3 meters (10 feet) of you.";
 
-                final SelectGPSScreen selectGPS = new SelectGPSScreen(c,
-                        previous,next);
-                selectGPS.setAvailableDevices(devices);
-
-                if (devices.length == 0) {
-                    // No devices were found.
-                    final String message = "No devices were found.\n"
-                            + "Make sure your Bluetooth GPS device is on"
-                            + " and within 3 meters (10 feet) of you.";
-
-                    next = new ErrorAlert("Discovery Error", message,
-                            selectGPS);
-                } else {
-                    // Let the user select from the devices found.
-                    next = selectGPS;
+                        next = new ErrorAlert("Discovery Error", message,
+                                selectGPS);
+                    } else {
+                        // Let the user select from the devices found.
+                        next = selectGPS;
+                    }
                 }
             }
 
