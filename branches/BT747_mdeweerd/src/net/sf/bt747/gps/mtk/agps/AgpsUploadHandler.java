@@ -159,7 +159,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                 percent++;
                 nextPacketPercentIdx += PERCENT_STEP;
             }
-            Generic.debug("Sent APGS data:" + cmd.toString());
+            Generic.debug("Sent AGPS data:" + cmd.toString());
             resetTimeOut();
         }
         return true; // Continue to run.
