@@ -19,13 +19,11 @@ import java.awt.Component;
 import gps.log.out.CommonOut;
 import gps.mvc.MtkModel;
 
-import javax.swing.JPanel;
 
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Int;
 
 /**
