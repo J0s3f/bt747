@@ -217,6 +217,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             }
 
             public final void onSelection() {
+                Log.info("User requested download (menu)");
                 startDownload();
                 logDownload.show();
             }
@@ -280,6 +281,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             // Show the menu
             acceptNotify();
         } else if (keyCode == DeviceScreen.FIRE) {
+            Log.info("User requested download (key)");
             startDownload();
         }
         super.keyReleased(keyCode);

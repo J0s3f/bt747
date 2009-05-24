@@ -1,7 +1,5 @@
 package net.sf.bt747.j4me.app.screens;
 
-import javax.microedition.lcdui.Graphics;
-
 import net.sf.bt747.j4me.app.AppController;
 import net.sf.bt747.j4me.app.ScreenFactory;
 
@@ -24,7 +22,8 @@ public final class DelayedDialog extends Dialog {
         dialogClassType = screenType;
     }
 
-    public void showNotify() {
+    public void show() {
+        super.show();
         try {
             BT747Dialog deviceScreen;
             deviceScreen = ScreenFactory.getScreen(dialogClassType);
@@ -35,16 +34,5 @@ public final class DelayedDialog extends Dialog {
         } catch (final Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void show() {
-        // Do not call show in the superclass.
-        // This is a dummy screen.
-        showNotify();
-    }
-
-    protected void paint(final Graphics g) {
-        // Nothing to show
-
     }
 }

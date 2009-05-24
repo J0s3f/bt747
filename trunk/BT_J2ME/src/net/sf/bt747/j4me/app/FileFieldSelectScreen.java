@@ -49,7 +49,7 @@ public final class FileFieldSelectScreen extends BT747Dialog {
         return logFormat;
     }
 
-    public void show() {
+    public void showNotify() {
         setupScreen();
         updateLogFormat(m().getIntOpt(AppSettings.FILEFIELDFORMAT));
         commentCheck.setChecked(m().getBooleanOpt(
@@ -57,7 +57,6 @@ public final class FileFieldSelectScreen extends BT747Dialog {
         nameCheck.setChecked(m().getBooleanOpt(
                 AppSettings.IS_WRITE_TRACKPOINT_NAME));
         invalidate();
-        super.show();
     }
 
     protected void acceptNotify() {

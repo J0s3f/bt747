@@ -189,9 +189,8 @@ public final class ConvertToScreen extends
         return c.getAppModel();
     }
 
-    public void show() {
+    public void showNotify() {
         setUpScreen();
-        super.show();
     }
 
     protected void acceptNotify() {

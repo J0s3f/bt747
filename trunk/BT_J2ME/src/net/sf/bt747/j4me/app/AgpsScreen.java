@@ -47,11 +47,10 @@ public final class AgpsScreen extends BT747Dialog {
         return c.getAppModel();
     }
 
-    public void show() {
+    public void showNotify() {
         Log.setLevel(Level.DEBUG);
         Log.debug("AGPS Menu");
         setupScreen();
-        super.show();
     }
 
     private final void updateButtons() {

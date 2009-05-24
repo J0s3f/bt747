@@ -126,9 +126,8 @@ public class PathSelectionScreen extends Menu {
         show();
     }
 
-    public void show() {
+    public void showNotify() {
         setup();
-        super.show();
     }
 
     // static final String fs = System.getProperty("file.separator");
@@ -164,7 +163,7 @@ public class PathSelectionScreen extends Menu {
                 files = null;
             } catch (final Exception e) {
                 // TODO: handle exception
-                // Log.error(currentPath, e);
+                Log.error(currentPath, e);
             }
         } else {
             try {
@@ -176,13 +175,14 @@ public class PathSelectionScreen extends Menu {
                 }
             } catch (final Exception e) {
                 // TODO: handle exception
-                // Log.error(currentPath, e);
+                Log.error(currentPath, e);
             }
         }
         try {
             fileUsage.close();
         } catch (final Exception e) {
             // TODO: handle exception
+            Log.error(currentPath,e);
         }
         // Log.info("End ");
 

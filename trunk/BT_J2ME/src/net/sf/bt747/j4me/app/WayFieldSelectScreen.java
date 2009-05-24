@@ -30,7 +30,7 @@ public final class WayFieldSelectScreen extends BT747Dialog {
 
     private boolean screenSetup = false;
 
-    private void setupSreen() {
+    private void setupScreen() {
         if (!screenSetup) {
             screenSetup = true;
             deleteAll();
@@ -65,10 +65,9 @@ public final class WayFieldSelectScreen extends BT747Dialog {
         return logFormat;
     }
 
-    public void show() {
-        setupSreen();
-        updateLogFormat(m().getWayPtRCR());
-        super.show();
+    public void showNotify() {
+        setupScreen();
+        updateLogFormat(m().getWayPtRCR());        
     }
 
     protected void acceptNotify() {

@@ -142,7 +142,7 @@ public class UIManager {
             UIManager.current = canvas;
 
             try {
-                canvas.showNotify();
+                UIManager.current.showNotify();
             } catch (final Throwable t) {
                 Log.warn("Unhandled exception in showNotify() of "
                         + UIManager.current, t);
@@ -154,10 +154,10 @@ public class UIManager {
             // This fixes problems on some phones to make sure the screen
             // appears correctly. For example BlackBerry phones sometimes
             // render only a part of the screen.
-            canvas.repaint();
+            UIManager.current.repaint();
 
             if (Log.isDebugEnabled()) {
-                Log.debug("Screen switched to " + canvas);
+                Log.debug("Screen switched to " + UIManager.current);
             }
         }
     }
