@@ -159,7 +159,7 @@ public final class AgpsScreen extends BT747Dialog {
                         buf = null;
                     }
                 } catch (Exception e) {
-                    Log.debug("Problem during APGS download", e);
+                    Log.debug("Problem during AGPS download", e);
                 }
                 if (agpsData != null) {
                     Log.info("Got AGPS data");
