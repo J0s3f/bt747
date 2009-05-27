@@ -174,14 +174,17 @@ public final class BT747Constants { // dev as in device
     public static final int C_RCR_COUNT = 16;
 
     // PMTK182 commands/replies.
-    /** Set a parameter concerning the log (2) */
+    /** Set a parameter concerning the log (1). */
     public static final int PMTK_LOG_SET = 1;
     /** Get a query concerning the log (2) */
     public static final int PMTK_LOG_Q = 2;
-    /** Received data concerning the log (3) */
+    /** Received data concerning the log (3). */
     public static final int PMTK_LOG_DT = 3; // REPLY
+    /** Switch logging on. (4). */
     public static final int PMTK_LOG_ON = 4;
+    /** Switch logging off. (5). */
     public static final int PMTK_LOG_OFF = 5;
+    /** Erase log. (6). */
     public static final int PMTK_LOG_ERASE = 6;
     /**
      * (7)
@@ -207,7 +210,51 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_LOG_DISTANCE_INTERVAL = 4;
     public static final int PMTK_LOG_SPEED_INTERVAL = 5;
     public static final int PMTK_LOG_REC_METHOD = 6;
+    /**
+     * Logger Status. <table>
+     * <tr>
+     * <th>bit 11</th>
+     * <td>Logging is full.</td>
+     * <td>
+     * 
+     * @see {@link #PMTK_LOG_STATUS_LOGISFULL_MASK}</td>
+     *      </tr>
+     *      <tr>
+     *      <th>bit 10</th>
+     *      <td>Logging needs initialisation (format).</td>
+     *      <td>
+     * @see {@link #PMTK_LOG_STATUS_LOGMUSTINIT_MASK} </td>
+     *      </tr>
+     *      <tr>
+     *      <th>bit 9 </th>
+     *      <td>Logging is enabled.</td>
+     *      <td>
+     * @see {@link #PMTK_LOG_STATUS_DISABLED_MASK}</td>
+     *      </tr>
+     *      <tr>
+     *      <th>bit 8</th>
+     *      <td>Logging is enabled.</td>
+     *      <td>
+     * @see {@link #PMTK_LOG_STATUS_LOGENABLED_MASK}</td>
+     *      </tr>
+     *      <tr>
+     *      <th>bit 2</th>
+     *      <td>Logging is in stop or overwrite mode. </td>
+     *      <td>
+     * @see {@link #PMTK_LOG_STATUS_LOGSTOP_OVER_MASK}</td>
+     *      </tr> *
+     *      <tr>
+     *      <th>bit 2</th>
+     *      <td>Logging is on/off</td>
+     *      <td>
+     * @see {@link #PMTK_LOG_STATUS_LOGONOF_MASK}</td>
+     *      </tr>
+     *      </table>
+     * 
+     * 
+     */
     public static final int PMTK_LOG_LOG_STATUS = 7;
+    /** Logger Memory used in bytes - 8 */
     public static final int PMTK_LOG_MEM_USED = 8; // bit 2 = logging on/off
     public static final int PMTK_LOG_FLASH = 9; // Requires extra param
     public static final int PMTK_LOG_NBR_LOG_PTS = 10;
@@ -279,7 +326,8 @@ public final class BT747Constants { // dev as in device
     /**
      * Response to EPO_INFO query.<br>
      * Answer Example<br>
-     * $PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000*1C<br><ol>
+     * $PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000*1C<br>
+     * <ol>
      * <li>$PMTK707 = AGPS Status</li>
      * <li>28 = Number of the effective data?</li>
      * <li>1511 = GPS Weeks of validity start</li>
@@ -289,7 +337,8 @@ public final class BT747Constants { // dev as in device
      * <li>1511 = GPS Weeks of ??1</li>
      * <li>540000 = GPS Seconds of ??1</li>
      * <li>1511 = GPS Weeks of ??2</li>
-     * <li>540000 = GPS Seconds of ??2</li></ol>
+     * <li>540000 = GPS Seconds of ??2</li>
+     * </ol>
      */
     public static final int PMTK_DT_EPO_INFO = 707;
     /** Send EPO data to device (722 0x2D2) */
@@ -333,6 +382,7 @@ public final class BT747Constants { // dev as in device
             + BT747Constants.PMTK_LOG_REC_METHOD;
     public static final String PMTK_LOG_LOG_STATUS_STR = ""
             + BT747Constants.PMTK_LOG_LOG_STATUS;
+
     public static final String PMTK_LOG_MEM_USED_STR = ""
             + BT747Constants.PMTK_LOG_MEM_USED; // bit
     // 2 =

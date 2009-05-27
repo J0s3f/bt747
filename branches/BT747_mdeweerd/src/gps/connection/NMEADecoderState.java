@@ -3,7 +3,9 @@
  */
 package gps.connection;
 
+import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -35,8 +37,9 @@ public final class NMEADecoderState implements DecoderStateInterface {
     private int checksum = 0;
 
     private int read_checksum;
-    
+
     private static boolean ignoreNMEA = false;
+
     /**
      * @return Returns the ignoreNMEA.
      */
@@ -52,6 +55,7 @@ public final class NMEADecoderState implements DecoderStateInterface {
         NMEADecoderState.ignoreNMEA = ignoreNMEA;
     }
 
+    private final BT747Semaphore rcvSema = JavaLibBridge.getSemaphoreInstance(1);
 
     /*
      * (non-Javadoc)
@@ -59,12 +63,24 @@ public final class NMEADecoderState implements DecoderStateInterface {
      * @see gps.connection.DecoderInterface#getResponse()
      */
     public final Object getResponse(final GPSrxtx context) {
+        Object result = null;
+        rcvSema.down();
+        try {
+            result = myGetResponse(context);
+        } catch (Exception e) {
+            Generic.debug("getResponse exception", e);
+        }
+        rcvSema.up();
+        return result;
+    }
+
+    private final Object myGetResponse(final GPSrxtx context) {
         final GPSPort gpsPort = context.getGpsPort();
         boolean continueReading;
         int myError = GPSrxtx.ERR_NOERROR;
         final boolean skipError = true;
         final boolean ignoreNMEA = isIgnoreNMEA(); // Cached for
-                                                            // efficiency
+        // efficiency
         continueReading = gpsPort.isConnected();
 
         if (current_state == NMEADecoderState.C_FOUND_STATE) {

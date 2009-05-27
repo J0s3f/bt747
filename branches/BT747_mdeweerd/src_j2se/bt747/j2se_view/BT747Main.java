@@ -502,7 +502,7 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.CONNECTED:
             updateConnectFunction(false);
             // TODO: Find the way to do this on tab entry.
-            c.reqHoluxName();
+            c.setMtkDataNeeded(MtkModel.DATA_HOLUX_NAME);
             c.setMtkDataNeeded(MtkModel.DATA_FLASH_USER_OPTION);
             c.setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
 

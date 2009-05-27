@@ -110,6 +110,12 @@ public class MtkController {
     public final static int CMD_COLDSTART = 2;
     /** To perform a full cold start on the device. */
     public final static int CMD_FULLCOLDSTART = 3;
+    /** Start logging on the device. */
+    public final static int CMD_STARTLOG = 4;
+    /** Stop logging on the device. */
+    public final static int CMD_STOPLOG = 5;
+    public final static int CMD_AUTOLOG_OFF = 6;
+    public final static int CMD_AUTOLOG_ON = 7;
 
     public final void cmd(final int cmd) {
         String nmeaCmd = null;
@@ -130,6 +136,24 @@ public class MtkController {
             nmeaCmd = MtkController.PMTK
                     + BT747Constants.PMTK_CMD_FULL_COLD_START_STR;
             break;
+        case CMD_STARTLOG:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_ON;
+            m.setLoggingActive(true); // This should be the result of
+            break;
+        case CMD_STOPLOG:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
+                    + BT747Constants.PMTK_LOG_OFF;
+            m.setLoggingActive(false); // This should be the result of
+            break;
+        case CMD_AUTOLOG_OFF:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
+                    + "," + BT747Constants.PMTK_LOG_DISABLE;
+            break;
+        case CMD_AUTOLOG_ON:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
+                    + "," + BT747Constants.PMTK_LOG_ENABLE;
+            break;
         default:
             break;
         }
@@ -141,12 +165,6 @@ public class MtkController {
     protected final void reqData(final int dataType) {
         String nmeaCmd = null;
         switch (dataType) {
-        case MtkModel.DATA_DEVICE_RELEASE:
-            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_VERSION_STR;
-            break;
-        case MtkModel.DATA_DEVICE_VERSION:
-            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_Q_RELEASE_STR;
-            break;
         case MtkModel.DATA_FLASH_TYPE:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
@@ -255,14 +273,20 @@ public class MtkController {
             break;
 
         case MtkModel.DATA_DGPS_MODE:
-            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_DGPS_MODE_STR;
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_DGPS_MODE_STR;
             break;
         case MtkModel.DATA_BT_MAC_ADDR:
-            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_API_Q_BT_MAC_ADDR;
+            nmeaCmd = MtkController.PMTK
+                    + BT747Constants.PMTK_API_Q_BT_MAC_ADDR;
             break;
         case MtkModel.DATA_FLASH_USER_OPTION:
             nmeaCmd = MtkController.PMTK
-            + BT747Constants.PMTK_API_GET_USER_OPTION_STR;
+                    + BT747Constants.PMTK_API_GET_USER_OPTION_STR;
+            break;
+        case MtkModel.DATA_HOLUX_NAME:
+            nmeaCmd = BT747Constants.HOLUX_MAIN_CMD
+                    + BT747Constants.HOLUX_API_Q_NAME;
             break;
         default:
             break;
@@ -273,11 +297,6 @@ public class MtkController {
             Generic.debug("Serious: (in MtkController) Unknown data type #"
                     + dataType);
         }
-    }
-
-    public final void reqHoluxName() {
-        sendCmd(BT747Constants.HOLUX_MAIN_CMD
-                + BT747Constants.HOLUX_API_Q_NAME);
     }
 
     public final void setLogTimeInterval(final int value) {
@@ -383,7 +402,7 @@ public class MtkController {
     public final void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
-        reqHoluxName();
+        reqData(MtkModel.DATA_HOLUX_NAME);
     }
 
     /**
@@ -458,42 +477,12 @@ public class MtkController {
 
     public final void logImmediate(final int value) {
         if (!m.isLoggingActive()) {
-            startLog();
+            cmd(CMD_STARTLOG);
         }
         sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_USER + ","
                 + JavaLibBridge.unsigned2hex(value, 4));
-    }
-
-    /** Activate the logging by the device. */
-    public final void startLog() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_ON);
-        m.setLoggingActive(true); // This should be the result of
-        // the action.
-        // The device will eventually tell the new status
-    }
-
-    /** Stop the automatic logging of the device. */
-    public final void stopLog() {
-        // Request log format from device
-        sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
-                + BT747Constants.PMTK_LOG_OFF);
-        m.setLoggingActive(false); // This should be the result of
-        // the action.
-        // The device will eventually tell the new status
-    }
-
-    public final void setAutoLog(final boolean enable) {
-        if (enable) {
-            sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
-                    + "," + BT747Constants.PMTK_LOG_ENABLE);
-        } else {
-            sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
-                    + "," + BT747Constants.PMTK_LOG_DISABLE);
-        }
     }
 
     public final void setLogRequestAhead(final int logRequestAhead) {
