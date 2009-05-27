@@ -1,3 +1,7 @@
+Version 1.68.22
+* Bug in regular requests for memory usage.  Corrected.
+* Improved handling of interface event.
+
 Version 1.68.21
 * Improved German translation of some items.
 * Fixed backward compatibility of settings file (for people trying 2.X.X).

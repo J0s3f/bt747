@@ -1303,8 +1303,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 }//GEN-LAST:event_btDownloadActionPerformed
 
     private void cbLoggingActiveItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLoggingActiveItemStateChanged
-        if (m.isLoggingActive() != cbLoggingActive.isSelected()) {
-            c.setLoggingActive(cbLoggingActive.isSelected());
+        final boolean state = (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED);
+        if (m.isLoggingActive() != state) {
+            c.setLoggingActive(state);
         }
     }//GEN-LAST:event_cbLoggingActiveItemStateChanged
 
