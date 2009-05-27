@@ -144,9 +144,9 @@ public class Model {
     private final boolean[] dataAvailable = new boolean[Model.DATA_LAST_INDEX + 1];
     private final int[] dataRequested = new int[Model.DATA_LAST_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
-    true, // DATA_MEM_USED
-            true, // DATA_MEM_PTS_LOGGED
             false, // DATA_FLASH_TYPE
+            true, // DATA_MEM_PTS_LOGGED
+            true, // DATA_MEM_USED
             false, // DATA_LOG_FORMAT
             false, // DATA_MTK_VERSION
             false, // DATA_MTK_RELEASE

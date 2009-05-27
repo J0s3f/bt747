@@ -312,7 +312,8 @@ public final class AppController extends Controller {
                     preferencesFile = new File(CONFIG_FILE_NAME, File.READ_ONLY);
                     readLength = preferencesFile.getSize();
                     if (readLength >= 100) {
-                        byte[] appSettingsArray = new byte[2048];
+                        final int len = Math.max(AppSettings.SIZE, readLength);
+                        byte[] appSettingsArray = new byte[len];
 
                         preferencesFile.readBytes(appSettingsArray, 0,
                                 readLength);
