@@ -245,61 +245,6 @@ public final class GPSLinkHandler {
         return cmdIdx != -1;
     }
 
-    // TODO: When acknowledge is missing for some commands, take appropriate
-    // action.
-    protected int analyseMTK_Ack(final String[] sNmea) {
-        // PMTK001,Cmd,Flag
-        int flag;
-        int result = -1;
-        // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
-
-        if (sNmea.length >= 3) {
-            String sMatch;
-            flag = JavaLibBridge.toInt(sNmea[sNmea.length - 1]); // Last
-            // parameter
-            sMatch = "PMTK" + sNmea[1];
-            for (int i = 2; i < sNmea.length - 1; i++) {
-                // ACK is variable length, can have parameters of cmd.
-                sMatch += "," + sNmea[i];
-            }
-            // if(GPS_DEBUG) {
-            // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
-            // }
-
-            removeFromSentCmds(sMatch);
-            // if(GPS_DEBUG) {
-            // debugMsg("After:"+sentCmds.size());
-            // }
-            // sentCmds.find(z_MatchString);
-            // if(GPS_DEBUG) {
-            // waba.sys.debugMsg("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
-            // if(GPS_DEBUG) {
-            // waba.sys.debugMsg("FLAG:"+Convert.toString(z_Flag)+"\n");}
-            switch (flag) {
-            case BT747Constants.PMTK_ACK_INVALID:
-                // 0: Invalid cmd or packet
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_UNSUPPORTED:
-                // 1: Unsupported cmd or packet
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_FAILED:
-                // 2: Valid cmd or packet but action failed
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_SUCCEEDED:
-                // 3: Valid cmd or packat but action succeeded
-                result = 0;
-                break;
-            default:
-                result = -1;
-                break;
-            }
-        }
-        return result;
-    }
-
     public final int getOutStandingCmdsCount() {
         int total;
         cmdBuffersAccess.down();

@@ -153,11 +153,12 @@ public class MtkModel {
     }
 
     private final boolean[] dataAvailable = new boolean[MtkModel.DATA_MAX_INDEX + 1];
+    private final boolean[] dataSupported = new boolean[MtkModel.DATA_MAX_INDEX + 1];
     private final int[] dataRequested = new int[MtkModel.DATA_MAX_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
-    true, // DATA_MEM_USED
-            true, // DATA_MEM_PTS_LOGGED
             false, // DATA_FLASH_TYPE
+            true, // DATA_MEM_PTS_LOGGED
+            true, // DATA_MEM_USED
             false, // DATA_LOG_FORMAT
             false, // DATA_MTK_VERSION
             false, // DATA_MTK_RELEASE
@@ -189,10 +190,11 @@ public class MtkModel {
     protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
     // possible index
 
-    /** The device version. */
-    public final static int DATA_DEVICE_VERSION = 9;
-    /** The device release. */
-    public final static int DATA_DEVICE_RELEASE = 10;
+
+    /** The Holux name of the device. */
+    public final static int DATA_HOLUX_NAME = 9;
+
+    /** FREE SPOT #10 */
     /**
      * The log time interval.<br>
      * Get value through {@link #getLogTimeInterval()}.
@@ -278,6 +280,7 @@ public class MtkModel {
         for (int i = 0; i < dataAvailable.length; i++) {
             dataAvailable[i] = false;
             dataRequested[i] = ts;
+            dataSupported[i] = true; // By default suppose all cmds are supported.
         }
         hasAgps = false;
         agpsDataCount = 0;
@@ -302,6 +305,9 @@ public class MtkModel {
         }
         if (!autofetch) {
             return false; // For debug.
+        }
+        if (!dataSupported[dataType]) {
+            return false;
         }
         if (Generic.getDebugLevel() > 1) {
             Generic.debug("ts:" + ts + " type:" + dataType + " timesout:"
@@ -338,6 +344,10 @@ public class MtkModel {
 
     public final boolean isDataAvailable(final int dataType) {
         return dataAvailable[dataType];
+    }
+
+    public final boolean isDataSupported(final int dataType) {
+        return dataSupported[dataType];
     }
 
     protected final void setChanged(final int dataType) {
@@ -536,7 +546,7 @@ public class MtkModel {
             case BT747Constants.PMTK_TEST: // CMD 000
                 break;
             case BT747Constants.PMTK_ACK: // CMD 001
-                result = handler.analyseMTK_Ack(sNmea);
+                result = analyseMTK_Ack(sNmea);
                 break;
             case BT747Constants.PMTK_SYS_MSG: // CMD 010
                 break;
@@ -686,6 +696,68 @@ public class MtkModel {
         return result;
     } // End method
 
+    // TODO: When acknowledge is missing for some commands, take appropriate
+    // action.
+    protected int analyseMTK_Ack(final String[] sNmea) {
+        // PMTK001,Cmd,Flag
+        int flag;
+        int result = -1;
+        // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
+
+        if (sNmea.length >= 3) {
+            String sMatch;
+            int cmdIdx;
+            flag = JavaLibBridge.toInt(sNmea[sNmea.length - 1]); // Last
+            cmdIdx = JavaLibBridge.toInt(sNmea[1]);
+            // parameter
+            sMatch = "PMTK" + sNmea[1];
+            for (int i = 2; i < sNmea.length - 1; i++) {
+                // ACK is variable length, can have parameters of cmd.
+                sMatch += "," + sNmea[i];
+            }
+            // if(GPS_DEBUG) {
+            // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
+            // }
+
+            handler.removeFromSentCmds(sMatch);
+            // if(GPS_DEBUG) {
+            // debugMsg("After:"+sentCmds.size());
+            // }
+            // sentCmds.find(z_MatchString);
+            // if(GPS_DEBUG) {
+            // waba.sys.debugMsg("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
+            // if(GPS_DEBUG) {
+            // waba.sys.debugMsg("FLAG:"+Convert.toString(z_Flag)+"\n");}
+            switch (flag) {
+            case BT747Constants.PMTK_ACK_INVALID:
+                // 0: Invalid cmd or packet
+                result = 0;
+                break;
+            case BT747Constants.PMTK_ACK_UNSUPPORTED:
+                switch(cmdIdx) {
+                case BT747Constants.PMTK_Q_VERSION:
+                    dataSupported[MtkModel.DATA_MTK_VERSION] = false;
+                    break;
+                }
+                result = 0;
+                break;
+            case BT747Constants.PMTK_ACK_FAILED:
+                // 2: Valid cmd or packet but action failed
+                result = 0;
+                break;
+            case BT747Constants.PMTK_ACK_SUCCEEDED:
+                // 3: Valid cmd or packat but action succeeded
+                result = 0;
+                break;
+            default:
+                result = -1;
+                break;
+            }
+        }
+        return result;
+    }
+
+    
     protected final void postEvent(final int eventNbr) {
         context.postGpsEvent(eventNbr, null);
     }

@@ -155,7 +155,7 @@ final class MTKLogDownloadHandler {
                     .isLoggingActive();
             if (context.disableLogging
                     && context.loggingIsActiveBeforeDownload) {
-                context.mtkC.stopLog();
+                context.mtkC.cmd(MtkController.CMD_STOPLOG);
                 context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
             }
         }
@@ -695,7 +695,7 @@ final class MTKLogDownloadHandler {
         closeLog();
 
         if (context.loggingIsActiveBeforeDownload) {
-            context.mtkC.startLog();
+            context.mtkC.cmd(MtkController.CMD_STARTLOG);
             context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
         }
         context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
@@ -743,7 +743,7 @@ final class MTKLogDownloadHandler {
 
     protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
-        context.mtkC.stopLog(); // Stop logging for this operation
+        context.mtkC.cmd(MtkController.CMD_STOPLOG); // Stop logging for this operation
         context.mtkC.reqData(MtkModel.DATA_LOG_STATUS); // Check status
         context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get flash sector
                                                 // information

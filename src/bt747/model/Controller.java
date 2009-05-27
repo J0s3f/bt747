@@ -138,7 +138,11 @@ public class Controller implements ModelListener {
     }
 
     public final void setAutoLog(final boolean enable) {
-        mtkC().setAutoLog(enable);
+        if (enable) {
+            mtkCmd(MtkController.CMD_AUTOLOG_ON);
+        } else {
+            mtkCmd(MtkController.CMD_AUTOLOG_OFF);
+        }
     }
 
     private final MtkController mtkC() {
@@ -741,9 +745,9 @@ public class Controller implements ModelListener {
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
-            mtkC().startLog();
+            mtkCmd(MtkController.CMD_STARTLOG);
         } else {
-            mtkC().stopLog();
+            mtkCmd(MtkController.CMD_STOPLOG);
         }
         getGpsC().reqLogOnOffStatus();
     }
@@ -1176,13 +1180,6 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * Get the flash user settings from the device.
-     */
-    public final void reqHoluxName() {
-        mtkC().reqHoluxName();
-    }
-
-    /**
      * Sets the MAC address for bluetooth (for devices that support it).
      * 
      * @param btMacAddr
@@ -1202,7 +1199,7 @@ public class Controller implements ModelListener {
      */
     public final void setHoluxName(final String holuxName) {
         mtkC().setHoluxName(holuxName);
-        reqHoluxName();
+        setMtkDataNeeded(MtkModel.DATA_HOLUX_NAME);
     }
 
     /**
