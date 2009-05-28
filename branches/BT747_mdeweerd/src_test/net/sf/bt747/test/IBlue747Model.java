@@ -20,7 +20,6 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEAWriter;
 import gps.convert.Conv;
-import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsRxtxExecCommand;
 
 import java.io.File;
@@ -49,7 +48,7 @@ public class IBlue747Model {
     }
 
     enum Model {
-        ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747
+        ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C
     };
 
     private GPSrxtx gpsRxTx = null;
@@ -76,7 +75,7 @@ public class IBlue747Model {
      * 
      */
     public IBlue747Model() {
-        setupModel(Model.IBLUE747PLUS);
+        setupModel(Model.HOLUXM1000C);
     }
 
     /**
@@ -600,6 +599,13 @@ public class IBlue747Model {
             mtkData.coreVersion = "M-core_2.02";
             mtkData.modelNumber = "231B";
             mtkData.modelRef = "";
+            mtkData.swVersion = "1.0";
+            break;
+        case HOLUXM1000C:
+            // PMTK705,AXN_1.0-B_1.3_C01,0035,01029-00A,1.0,
+            mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
+            mtkData.modelNumber = "0035";
+            mtkData.modelRef = "01029-00A";
             mtkData.swVersion = "1.0";
             break;
         case PHOTOMATE887:
