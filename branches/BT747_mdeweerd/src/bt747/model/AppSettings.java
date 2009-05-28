@@ -89,9 +89,8 @@ public class AppSettings {
     public static final int IMPERIAL = 3;
     /**
      * Param indicating forcing the data interpretation as holux.
-     * 
+     * @deprecated
      */
-    @Deprecated
     public static final int FORCE_HOLUXM241 = 4;
     /**
      * Param indicating that the record number for a position is to be written
