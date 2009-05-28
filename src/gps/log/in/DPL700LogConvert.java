@@ -41,25 +41,21 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
             | (1 << BT747Constants.FMT_HEIGHT_IDX);
 
-    static final int ITRACKU_NUMERIX = 0;
-    static final int PHOTOTRACKR = 1;
-    static final int ITRACKU_SIRFIII = 2;
+    // static final int ITRACKU_NUMERIX = 0;
+    // static final int PHOTOTRACKR = 1;
+    // static final int ITRACKU_SIRFIII = 2;
 
-    private int logType = DPL700LogConvert.ITRACKU_NUMERIX;
+    // private int logType = DPL700LogConvert.ITRACKU_NUMERIX;
 
     public DPL700LogConvert() {
         super();
     }
 
-    public int getLogType() {
-        return logType;
-    }
-
-    public void setLogType(final int logType) {
-        this.logType = logType;
-        switch (this.logType) {
-        case PHOTOTRACKR:
-        case ITRACKU_SIRFIII:
+    public void setLoggerType(final int logType) {
+        super.setLoggerType(logType);
+        switch (getLoggerType()) {
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
                     | (1 << BT747Constants.FMT_LATITUDE_IDX)
                     | (1 << BT747Constants.FMT_LONGITUDE_IDX)
@@ -67,7 +63,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                     | (1 << BT747Constants.FMT_SPEED_IDX);
             recordSize = 16;
             break;
-        case ITRACKU_NUMERIX:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
         default:
             activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
                     | (1 << BT747Constants.FMT_LATITUDE_IDX)
@@ -193,9 +189,10 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             int tag;
                             int altitude;
 
-                            switch (logType) {
-                            case PHOTOTRACKR:
-                            case ITRACKU_SIRFIII:
+                            switch (getLoggerType()) {
+                            case Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+                            case Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+                                // case Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
                                 // NEMERIX
                                 // Get information from log file
                                 longitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
@@ -350,12 +347,12 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                 | (1 << BT747Constants.FMT_LONGITUDE_IDX)
                 | (1 << BT747Constants.FMT_LONGITUDE_IDX | (1 << BT747Constants.FMT_SPEED_IDX));
 
-        switch (logType) {
-        case PHOTOTRACKR:
-        case ITRACKU_SIRFIII:
+        switch (getLoggerType()) {
+        case Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             logfmt |= (1 << BT747Constants.FMT_HEIGHT_IDX);
             break;
-        case ITRACKU_NUMERIX:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
         default:
             break;
         }

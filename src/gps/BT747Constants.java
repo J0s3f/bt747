@@ -82,7 +82,7 @@ public final class BT747Constants { // dev as in device
      * Entries are in order. The entry position corresponds to the bit
      * position in the log format 'byte'.
      */
-    public static final int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
+    public static final byte[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
             // // // 0
             2, // "VALID", // = 0x00002 // 1
             8, // "LATITUDE", // = 0x00004 // 2
@@ -117,7 +117,7 @@ public final class BT747Constants { // dev as in device
             0, // 1F // Log points with valid fix only
     };
 
-    public static final int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
+    public static final byte[] logFmtByteSizesHolux = { 4, // "UTC", // = //
             // 0x00001 // 0
             2, // "VALID", // = 0x00002 // 1
             4, // "LATITUDE", // = 0x00004 // 2
@@ -151,6 +151,9 @@ public final class BT747Constants { // dev as in device
             0, // 1E
             0, // 1F // Log points with valid fix only
     };
+    
+    public static final byte[] logFmtBytesSizesHolux245 =
+        logFmtByteSizesHolux;
 
     public static final int RCR_TIME_MASK = 0x01;
     public static final int RCR_SPEED_MASK = 0x02;
@@ -548,7 +551,7 @@ public final class BT747Constants { // dev as in device
         try {
             int bits = p_logFormat;
             int index = 0;
-            int[] byteSizes;
+            byte[] byteSizes;
             if (holux) {
                 byteSizes = BT747Constants.logFmtByteSizesHolux;
             } else {
@@ -591,7 +594,7 @@ public final class BT747Constants { // dev as in device
     public static final int logRecordSize(final int logFormat,
             final boolean holux, final int sats) {
         int cnt = 0;
-        int[] byteSizes;
+        byte[] byteSizes;
         if (holux) {
             byteSizes = BT747Constants.logFmtByteSizesHolux;
         } else {
@@ -622,7 +625,7 @@ public final class BT747Constants { // dev as in device
         int index = 0;
         int total = 0;
         int satRecSize = 0;
-        int[] byteSizes;
+        byte[] byteSizes;
         if (holux) {
             byteSizes = BT747Constants.logFmtByteSizesHolux;
         } else {
@@ -697,6 +700,9 @@ public final class BT747Constants { // dev as in device
         case 0x0023:
         case 0x0033:
             mdStr = "Holux M-241";
+            break;
+        case 0x0035:
+            mdStr = "Holux M1000C";
             break;
         case 0x0131:
             mdStr = "EB-85A";

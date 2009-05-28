@@ -767,7 +767,8 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(AppSettings.FORCE_HOLUXM241);
+                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_M241)
+                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_GR245);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -791,7 +792,8 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(AppSettings.FORCE_HOLUXM241);
+                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_M241)
+                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_GR245);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {

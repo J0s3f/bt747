@@ -456,18 +456,7 @@ public class Controller implements ModelListener {
             break;
         }
 
-        if (lc instanceof BT747LogConvert) {
-            final BT747LogConvert b = (BT747LogConvert) lc;
-            b.setHolux(m.getBooleanOpt(AppSettings.FORCE_HOLUXM241));
-            parameters += "Force Holux:"
-                    + m.getBooleanOpt(AppSettings.FORCE_HOLUXM241) + "\n";
-        } else if (lc instanceof DPL700LogConvert) {
-            final DPL700LogConvert b = (DPL700LogConvert) lc;
-            // / TODO: set SR Log type correctly.
-            b
-                    .setLogType(m.getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
-                            : 1);
-        }
+        lc.setLoggerType(m.getIntOpt(AppSettings.GPSTYPE));
         if (Generic.isDebug()) {
             Generic.debug(parameters);
         }

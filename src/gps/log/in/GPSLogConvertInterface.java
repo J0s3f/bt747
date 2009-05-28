@@ -85,4 +85,14 @@ public abstract class GPSLogConvertInterface {
      * @return log type such as {@link Model#TRL_LOGTYPE}.
      */
     public abstract int getType();
+
+    protected int loggerType = 0;
+
+    public void setLoggerType(final int loggerType) {
+        this.loggerType = loggerType;
+    }
+    
+    public final int getLoggerType() {
+        return loggerType;
+    }
 }

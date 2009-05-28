@@ -1,5 +1,6 @@
 Version 2.X.1320+
 * Precise height setting was incorrectly applied - corrected.
+* Added M1000C support
 
 Version 1.68.15
 * Fixed problem when writing back files "in place" with no position.

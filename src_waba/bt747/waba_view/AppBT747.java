@@ -160,6 +160,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private final MenuItem miGisteqType3 = new MenuItem(Txt
             .getString(Txt.S_GISTEQTYPE3), false);
     private final MenuItem miHolux = new MenuItem("Holux M241", false);
+    private final MenuItem miHolux245 = new MenuItem("Holux 245", false);
 
     private final MenuItem miInfo = new MenuItem(Txt.getString(Txt.S_INFO));
     private final MenuItem miAboutBT747 = new MenuItem(Txt
@@ -200,7 +201,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     miTraversableFocus, new MenuItem(), miDebug, miDebugConn,
                     miStats, miImperial, miOutputLogConditions, },
             { miDevice, miDefaultDevice, miGisteqType1, miGisteqType2,
-                    miGisteqType3, miHolux, },
+                    miGisteqType3, miHolux, miHolux245 },
             { miInfo, miAboutBT747, miAboutSuperWaba, miInfo },
             { miLanguage, miLangDE, miLangEN, miLangES, miLangFR, miLangIT,
                     miLangJP, miLangKO, miLangNL, miLangZH } };
@@ -237,6 +238,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private static final int C_MENU_GISTEQ_TYPE3 = 204;
     /** MenuBar item for Settings->Holux M-241. */
     private static final int C_MENU_HOLUX_241 = 205;
+    private static final int C_MENU_HOLUX_245 = 206;
 
     /** MenuBar item for Info->About BT747. */
     private static final int C_MENU_ABOUT = 301;
@@ -350,8 +352,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
         miRecordNumberInLogs.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
-        miHolux.isChecked = AppBT747.m
-                .getBooleanOpt(AppSettings.FORCE_HOLUXM241);
         miImperial.isChecked = AppBT747.m.getBooleanOpt(AppSettings.IMPERIAL);
         miOutputLogConditions.isChecked = AppBT747.m
                 .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
@@ -449,6 +449,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miGisteqType1.isChecked = false;
         miGisteqType2.isChecked = false;
         miGisteqType3.isChecked = false;
+        miHolux.isChecked = false;
+        miHolux245.isChecked = false;
         switch (AppBT747.m.getIntOpt(AppSettings.GPSTYPE)) {
         case AppSettings.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
@@ -462,6 +464,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
         case AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             miGisteqType3.isChecked = true;
             break;
+        case AppSettings.GPS_TYPE_HOLUX_GR245:
+            miHolux245.isChecked = true;
+            break;
+        case AppSettings.GPS_TYPE_HOLUX_M241:
+            miHolux.isChecked = true;
         default:
             break;
         }
@@ -534,10 +541,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
                 case C_MENU_STATS_ACTIVE:
                     AppBT747.c.setStats(miStats.isChecked);
                     break;
-                case C_MENU_HOLUX_241:
-                    AppBT747.c.setBooleanOpt(AppSettings.FORCE_HOLUXM241,
-                            miHolux.isChecked);
-                    break;
                 case C_MENU_OUTPUT_LOGCONDITIONS:
                     AppBT747.c.setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS,
                             miOutputLogConditions.isChecked);
@@ -581,6 +584,12 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
                             AppSettings.GPS_TYPE_DEFAULT);
                     gpsType();
+                    break;
+                case C_MENU_HOLUX_241:
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, AppSettings.GPS_TYPE_HOLUX_M241);
+                    break;
+                case C_MENU_HOLUX_245:
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, AppSettings.GPS_TYPE_HOLUX_GR245);
                     break;
                 case C_MENU_GISTEQ_TYPE1:
                     AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
