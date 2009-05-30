@@ -399,7 +399,7 @@ public class MtkController {
      * @param holuxName
      *                The holuxName to set.
      */
-    public final void setHoluxName(final String holuxName) {
+    public void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
         reqData(MtkModel.DATA_HOLUX_NAME);
