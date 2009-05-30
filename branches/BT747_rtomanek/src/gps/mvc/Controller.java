@@ -35,7 +35,9 @@ public class Controller implements BT747Thread {
     private Controller(final Model model) {
         gpsM = model;
         mtkM = gpsM.getMtkModel();
-        mtkC = new MtkController(mtkM);
+        // this probably needs to be refactored to create the correct controller
+        //mtkC = new MtkController(mtkM);
+        mtkC = new HoluxController(mtkM);
         handler = gpsM.getHandler();
     }
 
