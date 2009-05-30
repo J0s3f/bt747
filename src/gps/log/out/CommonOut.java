@@ -100,7 +100,7 @@ public final class CommonOut {
         style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
         rec.append("<table width=400>");
         if (s.voxStr != null) {
-            rec.append("<tr><td span=2>"); // Table row and first column
+            rec.append("<tr><td colspan=2>"); // Table row and first column
             // start
             // rec.append("</td><td>"); // Column split (span 2 so skipped)
             final String upperVox = s.voxStr.toUpperCase();
