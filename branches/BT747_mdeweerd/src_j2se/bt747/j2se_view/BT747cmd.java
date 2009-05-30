@@ -1151,7 +1151,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
                 accepts(OPT_DEVICETYPE,
-                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
+                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245).")
                         .withRequiredArg().describedAs("DEVICE");
                 accepts(OPT_TRKPTINFO,
                         "Add record information for each trackpoint.");
