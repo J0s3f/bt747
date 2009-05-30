@@ -19,24 +19,70 @@ public class Controller implements BT747Thread {
 
     private final Model gpsM;
     private final MtkModel mtkM;
-    private final MtkController mtkC;
+    private MtkController mtkC;
 
     private final GPSLinkHandler handler;
 
-    public final static Controller getInstance(final GPSrxtx gpsRxTx) {
+    public final static Controller getInstance(final GPSrxtx gpsRxTx,
+            final int protocol) {
         final Model m = new Model(gpsRxTx);
-        return Controller.getInstance(m);
+        return Controller.getInstance(m, protocol);
     }
 
-    public final static Controller getInstance(final Model model) {
-        return new Controller(model);
+    public final static Controller getInstance(final Model model,
+            final int protocol) {
+        return new Controller(model, protocol);
     }
 
-    private Controller(final Model model) {
+    public final static int PROTOCOL_MTK = 0;
+    public final static int PROTOCOL_SIRFIII = 1;
+    public final static int PROTOCOL_HOLUX_PHLX = 2;
+    /** @SuppressWarnings("unused") */
+    private int protocol;
+
+    private Controller(final Model model, final int protocol) {
         gpsM = model;
         mtkM = gpsM.getMtkModel();
-        mtkC = new MtkController(mtkM);
+        // this probably needs to be refactored to create the correct
+        // controller
+        setProtocol(protocol);
         handler = gpsM.getHandler();
+    }
+
+    /**
+     * Sets or changes the protocol on the link. This will result in a change
+     * in the GPS Controller (e.g., MtkController).
+     * 
+     * Refactoring will change this code but in principle not its interface.
+     * 
+     * @param newProtocol
+     *                The new protocol. Chosen from {@link #PROTOCOL_MTK},
+     *                {@link #PROTOCOL_SIRFIII}, {@link #PROTOCOL_HOLUX_PHLX}
+     */
+    public final void setProtocol(final int newProtocol) {
+        if (protocol != newProtocol && mtkC != null) {
+            /* Need only change if protocol changed. */
+            if (mtkM.getHandler().isConnected()) {
+                // TODO: Revisit to review code.
+                mtkM.getHandler().getGPSRxtx().closePort();
+            }
+            mtkC = null;
+        }
+        if (mtkC != null) {
+            /** Previous controller is still valid. */
+            return;
+        }
+        switch (protocol) {
+        default:
+        case PROTOCOL_MTK:
+        case PROTOCOL_SIRFIII:
+            mtkC = new MtkController(mtkM);
+            break;
+        case PROTOCOL_HOLUX_PHLX:
+            mtkC = new HoluxController(mtkM);
+            break;
+        }
+
     }
 
     public final Model getModel() {
@@ -92,7 +138,8 @@ public class Controller implements BT747Thread {
         // getDGPSMode();
         // getDatumMode();
         // getFixInterval();
-        mtkC.reqData(MtkModel.DATA_HOLUX_NAME); // Mainly here to identify Holux device
+        mtkC.reqData(MtkModel.DATA_HOLUX_NAME); // Mainly here to identify
+        // Holux device
         setDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
     }
 
@@ -163,7 +210,8 @@ public class Controller implements BT747Thread {
 
     private DeviceOperationHandlerIF operationHandler;
 
-    public final void setDeviceOperationHandler(final DeviceOperationHandlerIF h) {
+    public final void setDeviceOperationHandler(
+            final DeviceOperationHandlerIF h) {
         operationHandler = h;
     }
 
