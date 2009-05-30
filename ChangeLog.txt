@@ -1,3 +1,6 @@
+Version 1.68.23
+* Added M1000C support
+
 Version 1.68.22
 * Bug in regular requests for memory usage.  Corrected.
 * Improved handling of interface event.

@@ -70,8 +70,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
      */
     private static final int BUF_SIZE = 0x800;
 
-    private static final int minValidUtcTime = JavaLibBridge.getDateInstance(1,
-            1, 1995).dateToUTCepoch1970();
+    private static final int minValidUtcTime = JavaLibBridge.getDateInstance(
+            1, 1, 1995).dateToUTCepoch1970();
 
     /**
      * Parse the binary input file and convert it.
@@ -552,6 +552,21 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         this.holux = holux;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.in.GPSLogConvertInterface#setLoggerType(int)
+     */
+    public final void setLoggerType(int loggerType) {
+        super.setLoggerType(loggerType);
+        switch (getLoggerType()) {
+        case Model.GPS_TYPE_HOLUX_GR245:
+        case Model.GPS_TYPE_HOLUX_M241:
+            holux = true;
+            break;
+        }
+    }
+
     private int logMode = 0;
     private int rcr_mask = 0; // Default RCR based on log settings
     private int logSpeed = 0;
@@ -773,8 +788,32 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.height = JavaLibBridge.toFloatBitwise(height);
+                if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
+                    // Height is speed:
+                    r.speed = JavaLibBridge.toFloatBitwise(height);
+                } else {
+                    r.height = JavaLibBridge.toFloatBitwise(height);
+                }
             }
+        }
+        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
+            final int speed = (0xFF & bytes[recIdx++]) << 0
+                    | (0xFF & bytes[recIdx++]) << 8
+                    | (0xFF & bytes[recIdx++]) << 16
+                    | (0xFF & bytes[recIdx++]) << 24;
+            if (holux && getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
+                // Height is speed:
+                r.height = JavaLibBridge.toFloatBitwise(speed);
+            } else {
+                r.speed = JavaLibBridge.toFloatBitwise(speed);
+            }
+        }
+        /*
+         * Need to do this after SPEED and HEIGHT field because some holux
+         * loggers interchange these.
+         * 
+         */
+        if (r.hasHeight()) {
             if (valid) {
                 CommonIn.convertHeight(r, factorConversionWGS84ToMSL,
                         logFormat);
@@ -785,17 +824,11 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 valid = false;
             }
         }
-        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            final int speed = (0xFF & bytes[recIdx++]) << 0
-                    | (0xFF & bytes[recIdx++]) << 8
-                    | (0xFF & bytes[recIdx++]) << 16
-                    | (0xFF & bytes[recIdx++]) << 24;
-            r.speed = JavaLibBridge.toFloatBitwise(speed);
-            if (r.speed < -10.) {
-                Generic.debug("Invalid speed:" + r.speed);
-                valid = false;
-            }
+        if (r.hasSpeed() &&(r.speed < -10.)) {
+            Generic.debug("Invalid speed:" + r.speed);
+            valid = false;
         }
+
         if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
             final int heading = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
