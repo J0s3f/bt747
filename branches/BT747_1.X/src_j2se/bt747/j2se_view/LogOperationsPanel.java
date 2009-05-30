@@ -82,10 +82,13 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         return J2SEAppController.getString(s);
     }
 
+    private final static String HOLUX_M241 = "Holux M-241";
+    private final static String HOLUX_GR245 = "Holux GR-245";
+    
     private void updateGuiData() {
         cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("DEFAULT_DEVICE"), "Holux M-241",
-                "iTrackU-Nemerix", "PhotoTrackr", "iTrackU-SIRFIII" }));
+                getString("DEFAULT_DEVICE"), HOLUX_M241,
+                "iTrackU-Nemerix", "PhotoTrackr", "iTrackU-SIRFIII", HOLUX_GR245 }));
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("TABLE_Description"), getString("GPX_Description"),
                 getString("GPX_ForOSMDescription"),
@@ -955,13 +958,11 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 cbDisableLoggingDuringDownload.isSelected());
     }//GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
 
-    private void cbGPSTypeFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbGPSTypeFocusLost
-        int type = Model.GPS_TYPE_DEFAULT;
-        boolean forceHolux = false;
+    private void cbGPSTypeFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbGPSTypeFocusLost
+        int type;
         switch (cbGPSType.getSelectedIndex()) {
         case 1:
-            type = Model.GPS_TYPE_DEFAULT;
-            forceHolux = true;
+            type = Model.GPS_TYPE_HOLUX_M241;
             break;
         case 2:
             type = Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
@@ -972,49 +973,42 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case 4:
             type = Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
             break;
+        case 5:
+            type = Model.GPS_TYPE_HOLUX_GR245;
+            break;
         case 0:
         default:
             type = Model.GPS_TYPE_DEFAULT;
         }
         c.setIntOpt(AppSettings.GPSTYPE, type);
-        c.setBooleanOpt(Model.FORCE_HOLUXM241, forceHolux);
-    }//GEN-LAST:event_cbGPSTypeFocusLost
+    }// GEN-LAST:event_cbGPSTypeFocusLost
 
     private final void updateCbGPSType() {
-        if (m.getBooleanOpt(AppSettings.FORCE_HOLUXM241)) {
-            cbGPSType.setSelectedIndex(1);
-        } else {
-            int index = 0;
-            switch (m.getIntOpt(AppSettings.GPSTYPE)) {
-            case 0:
-                index = 0;
-                break;
-            case 1:
-                index = 2;
-                break;
-            case 2:
-                index = 3;
-                break;
-            case 3:
-                index = 4;
-                break;
-            }
-            cbGPSType.setSelectedIndex(index);
+        int index = 0;
+        switch (m.getIntOpt(AppSettings.GPSTYPE)) {
+        case AppSettings.GPS_TYPE_DEFAULT:
+            index = 0;
+            break;
+        case AppSettings.GPS_TYPE_HOLUX_M241:
+            index = 1;
+            break;
+        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+            index = 2;
+            break;
+        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+            index = 3;
+            break;
+        case AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+            index = 4;
+            break;
         }
-
+        cbGPSType.setSelectedIndex(index);
     }
 
     private void tfRawLogFilePathFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfRawLogFilePathFocusLost
 
         c.setStringOpt(AppSettings.LOGFILEPATH, tfRawLogFilePath.getText());
     }//GEN-LAST:event_tfRawLogFilePathFocusLost
-
-    private void btDownloadIBlueActionPerformed(
-            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO: next line must be done on button action
-        setDownloadMethod();
-        c.startDefaultDownload();
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cbFormatItemStateChanged(final java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFormatItemStateChanged
         switch (evt.getStateChange()) {

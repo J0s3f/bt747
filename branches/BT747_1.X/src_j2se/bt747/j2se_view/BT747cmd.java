@@ -683,11 +683,11 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             int deviceType = Model.GPS_TYPE_DEFAULT;
             if (arg.equals("default")) {
-                deviceType = Model.GPS_TYPE_DEFAULT;
-                c.setBooleanOpt(Model.FORCE_HOLUXM241, false);
+                deviceType = Model.GPS_TYPE_HOLUX_M241;
             } else if (arg.equals("holux")) {
                 deviceType = Model.GPS_TYPE_DEFAULT;
-                c.setBooleanOpt(Model.FORCE_HOLUXM241, true);
+            } else if (arg.equals("holux245")) {
+                deviceType = Model.GPS_TYPE_HOLUX_GR245;
             }
             c.setIntOpt(Model.GPSTYPE, deviceType);
         }
@@ -1154,7 +1154,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
                 accepts(OPT_DEVICETYPE,
-                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
+                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245).")
                         .withRequiredArg().describedAs("DEVICE");
                 accepts(OPT_TRKPTINFO,
                         "Add record information for each trackpoint.");

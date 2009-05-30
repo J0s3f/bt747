@@ -40,6 +40,18 @@ public class AppSettings {
      * ITrackU-SirfIII type.
      */
     public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
+
+    /**
+     * Specific Holux type.
+     * 
+     */
+    public static final int GPS_TYPE_HOLUX_GR245 = 4;
+    /**
+     * Specific Holux type.
+     * 
+     */
+    public static final int GPS_TYPE_HOLUX_M241 = 5;
+
     /**
      * Holux type.
      */
@@ -77,6 +89,7 @@ public class AppSettings {
     public static final int IMPERIAL = 3;
     /**
      * Param indicating forcing the data interpretation as holux.
+     * @deprecated
      */
     public static final int FORCE_HOLUXM241 = 4;
     /**
@@ -262,6 +275,16 @@ public class AppSettings {
      */
     public static final int FILETIMEOFFSETOLD = 52;
 
+    /** AGPS external link. */
+    public static final int AGPSURL = 53;
+    /** Whether precise GEOID calculation is to be used if available. */
+    public static final int IS_USE_PRECISE_GEOID = 54;
+    /**
+     * Indicates if this is the first time a connection is made in the app.
+     * Used to set some device dependent settings needed when no connection.
+     */
+    public static final int IS_FIRST_CONNECTION_TO_INIT = 55;
+
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
     private final static int START_IDX = 2;
@@ -287,6 +310,17 @@ public class AppSettings {
             if (AppSettings.paramsList[i][AppSettings.PARAM_IDX] != i) {
                 Generic.debug("ASSERT:Problem with param index " + i);
             }
+        }
+
+        final int initialLen = Settings.getAppSettings().length();
+        if (initialLen < SIZE) {
+            final StringBuffer s = new StringBuffer(SIZE);
+            s.append(Settings.getAppSettings());
+            for (int i = SIZE - initialLen; i > 0; i--) {
+                // Fill buffer.
+                s.append(' ');
+            }
+            Settings.setAppSettings(s.toString());
         }
 
         mVersion = getStringOpt(AppSettings.VERSION);
@@ -453,7 +487,22 @@ public class AppSettings {
             // New field is coded on 4 byte (8 chars)
             setIntOpt(AppSettings.FILETIMEOFFSET,
                     getIntOpt(AppSettings.FILETIMEOFFSETOLD));
-            setStringOpt(AppSettings.VERSION, "0.38");
+            /* fall through */
+        case 38:
+            setStringOpt(AppSettings.AGPSURL,
+                    "ftp://login:passwd@siteURL.com/MTK7d.EPO");
+            /* fall through */
+        case 39:
+            setBooleanOpt(AppSettings.IS_USE_PRECISE_GEOID, true);
+            /* fall through */
+        case 40:
+            if (getBooleanOpt(FORCE_HOLUXM241)) {
+                setIntOpt(GPSTYPE, GPS_TYPE_HOLUX_GR245);
+            }
+            /* If user already set a log type, skip this init. */
+            setBooleanOpt(IS_FIRST_CONNECTION_TO_INIT,
+                    getIntOpt(GPSTYPE) == GPS_TYPE_DEFAULT);
+            setStringOpt(AppSettings.VERSION, "0.41");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1459,14 +1508,20 @@ public class AppSettings {
     private static final int C_AGPSURL_IDX = AppSettings.C_FILETIMEOFFSET_IDX
             + AppSettings.C_FILETIMEOFFSET_SIZE;
     private static final int C_AGPSURL_SIZE = 256;
-    private static final int C_NEXT_IDX = AppSettings.C_AGPSURL_IDX
+    private static final int C_IS_USE_PRECISE_GEOID_IDX = AppSettings.C_AGPSURL_IDX
             + AppSettings.C_AGPSURL_SIZE;
+    private static final int C_IS_USE_PRECISE_GEOID_SIZE = 1;
+    private static final int C_IS_FIRST_CONNECTION_TO_INIT_IDX = AppSettings.C_IS_USE_PRECISE_GEOID_IDX
+            + AppSettings.C_IS_USE_PRECISE_GEOID_SIZE;
+    private static final int C_IS_FIRST_CONNECTION_TO_INIT_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX
+            + AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
             + AppSettings.C_NEXT_SIZE;
-    
+
     public static int SIZE = C_NEW_NEXT_IDX;
 
     private static final int[][] paramsList =
@@ -1617,6 +1672,15 @@ public class AppSettings {
             { AppSettings.INT, AppSettings.FILETIMEOFFSETOLD,
                     AppSettings.C_FILETIMEOFFSETOLD_IDX,
                     AppSettings.C_FILETIMEOFFSETOLD_SIZE },
+            { AppSettings.STRING, AppSettings.AGPSURL,
+                    AppSettings.C_AGPSURL_IDX, AppSettings.C_AGPSURL_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_USE_PRECISE_GEOID,
+                    AppSettings.C_IS_USE_PRECISE_GEOID_IDX,
+                    AppSettings.C_IS_USE_PRECISE_GEOID_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_FIRST_CONNECTION_TO_INIT,
+                    AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX,
+                    AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE },
+
     // End of list
     };
 
