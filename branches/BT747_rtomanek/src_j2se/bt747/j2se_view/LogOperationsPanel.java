@@ -1685,7 +1685,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }// GEN-LAST:event_endDateActionPerformed
 
     private void btDownloadActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btDownloadActionPerformed
-        if (m.getIntOpt(Model.DOWNLOAD_DEVICE) == 0) {
+        if (m.getIntOpt(Model.DEVICE_PROTOCOL) == 0) {
             setDownloadMethod();
             c.startDefaultDownload();
         } else {
