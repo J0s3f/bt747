@@ -66,58 +66,39 @@ public final class CommonOut {
      * @param r
      * @return
      */
-    public final static String getLink(final GPSRecord r) {
+    public final static String getLink(final GPSRecord r,
+            final boolean isToLower) {
         final String vox = r.getVoxStr();
+        String result;
         if (vox == null || vox.length() == 0 || vox.charAt(0) == '/'
                 || vox.charAt(0) == '\\' || vox.charAt(0) == '.'
                 || vox.indexOf(':') >= 0) {
             // This is a root path or already a URL
-            return vox;
+            result = vox;
+            ;
         } else {
-            String result = "./" + vox;
+            result = "./" + vox;
             if (r.voxStr.startsWith("VOX")) {
                 result += ".wav";
             }
-            return result;
         }
+        if (isToLower) {
+            result = result.toLowerCase();
+        }
+        return result;
     }
 
     public final static void getHtml(final StringBuffer rec,
             final GPSRecord s, final GPSRecord activeFields,
             final GPSRecord selectedFields, final BT747Time t,
             final boolean recordNbrInLogs, final boolean imperial) {
-        rec.append("<table width=400>");
 
-        if (recordNbrInLogs && s.hasRecCount()) {
-            rec.append("<tr><td>"); // Table row and first column start
-            rec.append(I18N.i18n("IDX"));
-            rec.append(":</td><td>"); // Column split
-            rec.append(s.getRecCount());
-            rec.append("</td></tr>"); // Column end and end row.
-        }
-        if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
-            rec.append("<tr><td>"); // Table row and first column start
-            rec.append(I18N.i18n("TIME"));
-            rec.append(":</td><td>"); // Column split
-            rec.append(CommonOut.getDateTimeStr(t));
-            rec.append("</td></tr>"); // Column end and end row.
-        }
+        // Need lowercase ;-(.
+        final boolean convertToLower = true;
+        final String rcr = CommonOut.getRCRstr(s);
         WayPointStyle style = null;
-        if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
-            rec.append("<tr><td>"); // Table row and first column start
-            rec.append(I18N.i18n("RCR"));
-            rec.append(":</td><td>"); // Column split
-            final String rcr = CommonOut.getRCRstr(s);
-            rec.append(rcr);
-            style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
-
-            if (s.voxStr == null && style != null) {
-                rec.append(" <b>(");
-                rec.append(I18N.i18n(style.getSymbolText()));
-                rec.append(")</b>");
-            }
-            rec.append("</td></tr>"); // Column end and end row.
-        }
+        style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
+        rec.append("<table width=400>");
         if (s.voxStr != null) {
             rec.append("<tr><td span=2>"); // Table row and first column
             // start
@@ -133,17 +114,53 @@ public final class CommonOut {
                     rec.append("<br>");
                 }
             }
+            String vox;
+            if (convertToLower) {
+                vox = s.voxStr.toLowerCase();
+            } else {
+                vox = s.voxStr;
+            }
             rec.append("<a target='_new' href='");
-            rec.append(getLink(s));
+            rec.append(getLink(s, convertToLower));
             rec.append("'>");
             if (isPicture) {
                 rec.append("<img height=150 src='");
-                rec.append(s.voxStr);
+
+                rec.append(vox);
+
                 rec.append("' >");
             } else {
-                rec.append(I18N.i18n("Click here") + " (" + s.voxStr + ")");
+                rec.append(I18N.i18n("Click here") + " (" + vox + ")");
             }
             rec.append("</a>");
+            rec.append("</td></tr>"); // Column end and end row.
+        }
+
+        if (recordNbrInLogs && s.hasRecCount()) {
+            rec.append("<tr><td>"); // Table row and first column start
+            rec.append(I18N.i18n("IDX"));
+            rec.append(":</td><td>"); // Column split
+            rec.append(s.getRecCount());
+            rec.append("</td></tr>"); // Column end and end row.
+        }
+        if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
+            rec.append("<tr><td>"); // Table row and first column start
+            rec.append(I18N.i18n("TIME"));
+            rec.append(":</td><td>"); // Column split
+            rec.append(CommonOut.getDateTimeStr(t));
+            rec.append("</td></tr>"); // Column end and end row.
+        }
+        if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
+            rec.append("<tr><td>"); // Table row and first column start
+            rec.append(I18N.i18n("RCR"));
+            rec.append(":</td><td>"); // Column split
+            rec.append(rcr);
+
+            if (s.voxStr == null && style != null) {
+                rec.append(" <b>(");
+                rec.append(I18N.i18n(style.getSymbolText()));
+                rec.append(")</b>");
+            }
             rec.append("</td></tr>"); // Column end and end row.
         }
         // if(activeFields.utc!=0) {
