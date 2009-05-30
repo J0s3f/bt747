@@ -114,7 +114,7 @@ public class Controller implements ModelListener {
     }
 
     private final gps.mvc.Model getGpsOldC() {
-        return m.gpsOldC();
+        return m.gpsM();
     }
 
     /*
@@ -728,7 +728,7 @@ public class Controller implements ModelListener {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
         // DPL700 when appropriate.
         // Initialisation method and download start should change.
-        m.gpsOldC().getDPL700Controller().getDPL700Log(
+        m.gpsM().getDPL700Controller().getDPL700Log(
                 m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 

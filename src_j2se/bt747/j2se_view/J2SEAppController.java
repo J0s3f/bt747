@@ -58,6 +58,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.I18N;
+import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -89,33 +90,36 @@ public final class J2SEAppController extends J2SEController {
     public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
     private J2SEAppModel m;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
      */
     @Override
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         super.modelEvent(e);
-        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
-            if(!loggerNeedsFormatQuestionAsked
-                    && m.isLoggerNeedsFormat()) {
+        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+            if (!loggerNeedsFormatQuestionAsked && m.isLoggerNeedsFormat()) {
                 loggerNeedsFormatQuestionAsked = true;
                 askLoggerNeedsFormat();
             }
-        } if(e.getType() == ModelEvent.CONNECTED) {
+        }
+        if (e.getType() == ModelEvent.CONNECTED) {
             resetValuesAfterConnect();
         }
     }
-    
+
     private boolean loggerNeedsFormatQuestionAsked;
+
     private final void resetValuesAfterConnect() {
         loggerNeedsFormatQuestionAsked = false;
     }
 
     private void askLoggerNeedsFormat() {
         int choice;
-        
+
         choice = JOptionPane.showOptionDialog(rootFrame,
                 getString("LOGGER_NEEDS_FORMAT_TEXT"),
                 getString("LOGGER_NEEDS_FORMAT_TITLE"),
@@ -127,8 +131,6 @@ public final class J2SEAppController extends J2SEController {
         }
 
     }
-    
-
 
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/" + iconPath);
@@ -227,7 +229,6 @@ public final class J2SEAppController extends J2SEController {
         m = model;
         c = this; // Temporary solution until application controller methods
 
-        initAppSettings();
         m.init();
         // moved from lower level Controller.
         super.setModel(m);
@@ -587,8 +588,12 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Initialise the application settings.
+     * 
+     * Must be called before Model is instantiated. And preferably just after
+     * {@link JavaLibBridge} setup because it kind of should be part of the
+     * JavaLib implementation.
      */
-    private void initAppSettings() {
+    public final static void initAppSettings() {
         J2SEAppModel.setDefaultBaseDirPath(java.lang.System
                 .getProperty("user.home"));
 
@@ -603,7 +608,8 @@ public final class J2SEAppController extends J2SEController {
                 preferencesFile = new FileInputStream(CONFIG_FILE_NAME);
                 readLength = preferencesFile.available();
                 if (readLength >= 100) {
-                    final int arrSize = Math.max(AppSettings.SIZE, readLength);
+                    final int arrSize = Math
+                            .max(AppSettings.SIZE, readLength);
                     final byte[] appSettingsArray = new byte[arrSize];
 
                     preferencesFile.read(appSettingsArray, 0, readLength);
@@ -629,6 +635,13 @@ public final class J2SEAppController extends J2SEController {
      *      implementation of saveSettings
      */
     public final void saveSettings() {
+        saveAppSettings();
+    }
+
+    /**
+     * Saves the application's settings.
+     */
+    private static final void saveAppSettings() {
         File preferencesFile;
         try {
             final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
@@ -919,10 +932,11 @@ public final class J2SEAppController extends J2SEController {
      * @param parent
      * @param en
      */
-    public static final void enableComponentHierarchy(final Component parent, final boolean en) {
+    public static final void enableComponentHierarchy(final Component parent,
+            final boolean en) {
         Component[] l;
         if (parent instanceof JPanel) {
-            l = ((JPanel)parent).getComponents();
+            l = ((JPanel) parent).getComponents();
             for (final Component component : l) {
                 component.setEnabled(en);
                 if (component.getClass() == JPanel.class) {
