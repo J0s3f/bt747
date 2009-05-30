@@ -3,6 +3,9 @@
  */
 package gps.mvc.commands;
 
+import gps.connection.GPSrxtx;
+import gps.connection.NMEAWriter;
+
 /**
  * @author Mario De Weerd
  * 
@@ -10,14 +13,21 @@ package gps.mvc.commands;
  * the command.
  * 
  */
-public class GpsLinkNmeaCommand {
-    private final String nmeaValue;
+public class GpsLinkNmeaCommand implements GpsRxtxExecCommand {
+    private final String nmeaCmd;
     
-    GpsLinkNmeaCommand(final String nmeaString) {
-        nmeaValue = nmeaString;
+    public GpsLinkNmeaCommand(final String nmeaString) {
+        nmeaCmd = nmeaString;
     }
     
     public String getNmeaValue() {
-        return nmeaValue;
+        return nmeaCmd;
+    }
+
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsRxtxExecCommand#execute(gps.connection.GPSrxtx)
+     */
+    public void execute(final GPSrxtx context) {
+        NMEAWriter.sendPacket(context, nmeaCmd);
     }
 }

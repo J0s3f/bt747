@@ -26,4 +26,5 @@ public interface GpsRxtxExecCommand {
      *                A reference to the link on which this command operates.
      */
     public void execute(final GPSrxtx context);
+    
 }
