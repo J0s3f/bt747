@@ -443,7 +443,7 @@ public final class GPSGPXFile extends GPSFile {
                     ) {
                         if (isGPX1_0) {
                             rec.append("<url>");
-                            rec.append(CommonOut.getLink(r));
+                            rec.append(CommonOut.getLink(r, false));
                             rec.append("</url><urlname>");
                             rec.append(r.getVoxStr());
                             rec.append("</urlname>\r\n");
@@ -451,7 +451,7 @@ public final class GPSGPXFile extends GPSFile {
 
                         {
                             rec.append("<link href=\"");
-                            rec.append(CommonOut.getLink(r));
+                            rec.append(CommonOut.getLink(r, false));
                             rec.append("\"><text>");
                             rec.append(r.getVoxStr());
                             rec.append("</text></link>\r\n");

@@ -18,13 +18,12 @@ import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
+import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.TracksAndWayPoints;
-import gps.log.in.BT747LogConvert;
-import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.MultiLogConvert;
@@ -134,6 +133,13 @@ public class Controller implements ModelListener {
         case ModelEvent.AGPS_UPLOAD_DONE:
             setMtkDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
             break;
+        case ModelEvent.SETTING_CHANGE: {
+            final int setting = JavaLibBridge.toInt((String) e.getArg());
+            switch (setting) {
+            case Model.DEVICE_PROTOCOL:
+                getGpsC().setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
+            }
+        }
         }
     }
 
@@ -833,7 +839,8 @@ public class Controller implements ModelListener {
      */
     public final void connectGPS() {
         closeGPS();
-        Generic.debug("Freeport is "+m.getStringOpt(AppSettings.FREETEXTPORT));
+        Generic.debug("Freeport is "
+                + m.getStringOpt(AppSettings.FREETEXTPORT));
         if (m.getStringOpt(AppSettings.FREETEXTPORT).length() != 0) {
             openFreeTextPort(m.getStringOpt(AppSettings.FREETEXTPORT));
         } else {

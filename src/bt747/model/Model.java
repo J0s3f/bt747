@@ -187,7 +187,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         gpsRxTx = new GPSrxtx();
 
         gpsM = new gps.mvc.Model(gpsRxTx);
-        gpsC = gps.mvc.Controller.getInstance(gpsM);
+        gpsC = gps.mvc.Controller.getInstance(gpsM, getIntOpt(AppSettings.DEVICE_PROTOCOL));
         mtkModel = gpsC.getModel().getMtkModel();
         gpsC.getModel().addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
