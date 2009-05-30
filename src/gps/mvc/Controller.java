@@ -72,6 +72,8 @@ public class Controller implements BT747Thread {
             /** Previous controller is still valid. */
             return;
         }
+        
+        this.protocol = newProtocol;
         switch (protocol) {
         default:
         case PROTOCOL_MTK:
