@@ -269,7 +269,7 @@ public class AppSettings {
     public final static int GPX_LINK_INFO = 49;
     public final static int IS_GPX_1_1 = 50;
     /** Type of device to download from - used in GUI */
-    public final static int DOWNLOAD_DEVICE = 51;
+    public final static int DEVICE_PROTOCOL = 51;
     /**
      * The previous field for the filetime offset.
      */
@@ -481,7 +481,7 @@ public class AppSettings {
             setBooleanOpt(AppSettings.IS_GPX_1_1, false);
             /* fall through */
         case 36:
-            setIntOpt(AppSettings.DOWNLOAD_DEVICE, 0);
+            setIntOpt(AppSettings.DEVICE_PROTOCOL, 0);
             /* fall through */
         case 37:
             // New field is coded on 4 byte (8 chars)
@@ -1666,7 +1666,7 @@ public class AppSettings {
             { AppSettings.BOOL, AppSettings.IS_GPX_1_1,
                     AppSettings.C_IS_GPX_1_1_IDX,
                     AppSettings.C_IS_GPX_1_1_SIZE },
-            { AppSettings.INT, AppSettings.DOWNLOAD_DEVICE,
+            { AppSettings.INT, AppSettings.DEVICE_PROTOCOL,
                     AppSettings.C_DOWNLOAD_DEVICE_IDX,
                     AppSettings.C_DOWNLOAD_DEVICE_SIZE },
             { AppSettings.INT, AppSettings.FILETIMEOFFSETOLD,
