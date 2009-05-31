@@ -21,6 +21,7 @@ import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import gps.ProtocolConstants;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -41,20 +42,33 @@ import bt747.sys.interfaces.BT747HashSet;
  * 
  */
 /* Final for the moment */
-public class Model {
+public class Model implements ProtocolConstants {
     private final GPSLinkHandler handler;
     // For the moment pointing to 'this' for the MtkModel.
     // After refactoring this should be effectively fully delegated.
     private final MtkModel mtkModel;
 
     /**
-     * Initialiser
+     * Initialiser.
      * 
-     * 
+     * Will also create the model(s) in the lower layers.
      */
-    public Model(final GPSrxtx gpsRxTx) {
+    public Model(final GPSrxtx gpsRxTx, final int protocol) {
         handler = new GPSLinkHandler();
-        mtkModel = new MtkModel(this, handler);
+
+        switch (protocol) {
+        case PROTOCOL_MTK:
+        case PROTOCOL_SIRFIII:
+            mtkModel = new MtkModel(this, handler);
+            break;
+        case PROTOCOL_HOLUX_PHLX:
+            mtkModel = new HoluxModel(this, handler);
+            break;
+        default:
+            // TODO: This should probably be handled through an exception
+            mtkModel = null;
+            break;
+        }
         setGPSRxtx(gpsRxTx);
     }
 
@@ -290,7 +304,6 @@ public class Model {
         return handler.getOutStandingCmdsCount();
     }
 
-
     protected final int timeSinceLastStamp() {
         return handler.timeSinceLastStamp();
     }
@@ -302,8 +315,7 @@ public class Model {
     protected final boolean isConnected() {
         return handler.isConnected();
     }
-    
-    
+
     /**
      * Get the start address for the log download. To be used for the download
      * progress bar.
