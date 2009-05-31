@@ -102,7 +102,7 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
-                c.setMtkDataNeeded(MtkModel.DATA_HOLUX_NAME);
+                c.setMtkDataNeeded(MtkModel.DATA_DEVICE_NAME);
                 c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
                 event.consumed = true;
             } else if (event.target == btSet) {

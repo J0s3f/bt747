@@ -117,7 +117,14 @@ public class MtkController {
     public final static int CMD_AUTOLOG_OFF = 6;
     public final static int CMD_AUTOLOG_ON = 7;
 
-    public final void cmd(final int cmd) {
+    /**
+     * Perform a command.
+     * 
+     * @param cmd
+     *                Command identification.
+     * @return true is command is supported.
+     */
+    public final boolean cmd(final int cmd) {
         String nmeaCmd = null;
         switch (cmd) {
         case CMD_HOTSTART:
@@ -155,14 +162,15 @@ public class MtkController {
                     + "," + BT747Constants.PMTK_LOG_ENABLE;
             break;
         default:
-            break;
+            return false;
         }
         if (nmeaCmd != null) {
             sendCmd(nmeaCmd);
         }
+        return true;
     }
 
-    protected void reqData(final int dataType) {
+    protected boolean reqData(final int dataType) {
         String nmeaCmd = null;
         switch (dataType) {
         case MtkModel.DATA_FLASH_TYPE:
@@ -211,7 +219,7 @@ public class MtkController {
             // 2 is the size
             // Required to know if log is in overwrite mode.
             mtkLogHandler.readLog(6, 2);
-            return;
+            return true;
         case MtkModel.DATA_LOG_TIME_INTERVAL:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
@@ -234,7 +242,7 @@ public class MtkController {
                     + BT747Constants.PMTK_LOG_Q + ","
                     + BT747Constants.PMTK_LOG_FLASH_STAT_STR;
             doSendCmd(nmeaCmd);
-            return;
+            return true;
         case MtkModel.DATA_LOG_FLASH_SECTOR_STATUS:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
@@ -284,7 +292,7 @@ public class MtkController {
             nmeaCmd = MtkController.PMTK
                     + BT747Constants.PMTK_API_GET_USER_OPTION_STR;
             break;
-        case MtkModel.DATA_HOLUX_NAME:
+        case MtkModel.DATA_DEVICE_NAME:
             nmeaCmd = BT747Constants.HOLUX_MAIN_CMD
                     + BT747Constants.HOLUX_API_Q_NAME;
             break;
@@ -293,13 +301,83 @@ public class MtkController {
         }
         if (nmeaCmd != null) {
             sendCmd(nmeaCmd);
+            return true;
         } else {
             Generic.debug("Serious: (in MtkController) Unknown data type #"
                     + dataType);
+            return false;
         }
     }
 
-    public final void setLogTimeInterval(final int value) {
+    /**
+     * Takes int value in 0.1 seconds.
+     */
+    public final static int CMD_SET_LOG_TIME_INTERVAL = 8;
+    /**
+     * Takes int value in 1 meters.
+     */
+    public final static int CMD_SET_LOG_DISTANCE_INTERVAL = 9;
+    /**
+     * Takes int value in 0.1 km/h.
+     */
+    public final static int CMD_SET_LOG_SPEED_INTERVAL = 10;
+    /**
+     * Takes String value for the device name.
+     */
+    public final static int CMD_SET_DEVICE_NAME = 11;
+
+    /**
+     * Check if a command is supported.
+     * 
+     * @param cmd
+     *                Command identification.
+     * @return true is command is supported.
+     */
+    public boolean isSupportedCmd(final int cmd) {
+        switch (cmd) {
+        case CMD_SET_LOG_TIME_INTERVAL:
+        case CMD_SET_LOG_DISTANCE_INTERVAL:
+        case CMD_SET_LOG_SPEED_INTERVAL:
+        case CMD_SET_DEVICE_NAME:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * Perform a command.
+     * 
+     * @param cmd
+     *                Command identification.
+     * @return true is command is supported.
+     */
+    public boolean cmd(final int cmd, final CmdParam param) {
+        if (param == null) {
+            return cmd(cmd);
+        } else {
+            switch (cmd) {
+            case CMD_SET_LOG_TIME_INTERVAL:
+                setLogTimeInterval(param.getInt());
+                break;
+            case CMD_SET_LOG_DISTANCE_INTERVAL:
+                setLogDistanceInterval(param.getInt());
+                break;
+            case CMD_SET_LOG_SPEED_INTERVAL:
+                setLogSpeedInterval(param.getInt());
+                break;
+            case CMD_SET_DEVICE_NAME:
+                setHoluxName(param.getString());
+                break;
+            default:
+                Generic.debug("Unsupported cmd in " + this);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private final void setLogTimeInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -309,7 +387,7 @@ public class MtkController {
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
 
-    public final void setLogDistanceInterval(final int value) {
+    private final void setLogDistanceInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -324,7 +402,7 @@ public class MtkController {
                 + z_value);
     }
 
-    public final void setLogSpeedInterval(final int value) {
+    private final void setLogSpeedInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -399,10 +477,10 @@ public class MtkController {
      * @param holuxName
      *                The holuxName to set.
      */
-    public void setHoluxName(final String holuxName) {
+    private void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
-        reqData(MtkModel.DATA_HOLUX_NAME);
+        reqData(MtkModel.DATA_DEVICE_NAME);
     }
 
     /**
