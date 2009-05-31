@@ -292,7 +292,7 @@ public class MtkController {
             nmeaCmd = MtkController.PMTK
                     + BT747Constants.PMTK_API_GET_USER_OPTION_STR;
             break;
-        case MtkModel.DATA_HOLUX_NAME:
+        case MtkModel.DATA_DEVICE_NAME:
             nmeaCmd = BT747Constants.HOLUX_MAIN_CMD
                     + BT747Constants.HOLUX_API_Q_NAME;
             break;
@@ -361,13 +361,14 @@ public class MtkController {
                 setLogTimeInterval(param.getInt());
                 break;
             case CMD_SET_LOG_DISTANCE_INTERVAL:
-                setLogTimeInterval(param.getInt());
+                setLogDistanceInterval(param.getInt());
                 break;
             case CMD_SET_LOG_SPEED_INTERVAL:
                 setLogSpeedInterval(param.getInt());
                 break;
             case CMD_SET_DEVICE_NAME:
                 setHoluxName(param.getString());
+                break;
             default:
                 Generic.debug("Unsupported cmd in " + this);
                 return false;
@@ -376,7 +377,7 @@ public class MtkController {
         return true;
     }
 
-    public final void setLogTimeInterval(final int value) {
+    private final void setLogTimeInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -386,7 +387,7 @@ public class MtkController {
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
 
-    public final void setLogDistanceInterval(final int value) {
+    private final void setLogDistanceInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -401,7 +402,7 @@ public class MtkController {
                 + z_value);
     }
 
-    public final void setLogSpeedInterval(final int value) {
+    private final void setLogSpeedInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -476,10 +477,10 @@ public class MtkController {
      * @param holuxName
      *                The holuxName to set.
      */
-    public void setHoluxName(final String holuxName) {
+    private void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
                 + BT747Constants.HOLUX_API_SET_NAME + "," + holuxName);
-        reqData(MtkModel.DATA_HOLUX_NAME);
+        reqData(MtkModel.DATA_DEVICE_NAME);
     }
 
     /**
