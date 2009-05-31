@@ -39,7 +39,7 @@ public class HoluxController extends MtkController {
 	 * For most cases delegates to a existing PMTK command while 
 	 * new functionality will be gradually implemented via PHLX commands. 
 	 */
-    protected void reqData(final int dataType) {
+    protected boolean reqData(final int dataType) {
        switch (dataType) {
         	case MtkModel.DATA_HOLUX_NAME:
         		sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
@@ -47,9 +47,9 @@ public class HoluxController extends MtkController {
         		break;
         		
         	default:
-        		super.reqData(dataType);
-        		return;
+        		return super.reqData(dataType);
         }
+       return true;
         /*
         switch (dataType) {
         case MtkModel.DATA_FLASH_TYPE:
