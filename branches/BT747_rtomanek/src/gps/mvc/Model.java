@@ -49,26 +49,26 @@ public class Model implements ProtocolConstants {
     private final MtkModel mtkModel;
 
     /**
-     * Initialiser
+     * Initialiser.
      * 
-     * 
+     * Will also create the model(s) in the lower layers.
      */
-    public Model(final GPSrxtx gpsRxTx, int protocol) {
+    public Model(final GPSrxtx gpsRxTx, final int protocol) {
         handler = new GPSLinkHandler();
 
         switch (protocol) {
-        	case PROTOCOL_MTK:
-        	case PROTOCOL_SIRFIII:
-        		mtkModel = new MtkModel(this, handler);
-        		break;
-        	case PROTOCOL_HOLUX_PHLX:
-        		mtkModel = new HoluxModel(this, handler);
-        		break;
-        	default:
-        		// TODO: This should probably be handled through an exception
-        		mtkModel = null;
-        		break;
-        }        
+        case PROTOCOL_MTK:
+        case PROTOCOL_SIRFIII:
+            mtkModel = new MtkModel(this, handler);
+            break;
+        case PROTOCOL_HOLUX_PHLX:
+            mtkModel = new HoluxModel(this, handler);
+            break;
+        default:
+            // TODO: This should probably be handled through an exception
+            mtkModel = null;
+            break;
+        }
         setGPSRxtx(gpsRxTx);
     }
 
@@ -304,7 +304,6 @@ public class Model implements ProtocolConstants {
         return handler.getOutStandingCmdsCount();
     }
 
-
     protected final int timeSinceLastStamp() {
         return handler.timeSinceLastStamp();
     }
@@ -316,8 +315,7 @@ public class Model implements ProtocolConstants {
     protected final boolean isConnected() {
         return handler.isConnected();
     }
-    
-    
+
     /**
      * Get the start address for the log download. To be used for the download
      * progress bar.
