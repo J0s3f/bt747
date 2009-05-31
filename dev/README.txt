@@ -2,9 +2,9 @@ This folder contains some script and files that are or were used during developm
 
 INFORMATION
 
-Further down you can find a short description of file in this directory.
 This is partially an attic with stuff that were tried but not fully successful.
 Other stuff will help you set up Eclipse.
+For a description of files in this directory, see FILELIST.txt.
 
 SETTING UP BT747 FOR DEVELOPMENT
 
@@ -148,7 +148,7 @@ A good start in the code is probably a read of BT747cmd.java.
 This single file constitutes the command line view.  You'll be able
 to see that the Controller is used to initiate the work and that the
 Model is used to get the data.  There are several cases where the
-Controller delegates directly to the Model.  I prefered to follow the MVC
+Controller delegates directly to the Model.  I preferred to follow the MVC
 paradigm rather than calling the Model to set values.  It allows future
 flexibility for extended controller operations (like checks) when
 values are changed.
@@ -166,49 +166,3 @@ proved to be useful at work where mysteriously enough recent self-learning
 usually becomes useful some months later.    
 
 Have fun with BT747 too!
-
-FILELIST
-
-bt747.jnc
-  File for use with Java Native Compiler.
-  Java Native Compiler can build an executable and binaries for windows without
-  needing a java distribution in the end.
-  
-change
-  Script used to change the order of some keywords in the source files.
-  
-README.txt
-  This file
-  
-
-debug.bat
-debugn.bat
-  Used the 'Omniscient Debugger' to help debug the application.
-  This was used a few times in the beginning.
-
-gcj_comp.bat
-  Script trying to compile the application using gcj
-  
-compile_with_swt.sh
-compile_swt.sh
-  Scripts 'trying' to compile with the swing awt to build a native
-  executable.
-  
-prof.bat
-  Script to profile the application.
-  
-run.bat
-  Script to run the application with debug.
-  
-build_small.xml
-  Reference file extracted from SuperwabaSDK - intention to use this to make
-  the standard build file more generic.
-  
-package.bat
-  File used to build actual packaging script in root directory.
-  
-*.launch
-  Files that you can import in eclipse as launch configurations.
-  
-BT747codestyle.xml
-  Codestyle for BT747 - you can import that in eclipse.
