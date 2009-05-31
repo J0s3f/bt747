@@ -47,11 +47,13 @@ public class IBlue747Model {
         IBlue747Model.modelPort = port;
     }
 
-    enum Model {
+    enum DeviceModelType {
         ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C
     };
 
-    private GPSrxtx gpsRxTx = null;
+    public GPSrxtx gpsRxTx = null;
+
+    private HlxController hlxController = new HlxController(this);
 
     private byte[] logData = null;
     private static final String logFile = "c:/bt747/Test.bin";
@@ -75,7 +77,7 @@ public class IBlue747Model {
      * 
      */
     public IBlue747Model() {
-        setupModel(Model.HOLUXM1000C);
+        setupModel(DeviceModelType.HOLUXM1000C);
     }
 
     /**
@@ -211,29 +213,29 @@ public class IBlue747Model {
         }
     }
 
-    private static class MtkDataModel {
+    public static class MtkDataModel {
         protected int logStatus = 0x104;
         private String coreVersion = "";
         /**
          * The curent communication mode of the device.
          */
-        private DeviceMode deviceMode = DeviceMode.DEVICE_MODE_NMEA;
-        private int flashCode = 0xC22015C2;
+        public DeviceMode deviceMode = DeviceMode.DEVICE_MODE_NMEA;
+        public int flashCode = 0xC22015C2;
         /**
          * The logger's format.
          */
-        int logFormat = 0x000215FF;
-        int logPoints = 0x231;
-        int memUsed = 0x00019D0;
-        Model model = Model.QST1300;
-        String modelNumber = "";
-        String modelRef = null;
-        private String swVersion = "1.0";
-        String mainVersion = null;
-        String releaseNumber = null;
+        public int logFormat = 0x000215FF;
+        public int logPoints = 0x231;
+        public int memUsed = 0x00019D0;
+        public DeviceModelType modelType = DeviceModelType.QST1300;
+        public String modelNumber = "";
+        public String modelRef = null;
+        public String swVersion = "1.0";
+        public String mainVersion = null;
+        public String releaseNumber = null;
     }
 
-    private final MtkDataModel mtkData = new MtkDataModel();
+    public final MtkDataModel mtkData = new MtkDataModel();
 
     public void replyMTK_Ack(final String[] p_nmea) {
         switch (mtkData.deviceMode) {
@@ -549,7 +551,11 @@ public class IBlue747Model {
             default:
                 break;
             }
-        } // End if
+        } else if (hlxController.handles(p_nmea[0])) {
+            // Delegate to holux controller. The MtkModel will respond too so
+            // we do not care about the result.
+            hlxController.analyseNMEA(p_nmea); // End if
+        }
         if (response != null) {
             if (response instanceof String) {
                 final String resp = (String) response;
@@ -563,13 +569,13 @@ public class IBlue747Model {
             acknowledge.execute(gpsRxTx);
         }
         if (z_Result < 0) {
-            Generic.debug("No response from model to " + nmea.toString());
+            Generic.debug("No response from MTK model to " + nmea.toString());
         }
         return z_Result;
     } // End method
 
-    private final void setupModel(final Model model) {
-        mtkData.model = model;
+    private final void setupModel(final DeviceModelType modelType) {
+        mtkData.modelType = modelType;
 
         /* Default values */
         mtkData.flashCode = 0xC22015C2;
@@ -581,7 +587,7 @@ public class IBlue747Model {
         mtkData.swVersion = "";
 
         /* Specific values */
-        switch (model) {//
+        switch (modelType) {//
         case IBLUE747:
             mtkData.coreVersion = "M-core_1.8";
             mtkData.modelNumber = "0011";
@@ -643,7 +649,7 @@ public class IBlue747Model {
             break;
         }
 
-        switch (model) {
+        switch (modelType) {
         case IBLUE747:
         case IBLUE821:
         case IBLUE747PLUS:
@@ -657,7 +663,7 @@ public class IBlue747Model {
         }
     }
 
-    private final void sendPacket(final String p) {
+    public final void sendPacket(final String p) {
         System.out.println(p);
         NMEAWriter.sendPacket(gpsRxTx, p);
     }

@@ -37,7 +37,8 @@ public class Controller implements BT747Thread {
     public final static int PROTOCOL_MTK = 0;
     public final static int PROTOCOL_SIRFIII = 1;
     public final static int PROTOCOL_HOLUX_PHLX = 2;
-    /** @SuppressWarnings("unused") */
+    
+    /** The current protocol in use. */
     private int protocol;
 
     private Controller(final Model model, final int protocol) {
@@ -63,7 +64,7 @@ public class Controller implements BT747Thread {
         if (protocol != newProtocol && mtkC != null) {
             /* Need only change if protocol changed. */
             if (mtkM.getHandler().isConnected()) {
-                // TODO: Revisit to review code.
+                // TODO: Revisit to review code leading to this long path:
                 mtkM.getHandler().getGPSRxtx().closePort();
             }
             mtkC = null;
@@ -72,8 +73,8 @@ public class Controller implements BT747Thread {
             /** Previous controller is still valid. */
             return;
         }
+        protocol = newProtocol;
         
-        this.protocol = newProtocol;
         switch (protocol) {
         default:
         case PROTOCOL_MTK:
