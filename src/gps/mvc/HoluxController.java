@@ -3,6 +3,8 @@
  */
 package gps.mvc;
 
+import bt747.sys.Generic;
+import gps.BT747Constants;
 import gps.HoluxConstants;
 
 /**
@@ -20,6 +22,11 @@ public class HoluxController extends MtkController {
 		// TODO Auto-generated constructor stub
 	}
 
+    protected void reqData(final int dataType) {
+    	super.reqData(dataType);
+    }
+	
+	
 	/**
 	 * Sets name of the device.
 	 * 
