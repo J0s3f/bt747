@@ -94,10 +94,18 @@ public class Model implements ProtocolConstants {
         handler.setGPSRxtx(gpsRxTx);
     }
 
+    /**
+     * Indicates if statistics regarding the link should be fetched.
+     * No actual implementation currently.
+     */
     private boolean GPS_STATS = false; // (!Settings.onDevice);
 
     public final void setStats(final boolean stats) {
         GPS_STATS = stats;
+    }
+    
+    public final boolean getStats() {
+        return GPS_STATS;
     }
 
     /**
@@ -172,7 +180,7 @@ public class Model implements ProtocolConstants {
     }
 
     public final int analyseNMEA(final String[] sNmea) {
-        final int cmd;
+        //final int cmd;
         int result;
         result = 0;
         try {
@@ -333,9 +341,9 @@ public class Model implements ProtocolConstants {
      * @return the endAddr
      */
     public final int getEndAddr() {
-        return mtkModel.getMtkLogHandler().getEndAddr();
+        return mtkModel.getEndAddr();
     }
-
+    
     /**
      * Get 'download ongoing' status.
      * 
@@ -343,7 +351,7 @@ public class Model implements ProtocolConstants {
      *         the download progress bar.
      */
     public final boolean isLogDownloadOnGoing() {
-        return mtkModel.getMtkLogHandler().isLogDownloadOnGoing();
+        return mtkModel.isLogDownloadOngoing();
     }
 
     /**
@@ -353,7 +361,7 @@ public class Model implements ProtocolConstants {
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {
-        return mtkModel.getMtkLogHandler().getNextReadAddr();
+        return mtkModel.getNextReadAddr();
     }
 
 }
