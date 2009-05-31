@@ -16,11 +16,13 @@ import bt747.sys.interfaces.BT747Thread;
  * @author Mario
  * 
  */
-public class Controller implements BT747Thread, ProtocolConstants {
+public class Controller implements BT747Thread, ProtocolConstants,
+        DeviceControllerIF {
 
     private final Model gpsM;
     private final MtkModel mtkM;
-    private MtkController mtkC;
+    // private MtkController mtkC;
+    private ProtectedDevControllerIF mtkC;
 
     private final GPSLinkHandler handler;
 
@@ -34,7 +36,7 @@ public class Controller implements BT747Thread, ProtocolConstants {
             final int protocol) {
         return new Controller(model, protocol);
     }
-    
+
     /** The current protocol in use. */
     private int protocol = PROTOCOL_INVALID;
 
@@ -71,7 +73,7 @@ public class Controller implements BT747Thread, ProtocolConstants {
             return;
         }
         protocol = newProtocol;
-        
+
         switch (protocol) {
         default:
         case PROTOCOL_MTK:
@@ -89,8 +91,13 @@ public class Controller implements BT747Thread, ProtocolConstants {
         return gpsM;
     }
 
+    /**
+     * TODO: Should no longer exist after refactoring.
+     * 
+     * @return
+     */
     public final MtkController getMtkController() {
-        return mtkC;
+        return (MtkController) mtkC;
     }
 
     private boolean eraseRequested;
@@ -169,7 +176,7 @@ public class Controller implements BT747Thread, ProtocolConstants {
      */
     public final void stopErase() {
         eraseRequested = false;
-        mtkC.getMtkLogHandler().stopErase();
+        mtkC.cmd(MtkController.CMD_STOP_WAITING_FOR_ERASE);
     }
 
     /**
@@ -233,7 +240,7 @@ public class Controller implements BT747Thread, ProtocolConstants {
             nextRun = timeStamp + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
-                mtkC.getMtkLogHandler().notifyRun();
+                mtkC.notifyRun();
                 {
                     // local value
                     final DeviceOperationHandlerIF h = operationHandler;
@@ -265,17 +272,17 @@ public class Controller implements BT747Thread, ProtocolConstants {
                 } while ((loopsToGo-- > 0));
                 if ((nextAvailableRun < timeStamp)
                         && (handler.getOutStandingCmdsCount() == 0)
-                        && !mtkC.getMtkLogHandler().isLogDownloadOnGoing()) {
+                        && !mtkM.isLogDownloadOngoing()) {
                     if (eraseRequested) {
                         eraseRequested = false; // Erase request handled
-                        mtkC.getMtkLogHandler().eraseLog();
+                        mtkC.cmd(MtkController.CMD_ERASE_LOG);
                     }
                     nextAvailableRun = nextRun + 300;
                     checkNextAvailable();
                 }
             } else {
                 Generic.removeThread(this);
-                mtkC.getMtkLogHandler().notifyDisconnected();
+                mtkC.notifyDisconnected();
             }
         }
     }
@@ -296,6 +303,33 @@ public class Controller implements BT747Thread, ProtocolConstants {
      */
     public final void stopped() {
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.mvc.DeviceControllerIF#cmd(int)
+     */
+    public final boolean cmd(int cmd) {
+        return mtkC.cmd(cmd);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.mvc.DeviceControllerIF#cmd(int, gps.mvc.CmdParam)
+     */
+    public final boolean cmd(int cmd, CmdParam param) {
+        return mtkC.cmd(cmd, param);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.mvc.DeviceControllerIF#isSupportedCmd(int)
+     */
+    public final boolean isSupportedCmd(int cmd) {
+        return mtkC.isSupportedCmd(cmd);
     }
 
 }

@@ -153,6 +153,7 @@ public class Controller implements ModelListener {
     }
 
     private final MtkController mtkC() {
+    //private final DeviceControllerIF gpsC() {
         return getGpsC().getMtkController();
     }
 

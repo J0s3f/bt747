@@ -22,7 +22,7 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  * @author Mario De Weerd
  * 
  */
-public class MtkController {
+public class MtkController implements ProtectedDevControllerIF {
     private MtkModel m;
     protected final MTKLogDownloadHandler mtkLogHandler;
 
@@ -170,7 +170,12 @@ public class MtkController {
         return true;
     }
 
-    protected boolean reqData(final int dataType) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.mvc.ProtectedDevControllerIF#reqData(int)
+     */
+    public boolean reqData(final int dataType) {
         String nmeaCmd = null;
         switch (dataType) {
         case MtkModel.DATA_FLASH_TYPE:
@@ -327,6 +332,16 @@ public class MtkController {
     public final static int CMD_SET_DEVICE_NAME = 11;
 
     /**
+     * Stop waiting for the erase to finish.
+     */
+    public final static int CMD_STOP_WAITING_FOR_ERASE = 12;
+    
+    /**
+     * Erase the log.
+     */
+    public final static int CMD_ERASE_LOG = 13;
+
+    /**
      * Check if a command is supported.
      * 
      * @param cmd
@@ -339,6 +354,8 @@ public class MtkController {
         case CMD_SET_LOG_DISTANCE_INTERVAL:
         case CMD_SET_LOG_SPEED_INTERVAL:
         case CMD_SET_DEVICE_NAME:
+        case CMD_STOP_WAITING_FOR_ERASE:
+        case CMD_ERASE_LOG:
             return true;
         default:
             return false;
@@ -368,6 +385,12 @@ public class MtkController {
                 break;
             case CMD_SET_DEVICE_NAME:
                 setHoluxName(param.getString());
+                break;
+            case CMD_STOP_WAITING_FOR_ERASE:
+                mtkLogHandler.stopErase();
+                break;
+            case CMD_ERASE_LOG:
+                mtkLogHandler.eraseLog();
                 break;
             default:
                 Generic.debug("Unsupported cmd in " + this);
@@ -604,11 +627,25 @@ public class MtkController {
         mtkLogHandler.cancelGetLog();
     }
 
-    // ///////////////////////////////////////////////////////////////
-    // To be removed after refactoring.
-
-    protected final MTKLogDownloadHandler getMtkLogHandler() {
-        return mtkLogHandler;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.mvc.ProtectedDevControllerIF#notifyRun()
+     */
+    public void notifyRun() {
+        if (mtkLogHandler != null) {
+            mtkLogHandler.notifyRun();
+        }
+    }
+    
+    /**
+     * The environment indicates a disconnect happened.
+     */
+    public void notifyDisconnected() {
+        if (mtkLogHandler!=null) {
+            mtkLogHandler.notifyDisconnected();
+        }
+        
     }
 
 }
