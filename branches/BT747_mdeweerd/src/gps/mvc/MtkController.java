@@ -162,7 +162,7 @@ public class MtkController {
         }
     }
 
-    protected final void reqData(final int dataType) {
+    protected void reqData(final int dataType) {
         String nmeaCmd = null;
         switch (dataType) {
         case MtkModel.DATA_FLASH_TYPE:
