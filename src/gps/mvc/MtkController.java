@@ -24,7 +24,7 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  */
 public class MtkController implements ProtectedDevControllerIF {
     private MtkModel m;
-    protected final MTKLogDownloadHandler mtkLogHandler;
+    private final MTKLogDownloadHandler mtkLogHandler;
 
     /** Default prefix to MTK command. */
     protected static final String PMTK = "PMTK";
@@ -118,6 +118,63 @@ public class MtkController implements ProtectedDevControllerIF {
     public final static int CMD_AUTOLOG_ON = 7;
 
     /**
+     * Takes int value in 0.1 seconds.
+     */
+    public final static int CMD_SET_LOG_TIME_INTERVAL = 8;
+    /**
+     * Takes int value in 1 meters.
+     */
+    public final static int CMD_SET_LOG_DISTANCE_INTERVAL = 9;
+    /**
+     * Takes int value in 0.1 km/h.
+     */
+    public final static int CMD_SET_LOG_SPEED_INTERVAL = 10;
+    /**
+     * Takes String value for the device name.
+     */
+    public final static int CMD_SET_DEVICE_NAME = 11;
+
+    /**
+     * Stop waiting for the erase to finish.
+     */
+    public final static int CMD_STOP_WAITING_FOR_ERASE = 12;
+
+    /**
+     * Erase the log.
+     */
+    public final static int CMD_ERASE_LOG = 13;
+
+    /**
+     * Set the GPS fix interval (1Hz fix/5Hz fix/...). Requires integer
+     * argument expressed in ms.
+     */
+    public static final int CMD_SET_GPS_FIX_INTERVAL = 14;
+    /**
+     * Sets overwrite or stop mode for the log. Requires boolean argument
+     * indicating overwrite.
+     */
+    public static final int CMD_SET_LOG_OVERWRITE = 15;
+    /**
+     * Enables the use of the test SBAS sats. Requires boolean argument
+     * indicating enable.
+     */
+    public static final int CMD_SET_SBAS_TEST_ENABLED = 16;
+    /**
+     * Enables the use of the SBAS sats. Requires boolean argument indicating
+     * enable.
+     */
+    public static final int CMD_SET_SBAS_ENABLED = 17;
+    /**
+     * Enables internal power saving mode. Requires boolean argument
+     * indicating enable.
+     */
+    public static final int CMD_SET_POWERSAVE_ENABLED = 18;
+    /**
+     * Cancel downloading the log.
+     */
+    public final static int CMD_CANCEL_GETLOG = 19;
+
+    /**
      * Perform a command.
      * 
      * @param cmd
@@ -160,6 +217,15 @@ public class MtkController implements ProtectedDevControllerIF {
         case CMD_AUTOLOG_ON:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG_STR
                     + "," + BT747Constants.PMTK_LOG_ENABLE;
+            break;
+        case CMD_STOP_WAITING_FOR_ERASE:
+            mtkLogHandler.stopErase();
+            break;
+        case CMD_ERASE_LOG:
+            mtkLogHandler.eraseLog();
+            break;
+        case CMD_CANCEL_GETLOG:
+            mtkLogHandler.cancelGetLog();
             break;
         default:
             return false;
@@ -315,33 +381,6 @@ public class MtkController implements ProtectedDevControllerIF {
     }
 
     /**
-     * Takes int value in 0.1 seconds.
-     */
-    public final static int CMD_SET_LOG_TIME_INTERVAL = 8;
-    /**
-     * Takes int value in 1 meters.
-     */
-    public final static int CMD_SET_LOG_DISTANCE_INTERVAL = 9;
-    /**
-     * Takes int value in 0.1 km/h.
-     */
-    public final static int CMD_SET_LOG_SPEED_INTERVAL = 10;
-    /**
-     * Takes String value for the device name.
-     */
-    public final static int CMD_SET_DEVICE_NAME = 11;
-
-    /**
-     * Stop waiting for the erase to finish.
-     */
-    public final static int CMD_STOP_WAITING_FOR_ERASE = 12;
-    
-    /**
-     * Erase the log.
-     */
-    public final static int CMD_ERASE_LOG = 13;
-
-    /**
      * Check if a command is supported.
      * 
      * @param cmd
@@ -350,12 +389,25 @@ public class MtkController implements ProtectedDevControllerIF {
      */
     public boolean isSupportedCmd(final int cmd) {
         switch (cmd) {
+        case CMD_HOTSTART:
+        case CMD_WARMSTART:
+        case CMD_COLDSTART:
+        case CMD_FULLCOLDSTART:
+        case CMD_STARTLOG:
+        case CMD_STOPLOG:
+        case CMD_AUTOLOG_OFF:
+        case CMD_AUTOLOG_ON:
         case CMD_SET_LOG_TIME_INTERVAL:
         case CMD_SET_LOG_DISTANCE_INTERVAL:
         case CMD_SET_LOG_SPEED_INTERVAL:
         case CMD_SET_DEVICE_NAME:
         case CMD_STOP_WAITING_FOR_ERASE:
         case CMD_ERASE_LOG:
+        case CMD_SET_GPS_FIX_INTERVAL:
+        case CMD_SET_LOG_OVERWRITE:
+        case CMD_SET_SBAS_TEST_ENABLED:
+        case CMD_SET_POWERSAVE_ENABLED:
+        case CMD_CANCEL_GETLOG:
             return true;
         default:
             return false;
@@ -386,11 +438,19 @@ public class MtkController implements ProtectedDevControllerIF {
             case CMD_SET_DEVICE_NAME:
                 setHoluxName(param.getString());
                 break;
-            case CMD_STOP_WAITING_FOR_ERASE:
-                mtkLogHandler.stopErase();
+            case CMD_SET_GPS_FIX_INTERVAL:
+                setFixInterval(param.getInt());
                 break;
-            case CMD_ERASE_LOG:
-                mtkLogHandler.eraseLog();
+            case CMD_SET_LOG_OVERWRITE:
+                setLogOverwrite(param.getBoolean());
+                break;
+            case CMD_SET_SBAS_TEST_ENABLED:
+                setSBASTestEnabled(param.getBoolean());
+                break;
+            case CMD_SET_SBAS_ENABLED:
+                setSBASEnabled(param.getBoolean());
+            case CMD_SET_POWERSAVE_ENABLED:
+                setPowerSaveEnabled(param.getBoolean());
                 break;
             default:
                 Generic.debug("Unsupported cmd in " + this);
@@ -439,7 +499,7 @@ public class MtkController implements ProtectedDevControllerIF {
                 + (z_value * 10));
     }
 
-    public final void setFixInterval(final int value) {
+    private final void setFixInterval(final int value) {
         int z_value = value;
         if (z_value > 30000) {
             z_value = 30000;
@@ -452,7 +512,7 @@ public class MtkController implements ProtectedDevControllerIF {
                 + "," + z_value + ",0,0,0.0,0.0");
     }
 
-    public final void setLogOverwrite(final boolean set) {
+    private final void setLogOverwrite(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
@@ -460,20 +520,20 @@ public class MtkController implements ProtectedDevControllerIF {
                 + (set ? "1" : "2"));
     }
 
-    public final void setSBASTestEnabled(final boolean set) {
+    private final void setSBASTestEnabled(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK
                 + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
                 + (set ? "0" : "1"));
     }
 
-    public final void setSBASEnabled(final boolean set) {
+    private final void setSBASEnabled(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK + BT747Constants.PMTK_API_SET_SBAS_STR
                 + "," + (set ? "1" : "0"));
     }
 
-    public final void setPowerSaveEnabled(final boolean set) {
+    private final void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
         sendCmd(MtkController.PMTK
                 + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
@@ -620,13 +680,6 @@ public class MtkController implements ProtectedDevControllerIF {
                 card, isIncremental, disableLogging);
     }
 
-    /**
-     * Cancel the log download process.
-     */
-    public final void cancelGetLog() {
-        mtkLogHandler.cancelGetLog();
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -637,15 +690,15 @@ public class MtkController implements ProtectedDevControllerIF {
             mtkLogHandler.notifyRun();
         }
     }
-    
+
     /**
      * The environment indicates a disconnect happened.
      */
     public void notifyDisconnected() {
-        if (mtkLogHandler!=null) {
+        if (mtkLogHandler != null) {
             mtkLogHandler.notifyDisconnected();
         }
-        
+
     }
 
 }

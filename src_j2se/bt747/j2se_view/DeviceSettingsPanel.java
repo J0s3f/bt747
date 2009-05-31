@@ -1150,15 +1150,15 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.mtkCmd(MtkController.CMD_HOTSTART);
+        c.gpsCmd(MtkController.CMD_HOTSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.mtkCmd(MtkController.CMD_WARMSTART);
+        c.gpsCmd(MtkController.CMD_WARMSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.mtkCmd(MtkController.CMD_COLDSTART);
+        c.gpsCmd(MtkController.CMD_COLDSTART);
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btFactoryResetDeviceActionPerformed(

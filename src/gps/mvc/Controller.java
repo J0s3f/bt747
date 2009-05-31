@@ -123,7 +123,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
             Generic.debug("Data request of " + dataType + " skipped");
         }
     }
-
+    
     public final void reqDeviceInfo() {
         setDataNeeded(MtkModel.DATA_MTK_RELEASE);
         setDataNeeded(MtkModel.DATA_MTK_VERSION);
