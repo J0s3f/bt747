@@ -49,9 +49,9 @@ public class MtkModel {
 
     public int logMemUsedPercent = 0;
 
-    private int logFixPeriod = 0; // Time between fixes
+    protected int logFixPeriod = 0; // Time between fixes
 
-    private int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
+    protected int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
     private boolean loggingActive = false;
     public boolean loggerIsFull = false;
@@ -62,38 +62,38 @@ public class MtkModel {
     // when
     // device is full
 
-    private int dgpsMode = 0;
+    protected int dgpsMode = 0;
 
     // Flash user option values
-    private int dtUserOptionTimesLeft;
+    protected int dtUserOptionTimesLeft;
 
-    private int dtUpdateRate;
+    protected int dtUpdateRate;
 
-    private int dtBaudRate;
+    protected int dtBaudRate;
 
-    private int dtGLL_Period;
+    protected int dtGLL_Period;
 
-    private int dtRMC_Period;
+    protected int dtRMC_Period;
 
-    private int dtVTG_Period;
+    protected int dtVTG_Period;
 
-    private int dtGSA_Period;
+    protected int dtGSA_Period;
 
-    private int dtGSV_Period;
+    protected int dtGSV_Period;
 
-    private int dtGGA_Period;
+    protected int dtGGA_Period;
 
-    private int dtZDA_Period;
+    protected int dtZDA_Period;
 
-    private int dtMCHN_Period;
+    protected int dtMCHN_Period;
 
-    private String mainVersion = "";
+    protected String mainVersion = "";
 
-    private String model = "";
+    protected String model = "";
 
-    private String device = "";
+    protected String device = "";
 
-    private String firmwareVersion = "";
+    protected String firmwareVersion = "";
 
     private String MtkLogVersion = "";
 
@@ -101,28 +101,28 @@ public class MtkModel {
     // Manufacturer and Product ID
     private int flashManuProdID = 0;
 
-    private String sBtMacAddr = "";
+    protected String sBtMacAddr = "";
 
-    private final int[] NMEA_periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+    protected final int[] NMEA_periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
-    private boolean holux = false; // True if Holux M-241 device detected
+    protected boolean holux = false; // True if Holux M-241 device detected
 
-    private String holuxName = "";
+    protected String holuxName = "";
 
-    private boolean SBASEnabled = false;
+    protected boolean SBASEnabled = false;
 
-    private boolean SBASTestEnabled = false;
+    protected boolean SBASTestEnabled = false;
 
-    private boolean powerSaveEnabled = false;
+    protected boolean powerSaveEnabled = false;
 
     private Model context;
 
-    private boolean hasAgps = false;
-    private int agpsDataCount = 0;
-    private BT747Time agpsStartTime;
-    private BT747Time agpsEndTime;
-    private BT747Time agpsStart2Time;
-    private BT747Time agpsEnd2Time;
+    protected boolean hasAgps = false;
+    protected int agpsDataCount = 0;
+    protected BT747Time agpsStartTime;
+    protected BT747Time agpsEndTime;
+    protected BT747Time agpsStart2Time;
+    protected BT747Time agpsEnd2Time;
 
     public MtkModel(final Model context, final GPSLinkHandler handler) {
         this.handler = handler;
@@ -134,7 +134,7 @@ public class MtkModel {
      * has been fetched. This is useful to know if the settings can be backed
      * up.
      */
-    private int dataOK = 0;
+    protected int dataOK = 0;
 
     // The next lines indicate bit fields of <code>dataOK</code>
     public static final int C_OK_FIX = 0x0001;
@@ -326,7 +326,7 @@ public class MtkModel {
         }
     }
 
-    private final void setAvailable(final int dataType) {
+    protected final void setAvailable(final int dataType) {
         dataAvailable[dataType] = true;
         switch (dataType) {
         case DATA_FLASH_TYPE:
@@ -379,7 +379,7 @@ public class MtkModel {
      * @return
      * @see #reqInitialLogMode()
      */
-    private int analyseLogNmea(final String[] sNmea) {
+    protected int analyseLogNmea(final String[] sNmea) {
         // if(GPS_DEBUG) {
         // waba.sys.debugMsg("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
         // Suppose that the command is ok (PMTK182)
@@ -518,7 +518,7 @@ public class MtkModel {
         return 0; // Done.
     }
 
-    public final int analyseMtkNmea(final String[] sNmea) {
+    public int analyseMtkNmea(final String[] sNmea) {
         int cmd;
         int result;
         result = 0;
