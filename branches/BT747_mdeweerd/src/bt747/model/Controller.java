@@ -40,6 +40,7 @@ import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
+import gps.mvc.CmdParam;
 import gps.mvc.DeviceOperationHandlerIF;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
@@ -1188,14 +1189,15 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * Set the textual description of the holux device.
+     * Set the textual description of the device.
+     * Currently supported by Holux devices.
      * 
-     * @param holuxName
-     *                The string to set as the Holux Name.
+     * @param deviceName
+     *                The string to set as the Device Name.
      */
-    public final void setHoluxName(final String holuxName) {
-        mtkC().setHoluxName(holuxName);
-        setMtkDataNeeded(MtkModel.DATA_HOLUX_NAME);
+    public final void setHoluxName(final String deviceName) {
+        mtkC().cmd(MtkController.CMD_SET_DEVICE_NAME, new CmdParam(deviceName));
+        setMtkDataNeeded(MtkModel.DATA_DEVICE_NAME);
     }
 
     /**
@@ -1320,17 +1322,17 @@ public class Controller implements ModelListener {
     }
 
     public final void setLogTimeInterval(final int value) {
-        mtkC().setLogTimeInterval(value);
+        mtkC().cmd(MtkController.CMD_SET_LOG_TIME_INTERVAL, new CmdParam(value));
         // TODO : request time interval
     }
 
     public final void setLogDistanceInterval(final int value) {
-        mtkC().setLogDistanceInterval(value);
+        mtkC().cmd(MtkController.CMD_SET_LOG_DISTANCE_INTERVAL, new CmdParam(value));
         // TODO : request distance interval
     }
 
     public final void setLogSpeedInterval(final int value) {
-        mtkC().setLogSpeedInterval(value);
+        mtkC().cmd(MtkController.CMD_SET_LOG_SPEED_INTERVAL, new CmdParam(value));
         // TODO : request speed interval
     }
 
