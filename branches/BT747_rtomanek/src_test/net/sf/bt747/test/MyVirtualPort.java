@@ -32,8 +32,6 @@ public class MyVirtualPort extends GPSPort {
     @Override
     public void write(final String s) {
         write(s.getBytes());
-        // TODO Auto-generated method stub
-
     }
 
     /*
