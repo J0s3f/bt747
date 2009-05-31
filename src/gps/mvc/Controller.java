@@ -138,7 +138,7 @@ public class Controller implements BT747Thread, ProtocolConstants {
         // getDGPSMode();
         // getDatumMode();
         // getFixInterval();
-        mtkC.reqData(MtkModel.DATA_HOLUX_NAME); // Mainly here to identify
+        mtkC.reqData(MtkModel.DATA_DEVICE_NAME); // Mainly here to identify
         // Holux device
         setDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
     }

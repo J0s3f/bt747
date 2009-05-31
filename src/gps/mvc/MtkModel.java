@@ -192,7 +192,7 @@ public class MtkModel {
 
 
     /** The Holux name of the device. */
-    public final static int DATA_HOLUX_NAME = 9;
+    public final static int DATA_DEVICE_NAME = 9;
 
     /** FREE SPOT #10 */
     /**

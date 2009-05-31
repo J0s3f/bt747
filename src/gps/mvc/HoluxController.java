@@ -22,15 +22,30 @@ public class HoluxController extends MtkController {
 		// TODO Auto-generated constructor stub
 	}
 		
+	/* (non-Javadoc)
+	 * @see gps.mvc.MtkController#cmd(int, gps.mvc.CmdParam)
+	 */
+	public boolean cmd(final int cmd, final CmdParam param) {
+	    switch(cmd) {
+	    case MtkController.CMD_SET_DEVICE_NAME:
+	        setHoluxName(param.getString());
+	        break;
+	    default:
+	        return super.cmd(cmd, param);
+	    }
+	    return true;
+	}
+	
+	
 	/**
 	 * Sets name of the device.
 	 * 
 	 * @param holuxName new device name
 	 */
-	public void setHoluxName(final String holuxName) {
+	private void setHoluxName(final String holuxName) {
 		sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
 		sendCmd(HoluxConstants.PHLX_NAME_SET_REQUEST + "," + holuxName);
-		reqData(MtkModel.DATA_HOLUX_NAME);
+		reqData(MtkModel.DATA_DEVICE_NAME);
 	}
 
 	/**
@@ -39,17 +54,17 @@ public class HoluxController extends MtkController {
 	 * For most cases delegates to a existing PMTK command while 
 	 * new functionality will be gradually implemented via PHLX commands. 
 	 */
-    protected void reqData(final int dataType) {
+    protected boolean reqData(final int dataType) {
        switch (dataType) {
-        	case MtkModel.DATA_HOLUX_NAME:
+        	case MtkModel.DATA_DEVICE_NAME:
         		sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
         		sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);
         		break;
         		
         	default:
-        		super.reqData(dataType);
-        		return;
+        		return super.reqData(dataType);
         }
+       return true;
         /*
         switch (dataType) {
         case MtkModel.DATA_FLASH_TYPE:
