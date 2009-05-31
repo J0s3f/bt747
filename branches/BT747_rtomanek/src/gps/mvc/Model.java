@@ -21,6 +21,7 @@ import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import gps.ProtocolConstants;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -41,7 +42,7 @@ import bt747.sys.interfaces.BT747HashSet;
  * 
  */
 /* Final for the moment */
-public class Model {
+public class Model implements ProtocolConstants {
     private final GPSLinkHandler handler;
     // For the moment pointing to 'this' for the MtkModel.
     // After refactoring this should be effectively fully delegated.
@@ -52,9 +53,22 @@ public class Model {
      * 
      * 
      */
-    public Model(final GPSrxtx gpsRxTx) {
+    public Model(final GPSrxtx gpsRxTx, int protocol) {
         handler = new GPSLinkHandler();
-        mtkModel = new MtkModel(this, handler);
+
+        switch (protocol) {
+        	case PROTOCOL_MTK:
+        	case PROTOCOL_SIRFIII:
+        		mtkModel = new MtkModel(this, handler);
+        		break;
+        	case PROTOCOL_HOLUX_PHLX:
+        		mtkModel = new HoluxModel(this, handler);
+        		break;
+        	default:
+        		// TODO: This should probably be handled through an exception
+        		mtkModel = null;
+        		break;
+        }        
         setGPSRxtx(gpsRxTx);
     }
 

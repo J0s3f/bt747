@@ -4,6 +4,7 @@
 package gps.mvc;
 
 import gps.connection.GPSrxtx;
+import gps.ProtocolConstants;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
@@ -15,7 +16,7 @@ import bt747.sys.interfaces.BT747Thread;
  * @author Mario
  * 
  */
-public class Controller implements BT747Thread {
+public class Controller implements BT747Thread, ProtocolConstants {
 
     private final Model gpsM;
     private final MtkModel mtkM;
@@ -25,7 +26,7 @@ public class Controller implements BT747Thread {
 
     public final static Controller getInstance(final GPSrxtx gpsRxTx,
             final int protocol) {
-        final Model m = new Model(gpsRxTx);
+        final Model m = new Model(gpsRxTx, protocol);
         return Controller.getInstance(m, protocol);
     }
 
@@ -33,13 +34,9 @@ public class Controller implements BT747Thread {
             final int protocol) {
         return new Controller(model, protocol);
     }
-
-    public final static int PROTOCOL_MTK = 0;
-    public final static int PROTOCOL_SIRFIII = 1;
-    public final static int PROTOCOL_HOLUX_PHLX = 2;
     
     /** The current protocol in use. */
-    private int protocol;
+    private int protocol = PROTOCOL_INVALID;
 
     private Controller(final Model model, final int protocol) {
         gpsM = model;
