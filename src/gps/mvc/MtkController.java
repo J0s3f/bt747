@@ -24,10 +24,10 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  */
 public class MtkController {
     private MtkModel m;
-    private final MTKLogDownloadHandler mtkLogHandler;
+    protected final MTKLogDownloadHandler mtkLogHandler;
 
     /** Default prefix to MTK command. */
-    private static final String PMTK = "PMTK";
+    protected static final String PMTK = "PMTK";
 
     MtkController(final MtkModel m) {
         this.m = m;
