@@ -18,7 +18,6 @@ import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
-import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
@@ -146,13 +145,14 @@ public class Controller implements ModelListener {
 
     public final void setAutoLog(final boolean enable) {
         if (enable) {
-            mtkCmd(MtkController.CMD_AUTOLOG_ON);
+            gpsCmd(MtkController.CMD_AUTOLOG_ON);
         } else {
-            mtkCmd(MtkController.CMD_AUTOLOG_OFF);
+            gpsCmd(MtkController.CMD_AUTOLOG_OFF);
         }
     }
 
     private final MtkController mtkC() {
+        // private final DeviceControllerIF gpsC() {
         return getGpsC().getMtkController();
     }
 
@@ -175,6 +175,24 @@ public class Controller implements ModelListener {
                 connectGPS();
             }
         }
+    }
+
+    /**
+     * Do a GPS command.
+     * 
+     * @param cmd
+     */
+    public void gpsCmd(final int cmd) {
+        getGpsC().cmd(cmd);
+    }
+
+    /**
+     * Do a GPS command.
+     * 
+     * @param cmd
+     */
+    public void gpsCmd(final int cmd, final CmdParam param) {
+        getGpsC().cmd(cmd, param);
     }
 
     /**
@@ -654,7 +672,7 @@ public class Controller implements ModelListener {
      * Cancel the log download process.
      */
     public final void cancelGetLog() {
-        mtkC().cancelGetLog();
+        gpsCmd(MtkController.CMD_CANCEL_GETLOG);
     }
 
     /**
@@ -741,9 +759,9 @@ public class Controller implements ModelListener {
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
-            mtkCmd(MtkController.CMD_STARTLOG);
+            gpsCmd(MtkController.CMD_STARTLOG);
         } else {
-            mtkCmd(MtkController.CMD_STOPLOG);
+            gpsCmd(MtkController.CMD_STOPLOG);
         }
         getGpsC().reqLogOnOffStatus();
     }
@@ -766,7 +784,8 @@ public class Controller implements ModelListener {
      *                logging when device is full
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
-        mtkC().setLogOverwrite(isOverWriteLog);
+        gpsCmd(MtkController.CMD_SET_LOG_OVERWRITE, new CmdParam(
+                isOverWriteLog));
         setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
     };
 
@@ -1189,14 +1208,15 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * Set the textual description of the device.
-     * Currently supported by Holux devices.
+     * Set the textual description of the device. Currently supported by Holux
+     * devices.
      * 
      * @param deviceName
      *                The string to set as the Device Name.
      */
     public final void setHoluxName(final String deviceName) {
-        mtkC().cmd(MtkController.CMD_SET_DEVICE_NAME, new CmdParam(deviceName));
+        mtkC().cmd(MtkController.CMD_SET_DEVICE_NAME,
+                new CmdParam(deviceName));
         setMtkDataNeeded(MtkModel.DATA_DEVICE_NAME);
     }
 
@@ -1239,7 +1259,8 @@ public class Controller implements ModelListener {
      *                When true, enable test satellites.
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
-        mtkC().setSBASTestEnabled(isSBASTestEnabled);
+        gpsCmd(MtkController.CMD_SET_SBAS_TEST_ENABLED, new CmdParam(
+                isSBASTestEnabled));
         setMtkDataNeeded(MtkModel.DATA_SBAS_TEST_STATUS);
     }
 
@@ -1250,7 +1271,7 @@ public class Controller implements ModelListener {
      *                When true, enables SBAS.
      */
     public final void setSBASEnabled(final boolean set) {
-        mtkC().setSBASEnabled(set);
+        gpsCmd(MtkController.CMD_SET_SBAS_ENABLED, new CmdParam(set));
         setMtkDataNeeded(MtkModel.DATA_SBAS_STATUS);
     }
 
@@ -1283,7 +1304,7 @@ public class Controller implements ModelListener {
      *                If true, enable power save mode.
      */
     public final void setPowerSaveEnabled(final boolean set) {
-        mtkC().setPowerSaveEnabled(set);
+        gpsCmd(MtkController.CMD_SET_POWERSAVE_ENABLED, new CmdParam(set));
         setMtkDataNeeded(MtkModel.DATA_POWERSAVE_STATUS);
     }
 
@@ -1316,41 +1337,25 @@ public class Controller implements ModelListener {
 
     public final void setFixInterval(final int value) {
         if (value != 0) {
-            mtkC().setFixInterval(value);
+            gpsCmd(MtkController.CMD_SET_GPS_FIX_INTERVAL,new CmdParam(value));
             setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
         }
     }
 
     public final void setLogTimeInterval(final int value) {
-        mtkC().cmd(MtkController.CMD_SET_LOG_TIME_INTERVAL, new CmdParam(value));
+        gpsCmd(MtkController.CMD_SET_LOG_TIME_INTERVAL, new CmdParam(value));
         // TODO : request time interval
     }
 
     public final void setLogDistanceInterval(final int value) {
-        mtkC().cmd(MtkController.CMD_SET_LOG_DISTANCE_INTERVAL, new CmdParam(value));
+        gpsCmd(MtkController.CMD_SET_LOG_DISTANCE_INTERVAL, new CmdParam(
+                value));
         // TODO : request distance interval
     }
 
     public final void setLogSpeedInterval(final int value) {
-        mtkC().cmd(MtkController.CMD_SET_LOG_SPEED_INTERVAL, new CmdParam(value));
+        gpsCmd(MtkController.CMD_SET_LOG_SPEED_INTERVAL, new CmdParam(value));
         // TODO : request speed interval
-    }
-
-    /**
-     * Send a command to the MTK device.
-     * 
-     * @param cmd
-     *                Command type. One of:
-     *                <ul>
-     *                <li>{@link MtkController#CMD_HOTSTART}</li>
-     *                <li>{@link MtkController#CMD_COLDSTART}</li>
-     *                <li>{@link MtkController#CMD_WARMSTART}</li>
-     *                <li>{@link MtkController#CMD_FULLCOLDSTART}</li>
-     *                </ul>
-     */
-    public final void mtkCmd(final int cmd) {
-        final MtkController r = mtkC();
-        r.cmd(cmd);
     }
 
     public final boolean isEnableStoreOK() {

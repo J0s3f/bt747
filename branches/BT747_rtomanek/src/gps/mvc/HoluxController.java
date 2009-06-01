@@ -54,7 +54,7 @@ public class HoluxController extends MtkController {
 	 * For most cases delegates to a existing PMTK command while 
 	 * new functionality will be gradually implemented via PHLX commands. 
 	 */
-    protected boolean reqData(final int dataType) {
+    public boolean reqData(final int dataType) {
        switch (dataType) {
         	case MtkModel.DATA_DEVICE_NAME:
         		sendCmd(HoluxConstants.PHLX_CMD_PREFIX);

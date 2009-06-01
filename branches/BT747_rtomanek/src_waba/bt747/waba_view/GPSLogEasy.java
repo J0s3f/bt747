@@ -132,11 +132,11 @@ public final class GPSLogEasy extends Container implements ModelListener {
             } else if (event.target == btRestore) {
                 c.restoreSetting1();
             } else if (event.target == btHotStart) {
-                c.mtkCmd(MtkController.CMD_HOTSTART);
+                c.gpsCmd(MtkController.CMD_HOTSTART);
             } else if (event.target == btColdStart) {
-                c.mtkCmd(MtkController.CMD_COLDSTART);
+                c.gpsCmd(MtkController.CMD_COLDSTART);
             } else if (event.target == btWarmStart) {
-                c.mtkCmd(MtkController.CMD_WARMSTART);
+                c.gpsCmd(MtkController.CMD_WARMSTART);
             } else if (event.target == btFullColdStart) {
                 MessageBox mb;
                 String[] szExitButtonArray = { Txt.getString(Txt.YES), Txt.getString(Txt.NO) };
@@ -145,7 +145,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
                 mb.popupBlockingModal();
                 if (mb.getPressedButtonIndex() == 0) {
                     // Exit application
-                    c.mtkCmd(MtkController.CMD_FULLCOLDSTART);
+                    c.gpsCmd(MtkController.CMD_FULLCOLDSTART);
                 }
             } else if (event.target == btForceErase) {
                 c.recoveryErase();

@@ -26,7 +26,7 @@ public class MtkModel {
     private final GPSLinkHandler handler;
     private MTKLogDownloadHandler mtkLogHandler;
 
-    protected final void setLogHandler(MTKLogDownloadHandler handler) {
+    protected final void setLogHandler(final MTKLogDownloadHandler handler) {
         mtkLogHandler = handler;
     }
 
@@ -156,7 +156,7 @@ public class MtkModel {
     private final boolean[] dataSupported = new boolean[MtkModel.DATA_MAX_INDEX + 1];
     private final int[] dataRequested = new int[MtkModel.DATA_MAX_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
-            false, // DATA_FLASH_TYPE
+    false, // DATA_FLASH_TYPE
             true, // DATA_MEM_PTS_LOGGED
             true, // DATA_MEM_USED
             false, // DATA_LOG_FORMAT
@@ -189,7 +189,6 @@ public class MtkModel {
     public final static int DATA_LOG_VERSION = 8;
     protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
     // possible index
-
 
     /** The Holux name of the device. */
     public final static int DATA_DEVICE_NAME = 9;
@@ -280,7 +279,8 @@ public class MtkModel {
         for (int i = 0; i < dataAvailable.length; i++) {
             dataAvailable[i] = false;
             dataRequested[i] = ts;
-            dataSupported[i] = true; // By default suppose all cmds are supported.
+            dataSupported[i] = true; // By default suppose all cmds are
+            // supported.
         }
         hasAgps = false;
         agpsDataCount = 0;
@@ -299,7 +299,7 @@ public class MtkModel {
 
     protected final boolean isDataNeedsRequest(final int ts,
             final int dataType) {
-        if (dataType > DATA_LAST_AUTO_INDEX) {
+        if (dataType > MtkModel.DATA_LAST_AUTO_INDEX) {
             // Data beyond last automatic index is needed.
             return true;
         }
@@ -734,7 +734,7 @@ public class MtkModel {
                 result = 0;
                 break;
             case BT747Constants.PMTK_ACK_UNSUPPORTED:
-                switch(cmdIdx) {
+                switch (cmdIdx) {
                 case BT747Constants.PMTK_Q_VERSION:
                     dataSupported[MtkModel.DATA_MTK_VERSION] = false;
                     break;
@@ -757,7 +757,6 @@ public class MtkModel {
         return result;
     }
 
-    
     protected final void postEvent(final int eventNbr) {
         context.postGpsEvent(eventNbr, null);
     }
@@ -1043,6 +1042,8 @@ public class MtkModel {
         return mtkLogHandler.getStartAddr();
     }
 
+    private int logDownloadEndAddr;
+
     /**
      * Get the end address for the log download. To be used for the download
      * progress bar.
@@ -1050,17 +1051,22 @@ public class MtkModel {
      * @return the endAddr
      */
     public final int getEndAddr() {
-        return mtkLogHandler.getEndAddr();
+        return logDownloadEndAddr;
+        // return mtkLogHandler.getEndAddr();
     }
 
+    protected void setEndAddr(final int endAddr) {
+        logDownloadEndAddr = endAddr;
+    }
+
+    private int nextReadAddr;
+
     /**
-     * Get 'download ongoing' status.
-     * 
-     * @return true if the download is currently ongoing. This is usefull for
-     *         the download progress bar.
+     * @param nextReadAddr
+     *                the nextReadAddr to set
      */
-    public final boolean isLogDownloadOnGoing() {
-        return mtkLogHandler.isLogDownloadOnGoing();
+    protected void setNextReadAddr(final int nextReadAddr) {
+        this.nextReadAddr = nextReadAddr;
     }
 
     /**
@@ -1070,37 +1076,46 @@ public class MtkModel {
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {
-        return mtkLogHandler.getNextReadAddr();
+        return nextReadAddr;
     }
 
+    private boolean isLogDownloadOngoing = false;
+
     /**
-     * @deprecated
+     * Get 'download ongoing' status.
+     * 
+     * @return true if the download is currently ongoing. This is usefull for
+     *         the download progress bar.
      */
-    public final MTKLogDownloadHandler getMtkLogHandler() {
-        return mtkLogHandler;
+    public final boolean isLogDownloadOngoing() {
+        return isLogDownloadOngoing;
+    }
+
+    protected final void setLogDownloadOngoing(final boolean ongoing) {
+        isLogDownloadOngoing = ongoing;
     }
 
     public final int getAgpsDataCount() {
-        return this.agpsDataCount;
+        return agpsDataCount;
     }
 
     public final BT747Time getAgpsStartTime() {
-        return this.agpsStartTime;
+        return agpsStartTime;
     }
 
     public final BT747Time getAgpsEndTime() {
-        return this.agpsEndTime;
+        return agpsEndTime;
     }
 
     public final BT747Time getAgpsStart2Time() {
-        return this.agpsStart2Time;
+        return agpsStart2Time;
     }
 
     public final BT747Time getAgpsEnd2Time() {
-        return this.agpsEnd2Time;
+        return agpsEnd2Time;
     }
 
     public final boolean hasAgps() {
-        return this.hasAgps;
+        return hasAgps;
     }
 }

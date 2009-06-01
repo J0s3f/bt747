@@ -17,6 +17,7 @@ package bt747.j2se_view;
 import java.awt.Component;
 
 import gps.log.out.CommonOut;
+import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 
 
@@ -138,6 +139,7 @@ public final class AgpsPanel extends javax.swing.JPanel
         btDownloadAgpsData = new javax.swing.JButton();
         txtAgpsInfo1 = new javax.swing.JLabel();
         txtAgpsInfo2 = new javax.swing.JLabel();
+        btClearAgpsData = new javax.swing.JButton();
         osmAccountPanel = new javax.swing.JPanel();
         lbLogin = new javax.swing.JLabel();
         txtLogin = new javax.swing.JTextField();
@@ -170,12 +172,19 @@ public final class AgpsPanel extends javax.swing.JPanel
 
         txtAgpsInfo2.setText(bundle.getString("AgpsPanel.txtAgpsInfo2.text")); // NOI18N
 
+        btClearAgpsData.setText(bundle.getString("AgpsPanel.btClearAgpsData.text")); // NOI18N
+        btClearAgpsData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btClearAgpsDataActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout agpsPanelLayout = new org.jdesktop.layout.GroupLayout(agpsPanel);
         agpsPanel.setLayout(agpsPanelLayout);
         agpsPanelLayout.setHorizontalGroup(
             agpsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(agpsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(agpsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(agpsPanelLayout.createSequentialGroup()
                         .add(lbAgpsUrl)
@@ -183,11 +192,12 @@ public final class AgpsPanel extends javax.swing.JPanel
                         .add(txtAgpsUrl, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 351, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(agpsPanelLayout.createSequentialGroup()
                         .add(btUploadAgpsData)
-                        .add(18, 18, 18)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btClearAgpsData)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(btDownloadAgpsData))
                     .add(txtAgpsInfo1)
-                    .add(txtAgpsInfo2))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .add(txtAgpsInfo2)))
         );
         agpsPanelLayout.setVerticalGroup(
             agpsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -198,6 +208,7 @@ public final class AgpsPanel extends javax.swing.JPanel
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(agpsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btUploadAgpsData)
+                    .add(btClearAgpsData)
                     .add(btDownloadAgpsData))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(txtAgpsInfo1)
@@ -250,8 +261,8 @@ public final class AgpsPanel extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -270,8 +281,13 @@ public final class AgpsPanel extends javax.swing.JPanel
         c.downloadAndUploadAgpsData();
     }//GEN-LAST:event_btUploadAgpsDataActionPerformed
 
+    private void btClearAgpsDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearAgpsDataActionPerformed
+        c.gpsCmd(MtkController.CMD_EPO_CLEAR);
+    }//GEN-LAST:event_btClearAgpsDataActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel agpsPanel;
+    private javax.swing.JButton btClearAgpsData;
     private javax.swing.JButton btDownloadAgpsData;
     private javax.swing.JButton btUploadAgpsData;
     private javax.swing.JLabel lbAgpsUrl;

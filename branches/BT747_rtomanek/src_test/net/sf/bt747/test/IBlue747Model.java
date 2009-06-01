@@ -534,6 +534,7 @@ public class IBlue747Model {
             case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
                 break;
             default:
+                acknowledge = new Acknowledge(p_nmea, BT747Constants.PMTK_ACK_UNSUPPORTED);
                 System.err.println("Not supported in model:" + z_Cmd);
             } // End switch
         } else if (p_nmea[0].startsWith("PTSI")) {
