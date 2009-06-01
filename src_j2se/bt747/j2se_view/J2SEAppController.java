@@ -453,7 +453,7 @@ public final class J2SEAppController extends J2SEController {
                 null, null, 0);
 
         if (choice == JOptionPane.OK_OPTION) {
-            c.mtkCmd(MtkController.CMD_FULLCOLDSTART);
+            c.gpsCmd(MtkController.CMD_FULLCOLDSTART);
         }
 
     }

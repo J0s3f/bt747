@@ -272,6 +272,7 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_CMD_WARM_START = 102;
     public static final int PMTK_CMD_COLD_START = 103;
     public static final int PMTK_CMD_FULL_COLD_START = 104;
+    public static final int PMTK_CMD_EPO_CLEAR = 127;
     public static final int PMTK_CMD_LOG = 182;
     public static final int PMTK_SET_NMEA_BAUD_RATE = 251;
     /** Set binary mode used in AGPS - will be tried for other too */
