@@ -883,7 +883,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * be thought of as events raised per second by taking 1000 and dividing
      * it by this number (e.g. 1000 / 250 = 4 events per second).
      */
-    private static final short REPEAT_PERIOD = 200;
+    private static final short REPEAT_PERIOD = 330;
 
     /**
      * When <code>true</code> this is running on a BlackBerry device. When

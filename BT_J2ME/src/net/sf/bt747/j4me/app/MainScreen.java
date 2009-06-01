@@ -16,6 +16,7 @@ package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
 import gps.GpsEvent;
+import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 
 import java.util.Timer;
@@ -89,6 +90,8 @@ public final class MainScreen extends Dialog implements ModelListener {
     private final static int NO_CONFIRM = 0;
     private final static int ERASE_CONFIRM = 1;
     private final static int DOWNLOAD_OVERWRITE_CONFIRM = 2;
+    private final static int AGPS_CLEAR_CONFIRM = 3;
+    private final static int COLD_START_CONFIRM = 4;
 
     /**
      * A reference to the confirmation screen.
@@ -124,17 +127,18 @@ public final class MainScreen extends Dialog implements ModelListener {
 
         // Add the menu buttons.
         setFullScreenMode(false);
-        
-        //initialSetupScreen();
+
+        // initialSetupScreen();
     }
 
     private boolean initialScreenSetup = false;
+
     public void initialSetupScreen() {
         if (!initialScreenSetup) {
             Log.debug("MainScreen initialSetupScreen taken");
             initialScreenSetup = true;
             setMenuText("Logger Menu", "App Menu");
-            
+
             downloadLogScreen = new LogDownloadScreen(c, this);
             loggerInfoScreen = new DelayedDialog(
                     ScreenFactory.LOGGERSTATUSSCREEN, c, this, this);
@@ -190,6 +194,84 @@ public final class MainScreen extends Dialog implements ModelListener {
                     ScreenFactory.GPSPOSITIONSCREEN, c, this, this));
 
             Menu subMenu;
+
+            subMenu = new Menu("AGPS", rootMenu);
+            subMenu.appendMenuOption("AGPS Upload", new DelayedDialog(
+                    ScreenFactory.AGPSSCREEN, c, this, this));
+            subMenu.appendMenuOption(new MenuItem() {
+                public final String getText() {
+                    return "Clear AGPS data";
+                }
+
+                public final void onSelection() {
+                    confirmScreenOption = AGPS_CLEAR_CONFIRM;
+                    confirmScreen = new ConfirmScreen("Confirm APGS Clear",
+                            "Do you confirm clearing APGS data???\n", null,
+                            myself);
+                    confirmScreen.show();
+                }
+            });
+            rootMenu.appendSubmenu(subMenu);
+
+            subMenu = new Menu("Miscellaneous", rootMenu);
+            subMenu.appendMenuOption(new MenuItem() {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#getText()
+                 */
+                public String getText() {
+                    return "Hot start";
+                }
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#onSelection()
+                 */
+                public void onSelection() {
+                    c.gpsCmd(MtkController.CMD_HOTSTART);
+                    rootMenu.show();
+                }
+            });
+            subMenu.appendMenuOption(new MenuItem() {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#getText()
+                 */
+                public String getText() {
+                    return "Warm start";
+                }
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.j4me.ui.MenuItem#onSelection()
+                 */
+                public void onSelection() {
+                    c.gpsCmd(MtkController.CMD_WARMSTART);
+                    rootMenu.show();
+                }
+            });
+            subMenu.appendMenuOption(new MenuItem() {
+                public final String getText() {
+                    return "Cold start";
+                }
+
+                public final void onSelection() {
+                    confirmScreenOption = COLD_START_CONFIRM;
+                    confirmScreen = new ConfirmScreen("Confirm cold start",
+                            "Do you confirm a cold start of the GPS "
+                                    + "(needs to lock on sats again"
+                                    + " and get almanac data)???\n", null,
+                            myself);
+                    confirmScreen.show();
+                }
+            });
+
+            rootMenu.appendSubmenu(subMenu);
+
             subMenu = new Menu("App Settings", rootMenu);
             subMenu.appendMenuOption("Working dir", baseDirScreen);
             subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
@@ -238,9 +320,6 @@ public final class MainScreen extends Dialog implements ModelListener {
             });
 
             rootMenu.appendSubmenu(subMenu);
-
-            rootMenu.appendMenuOption("AGPS", new DelayedDialog(
-                    ScreenFactory.AGPSSCREEN, c, this, this));
 
             m().addListener(this);
         }
@@ -331,8 +410,10 @@ public final class MainScreen extends Dialog implements ModelListener {
         Log.debug("MainScreen showNotify");
         setupScreen();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.j4me.ui.DeviceScreen#show()
      */
     public void show() {
@@ -390,6 +471,16 @@ public final class MainScreen extends Dialog implements ModelListener {
                         confirmScreen = null;
                         interruptedScreen.show();
                         return;
+                    }
+                    break;
+                case AGPS_CLEAR_CONFIRM:
+                    if (confirmScreen.getConfirmation()) {
+                        c.gpsCmd(MtkController.CMD_EPO_CLEAR);
+                    }
+                    break;
+                case COLD_START_CONFIRM:
+                    if (confirmScreen.getConfirmation()) {
+                        c.gpsCmd(MtkController.CMD_COLDSTART);
                     }
                     break;
                 }
