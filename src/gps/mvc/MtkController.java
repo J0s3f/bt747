@@ -175,6 +175,11 @@ public class MtkController implements ProtectedDevControllerIF {
     public final static int CMD_CANCEL_GETLOG = 19;
 
     /**
+     * Clear the EPO data.
+     */
+    public final static int CMD_EPO_CLEAR = 20;
+
+    /**
      * Perform a command.
      * 
      * @param cmd
@@ -183,6 +188,7 @@ public class MtkController implements ProtectedDevControllerIF {
      */
     public final boolean cmd(final int cmd) {
         String nmeaCmd = null;
+        int reqData = -1;
         switch (cmd) {
         case CMD_HOTSTART:
             nmeaCmd = MtkController.PMTK
@@ -227,11 +233,18 @@ public class MtkController implements ProtectedDevControllerIF {
         case CMD_CANCEL_GETLOG:
             mtkLogHandler.cancelGetLog();
             break;
+        case CMD_EPO_CLEAR:
+            nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_EPO_CLEAR;
+            reqData = MtkModel.DATA_AGPS_STORED_RANGE;
+            break;
         default:
             return false;
         }
         if (nmeaCmd != null) {
             sendCmd(nmeaCmd);
+            if (reqData != -1) {
+                reqData(reqData);
+            }
         }
         return true;
     }
@@ -638,7 +651,7 @@ public class MtkController implements ProtectedDevControllerIF {
 
     public final void logImmediate(final int value) {
         if (!m.isLoggingActive()) {
-            cmd(CMD_STARTLOG);
+            cmd(MtkController.CMD_STARTLOG);
         }
         sendCmd(MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
