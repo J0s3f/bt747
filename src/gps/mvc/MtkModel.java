@@ -24,7 +24,7 @@ import bt747.sys.interfaces.BT747Time;
  */
 public class MtkModel {
     private final GPSLinkHandler handler;
-    private MTKLogDownloadHandler mtkLogHandler;
+    protected MTKLogDownloadHandler mtkLogHandler;
 
     protected final void setLogHandler(final MTKLogDownloadHandler handler) {
         mtkLogHandler = handler;

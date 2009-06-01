@@ -44,7 +44,7 @@ public class HoluxConstants {
      * To GPS: Erase log command.
      * Parameters: none
      */  
-    public static final String PHLX_LOG_ERASE = "PHLX839";
+    public static final String PHLX_LOG_ERASE_REQUEST = "PHLX839";
 
     /**
      * From GPS: Log erased.
