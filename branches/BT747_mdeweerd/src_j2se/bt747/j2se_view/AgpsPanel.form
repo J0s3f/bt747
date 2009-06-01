@@ -16,8 +16,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="agpsPanel" min="-2" max="-2" attributes="0"/>
           <Component id="osmAccountPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+          <Component id="agpsPanel" alignment="0" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -46,7 +46,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lbAgpsUrl" min="-2" max="-2" attributes="0"/>
@@ -55,13 +55,14 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btUploadAgpsData" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btClearAgpsData" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="btDownloadAgpsData" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="txtAgpsInfo1" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="txtAgpsInfo2" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -75,6 +76,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btUploadAgpsData" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btClearAgpsData" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btDownloadAgpsData" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -136,6 +138,16 @@
               <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="AgpsPanel.txtAgpsInfo2.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btClearAgpsData">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="AgpsPanel.btClearAgpsData.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btClearAgpsDataActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
