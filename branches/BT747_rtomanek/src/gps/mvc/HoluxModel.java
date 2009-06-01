@@ -70,12 +70,19 @@ public class HoluxModel extends MtkModel {
 		    }
 		    Generic.debug(s);
 		}
-
-		if (sNmea[0].equals(HoluxConstants.PHLX_NAME_GET_RESPONSE)) {
+		
+		String cmd = sNmea[0];
+		if (cmd.equals(HoluxConstants.PHLX_NAME_GET_RESPONSE)) {
 		    if (sNmea.length == 2) {
 		        holuxName = sNmea[1];
 		        postEvent(GpsEvent.UPDATE_HOLUX_NAME);
 		    }
+		} else if (cmd.equals(HoluxConstants.PHLX_LOG_ERASE_ACK)) {
+			// from gps.mvc.MTKLogDownloadHandler.handleLogFlashStatReply(String)
+			// however: simplified the mind-boggling path to access self
+            if (this.isEraseOngoing()) {
+            	mtkLogHandler.signalEraseDone();
+            }
 		}
 		
 		return result;		
