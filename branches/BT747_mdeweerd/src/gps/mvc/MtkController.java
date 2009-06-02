@@ -186,7 +186,7 @@ public class MtkController implements ProtectedDevControllerIF {
      *                Command identification.
      * @return true is command is supported.
      */
-    public final boolean cmd(final int cmd) {
+    public boolean cmd(final int cmd) {
         String nmeaCmd = null;
         int reqData = -1;
         switch (cmd) {

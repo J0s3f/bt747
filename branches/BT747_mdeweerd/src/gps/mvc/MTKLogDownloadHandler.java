@@ -834,7 +834,7 @@ final class MTKLogDownloadHandler {
         // readLogFlashStatus(); - Will be done after timeout
     }
 
-    private void signalEraseDone() {
+    protected void signalEraseDone() {
         context.setLogState(MTKLogDownloadHandler.C_LOG_NOLOGGING);
         context.mtkM.getHandler().setLogOrEraseOngoing(true);
         context.mtkM.setEraseOngoing(false);
