@@ -783,28 +783,35 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         | (0xFF & bytes[recIdx++]) << 24;
                 r.height = JavaLibBridge.toFloatBitwise(height);
             } else {
-                final int height =
-
-                (0xFF & bytes[recIdx++]) << 8
-                        | (0xFF & bytes[recIdx++]) << 16
-                        | (0xFF & bytes[recIdx++]) << 24;
                 if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
                     // Height is speed:
-                    r.speed = JavaLibBridge.toFloatBitwise(height);
+                    final int height = (0xFF & bytes[recIdx++]) << 0
+                    	| (0xFF & bytes[recIdx++]) << 8
+                    	| (0xFF & bytes[recIdx++]) << 16
+                    	| (0xFF & bytes[recIdx++]) << 24;
+                    r.speed = ((float) height) * 3600f / 1000f / 100f;
                 } else {
+                    final int height = 0x00
+                    	| (0xFF & bytes[recIdx++]) << 8
+                    	| (0xFF & bytes[recIdx++]) << 16
+                    	| (0xFF & bytes[recIdx++]) << 24;
                     r.height = JavaLibBridge.toFloatBitwise(height);
                 }
             }
         }
         if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            final int speed = (0xFF & bytes[recIdx++]) << 0
+            if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
+            	final int speed = 0x00
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
                 // Height is speed:
                 r.height = JavaLibBridge.toFloatBitwise(speed);
             } else {
+            	final int speed = (0xFF & bytes[recIdx++]) << 0
+            		| (0xFF & bytes[recIdx++]) << 8
+                	| (0xFF & bytes[recIdx++]) << 16
+                	| (0xFF & bytes[recIdx++]) << 24;
                 r.speed = JavaLibBridge.toFloatBitwise(speed);
             }
         }
