@@ -761,11 +761,14 @@ public class AppSettings {
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
+    public static final int SPLIT_ONE_FILE = 0;
+    public static final int SPLIT_ONE_FILE_PER_DAY = 1;
+    public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
     /**
      * The way we split the input track:<br>
-     * ONE_FILE = 0<br>
-     * ONE_FILE_PER_DAY = 1<br>
-     * ONE_FILE_PER_TRACK = 2
+     * {@link #SPLIT_ONE_FILE}<br>
+     * {@link #SPLIT_ONE_FILE_PER_DAY}<br>
+     * {@link #SPLIT_ONE_FILE_PER_TRACK}
      * 
      * @return Current setting.
      */
@@ -776,9 +779,9 @@ public class AppSettings {
 
     /**
      * The way we split the input track:<br>
-     * ONE_FILE = 0<br>
-     * ONE_FILE_PER_DAY = 1<br>
-     * ONE_FILE_PER_TRACK = 2
+     * {@link #SPLIT_ONE_FILE}<br>
+     * {@link #SPLIT_ONE_FILE_PER_DAY}<br>
+     * {@link #SPLIT_ONE_FILE_PER_TRACK}
      * 
      * @param value
      *                New setting
