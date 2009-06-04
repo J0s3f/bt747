@@ -801,7 +801,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            if (holux && getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
+            if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
                 // Height is speed:
                 r.height = JavaLibBridge.toFloatBitwise(speed);
             } else {
