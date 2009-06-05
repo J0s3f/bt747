@@ -55,7 +55,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * Indicates the fields active in the current record (for
      * {@link #writeRecord(GPSRecord)}).
      */
-    protected GPSRecord activeFields;
+    private GPSRecord activeFields = GPSRecord.getLogFormatRecord(0);
 
     /**
      * Indicates the fields active in the files (useful for
@@ -513,7 +513,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         previousTime = nextPreviousTime;
         // bt747.sys.Generic.debug("Adding\n"+r.toString());
 
-        if (activeFields.utc != 0) {
+        if (r.hasUtc()) {
             t.setUTCTime(r.utc); // Initialization needed later too!
             if (oneFilePerDay || oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7)
@@ -533,7 +533,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             boolean createOK = true;
             previousDate = dateref;
 
-            if (activeFields.utc != 0) {
+            if (r.hasUtc()) {
                 if ((r.utc < 24 * 3600) // No date provided by log.
                         || (t.getYear() > 2000)) {
                     extraExt = "-" + t.getYear()
@@ -595,7 +595,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             }
         }
 
-        if ((activeFields.utc != 0) && recordIsNeeded(r)) {
+        if ((r.hasUtc()) && recordIsNeeded(r)) {
             nextPreviousTime = r.utc;
         }
     };
