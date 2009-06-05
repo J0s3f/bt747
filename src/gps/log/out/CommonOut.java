@@ -54,7 +54,7 @@ public final class CommonOut {
     public final static String getHtml(final GPSRecord s) {
         StringBuffer rec = new StringBuffer(200);
         CommonOut
-                .getHtml(rec, s, s, s, s.getBT747Time(), true, false /* imperial */);
+                .getHtml(rec, s, s, s.getBT747Time(), true, false /* imperial */);
         final String r = rec.toString();
         rec = null;
         return r;
@@ -89,7 +89,7 @@ public final class CommonOut {
     }
 
     public final static void getHtml(final StringBuffer rec,
-            final GPSRecord s, final GPSRecord activeFields,
+            final GPSRecord s,
             final GPSRecord selectedFields, final BT747Time t,
             final boolean recordNbrInLogs, final boolean imperial) {
 
@@ -143,14 +143,14 @@ public final class CommonOut {
             rec.append(s.getRecCount());
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
+        if ((s.hasUtc()) && (selectedFields.hasUtc())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("TIME"));
             rec.append(":</td><td>"); // Column split
             rec.append(CommonOut.getDateTimeStr(t));
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
+        if ((s.hasRcr()) && (selectedFields.hasRcr())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("RCR"));
             rec.append(":</td><td>"); // Column split
@@ -163,7 +163,7 @@ public final class CommonOut {
             }
             rec.append("</td></tr>"); // Column end and end row.
         }
-        // if(activeFields.utc!=0) {
+        // if(s.utc!=0) {
         // Time t=utcTime(s.utc);
         //                    
         // rec.append("<br>DATE: ");
@@ -180,7 +180,7 @@ public final class CommonOut {
         // +(t.getSecond()<10?"0":"")+JavaLibBridge.toString(t.getSecond())
         // );
         // }
-        if ((activeFields.hasValid()) && (selectedFields.hasValid())) {
+        if ((s.hasValid()) && (selectedFields.hasValid())) {
             rec.append("<tr><td>"); // Table row and first column start
             // rec.append("<br>VALID: ");
             rec.append(I18N.i18n("VALID"));
@@ -188,7 +188,7 @@ public final class CommonOut {
             rec.append(I18N.i18n(CommonOut.getFixText(s.valid)));
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasLatitude()) && (selectedFields.hasLatitude())) {
+        if ((s.hasLatitude()) && (selectedFields.hasLatitude())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("LATITUDE"));
             rec.append(":</td><td>"); // Column split
@@ -201,7 +201,7 @@ public final class CommonOut {
             }
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasLongitude()) && (selectedFields.hasLongitude())) {
+        if ((s.hasLongitude()) && (selectedFields.hasLongitude())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("LONGITUDE"));
             rec.append(":</td><td>"); // Column split
@@ -214,7 +214,7 @@ public final class CommonOut {
             }
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasHeight()) && (selectedFields.hasHeight())) {
+        if ((s.hasHeight()) && (selectedFields.hasHeight())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("HEIGHT"));
             rec.append(":</td><td>"); // Column split
@@ -229,7 +229,7 @@ public final class CommonOut {
             }
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasSpeed()) && (selectedFields.hasSpeed())) {
+        if ((s.hasSpeed()) && (selectedFields.hasSpeed())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("SPEED"));
             rec.append(":</td><td>"); // Column split
@@ -242,49 +242,49 @@ public final class CommonOut {
             }
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasHeading()) && (selectedFields.hasHeading())) {
+        if ((s.hasHeading()) && (selectedFields.hasHeading())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("HEADING"));
             rec.append(":</td><td>"); // Column split
             rec.append(JavaLibBridge.toString(s.heading));
             rec.append("&#176;</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
+        if ((s.hasDsta()) && (selectedFields.hasDsta())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("DSTA"));
             rec.append(":</td><td>"); // Column split
             rec.append(s.dsta);
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasDage()) && (selectedFields.hasDage())) {
+        if ((s.hasDage()) && (selectedFields.hasDage())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("DAGE"));
             rec.append(":</td><td>"); // Column split
             rec.append(s.dage);
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasPdop()) && (selectedFields.hasPdop())) {
+        if ((s.hasPdop()) && (selectedFields.hasPdop())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("PDOP"));
             rec.append(":</td><td>"); // Column split
             rec.append(JavaLibBridge.toString(s.pdop / 100.0, 2));
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasHdop()) && (selectedFields.hasHdop())) {
+        if ((s.hasHdop()) && (selectedFields.hasHdop())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("HDOP"));
             rec.append(":</td><td>"); // Column split
             rec.append(JavaLibBridge.toString(s.hdop / 100.0, 2));
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasVdop()) && (selectedFields.hasVdop())) {
+        if ((s.hasVdop()) && (selectedFields.hasVdop())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("VDOP"));
             rec.append(":</td><td>"); // Column split
             rec.append(JavaLibBridge.toString(s.vdop / 100.0, 2));
             rec.append("</td></tr>"); // Column end and end row.
         }
-        if ((activeFields.hasDistance()) && (selectedFields.hasDistance())) {
+        if ((s.hasDistance()) && (selectedFields.hasDistance())) {
             rec.append("<tr><td>"); // Table row and first column start
             rec.append(I18N.i18n("DISTANCE"));
             rec.append(":</td><td>"); // Column split

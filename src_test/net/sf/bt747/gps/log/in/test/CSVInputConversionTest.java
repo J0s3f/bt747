@@ -14,7 +14,7 @@ import gps.log.in.CSVLogConvert;
  */
 public class CSVInputConversionTest extends TestConvertInBase {
     
-    public static final String TEST_HDOP_FILE = "testHDOP.csv";
+    public static final String TEST_HDOP_FILE = "logfiles/testHDOP.csv";
     
     
     public String getResourcePath(String rsc) {

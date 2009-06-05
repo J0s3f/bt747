@@ -66,8 +66,8 @@ public final class GPSNMEAFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected final boolean recordIsNeeded(final GPSRecord s) {
-        return ptFilters[GPSFilter.TRKPT].doFilter(s);
+    protected final boolean recordIsNeeded(final GPSRecord r) {
+        return ptFilters[GPSFilter.TRKPT].doFilter(r);
     }
 
     /*
@@ -75,42 +75,42 @@ public final class GPSNMEAFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
-        super.writeRecord(s);
+    public final void writeRecord(final GPSRecord r) {
+        super.writeRecord(r);
         String timeStr = "";
-        if ((activeFields != null) && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+        if (ptFilters[GPSFilter.TRKPT].doFilter(r)) {
 
-            if ((activeFields.hasUtc())) {
+            if ((r.hasUtc())) {
                 timeStr = (t.getHour() < 10 ? "0" : "") + t.getHour()
                         + (t.getMinute() < 10 ? "0" : "") + t.getMinute()
                         + (t.getSecond() < 10 ? "0" : "") + t.getSecond();
-                if (activeFields.hasMillisecond()) {
-                    timeStr += "." + ((s.milisecond < 100) ? "0" : "")
-                            + ((s.milisecond < 10) ? "0" : "")
-                            + (s.milisecond);
+                if (r.hasMillisecond()) {
+                    timeStr += "." + ((r.milisecond < 100) ? "0" : "")
+                            + ((r.milisecond < 10) ? "0" : "")
+                            + (r.milisecond);
                 }
             }
 
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0) {
-                writeRMC(s, timeStr);
+                writeRMC(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0) {
-                writeGGA(s, timeStr);
+                writeGGA(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
-                writeZDA(s, timeStr);
+                writeZDA(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0) {
-                writeGSA(s, timeStr);
+                writeGSA(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSV_IDX)) != 0) {
-                writeGSV(s, timeStr);
+                writeGSV(r, timeStr);
             }
 
-        } // activeFields!=null
+        } 
     }
 
-    private void writeRMC(final GPSRecord s, final String timeStr) {
+    private void writeRMC(final GPSRecord r, final String timeStr) {
         // eg4.
         // $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
         // 1 = UTC of position fix (hhmmss.ss)
@@ -135,15 +135,15 @@ public final class GPSNMEAFile extends GPSFile {
         rec.setLength(0);
         rec.append("GPRMC,");
 
-        if ((activeFields.hasUtc())) {
+        if ((r.hasUtc())) {
             // 1 = UTC of position fix
             rec.append(timeStr);
         }
 
         // 2 = Data status (V=navigation receiver warning)
-        if ((activeFields.hasValid())) {
+        if ((r.hasValid())) {
             String tmp;
-            switch (s.valid) {
+            switch (r.valid) {
             case 0x0001:
                 tmp = ",V,"; // "No fix";
                 break;
@@ -157,15 +157,15 @@ public final class GPSNMEAFile extends GPSFile {
 
         // 3 = Latitude of fix
         // 4 = N or S
-        if (activeFields.hasLatitude()) {
+        if (r.hasLatitude()) {
             String sl;
             double l;
-            if (s.latitude >= 0) {
+            if (r.latitude >= 0) {
                 sl = ",N,";
-                l = s.latitude;
+                l = r.latitude;
             } else {
                 sl = ",S,";
-                l = -s.latitude;
+                l = -r.latitude;
             }
             final int a = (int) Math.floor(l);
             rec.append(((a < 10) ? "0" : "") + a);
@@ -180,15 +180,15 @@ public final class GPSNMEAFile extends GPSFile {
 
         // 5 = Longitude of fix
         // 6 = E or W
-        if (activeFields.hasLongitude()) {
+        if (r.hasLongitude()) {
             String sl;
             double l;
-            if (s.longitude >= 0) {
+            if (r.longitude >= 0) {
                 sl = ",E,";
-                l = s.longitude;
+                l = r.longitude;
             } else {
                 sl = ",W,";
-                l = -s.longitude;
+                l = -r.longitude;
             }
             final int a = (int) Math.floor(l);
             rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
@@ -208,16 +208,16 @@ public final class GPSNMEAFile extends GPSFile {
         // true course)
         // 11 = E or W
         // 12 = Checksum
-        if (activeFields.hasSpeed()) {
+        if (r.hasSpeed()) {
             rec.append(JavaLibBridge
-                    .toString(s.speed * GPSNMEAFile.KMH_PER_KNOT, 3));
+                    .toString(r.speed * GPSNMEAFile.KMH_PER_KNOT, 3));
         }
         rec.append(",");
-        if (activeFields.hasHeading()) {
-            rec.append(JavaLibBridge.toString(s.heading, 6));
+        if (r.hasHeading()) {
+            rec.append(JavaLibBridge.toString(r.heading, 6));
         }
         rec.append(",");
-        if ((activeFields.hasUtc())) {
+        if ((r.hasUtc())) {
             // DATE & TIME
             rec.append((t.getDay() < 10 ? "0" : "") + t.getDay()
                     + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
@@ -226,7 +226,7 @@ public final class GPSNMEAFile extends GPSFile {
         }
         rec.append(",,");
         // Extra field on transystem
-        if ((activeFields.hasValid() && (s.valid == 0x0004))) {
+        if ((r.hasValid() && (r.valid == 0x0004))) {
             rec.append(",D");
         } else {
             rec.append(",A");
@@ -235,24 +235,24 @@ public final class GPSNMEAFile extends GPSFile {
         rec.setLength(0);
     }
 
-    private void writeGGA(final GPSRecord s, final String timeStr) {
+    private void writeGGA(final GPSRecord r, final String timeStr) {
         rec.setLength(0);
         rec.append("GPGGA,");
 
-        if ((activeFields.hasUtc())) {
+        if ((r.hasUtc())) {
             rec.append(timeStr);
         }
         rec.append(",");
 
-        if (activeFields.hasLatitude()) {
+        if (r.hasLatitude()) {
             String sl;
             double l;
-            if (s.latitude >= 0) {
+            if (r.latitude >= 0) {
                 sl = ",N,";
-                l = s.latitude;
+                l = r.latitude;
             } else {
                 sl = ",S,";
-                l = -s.latitude;
+                l = -r.latitude;
             }
             final int a = (int) Math.floor(l);
             rec.append(((a < 10) ? "0" : "") + a);
@@ -265,15 +265,15 @@ public final class GPSNMEAFile extends GPSFile {
             rec.append(",,");
         }
 
-        if (activeFields.hasLongitude()) {
+        if (r.hasLongitude()) {
             String sl;
             double l;
-            if (s.longitude >= 0) {
+            if (r.longitude >= 0) {
                 sl = ",E,";
-                l = s.longitude;
+                l = r.longitude;
             } else {
                 sl = ",W,";
-                l = -s.longitude;
+                l = -r.longitude;
             }
             final int a = (int) Math.floor(l);
             rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
@@ -293,9 +293,9 @@ public final class GPSNMEAFile extends GPSFile {
         // - 2=DGPS fix
         // - 3=Precise positioning service (PPS) fix
 
-        if ((activeFields.hasValid())) {
+        if ((r.hasValid())) {
             String tmp = "";
-            switch (s.valid) {
+            switch (r.valid) {
             case 0x0001:
                 tmp = "0"; // "No fix";
                 break;
@@ -331,27 +331,27 @@ public final class GPSNMEAFile extends GPSFile {
         rec.append(",");
 
         // - 08 is the number of SV's being tracked
-        if (activeFields.hasNsat()) {
-            rec.append((s.nsat & 0xFF00) >> 8);
+        if (r.hasNsat()) {
+            rec.append((r.nsat & 0xFF00) >> 8);
             // rec+="("+JavaLibBridge.toString(s.nsat&0xFF)+")";
         }
         rec.append(",");
 
         // - 0.9 is the horizontal dilution of position (HDOP)
-        if (activeFields.hasHdop()) {
-            rec.append(JavaLibBridge.toString(s.hdop / 100.0, 2));
+        if (r.hasHdop()) {
+            rec.append(JavaLibBridge.toString(r.hdop / 100.0, 2));
         }
         rec.append(",");
         // - 133.4,M is the altitude, in meters, above mean sea level
-        if ((activeFields.hasHeight())) {
+        if ((r.hasHeight())) {
             float separation = 0.0f;
-            final boolean hasLatLon = ((activeFields.hasLatitude()) && (activeFields
+            final boolean hasLatLon = ((r.hasLatitude()) && (r
                     .hasLongitude()));
             if (hasLatLon) {
-                separation = ((long) (10 * Conv.wgs84Separation(s.latitude,
-                        s.longitude))) / 10.f;
+                separation = ((long) (10 * Conv.wgs84Separation(r.latitude,
+                        r.longitude))) / 10.f;
             }
-            rec.append(JavaLibBridge.toString(s.height - separation, 3));
+            rec.append(JavaLibBridge.toString(r.height - separation, 3));
             if (hasLatLon) {
                 rec.append(",M,");
                 rec.append(JavaLibBridge.toString(separation, 1));
@@ -367,20 +367,20 @@ public final class GPSNMEAFile extends GPSFile {
         // - (empty field) is the DGPS station ID number
         // - *42 is the checksum field
 
-        if ((activeFields.hasDage())) {
-            rec.append(s.dage);
+        if ((r.hasDage())) {
+            rec.append(r.dage);
         }
         rec.append(",");
 
-        if ((activeFields.hasDsta())) {
-            rec.append(s.dsta);
+        if ((r.hasDsta())) {
+            rec.append(r.dsta);
         }
 
         writeNMEA(rec.toString());
         rec.setLength(0);
     }
 
-    private void writeGSV(final GPSRecord s, final String timeStr) {
+    private void writeGSV(final GPSRecord r, final String timeStr) {
         // $GPGSV
         // GPS Satellites in view
         //
@@ -402,54 +402,54 @@ public final class GPSNMEAFile extends GPSFile {
         // 12-15= Information about third SV, same as field 4-7
         // 16-19= Information about fourth SV, same as field 4-7
         //
-        if (activeFields.hasSid()) {
+        if (r.hasSid()) {
             int j;
             int i;
             int m;
-            for (i = (s.sid.length - 1), m = 1, j = 0; i >= 0; m++) {
+            for (i = (r.sid.length - 1), m = 1, j = 0; i >= 0; m++) {
                 rec.setLength(0);
                 rec.append("GPGSV,");
-                rec.append((s.sid.length + 3) / 4);
+                rec.append((r.sid.length + 3) / 4);
                 rec.append(",");
                 rec.append(m);
                 rec.append(",");
                 // rec.append(JavaLibBridge.toString((s.nsat&0xFF00)>>8)); //
                 // in use
-                rec.append(s.nsat & 0xFF); // in
+                rec.append(r.nsat & 0xFF); // in
                 // view
                 rec.append(",");
                 int n;
                 for (n = 4; n > 0; i--, n--, j++) {
 
                     if (i >= 0) {
-                        if (s.sid[j] < 10) {
+                        if (r.sid[j] < 10) {
                             rec.append('0');
                         }
-                        rec.append(s.sid[j]);
+                        rec.append(r.sid[j]);
                         rec.append(",");
 
-                        if (activeFields.hasEle()) {
-                            if (s.ele[j] < 10) {
+                        if (r.hasEle()) {
+                            if (r.ele[j] < 10) {
                                 rec.append('0');
                             }
-                            rec.append(s.ele[j]);
+                            rec.append(r.ele[j]);
                         }
                         rec.append(",");
-                        if (activeFields.hasAzi()) {
+                        if (r.hasAzi()) {
                             // if(s.azi[j]<100) {
                             // rec.append('0');
-                            if (s.azi[j] < 10) {
+                            if (r.azi[j] < 10) {
                                 rec.append('0');
                             }
                             // }
-                            rec.append(s.azi[j]);
+                            rec.append(r.azi[j]);
                         }
                         rec.append(",");
-                        if (activeFields.hasSnr()) {
-                            if (s.snr[j] < 10) {
+                        if (r.hasSnr()) {
+                            if (r.snr[j] < 10) {
                                 rec.append('0');
                             }
-                            rec.append(s.snr[j]);
+                            rec.append(r.snr[j]);
                         }
                         rec.append(",");
                     } else {
@@ -462,8 +462,8 @@ public final class GPSNMEAFile extends GPSFile {
         }
     }
 
-    private void writeZDA(final GPSRecord s, final String timeStr) {
-        if ((activeFields.hasUtc())) {
+    private void writeZDA(final GPSRecord r, final String timeStr) {
+        if ((r.hasUtc())) {
             /*
              * Write GPZDA sentence if time is available
              */
@@ -482,10 +482,10 @@ public final class GPSNMEAFile extends GPSFile {
     }
 
     // FIX
-    private void writeGSA(final GPSRecord s, final String timeStr) {
-        if (activeFields.hasValid() || activeFields.hasSid()
-                || activeFields.hasPdop() || activeFields.hasHdop()
-                || activeFields.hasVdop()) {
+    private void writeGSA(final GPSRecord r, final String timeStr) {
+        if (r.hasValid() || r.hasSid()
+                || r.hasPdop() || r.hasHdop()
+                || r.hasVdop()) {
             // $GPGSA
             // GPS DOP and active satellites
             //
@@ -509,8 +509,8 @@ public final class GPSNMEAFile extends GPSFile {
             rec.setLength(0);
             rec.append("GPGSA,A,");
             // Mode
-            if ((activeFields.hasValid())) {
-                if (s.valid == 1) {
+            if ((r.hasValid())) {
+                if (r.valid == 1) {
                     rec.append("1");
                 } else {
                     rec.append("3");
@@ -519,8 +519,8 @@ public final class GPSNMEAFile extends GPSFile {
             rec.append(",");
 
             int sid_len;
-            if ((s.sid != null)) {
-                sid_len = s.sid.length;
+            if ((r.sid != null)) {
+                sid_len = r.sid.length;
             } else {
                 sid_len = 0;
             }
@@ -529,23 +529,23 @@ public final class GPSNMEAFile extends GPSFile {
             int j;
             for (i = (sid_len - 1), n = 12, j = 0; n > 0; n--, i--, j++) {
                 if (i > 0) {
-                    if (s.sidinuse[j]) {
-                        rec.append(s.sid[j]);
+                    if (r.sidinuse[j]) {
+                        rec.append(r.sid[j]);
                     }
                 }
                 rec.append(",");
             }
 
-            if (activeFields.hasPdop()) {
-                rec.append(JavaLibBridge.toString(s.pdop / 100f, 2));
+            if (r.hasPdop()) {
+                rec.append(JavaLibBridge.toString(r.pdop / 100f, 2));
             }
             rec.append(",");
-            if (activeFields.hasHdop()) {
-                rec.append(JavaLibBridge.toString(s.hdop / 100f, 2));
+            if (r.hasHdop()) {
+                rec.append(JavaLibBridge.toString(r.hdop / 100f, 2));
             }
             rec.append(",");
-            if (activeFields.hasVdop()) {
-                rec.append(JavaLibBridge.toString(s.vdop / 100f, 2));
+            if (r.hasVdop()) {
+                rec.append(JavaLibBridge.toString(r.vdop / 100f, 2));
             }
             // rec.append(",");
             writeNMEA(rec.toString());
