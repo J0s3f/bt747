@@ -410,7 +410,7 @@ public final class GPSGPXFile extends GPSFile {
                 }
                 // <cmt> xsd:string </cmt> [0..1] ?
                 // No comments, so commented out.
-                if (isTrkComment
+                if ((isTrkComment || isWayType)
                         && (recordNbrInLogs || (fixStr.length() != 0)
                                 || (rcrStr.length() != 0)
                                 || (hdopStr.length() != 0) || (nsatStr
