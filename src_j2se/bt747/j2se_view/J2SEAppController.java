@@ -642,16 +642,22 @@ public final class J2SEAppController extends J2SEController {
      * Saves the application's settings.
      */
     private static final void saveAppSettings() {
-        Generic.debug("Attempting saving settings to "+CONFIG_FILE_NAME);
+        Generic.debug("Attempting saving settings to " + CONFIG_FILE_NAME);
         File preferencesFile;
         try {
-            final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
-                    CONFIG_FILE_NAME.lastIndexOf('/')));
-            if (!m_Dir.exists()) {
-                m_Dir.mkdirs();
+            int lastIndex;
+            lastIndex = Math.max(CONFIG_FILE_NAME.lastIndexOf('/'),
+                    CONFIG_FILE_NAME.lastIndexOf('\\'));
+            if (lastIndex != -1) {
+                final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
+                        lastIndex));
+                if (!m_Dir.exists()) {
+                    m_Dir.mkdirs();
+                }
             }
         } catch (final Exception e) {
-            Generic.debug("Directory creation failed for "+CONFIG_FILE_NAME, e);
+            Generic.debug(
+                    "Directory creation failed for " + CONFIG_FILE_NAME, e);
             // Vm.debug("Exception new log delete");
             // e.printStackTrace();
         }
@@ -672,8 +678,10 @@ public final class J2SEAppController extends J2SEController {
             os.write(Settings.getAppSettings().getBytes(), 0, Settings
                     .getAppSettings().length());
             os.close();
+            Generic.debug("Writing settings success for " + CONFIG_FILE_NAME);
         } catch (final Exception e) {
-            Generic.debug("Writing settings file failed for " + CONFIG_FILE_NAME, e);
+            Generic.debug("Writing settings file failed for "
+                    + CONFIG_FILE_NAME, e);
         }
     }
 
