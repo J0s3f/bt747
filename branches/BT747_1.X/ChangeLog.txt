@@ -1,5 +1,8 @@
+Version 1.68.24
+* Fixed trackpoint info in gpx output (should only control trackpoints and not waypoints).
+
 Version 1.68.23
-* Added M1000C support
+* Added M1000C support (not perfect yet)
 
 Version 1.68.22
 * Bug in regular requests for memory usage.  Corrected.
