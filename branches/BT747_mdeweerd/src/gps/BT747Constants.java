@@ -152,42 +152,6 @@ public final class BT747Constants { // dev as in device
             0, // 1F // Log points with valid fix only
     };
     
-    public static final byte[] logFmtBytesSizesHolux245 = { 4, // "UTC", // = //
-        // 0x00001 // 0
-        2, // "VALID", // = 0x00002 // 1
-        4, // "LATITUDE", // = 0x00004 // 2
-        4, // "LONGITUDE",// = 0x00008 // 3
-        3, // "HEIGHT", // = 0x00020 // 4
-        4, // "SPEED", // = 0x00010 // 5
-        4, // "HEADING", // = 0x00040 // 6
-        2, // "DSTA", // = 0x00080 // 7
-        4, // "DAGE", // = 0x00100 // 8
-        2, // "PDOP", // = 0x00200 // 9
-        2, // "HDOP", // = 0x00400 // A
-        2, // "VDOP", // = 0x00800 // B
-        2, // "NSAT", // = 0x01000 // C
-        4, // "SID", // = 0x02000 // D
-        2, // "ELEVATION",// = 0x04000 // E
-        2, // "AZIMUTH", // = 0x08000 // F
-        2, // "SNR", // = 0x10000 // 10
-        2, // "RCR", // = 0x20000 // 11
-        2, // "MILISECOND",// = 0x40000 // 12
-        8, // "DISTANCE" // = 0x80000 // 13
-        0, // 14
-        0, // 15
-        0, // 16
-        0, // 17
-        0, // 18
-        0, // 19
-        0, // 1A
-        0, // 1B
-        0, // 1C
-        0, // 1D
-        0, // 1E
-        0, // 1F // Log points with valid fix only
-};
-
-
     public static final int RCR_TIME_MASK = 0x01;
     public static final int RCR_SPEED_MASK = 0x02;
     public static final int RCR_DISTANCE_MASK = 0x04;
@@ -697,7 +661,6 @@ public final class BT747Constants { // dev as in device
         case BT747Constants.GPS_TYPE_DEFAULT:
             return BT747Constants.logFmtByteSizes;
         case BT747Constants.GPS_TYPE_HOLUX_GR245:
-            return BT747Constants.logFmtBytesSizesHolux245;
         case BT747Constants.GPS_TYPE_HOLUX_M241:
             return BT747Constants.logFmtByteSizesHolux;
             }
