@@ -1,3 +1,8 @@
+Version 1.68.24
+* M1000C decoding should work now.
+* Correction in CSV output when RCR field is not available
+  (bug likely introduced in 1.68.23 or 1.68.22)
+
 Version 1.68.23
 * Added M1000C support (not perfect yet)
 * Fixed trackpoint info in gpx output (should only control trackpoints and not waypoints).
