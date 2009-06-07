@@ -196,10 +196,10 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((activeFileFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                 rec.append(fieldSep);
-            }
-            /* RCR value */
-            if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
-                rec.append(CommonOut.getRCRstr(r));
+                /* RCR value */
+                if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
+                    rec.append(CommonOut.getRCRstr(r));
+                }
             }
             /* DATE , TIME */
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
