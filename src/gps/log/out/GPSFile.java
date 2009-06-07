@@ -33,11 +33,11 @@ import bt747.sys.interfaces.BT747Time;
  * Derived classes will be able to write the desired output in the formats
  * they implement.
  * 
- * Refactoring / Discussion:
- * Either each implementation of this abstract class is a Strategy Design Pattern.
- * Or this abstract class could be a concrete class and be a Strategy itself.
- * The concrete classes currently deriving from this class would be Builders.
- * This will be given some thought.  It is not urgent to make the change.
+ * Refactoring / Discussion: Either each implementation of this abstract class
+ * is a Strategy Design Pattern. Or this abstract class could be a concrete
+ * class and be a Strategy itself. The concrete classes currently deriving
+ * from this class would be Builders. This will be given some thought. It is
+ * not urgent to make the change.
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
 
@@ -67,6 +67,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * The fields that are selected for the file output.
      */
     protected GPSRecord selectedFileFields;
+
+    private GPSRecord mySelectedFileFields;
 
     /**
      * True if the current record is the first record - needed for initial
@@ -232,6 +234,13 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             final GPSRecord activeFileFieldsFormat) {
         // TODO: Take into account the waypoints.
         activeFileFields = activeFileFieldsFormat;
+        updateFields();
+    }
+
+    private final void updateFields() {
+        if (activeFileFields != null && mySelectedFileFields != null)
+            selectedFileFields = GPSRecord.getCommonFormat(activeFileFields,
+                    mySelectedFileFields);
     }
 
     /**
@@ -243,7 +252,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @param selectedOutputFields
      */
     public final void setOutputFields(final GPSRecord selectedOutputFields) {
-        selectedFileFields = selectedOutputFields;
+        mySelectedFileFields = selectedOutputFields;
+        updateFields();
     }
 
     /**
@@ -257,6 +267,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      */
     public void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
+        updateFields();
     };
 
     /**

@@ -761,19 +761,8 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      */
     public final int getEstimatedNbrRecords(final int logFormat) {
         int count = 0;
-        boolean forHolux;
-        // Calculate for a holux either because this is the default setting or
-        // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected())
-                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_M241)
-                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_GR245);
         try {
-            int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
-            if (forHolux) {
-                size += 1;
-            } else {
-                size += 2;
-            }
+            int size = BT747Constants.logRecordAndChecksumSize(logFormat, getCurrentGpsType(), 12);
             if (size != 0) {
                 count = logMemUsefullSize() / size;
             }
@@ -783,22 +772,21 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         return count;
     }
 
+    
+    private final int getCurrentGpsType() {
+        if(isHolux() && gpsRxTx.isConnected()) {
+            return BT747Constants.GPS_TYPE_HOLUX_M241;
+        }
+        return getIntOpt(AppSettings.GPSTYPE);
+    }
+    
     // TODO: merge this function with the above.
     public final int getEstimatedNbrRecordsFree(final int logFormat) {
         int count = 0;
-        boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected())
-                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_M241)
-                || (getIntOpt(AppSettings.GPSTYPE) == AppSettings.GPS_TYPE_HOLUX_GR245);
         try {
-            int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
-            if (forHolux) {
-                size += 1;
-            } else {
-                size += 2;
-            }
+            int size = BT747Constants.logRecordAndChecksumSize(logFormat, getCurrentGpsType(), 12);
             if (size != 0) {
                 count = logFreeMemUsefullSize() / size;
             }
