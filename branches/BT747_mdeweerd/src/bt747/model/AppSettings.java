@@ -32,34 +32,6 @@ public class AppSettings {
      * Google map file name (basename).
      */
     public static final String C_GMAP_KEY_FILENAME = "gmapkey.txt";
-    /**
-     * Default gps type selection (MTK Logger).
-     */
-    public static final int GPS_TYPE_DEFAULT = 0;
-    /**
-     * ITrackU-SirfIII type.
-     */
-    public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
-
-    /**
-     * Specific Holux type.
-     * 
-     */
-    public static final int GPS_TYPE_HOLUX_GR245 = 4;
-    /**
-     * Specific Holux type.
-     * 
-     */
-    public static final int GPS_TYPE_HOLUX_M241 = 5;
-
-    /**
-     * Holux type.
-     */
-    public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
-    /**
-     * ITrackU-Phototrackr type.
-     */
-    public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
 
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 4000; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
@@ -497,11 +469,11 @@ public class AppSettings {
             /* fall through */
         case 40:
             if (getBooleanOpt(FORCE_HOLUXM241)) {
-                setIntOpt(GPSTYPE, GPS_TYPE_HOLUX_GR245);
+                setIntOpt(GPSTYPE, BT747Constants.GPS_TYPE_HOLUX_GR245);
             }
             /* If user already set a log type, skip this init. */
             setBooleanOpt(IS_FIRST_CONNECTION_TO_INIT,
-                    getIntOpt(GPSTYPE) == GPS_TYPE_DEFAULT);
+                    getIntOpt(GPSTYPE) == BT747Constants.GPS_TYPE_DEFAULT);
             setStringOpt(AppSettings.VERSION, "0.41");
             /* fall through */
         default:

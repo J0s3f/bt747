@@ -111,7 +111,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
      */
     public void converterSetup() {
         lc.setConvertWGS84ToMSL(+1);
-        lc.setLoggerType(Model.GPS_TYPE_DEFAULT);
+        lc.setLoggerType(BT747Constants.GPS_TYPE_DEFAULT);
 
         gpsFile = new GPSArray();
 

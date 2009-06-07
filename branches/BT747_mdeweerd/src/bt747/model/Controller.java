@@ -681,12 +681,12 @@ public class Controller implements ModelListener {
     public final void startDownload() {
         switch (m.getIntOpt(AppSettings.GPSTYPE)) {
         default:
-        case AppSettings.GPS_TYPE_DEFAULT:
+        case BT747Constants.GPS_TYPE_DEFAULT:
             startDefaultDownload();
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
-        case AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             startDPL700Download();
             break;
         }

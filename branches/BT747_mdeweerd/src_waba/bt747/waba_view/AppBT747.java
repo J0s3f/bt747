@@ -33,6 +33,7 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.*;
 import net.sf.bt747.waba.system.WabaJavaTranslations;
@@ -452,22 +453,22 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miHolux.isChecked = false;
         miHolux245.isChecked = false;
         switch (AppBT747.m.getIntOpt(AppSettings.GPSTYPE)) {
-        case AppSettings.GPS_TYPE_DEFAULT:
+        case BT747Constants.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             miGisteqType1.isChecked = true;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             miGisteqType2.isChecked = true;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             miGisteqType3.isChecked = true;
             break;
-        case AppSettings.GPS_TYPE_HOLUX_GR245:
+        case BT747Constants.GPS_TYPE_HOLUX_GR245:
             miHolux245.isChecked = true;
             break;
-        case AppSettings.GPS_TYPE_HOLUX_M241:
+        case BT747Constants.GPS_TYPE_HOLUX_M241:
             miHolux.isChecked = true;
         default:
             break;
@@ -582,30 +583,30 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     break;
                 case C_MENU_DEFAULTDEVICE:
                     AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
-                            AppSettings.GPS_TYPE_DEFAULT);
+                            BT747Constants.GPS_TYPE_DEFAULT);
                     gpsType();
                     break;
                 case C_MENU_HOLUX_241:
-                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, AppSettings.GPS_TYPE_HOLUX_M241);
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, BT747Constants.GPS_TYPE_HOLUX_M241);
                     break;
                 case C_MENU_HOLUX_245:
-                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, AppSettings.GPS_TYPE_HOLUX_GR245);
+                    AppBT747.c.setIntOpt(AppSettings.GPSTYPE, BT747Constants.GPS_TYPE_HOLUX_GR245);
                     break;
                 case C_MENU_GISTEQ_TYPE1:
                     AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
-                            AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
+                            BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
                     AppBT747.c.setIntOpt(AppSettings.GPSTYPE,
-                            AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
+                            BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
                     AppBT747.c
                             .setIntOpt(
                                     AppSettings.GPSTYPE,
-                                    AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
+                                    BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
                 case C_MENU_LANG_DE:
