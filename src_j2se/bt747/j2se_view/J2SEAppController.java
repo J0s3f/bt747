@@ -60,6 +60,7 @@ import bt747.sys.Generic;
 import bt747.sys.I18N;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Vector;
 
 public final class J2SEAppController extends J2SEController {
@@ -100,15 +101,27 @@ public final class J2SEAppController extends J2SEController {
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         super.modelEvent(e);
-        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+        switch(e.getType()) {
+        case ModelEvent.UPDATE_LOG_LOG_STATUS:
             if (!loggerNeedsFormatQuestionAsked && m.isLoggerNeedsFormat()) {
                 loggerNeedsFormatQuestionAsked = true;
                 askLoggerNeedsFormat();
             }
-        }
-        if (e.getType() == ModelEvent.CONNECTED) {
+        break;
+        case ModelEvent.CONNECTED:
             resetValuesAfterConnect();
+            break;
+        case ModelEvent.EXCEPTION:
+            notifyBT747Exception((BT747Exception) e.getArg());
+            break;
         }
+    }
+    
+    private final void notifyBT747Exception(final BT747Exception e) {
+        JOptionPane.showMessageDialog(rootFrame,
+                "<html><b>"+e.getCause()+"</b><br><p>"+e.getMessage(),
+                getString("OPERATION_FAILED"), // TITLE
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private boolean loggerNeedsFormatQuestionAsked;
@@ -364,7 +377,6 @@ public final class J2SEAppController extends J2SEController {
                 // Erase log
                 c.recoveryEraseLog();
             }
-
         }
     }
 

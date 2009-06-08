@@ -18,7 +18,7 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Exception;
 
 /**
  * @author Mario
@@ -161,10 +161,14 @@ public class J2SEController extends Controller {
             public final void run() {
                 final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
                 bt747.sys.Generic.debug("Getting data from <" + urlTxt + ">");
+                try {
                 final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
                 bt747.sys.Generic.debug("Finished getting data from <"
                         + urlTxt + ">");
                 setAgpsData(agpsData);
+                } catch (final BT747Exception b) {
+                    m.postEvent(new ModelEvent(ModelEvent.EXCEPTION, b));
+                }
             }
         });
 

@@ -13,6 +13,7 @@ import bt747.model.EventPoster;
 import bt747.model.ModelEvent;
 import bt747.sys.ByteDataStream;
 import bt747.sys.Generic;
+import bt747.sys.I18N;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747InputStream;
 import bt747.sys.interfaces.BT747Int;
@@ -143,7 +144,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         if (errorCnt >= MAX_ERROR_CNT) {
             /* Max error count exceeded - stop. */
             stopUploadMode(handler);
-            throw new BT747Exception("Too many errors during AGPS upload");
+            throw new BT747Exception(I18N.i18n("Too many errors during AGPS upload"));
         }
         if (sendNextOK) {
             // OK to send data

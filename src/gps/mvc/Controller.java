@@ -4,6 +4,7 @@
 package gps.mvc;
 
 import gps.connection.GPSrxtx;
+import gps.GpsEvent;
 import gps.ProtocolConstants;
 
 import bt747.sys.Generic;
@@ -251,6 +252,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
                             }
                         } catch (BT747Exception e) {
                             Generic.debug("Handler: ", e);
+                            gpsM.postEvent(new GpsEvent(GpsEvent.EXCEPTION,e));
                             setDeviceOperationHandler(null);
                         }
                     }
