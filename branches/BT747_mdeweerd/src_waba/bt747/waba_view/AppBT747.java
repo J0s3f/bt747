@@ -99,6 +99,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
             GPSrxtx.setDefaultGpsPortInstance(gpsPort);
         }
 
+        AppController.initAppSettings();
         m = new Model();
         c = new AppController(AppBT747.m);
         Txt.setLang(AppBT747.m.getStringOpt(AppSettings.LANGUAGE));
