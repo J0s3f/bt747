@@ -134,6 +134,11 @@ public class GpsEvent {
     public static final int DATA_UPDATE = 37;
 
     /**
+     * An exception has been thrown. The parameter must be a BT747Exception.
+     */
+    public static final int EXCEPTION = 38;
+
+    /**
      * The event's type.
      */
     private final int type;
