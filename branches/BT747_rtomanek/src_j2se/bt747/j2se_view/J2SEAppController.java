@@ -60,6 +60,7 @@ import bt747.sys.Generic;
 import bt747.sys.I18N;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Vector;
 
 public final class J2SEAppController extends J2SEController {
@@ -100,15 +101,27 @@ public final class J2SEAppController extends J2SEController {
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         super.modelEvent(e);
-        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+        switch(e.getType()) {
+        case ModelEvent.UPDATE_LOG_LOG_STATUS:
             if (!loggerNeedsFormatQuestionAsked && m.isLoggerNeedsFormat()) {
                 loggerNeedsFormatQuestionAsked = true;
                 askLoggerNeedsFormat();
             }
-        }
-        if (e.getType() == ModelEvent.CONNECTED) {
+        break;
+        case ModelEvent.CONNECTED:
             resetValuesAfterConnect();
+            break;
+        case ModelEvent.EXCEPTION:
+            notifyBT747Exception((BT747Exception) e.getArg());
+            break;
         }
+    }
+    
+    private final void notifyBT747Exception(final BT747Exception e) {
+        JOptionPane.showMessageDialog(rootFrame,
+                "<html><b>"+e.getCause()+"</b><br><p>"+e.getMessage(),
+                getString("OPERATION_FAILED"), // TITLE
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private boolean loggerNeedsFormatQuestionAsked;
@@ -364,7 +377,6 @@ public final class J2SEAppController extends J2SEController {
                 // Erase log
                 c.recoveryEraseLog();
             }
-
         }
     }
 
@@ -642,14 +654,22 @@ public final class J2SEAppController extends J2SEController {
      * Saves the application's settings.
      */
     private static final void saveAppSettings() {
+        Generic.debug("Attempting saving settings to " + CONFIG_FILE_NAME);
         File preferencesFile;
         try {
-            final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
-                    CONFIG_FILE_NAME.lastIndexOf('/')));
-            if (!m_Dir.exists()) {
-                m_Dir.mkdirs();
+            int lastIndex;
+            lastIndex = Math.max(CONFIG_FILE_NAME.lastIndexOf('/'),
+                    CONFIG_FILE_NAME.lastIndexOf('\\'));
+            if (lastIndex != -1) {
+                final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
+                        lastIndex));
+                if (!m_Dir.exists()) {
+                    m_Dir.mkdirs();
+                }
             }
         } catch (final Exception e) {
+            Generic.debug(
+                    "Directory creation failed for " + CONFIG_FILE_NAME, e);
             // Vm.debug("Exception new log delete");
             // e.printStackTrace();
         }
@@ -659,6 +679,7 @@ public final class J2SEAppController extends J2SEController {
                 preferencesFile.delete();
             }
         } catch (final Exception e) {
+            Generic.debug("Deleting file failed for " + CONFIG_FILE_NAME, e);
             // Vm.debug("Exception new log delete");
         }
         try {
@@ -669,8 +690,10 @@ public final class J2SEAppController extends J2SEController {
             os.write(Settings.getAppSettings().getBytes(), 0, Settings
                     .getAppSettings().length());
             os.close();
+            Generic.debug("Writing settings success for " + CONFIG_FILE_NAME);
         } catch (final Exception e) {
-            e.printStackTrace();
+            Generic.debug("Writing settings file failed for "
+                    + CONFIG_FILE_NAME, e);
         }
     }
 

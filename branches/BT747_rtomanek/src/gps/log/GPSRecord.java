@@ -289,6 +289,78 @@ public class GPSRecord {
         return new GPSRecord(this);
     }
 
+    public final static GPSRecord getCommonFormat(final GPSRecord a,
+            final GPSRecord b) {
+        final GPSRecord gpsRec = new GPSRecord();
+        if (a.hasUtc() && b.hasUtc()) {
+            gpsRec.utc = GPSRecord.HAS_UTC;
+        }
+        if (a.hasValid() && b.hasValid()) {
+            gpsRec.valid = GPSRecord.HAS_VALID;
+        }
+        if (a.hasLatitude() && b.hasLatitude()) {
+            gpsRec.latitude = GPSRecord.HAS_LAT_LON;
+        }
+        if (a.hasLongitude() && b.hasLongitude()) {
+            gpsRec.longitude = GPSRecord.HAS_LAT_LON;
+        }
+        if (a.hasHeight() && b.hasHeight()) {
+            gpsRec.height = GPSRecord.HAS_HEIGHT;
+        }
+        if (a.hasSpeed() && b.hasSpeed()) {
+            gpsRec.speed = GPSRecord.HAS_SPEED;
+        }
+        if (a.hasHeading() && b.hasHeading()) {
+            gpsRec.heading = GPSRecord.HAS_HEADING;
+        }
+        if (a.hasDsta() && b.hasDsta()) {
+            gpsRec.dsta = GPSRecord.HAS_DSTA;
+        }
+        if (a.hasDage() && b.hasDage()) {
+            gpsRec.dage = GPSRecord.HAS_DAGE;
+        }
+        if (a.hasPdop() && b.hasPdop()) {
+            gpsRec.pdop = GPSRecord.HAS_XDOP;
+        }
+        if (a.hasHdop() && b.hasHdop()) {
+            gpsRec.hdop = GPSRecord.HAS_XDOP;
+        }
+        if (a.hasVdop() && b.hasVdop()) {
+            gpsRec.vdop = GPSRecord.HAS_XDOP;
+        }
+        if (a.hasNsat() && b.hasNsat()) {
+            gpsRec.nsat = GPSRecord.HAS_NSAT;
+        }
+        if (a.hasSid() && b.hasSid()) {
+            gpsRec.sid = new int[0];
+        }
+        if (a.hasSidInUse() && b.hasSidInUse()) {
+            gpsRec.sidinuse = new boolean[0];
+        }
+
+        if (a.hasEle() && b.hasEle()) {
+            gpsRec.ele = new int[0];
+        }
+        if (a.hasAzi() && b.hasAzi()) {
+            gpsRec.azi = new int[0];
+        }
+        if (a.hasSnr() && b.hasSnr()) {
+            gpsRec.snr = new int[0];
+        }
+        if (a.hasRcr() && b.hasRcr()) {
+            gpsRec.rcr = GPSRecord.HAS_RCR;
+        }
+        if (a.hasMillisecond() && b.hasMillisecond()) {
+            gpsRec.milisecond = GPSRecord.HAS_MILISECOND;
+        }
+        if (a.hasDistance() && b.hasDistance()) {
+            gpsRec.distance = GPSRecord.HAS_DISTANCE;
+        }
+
+        /* End handling record */
+        return gpsRec;
+    }
+
     /** Return log format based on content. */
     public final int getLogFormat() {
         int logFormat = 0;
@@ -588,8 +660,9 @@ public class GPSRecord {
                     + "(" + utc + ")");
         }
         if (hasTagUtc()) {
-            rec.append("\nTAGUTC:" + gps.log.out.CommonOut.getDateTimeStr(tagutc)
-                    + "(" + tagutc + ")");
+            rec.append("\nTAGUTC:"
+                    + gps.log.out.CommonOut.getDateTimeStr(tagutc) + "("
+                    + tagutc + ")");
         }
         if (hasValid()) {
             rec.append("\nVALID:" + JavaLibBridge.unsigned2hex(valid, 8));

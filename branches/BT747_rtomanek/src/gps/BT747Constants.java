@@ -152,9 +152,6 @@ public final class BT747Constants { // dev as in device
             0, // 1F // Log points with valid fix only
     };
     
-    public static final byte[] logFmtBytesSizesHolux245 =
-        logFmtByteSizesHolux;
-
     public static final int RCR_TIME_MASK = 0x01;
     public static final int RCR_SPEED_MASK = 0x02;
     public static final int RCR_DISTANCE_MASK = 0x04;
@@ -534,6 +531,37 @@ public final class BT747Constants { // dev as in device
     public static final int HOLUX_API_DT_HW_VERSION = 7;
     public static final int HOLUX_API_DT_TZ_OFFSET = 10;
 
+    
+    /**
+     * Default gps type selection (MTK Logger).
+     */
+    public static final int GPS_TYPE_DEFAULT = 0;
+    /**
+     * ITrackU-SirfIII type.
+     */
+    public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
+
+    /**
+     * Specific Holux type.
+     * 
+     */
+    public static final int GPS_TYPE_HOLUX_GR245 = 4;
+    /**
+     * Specific Holux type.
+     * 
+     */
+    public static final int GPS_TYPE_HOLUX_M241 = 5;
+
+    /**
+     * Holux type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
+    /**
+     * ITrackU-Phototrackr type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
+
+    
     /**
      * Get the minimum size for a log record. This does not include the
      * checksum.
@@ -547,17 +575,12 @@ public final class BT747Constants { // dev as in device
      * @return Size of the header
      */
     public static final int logRecordMinSize(final int p_logFormat,
-            final boolean holux) {
+            final int gpsType) {
         int total = 0;
         try {
             int bits = p_logFormat;
             int index = 0;
-            byte[] byteSizes;
-            if (holux) {
-                byteSizes = BT747Constants.logFmtByteSizesHolux;
-            } else {
-                byteSizes = BT747Constants.logFmtByteSizes;
-            }
+            final byte[] byteSizes = getByteSizes(gpsType);
             do {
                 if ((bits & 1) != 0) {
                     switch (index) {
@@ -581,6 +604,23 @@ public final class BT747Constants { // dev as in device
         return total;
     }
 
+    
+    public static final int logRecordAndChecksumSize(final int logFormat,
+            final int gpsType, final int sats) {
+        int checksumSize;
+        switch(gpsType) {
+        default:
+        case BT747Constants.GPS_TYPE_DEFAULT:
+            checksumSize = 2;
+            break;
+        case BT747Constants.GPS_TYPE_HOLUX_GR245:
+        case BT747Constants.GPS_TYPE_HOLUX_M241:
+            checksumSize = 1;
+            break;
+            }
+        return checksumSize + logRecordSize(logFormat, gpsType, sats);
+    }
+    
     /**
      * Calculate the log record size
      * 
@@ -593,14 +633,9 @@ public final class BT747Constants { // dev as in device
      * @return The estimated record size.
      */
     public static final int logRecordSize(final int logFormat,
-            final boolean holux, final int sats) {
+            final int gpsType, final int sats) {
         int cnt = 0;
-        byte[] byteSizes;
-        if (holux) {
-            byteSizes = BT747Constants.logFmtByteSizesHolux;
-        } else {
-            byteSizes = BT747Constants.logFmtByteSizes;
-        }
+        final byte[] byteSizes = getByteSizes(gpsType);
         if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
             cnt += byteSizes[BT747Constants.FMT_SID_IDX];
             cnt += (logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0 ? byteSizes[BT747Constants.FMT_ELEVATION_IDX]
@@ -611,27 +646,33 @@ public final class BT747Constants { // dev as in device
                     : 0;
             cnt *= sats - 1;
         }
-        return cnt + BT747Constants.logRecordMinSize(logFormat, holux);
+        return cnt + BT747Constants.logRecordMinSize(logFormat, gpsType);
     }
 
     public static final int logRecordMaxSize(final int p_logFormat,
-            final boolean holux) {
-        return BT747Constants.logRecordSize(p_logFormat, holux,
+            final int gpsType) {
+        return BT747Constants.logRecordSize(p_logFormat, gpsType,
                 BT747Constants.FMT_MAX_SATS);
     }
+    
+    private static final byte[] getByteSizes(final int gpsType) {
+        switch(gpsType) {
+        default:
+        case BT747Constants.GPS_TYPE_DEFAULT:
+            return BT747Constants.logFmtByteSizes;
+        case BT747Constants.GPS_TYPE_HOLUX_GR245:
+        case BT747Constants.GPS_TYPE_HOLUX_M241:
+            return BT747Constants.logFmtByteSizesHolux;
+            }
+        }
 
     public static final int[] logRecordSatOffsetAndSize(final int logFormat,
-            final boolean holux) {
+            final int gpsType) {
         int bits = logFormat;
         int index = 0;
         int total = 0;
         int satRecSize = 0;
-        byte[] byteSizes;
-        if (holux) {
-            byteSizes = BT747Constants.logFmtByteSizesHolux;
-        } else {
-            byteSizes = BT747Constants.logFmtByteSizes;
-        }
+        final byte[] byteSizes = getByteSizes(gpsType);
         do {
             if ((bits & 1) != 0) {
                 switch (index) {

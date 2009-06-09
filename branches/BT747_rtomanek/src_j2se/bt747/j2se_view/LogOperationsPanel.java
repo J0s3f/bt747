@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package bt747.j2se_view;
 
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
@@ -1359,23 +1360,23 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         int type;
         switch (cbGPSType.getSelectedIndex()) {
         case 1:
-            type = Model.GPS_TYPE_HOLUX_M241;
+            type = BT747Constants.GPS_TYPE_HOLUX_M241;
             break;
         case 2:
-            type = Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
+            type = BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
             break;
         case 3:
-            type = Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
+            type = BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
             break;
         case 4:
-            type = Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
+            type = BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
             break;
         case 5:
-            type = Model.GPS_TYPE_HOLUX_GR245;
+            type = BT747Constants.GPS_TYPE_HOLUX_GR245;
             break;
         case 0:
         default:
-            type = Model.GPS_TYPE_DEFAULT;
+            type = BT747Constants.GPS_TYPE_DEFAULT;
         }
         c.setIntOpt(AppSettings.GPSTYPE, type);
     }// GEN-LAST:event_cbGPSTypeFocusLost
@@ -1383,19 +1384,19 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private final void updateCbGPSType() {
             int index = 0;
         switch (m.getIntOpt(AppSettings.GPSTYPE)) {
-        case AppSettings.GPS_TYPE_DEFAULT:
+        case BT747Constants.GPS_TYPE_DEFAULT:
             index = 0;
             break;
-        case AppSettings.GPS_TYPE_HOLUX_M241:
+        case BT747Constants.GPS_TYPE_HOLUX_M241:
             index = 1;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             index = 2;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             index = 3;
             break;
-        case AppSettings.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             index = 4;
             break;
         }

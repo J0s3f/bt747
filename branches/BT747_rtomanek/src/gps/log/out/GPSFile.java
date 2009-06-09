@@ -33,11 +33,11 @@ import bt747.sys.interfaces.BT747Time;
  * Derived classes will be able to write the desired output in the formats
  * they implement.
  * 
- * Refactoring / Discussion:
- * Either each implementation of this abstract class is a Strategy Design Pattern.
- * Or this abstract class could be a concrete class and be a Strategy itself.
- * The concrete classes currently deriving from this class would be Builders.
- * This will be given some thought.  It is not urgent to make the change.
+ * Refactoring / Discussion: Either each implementation of this abstract class
+ * is a Strategy Design Pattern. Or this abstract class could be a concrete
+ * class and be a Strategy itself. The concrete classes currently deriving
+ * from this class would be Builders. This will be given some thought. It is
+ * not urgent to make the change.
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
 
@@ -55,7 +55,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * Indicates the fields active in the current record (for
      * {@link #writeRecord(GPSRecord)}).
      */
-    protected GPSRecord activeFields;
+    private GPSRecord activeFields = GPSRecord.getLogFormatRecord(0);
 
     /**
      * Indicates the fields active in the files (useful for
@@ -67,6 +67,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * The fields that are selected for the file output.
      */
     protected GPSRecord selectedFileFields;
+
+    private GPSRecord mySelectedFileFields;
 
     /**
      * True if the current record is the first record - needed for initial
@@ -232,6 +234,13 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             final GPSRecord activeFileFieldsFormat) {
         // TODO: Take into account the waypoints.
         activeFileFields = activeFileFieldsFormat;
+        updateFields();
+    }
+
+    private final void updateFields() {
+        if (activeFileFields != null && mySelectedFileFields != null)
+            selectedFileFields = GPSRecord.getCommonFormat(activeFileFields,
+                    mySelectedFileFields);
     }
 
     /**
@@ -243,7 +252,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @param selectedOutputFields
      */
     public final void setOutputFields(final GPSRecord selectedOutputFields) {
-        selectedFileFields = selectedOutputFields;
+        mySelectedFileFields = selectedOutputFields;
+        updateFields();
     }
 
     /**
@@ -257,6 +267,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      */
     public void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
+        updateFields();
     };
 
     /**
@@ -513,7 +524,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         previousTime = nextPreviousTime;
         // bt747.sys.Generic.debug("Adding\n"+r.toString());
 
-        if (activeFields.utc != 0) {
+        if (r.hasUtc()) {
             t.setUTCTime(r.utc); // Initialization needed later too!
             if (oneFilePerDay || oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7)
@@ -533,7 +544,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             boolean createOK = true;
             previousDate = dateref;
 
-            if (activeFields.utc != 0) {
+            if (r.hasUtc()) {
                 if ((r.utc < 24 * 3600) // No date provided by log.
                         || (t.getYear() > 2000)) {
                     extraExt = "-" + t.getYear()
@@ -595,7 +606,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             }
         }
 
-        if ((activeFields.utc != 0) && recordIsNeeded(r)) {
+        if ((r.hasUtc()) && recordIsNeeded(r)) {
             nextPreviousTime = r.utc;
         }
     };

@@ -58,7 +58,6 @@ public final class AppController extends Controller {
         this.m = model;
         c = this; // Temporary solution until application controller methods
 
-        initAppSettings();
         m.init();
         // moved from lower level Controller.
         super.setModel(m);
@@ -266,13 +265,13 @@ public final class AppController extends Controller {
     // l.newEvent(e);
     // }
     // }
-    private boolean isWin32LikeDevice() {
+    private final static boolean isWin32LikeDevice() {
         return waba.sys.Settings.platform.startsWith("WindowsCE")
                 || waba.sys.Settings.platform.startsWith("PocketPC")
                 || (waba.sys.Settings.platform.startsWith("Win32") && Settings.onDevice);
     }
 
-    private void initAppSettings() {
+    public final static void initAppSettings() {
         AppSettings.setDefaultChunkSize(waba.sys.Settings.onDevice ? 220
                 : 0x10000);
         AppSettings.setDefaultTraversable(waba.sys.Settings.onDevice

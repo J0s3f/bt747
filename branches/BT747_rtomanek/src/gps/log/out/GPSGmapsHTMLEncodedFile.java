@@ -489,12 +489,11 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
-        super.writeRecord(s);
+    public final void writeRecord(final GPSRecord r) {
+        super.writeRecord(r);
 
-        if (activeFields != null) {
 
-            if (!ptFilters[currentFilter].doFilter(s)) {
+            if (!ptFilters[currentFilter].doFilter(r)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
                 if (!isWayType && !isNewTrack && !firstRecord
@@ -510,19 +509,19 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     // "points.push(new GPoint(3.11492833333333,45.75697))";
                     // map.addOverlay(new GPolyline(points,"#960000",2,.75));
                 }
-                if (!isWayType && cachedRecordIsNeeded(s)) {
+                if (!isWayType && cachedRecordIsNeeded(r)) {
                     // Update map boundaries
-                    if (s.latitude < minlat) {
-                        minlat = s.latitude;
+                    if (r.latitude < minlat) {
+                        minlat = r.latitude;
                     }
-                    if (s.latitude > maxlat) {
-                        maxlat = s.latitude;
+                    if (r.latitude > maxlat) {
+                        maxlat = r.latitude;
                     }
-                    if (s.longitude < minlon) {
-                        minlon = s.longitude;
+                    if (r.longitude < minlon) {
+                        minlon = r.longitude;
                     }
-                    if (s.longitude > maxlon) {
-                        maxlon = s.longitude;
+                    if (r.longitude > maxlon) {
+                        maxlon = r.longitude;
                     }
                 }
             } else {
@@ -531,19 +530,19 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 if (!isWayType) {
                     // StringBuffer rec=new StringBuffer(1024);
                     boolean isTimeSPlit;
-                    isTimeSPlit = (activeFields.hasUtc())
-                            && ((s.utc - previousTime) > trackSepTime);
+                    isTimeSPlit = (r.hasUtc())
+                            && ((r.utc - previousTime) > trackSepTime);
                     rec.setLength(0);
                     if (isNewTrack || isTimeSPlit) {
                         isNewTrack = false;
-                        if ((activeFields.hasLatitude())
-                                && (activeFields.hasLongitude())) {
+                        if ((r.hasLatitude())
+                                && (r.hasLongitude())) {
                             if (!isTimeSPlit) {
                                 track.addTrackpoint(new Trackpoint(
-                                        s.latitude, s.longitude));
-                                if ((activeFields.hasUtc())) {
-                                    previousTime = s.utc;
-                                    previousRec = s.recCount;
+                                        r.latitude, r.longitude));
+                                if ((r.hasUtc())) {
+                                    previousTime = r.utc;
+                                    previousRec = r.recCount;
                                 }
                                 endTrack(badTrackColor);
                             } else {
@@ -556,19 +555,19 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         }
                         resetTrack();
                         // Vm.debug("Pos:"+getTimeStr(s));
-                        trackStartInfo = "<b>#" + s.recCount + "# </b>"
-                                + CommonOut.getDateTimeStr(activeFields, t);
+                        trackStartInfo = "<b>#" + r.recCount + "# </b>"
+                                + CommonOut.getDateTimeStr(r, t);
                         if (trackDescription.length() == 0) {
                             trackDescription = CommonOut.getDateTimeStr(
-                                    activeFields, t);
+                                    r, t);
                             // bt747.sys.Vm.debug(trackDescription);
                         }
                     }
                 }
 
-                if ((activeFields.hasUtc())) {
-                    previousTime = s.utc;
-                    previousRec = s.recCount;
+                if ((r.hasUtc())) {
+                    previousTime = r.utc;
+                    previousRec = r.recCount;
                 }
                 // " <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 // " <ele>12.863281</ele>"+
@@ -584,15 +583,15 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 // } else {
                 // rec.append("<trkpt ");
                 // }
-                if ((activeFields.hasLatitude())
-                        && (activeFields.hasLongitude())) {
+                if ((r.hasLatitude())
+                        && (r.hasLongitude())) {
                     // rec.append("points.push(new GLatLng(");
                     // rec.append(JavaLibBridge.toString(s.latitude,6));
                     // rec.append(',');
                     // rec.append(JavaLibBridge.toString(s.longitude,6));
                     // rec.append("));");
-                    final Trackpoint tp = new Trackpoint(s.latitude,
-                            s.longitude);
+                    final Trackpoint tp = new Trackpoint(r.latitude,
+                            r.longitude);
                     //                    
                     track.addTrackpoint(tp);
 
@@ -611,33 +610,33 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                 }
 
-                if (isWayType && (activeFields.hasLatitude())
-                        && (activeFields.hasLongitude())) {
-                    waypoints.addTrackpoint(new Trackpoint(s.latitude,
-                            s.longitude));
+                if (isWayType && (r.hasLatitude())
+                        && (r.hasLongitude())) {
+                    waypoints.addTrackpoint(new Trackpoint(r.latitude,
+                            r.longitude));
                     infoHtmls.append("\"");
-                    final String r = CommonOut.getRCRstr(s);
+                    final String rcrStr = CommonOut.getRCRstr(r);
                     String icon = "";
-                    if (icons.get(r) == null) {
+                    if (icons.get(rcrStr) == null) {
                         WayPointStyle style;
-                        if ((r.length() > 0) && (r.charAt(0) == 'X')) {
+                        if ((rcrStr.length() > 0) && (rcrStr.charAt(0) == 'X')) {
                             style = CommonOut.getWayPointStyles().get(
-                                    r.substring(1));
-                        } else if (r.length() > 1) {
+                                    rcrStr.substring(1));
+                        } else if (rcrStr.length() > 1) {
                             style = CommonOut.getWayPointStyles().get("M");
                         } else {
-                            style = CommonOut.getWayPointStyles().get(r);
+                            style = CommonOut.getWayPointStyles().get(rcrStr);
                         }
                         if (style != null) {
                             final String url = style.getIconUrl();
-                            icons.put(r, url);
-                            icon = "ICON" + r;
+                            icons.put(rcrStr, url);
+                            icon = "ICON" + rcrStr;
                         }
                     } else {
-                        icon = "ICON" + r;
+                        icon = "ICON" + rcrStr;
                     }
                     iconList.addElement(icon);
-                    CommonOut.getHtml(infoHtmls, s, activeFields,
+                    CommonOut.getHtml(infoHtmls, r,
                             selectedFileFields, t, recordNbrInLogs, imperial);
                     infoHtmls.append("\",\n");
                 }
@@ -646,7 +645,6 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 rec.setLength(0);
 
             }
-        } // activeFields!=null
     }
 
     /*

@@ -58,9 +58,12 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                             .getLogFormatRecord(logFormat));
         }
 
-        minRecordSize = BT747Constants.logRecordMinSize(logFormat, holux);
-        maxRecordSize = BT747Constants.logRecordMaxSize(logFormat, holux);
-        result = BT747Constants.logRecordSatOffsetAndSize(logFormat, holux);
+        minRecordSize = BT747Constants.logRecordMinSize(logFormat,
+                getLoggerType());
+        maxRecordSize = BT747Constants.logRecordMaxSize(logFormat,
+                getLoggerType());
+        result = BT747Constants.logRecordSatOffsetAndSize(logFormat,
+                getLoggerType());
         satIdxOffset = result[0];
         satRecSize = result[1];
     }
@@ -239,7 +242,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             while (continueInBuffer) {
                 boolean lookForRecord = true;
 
-                while (lookForRecord && (sizeToRead - 16 > offsetInBuffer) // Enough
+                while (lookForRecord && (sizeToRead - 20 > offsetInBuffer) // Enough
                 // bytes
                 // in
                 // buffer
@@ -560,8 +563,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
     public final void setLoggerType(int loggerType) {
         super.setLoggerType(loggerType);
         switch (getLoggerType()) {
-        case Model.GPS_TYPE_HOLUX_GR245:
-        case Model.GPS_TYPE_HOLUX_M241:
+        case BT747Constants.GPS_TYPE_HOLUX_GR245:
+        case BT747Constants.GPS_TYPE_HOLUX_M241:
             holux = true;
             break;
         }
@@ -688,6 +691,17 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 nextPointIsWayPt = true;
                 // Generic.debug("Holux Waypoint");
             }
+            if (((0xFF & bytes[offsetInBuffer + 5]) == 'G')
+                    && ((0xFF & bytes[offsetInBuffer + 6]) == 'R')
+                    && ((0xFF & bytes[offsetInBuffer + 7]) == '2')
+                    && ((0xFF & bytes[offsetInBuffer + 8]) == '4')
+                    && ((0xFF & bytes[offsetInBuffer + 9]) == '5')
+                    && ((0xFF & bytes[offsetInBuffer + 16]) == ' ')
+                    && ((0xFF & bytes[offsetInBuffer + 17]) == ' ')
+                    && ((0xFF & bytes[offsetInBuffer + 18]) == ' ')
+                    && ((0xFF & bytes[offsetInBuffer + 19]) == ' ')) {
+                nbrBytesDone += 4;
+            }
         }
         return nbrBytesDone;
     }
@@ -775,36 +789,49 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 valid = false;
             }
         }
-        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
-            if (!holux) {
-                final int height = (0xFF & bytes[recIdx++]) << 0
+        if (getLoggerType() == BT747Constants.GPS_TYPE_HOLUX_GR245) {
+            if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
+                final int speed_m_s = (0xFF & bytes[recIdx++])
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                r.height = JavaLibBridge.toFloatBitwise(height);
-            } else {
-                final int height =
-
-                (0xFF & bytes[recIdx++]) << 8
+                // speed is in cm/s and 'integer'.
+                // 0x7FFFFF = 301989,852 km/h
+                // 0x000001 = 1 cm /s = 3600 cm / h = 0.036 km /h
+                // Height is speed:
+                r.speed = (speed_m_s) * 0.036f;
+            }
+            if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
+                // GR245
+                final int height = (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
-                    // Height is speed:
-                    r.speed = JavaLibBridge.toFloatBitwise(height);
+
+                r.height = JavaLibBridge.toFloatBitwise(height);
+            }
+        } else {
+            if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
+                if (!holux) {
+                    final int height = (0xFF & bytes[recIdx++]) << 0
+                            | (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24;
+                    r.height = JavaLibBridge.toFloatBitwise(height);
                 } else {
+                    final int height =
+
+                    (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24;
+
                     r.height = JavaLibBridge.toFloatBitwise(height);
                 }
             }
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            final int speed = (0xFF & bytes[recIdx++]) << 0
-                    | (0xFF & bytes[recIdx++]) << 8
-                    | (0xFF & bytes[recIdx++]) << 16
-                    | (0xFF & bytes[recIdx++]) << 24;
-            if (getLoggerType() == Model.GPS_TYPE_HOLUX_GR245) {
-                // Height is speed:
-                r.height = JavaLibBridge.toFloatBitwise(speed);
-            } else {
+            if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
+                final int speed = (0xFF & bytes[recIdx++]) << 0
+                        | (0xFF & bytes[recIdx++]) << 8
+                        | (0xFF & bytes[recIdx++]) << 16
+                        | (0xFF & bytes[recIdx++]) << 24;
                 r.speed = JavaLibBridge.toFloatBitwise(speed);
             }
         }
@@ -824,7 +851,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 valid = false;
             }
         }
-        if (r.hasSpeed() &&(r.speed < -10.)) {
+        if (r.hasSpeed() && (r.speed < -10.)) {
             Generic.debug("Invalid speed:" + r.speed);
             valid = false;
         }
