@@ -4,13 +4,13 @@
 package bt747.sys.interfaces;
 
 import bt747.sys.Generic;
-import bt747.sys.I18N;
 
 /**
  * @author Mario
  * 
  */
 public class BT747Exception extends Error {
+    private Throwable t;
     /**
      * 
      */
@@ -28,7 +28,12 @@ public class BT747Exception extends Error {
      * 
      */
     public BT747Exception(final String msg, final Throwable e) {
-        super(msg, e);
+        super(msg);
+        t = e;
         Generic.debug("Exception created: " + getMessage(), e);
+    }
+    
+    public Throwable getCause() {
+        return t;
     }
 }
