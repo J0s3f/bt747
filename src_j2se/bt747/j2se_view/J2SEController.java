@@ -18,6 +18,7 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
 
 /**
@@ -107,7 +108,10 @@ public class J2SEController extends Controller {
         GeoidIF geoidIF = null;
         if (m.getBooleanOpt(Model.IS_USE_PRECISE_GEOID)) {
             geoidIF = net.sf.bt747.j2se.app.utils.Geoid.getInstance();
-
+            if(geoidIF==null) {
+                Generic.debug("Precise Geoid loading failed");
+                super.setBooleanOpt(Model.IS_USE_PRECISE_GEOID, false);
+            }
         } else {
             geoidIF = gps.convert.Geoid.getInstance();
         }
