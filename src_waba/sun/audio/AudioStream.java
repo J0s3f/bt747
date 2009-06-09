@@ -13,7 +13,8 @@ public class AudioStream {
     /**
      * 
      */
-    public AudioStream(final String path) {
+    public AudioStream(final String path) throws java.io.IOException {
+        throw new java.io.IOException("Override");
         // Do nothing
     }
 }
