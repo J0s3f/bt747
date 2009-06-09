@@ -61,6 +61,7 @@ public class AppSettings {
     public static final int IMPERIAL = 3;
     /**
      * Param indicating forcing the data interpretation as holux.
+     * 
      * @deprecated
      */
     public static final int FORCE_HOLUXM241 = 4;
@@ -216,6 +217,9 @@ public class AppSettings {
     public final static int SETTING1_LOG_FORMAT = 37;
     public final static int SETTING1_SBAS = 38;
     public final static int ADVFILTACTIVE = 39;
+    /**
+     * Force GPX utc offset to 0.
+     */
     public final static int GPXUTC0 = 40;
     public final static int DECODEGPS = 41;
     public final static int GPXTRKSEGBIG = 42;
@@ -256,6 +260,11 @@ public class AppSettings {
      * Used to set some device dependent settings needed when no connection.
      */
     public static final int IS_FIRST_CONNECTION_TO_INIT = 55;
+
+    /**
+     * Force NMEA utc offset to 0.
+     */
+    public final static int NMEAUTC0 = 40;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -474,7 +483,10 @@ public class AppSettings {
             /* If user already set a log type, skip this init. */
             setBooleanOpt(IS_FIRST_CONNECTION_TO_INIT,
                     getIntOpt(GPSTYPE) == BT747Constants.GPS_TYPE_DEFAULT);
-            setStringOpt(AppSettings.VERSION, "0.41");
+            /* fall through */
+        case 41:
+            setBooleanOpt(NMEAUTC0, false);
+            setStringOpt(AppSettings.VERSION, "0.42");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -736,6 +748,7 @@ public class AppSettings {
     public static final int SPLIT_ONE_FILE = 0;
     public static final int SPLIT_ONE_FILE_PER_DAY = 1;
     public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
+
     /**
      * The way we split the input track:<br>
      * {@link #SPLIT_ONE_FILE}<br>
@@ -1489,8 +1502,11 @@ public class AppSettings {
     private static final int C_IS_FIRST_CONNECTION_TO_INIT_IDX = AppSettings.C_IS_USE_PRECISE_GEOID_IDX
             + AppSettings.C_IS_USE_PRECISE_GEOID_SIZE;
     private static final int C_IS_FIRST_CONNECTION_TO_INIT_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX
+    private static final int C_NMEAUTC0_IDX = AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX
             + AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE;
+    private static final int C_NMEAUTC0_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_NMEAUTC0_IDX
+            + AppSettings.C_NMEAUTC0_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1655,6 +1671,8 @@ public class AppSettings {
             { AppSettings.BOOL, AppSettings.IS_FIRST_CONNECTION_TO_INIT,
                     AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX,
                     AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE },
+            { AppSettings.BOOL, AppSettings.NMEAUTC0,
+                    AppSettings.C_NMEAUTC0_IDX, AppSettings.C_NMEAUTC0_SIZE },
 
     // End of list
     };

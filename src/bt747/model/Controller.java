@@ -318,8 +318,10 @@ public class Controller implements ModelListener {
 
     private void configureGpsFile(final GPSFile gpsFile) {
         if (gpsFile != null) {
-            if (!((gpsFile.getClass() == GPSGPXFile.class) && m
-                    .getBooleanOpt(AppSettings.GPXUTC0))) {
+            if (!(((gpsFile.getClass() == GPSGPXFile.class) && m
+                    .getBooleanOpt(AppSettings.GPXUTC0)) || ((gpsFile
+                    .getClass() == GPSNMEAFile.class) && m
+                    .getBooleanOpt(AppSettings.NMEAUTC0)))) {
                 gpsFile.setTimeOffset(m
                         .getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
                         * Controller.SECONDS_PER_HOUR);
@@ -1337,7 +1339,8 @@ public class Controller implements ModelListener {
 
     public final void setFixInterval(final int value) {
         if (value != 0) {
-            gpsCmd(MtkController.CMD_SET_GPS_FIX_INTERVAL,new CmdParam(value));
+            gpsCmd(MtkController.CMD_SET_GPS_FIX_INTERVAL,
+                    new CmdParam(value));
             setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
         }
     }

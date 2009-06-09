@@ -241,6 +241,12 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         if (activeFileFields != null && mySelectedFileFields != null)
             selectedFileFields = GPSRecord.getCommonFormat(activeFileFields,
                     mySelectedFileFields);
+        else {
+            selectedFileFields = mySelectedFileFields;
+            if(selectedFileFields == null) {
+                selectedFileFields = activeFileFields;
+            }
+        }
     }
 
     /**
