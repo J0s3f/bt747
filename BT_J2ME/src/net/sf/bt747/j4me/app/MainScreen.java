@@ -28,6 +28,7 @@ import net.sf.bt747.j4me.app.conn.FindingGPSDevicesAlert;
 import net.sf.bt747.j4me.app.conn.InitializingGPSAlert;
 import net.sf.bt747.j4me.app.log.LogScreen;
 import net.sf.bt747.j4me.app.screens.DelayedDialog;
+import net.sf.bt747.j4me.app.screens.ErrorAlert;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
@@ -43,6 +44,7 @@ import org.j4me.ui.components.Label;
 import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.interfaces.BT747Exception;
 
 /**
  * The "Main" screen. This is the application's entry screen. It will show the
@@ -693,6 +695,12 @@ public final class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    private void reportException(final BT747Exception e) {
+        ErrorAlert es = new ErrorAlert("Error", e.getCause() + "\n"
+                + e.getMessage(), UIManager.getScreen());
+        es.show();
+    }
+
     private DeviceScreen interruptedScreen = null;
 
     /**
@@ -733,6 +741,8 @@ public final class MainScreen extends Dialog implements ModelListener {
                             + " data is irrelevant?", myself);
             confirmScreen.show();
             break;
+        case ModelEvent.EXCEPTION:
+            reportException((BT747Exception) e.getArg());
         default:
             break;
         }

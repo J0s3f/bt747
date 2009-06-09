@@ -28,6 +28,8 @@ import bt747.sys.Settings;
 public class AppController extends Controller {
 
     private AppModel m;
+    
+    private static boolean staticNeedsResetSettings = false;
 
     public AppController(final AppModel m) {
         this.m = m;
@@ -47,12 +49,18 @@ public class AppController extends Controller {
     }
 
     private void appInit() {
-        initAppSettings();
+        m.init();
+        if(staticNeedsResetSettings) {
+            staticNeedsResetSettings = false;
+            resetSettings();
+            saveSettings();
+        }
+        initAppSettingsPart2();
         setBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD, true);
         // TODO: Should load settings for Model^
     }
 
-    private void initAppSettings() {
+    public static void initAppSettings() {
         Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
         RecordStore recordStore;
         try {
@@ -60,14 +68,23 @@ public class AppController extends Controller {
             byte[] bytes = recordStore.getRecord(1);
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
-                m.init();
                 Log.debug("Recovered settings");
             } else {
                 // Log.debug("Initialising settings");
-                m.init();
-                resetSettings();
-                saveSettings();
+                staticNeedsResetSettings = true;
             }
+            recordStore.closeRecordStore();
+        } catch (final RecordStoreException exception) {
+            return;
+        }
+    }
+
+    private void initAppSettingsPart2() {
+        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
+        RecordStore recordStore;
+        try {
+            recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
+            byte[] bytes;
             bytes = recordStore.getRecord(2);
             // Log.debug("Size:"+bytes.length);
             final DataInputStream is = new DataInputStream(
@@ -263,11 +280,11 @@ public class AppController extends Controller {
         m.getIntOpt(AppSettings.FILEFIELDFORMAT);
     }
 
-    private String removeNull(final String text) {
+    private static String removeNull(final String text) {
         return text != null ? text : "";
     }
 
-    private String restoreNull(final String text) {
+    private static String restoreNull(final String text) {
         return text.length() > 0 ? text : null;
     }
 

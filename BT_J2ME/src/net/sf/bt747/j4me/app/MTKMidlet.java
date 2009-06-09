@@ -112,6 +112,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
                 Log.error("Setting port instance.", e);
             }
 
+            AppController.initAppSettings();
             setAppModel(new AppModel());
 //            Log.info("Before appController");
             setAppController(new AppController(MTKMidlet.m));
