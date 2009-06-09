@@ -8,9 +8,11 @@ import javax.microedition.io.InputConnection;
 
 import net.sf.bt747.j2me.app.ftp.SimpleFTP;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
+import net.sf.bt747.j4me.app.screens.ErrorAlert;
 
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.TextBox;
 
@@ -159,6 +161,8 @@ public final class AgpsScreen extends BT747Dialog {
                     }
                 } catch (Exception e) {
                     Log.debug("Problem during AGPS download", e);
+                    (new ErrorAlert("Error", "Problem during AGPS download\n"
+                            + e.getMessage(), UIManager.getScreen())).show();
                 }
                 if (agpsData != null) {
                     Log.info("Got AGPS data");
