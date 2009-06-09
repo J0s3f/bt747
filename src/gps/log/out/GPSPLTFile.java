@@ -109,22 +109,22 @@ public final class GPSPLTFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
-        super.writeRecord(s);
+    public final void writeRecord(final GPSRecord r) {
+        super.writeRecord(r);
 
-        if ((activeFields != null) && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+        if ((r != null) && ptFilters[GPSFilter.TRKPT].doFilter(r)) {
             String rec = "";
 
             // Field 1 : Latitude - decimal degrees.
-            if ((activeFields.hasLatitude())
+            if ((r.hasLatitude())
                     && (selectedFileFields.hasLatitude())) {
-                rec += JavaLibBridge.toString(s.latitude, 6);
+                rec += JavaLibBridge.toString(r.latitude, 6);
             }
             rec += ",";
             // Field 2 : Longitude - decimal degrees.
-            if ((activeFields.hasLongitude())
+            if ((r.hasLongitude())
                     && (selectedFileFields.hasLongitude())) {
-                rec += JavaLibBridge.toString(s.longitude, 6);
+                rec += JavaLibBridge.toString(r.longitude, 6);
             }
             rec += ",";
             // Field 3 : Code - 0 if normal, 1 if break in track line
@@ -132,9 +132,9 @@ public final class GPSPLTFile extends GPSFile {
             // later
             // ...
             // Field 4 : Altitude in feet (-777 if not valid)
-            if ((activeFields.hasHeight())
+            if ((r.hasHeight())
                     && (selectedFileFields.hasHeight())) {
-                rec += ((int) (s.height * 3.2808398950131233595800524934383));
+                rec += ((int) (r.height * 3.2808398950131233595800524934383));
             } else {
                 rec += "-777";
             }
@@ -147,12 +147,12 @@ public final class GPSPLTFile extends GPSFile {
 
             // Field 6 : Date as a string
             // Field 7 : Time as a string
-            if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
+            if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec += JavaLibBridge
                         .toString(
-                                (s.utc + ((activeFields.hasMillisecond())
+                                (r.utc + ((r.hasMillisecond())
                                         && (selectedFileFields
-                                                .hasMillisecond()) ? (s.milisecond / 1000.0)
+                                                .hasMillisecond()) ? (r.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days
                                 // since
                                 // 30/12/1899
@@ -164,18 +164,18 @@ public final class GPSPLTFile extends GPSFile {
                         + t.getHour() + ":" + (t.getMinute() < 10 ? "0" : "")
                         + t.getMinute() + ":"
                         + (t.getSecond() < 10 ? "0" : "") + t.getSecond();
-                if ((activeFields.hasMillisecond())
+                if ((r.hasMillisecond())
                         && (selectedFileFields.hasMillisecond())) {
                     rec += ".";
-                    rec += (s.milisecond < 100) ? "0" : "";
-                    rec += (s.milisecond < 10) ? "0" : "";
-                    rec += s.milisecond;
+                    rec += (r.milisecond < 100) ? "0" : "";
+                    rec += (r.milisecond < 10) ? "0" : "";
+                    rec += r.milisecond;
                 }
             } else {
                 rec += ",,";
             }
             rec += "\r\n";
             writeTxt(rec);
-        } // activeFields!=null
+        } // s!=null
     }
 }

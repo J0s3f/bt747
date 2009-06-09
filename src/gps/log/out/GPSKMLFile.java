@@ -267,14 +267,13 @@ public class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
-        super.writeRecord(s);
+    public final void writeRecord(final GPSRecord r) {
+        super.writeRecord(r);
 
-        if (activeFields != null) {
             rec.setLength(0);
-            if (ptFilters[currentFilter].doFilter(s)) {
+            if (ptFilters[currentFilter].doFilter(r)) {
                 String dateString = "";
-                if (activeFields.hasUtc()) {
+                if (r.hasUtc()) {
                     dateString = t.getYear() + "-"
                             + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
                             + "-" + (t.getDay() < 10 ? "0" : "") + t.getDay();
@@ -298,7 +297,7 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<Placemark>\r\n");
                     if (!isTrackType || isIncludeTrkName) {
                         rec.append("<name>");
-                        if ((activeFields.hasUtc())
+                        if ((r.hasUtc())
                                 && (selectedFileFields.hasUtc())) {
                             rec.append("TIME: "
                                     + (t.getHour() < 10 ? "0" : "")
@@ -308,9 +307,9 @@ public class GPSKMLFile extends GPSFile {
                                     + (t.getSecond() < 10 ? "0" : "")
                                     + t.getSecond());
                         } else {
-                            if (s.hasRecCount()) {
+                            if (r.hasRecCount()) {
                                 rec.append("IDX: ");
-                                rec.append(s.getRecCount());
+                                rec.append(r.getRecCount());
                             }
                         }
                         rec.append("</name>\r\n");
@@ -322,17 +321,17 @@ public class GPSKMLFile extends GPSFile {
                     if (isWayType || isTrkComment) {
                         rec.append("<description>");
                         rec.append("<![CDATA[");
-                        CommonOut.getHtml(rec, s, activeFields,
+                        CommonOut.getHtml(rec, r,
                                 selectedFileFields, t, recordNbrInLogs,
                                 imperial);
                         rec.append("]]>");
                         rec.append("</description>");
                     }
 
-                    if (((activeFields.hasUtc()) && (selectedFileFields
+                    if (((r.hasUtc()) && (selectedFileFields
                             .hasUtc()))) {
                         rec.append("<TimeStamp><when>");
-                        if ((activeFields.hasUtc())
+                        if ((r.hasUtc())
                                 && (selectedFileFields.hasUtc())) {
                             rec.append(dateString + "T"
                                     + (t.getHour() < 10 ? "0" : "")
@@ -340,25 +339,25 @@ public class GPSKMLFile extends GPSFile {
                                     + (t.getMinute() < 10 ? "0" : "")
                                     + t.getMinute() + ":"
                                     + (t.getSecond() < 10 ? "0" : ""));
-                            if (activeFields.milisecond == 0) {
+                            if (r.milisecond == 0) {
                                 rec.append(t.getSecond());
                             } else {
                                 rec.append(JavaLibBridge.toString((float) t
                                         .getSecond()
-                                        + s.milisecond / 1000.0, 3));
+                                        + r.milisecond / 1000.0, 3));
                             }
                             rec.append("Z");
                         }
                         rec.append("</when></TimeStamp>\r\n");
                     }
 
-                    if ((activeFields.hasRcr())
+                    if ((r.hasRcr())
                             && (selectedFileFields.hasRcr())) {
                         rec.append("<styleUrl>");
-                        String style = CommonOut.getRCRstr(s);
+                        String style = CommonOut.getRCRstr(r);
 
                         if ((style.length() > 1)
-                                && ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
+                                && ((r.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
                             style = "M";
                         }
                         rec.append("#Style");
@@ -366,19 +365,19 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</styleUrl>\r\n");
                     }
 
-                    if (((activeFields.hasLongitude()) && (selectedFileFields
+                    if (((r.hasLongitude()) && (selectedFileFields
                             .hasLongitude()))
-                            && ((activeFields.hasLatitude()) && (selectedFileFields
+                            && ((r.hasLatitude()) && (selectedFileFields
                                     .hasLatitude()))) {
                         rec.append("<Point>\r\n");
                         rec.append("<coordinates>");
-                        rec.append(JavaLibBridge.toString(s.longitude, 6));
+                        rec.append(JavaLibBridge.toString(r.longitude, 6));
                         rec.append(",");
-                        rec.append(JavaLibBridge.toString(s.latitude, 6));
-                        if ((activeFields.hasHeight())
+                        rec.append(JavaLibBridge.toString(r.latitude, 6));
+                        if ((r.hasHeight())
                                 && (selectedFileFields.hasHeight())) {
                             rec.append(",");
-                            rec.append(JavaLibBridge.toString(s.height, 3));
+                            rec.append(JavaLibBridge.toString(r.height, 3));
                         }
                         rec.append("</coordinates>");
                         rec.append("</Point>\r\n");
@@ -389,26 +388,26 @@ public class GPSKMLFile extends GPSFile {
                     rec.setLength(0);
                 } else if (isPathType) {
                     rec.setLength(0);
-                    if ((activeFields.hasLongitude())
+                    if ((r.hasLongitude())
                             && (selectedFileFields.hasLongitude())
-                            && (activeFields.hasLatitude())
+                            && (r.hasLatitude())
                             && (selectedFileFields.hasLatitude())) {
                         boolean isChangeLineString = false;
 
                         boolean isTimeSplit;
-                        isTimeSplit = (activeFields.hasUtc())
-                                && ((s.utc - previousTime) > trackSepTime);
+                        isTimeSplit = (r.hasUtc())
+                                && ((r.utc - previousTime) > trackSepTime);
                         if (isTimeSplit) {
                             endTrack();
                         }
                         if (!trackStarted) {
                             String name = "";
-                            if (activeFields.hasUtc()) {
-                                name = CommonOut.getDateTimeStr(s.utc);
+                            if (r.hasUtc()) {
+                                name = CommonOut.getDateTimeStr(r.utc);
                             }
                             startTrack(name);
                         }
-                        if (((activeFields.hasHeight()) && (selectedFileFields
+                        if (((r.hasHeight()) && (selectedFileFields
                                 .hasHeight())) != (altitudeMode == 0)) {
                             // Must change altitude mode because height
                             // availability changed.
@@ -426,7 +425,7 @@ public class GPSKMLFile extends GPSFile {
                                     + "    <extrude>1</extrude>\r\n"
                                     + "    <tessellate>1</tessellate>\r\n"
                                     + "    <altitudeMode>");
-                            if ((activeFields.hasHeight())
+                            if ((r.hasHeight())
                                     && (selectedFileFields.hasHeight())) {
                                 altitudeMode = 0;
                                 // clampToGround, relativeToGround, absolute
@@ -438,13 +437,13 @@ public class GPSKMLFile extends GPSFile {
                             rec.append("</altitudeMode><coordinates>\r\n");
                         }
                         rec.append("        ");
-                        rec.append(JavaLibBridge.toString(s.longitude, 6));
+                        rec.append(JavaLibBridge.toString(r.longitude, 6));
                         rec.append(",");
-                        rec.append(JavaLibBridge.toString(s.latitude, 6));
-                        if ((activeFields.hasHeight())
+                        rec.append(JavaLibBridge.toString(r.latitude, 6));
+                        if ((r.hasHeight())
                                 && (selectedFileFields.hasHeight())) {
                             rec.append(",");
-                            rec.append(JavaLibBridge.toString(s.height, 3));
+                            rec.append(JavaLibBridge.toString(r.height, 3));
                         }
                         rec.append("\r\n");
                         writeTxt(rec.toString());
@@ -453,7 +452,6 @@ public class GPSKMLFile extends GPSFile {
                 }
 
             }
-        } // activeFields!=null
     }
 
     /*

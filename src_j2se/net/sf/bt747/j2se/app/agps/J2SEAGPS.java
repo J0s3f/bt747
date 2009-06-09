@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import bt747.sys.Generic;
+import bt747.sys.I18N;
+import bt747.sys.interfaces.BT747Exception;
 
 /**
  * @author Mario
@@ -27,7 +28,8 @@ public class J2SEAGPS {
         return getBytesFromUrl(TRANS_AGPS_7d);
     }
 
-    public static final byte[] getBytesFromUrl(final String urlString) {
+    public static final byte[] getBytesFromUrl(final String urlString)
+            throws BT747Exception {
         byte[] result = null;
         try {
             final URL url = new URL(urlString);
@@ -36,7 +38,8 @@ public class J2SEAGPS {
             urlc.setReadTimeout(5000);
             final InputStream ins = urlc.getInputStream(); // To download
             // OutputStream os = urlc.getOutputStream(); // To upload
-            final ByteArrayOutputStream bout = new ByteArrayOutputStream(120 * 1024);
+            final ByteArrayOutputStream bout = new ByteArrayOutputStream(
+                    120 * 1024);
             final byte[] buf = new byte[1024];
             while (true) {
                 final int n = ins.read(buf);
@@ -47,8 +50,9 @@ public class J2SEAGPS {
             }
             result = bout.toByteArray();
             bout.close();
-        } catch (Exception e) {
-            Generic.debug("Problem downloading AGPS data", e);
+        } catch (final Exception e) {
+            throw new BT747Exception(I18N
+                    .i18n("Problem downloading AGPS data."), e);
         }
         return result;
     }

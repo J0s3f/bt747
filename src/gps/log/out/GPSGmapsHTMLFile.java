@@ -169,12 +169,11 @@ public final class GPSGmapsHTMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
-        super.writeRecord(s);
+    public void writeRecord(final GPSRecord r) {
+        super.writeRecord(r);
 
-        if (activeFields != null) {
 
-            if (!ptFilters[m_currentFilter].doFilter(s)) {
+            if (!ptFilters[m_currentFilter].doFilter(r)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
                 if (!m_isWayType && !m_newTrack && !firstRecord) {
@@ -204,24 +203,24 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // } else {
                 // rec.append("<trkpt ");
                 // }
-                if (activeFields.hasLatitude() && activeFields.hasLongitude()) {
+                if (r.hasPosition()) {
                     rec.append("points.push(new GLatLng(");
-                    rec.append(JavaLibBridge.toString(s.latitude, 6));
+                    rec.append(JavaLibBridge.toString(r.latitude, 6));
                     rec.append(',');
-                    rec.append(JavaLibBridge.toString(s.longitude, 6));
+                    rec.append(JavaLibBridge.toString(r.longitude, 6));
                     rec.append("));");
 
-                    if (s.latitude < minlat) {
-                        minlat = s.latitude;
+                    if (r.latitude < minlat) {
+                        minlat = r.latitude;
                     }
-                    if (s.latitude > maxlat) {
-                        maxlat = s.latitude;
+                    if (r.latitude > maxlat) {
+                        maxlat = r.latitude;
                     }
-                    if (s.longitude < minlon) {
-                        minlon = s.longitude;
+                    if (r.longitude < minlon) {
+                        minlon = r.longitude;
                     }
-                    if (s.longitude > maxlon) {
-                        maxlon = s.longitude;
+                    if (r.longitude > maxlon) {
+                        maxlon = r.longitude;
                     }
                 }
                 // //
@@ -421,7 +420,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 writeTxt(rec.toString());
 
             }
-        } // activeFields!=null
+        
     }
 
     /*
