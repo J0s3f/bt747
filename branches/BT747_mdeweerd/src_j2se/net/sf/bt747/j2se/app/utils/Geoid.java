@@ -18,7 +18,6 @@ public final class Geoid implements GeoidIF {
 
     private static byte[] geoid_delta;
     private static GeoidIF instance;
-
     private static final String GEOID_RESOURCE = "/net/sf/bt747/j2se/app/utils/geoid1DEG.bin";
     private static final int SIZE = 360 * 179;
 
@@ -45,15 +44,16 @@ public final class Geoid implements GeoidIF {
                 // Get the resource.
                 final InputStream is = Geoid.class
                         .getResourceAsStream(GEOID_RESOURCE);
-                // System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
-                // .getPath());
+                System.err.println(Geoid.class.getResource(GEOID_RESOURCE).getPath());
                 if (is.available() != SIZE) {
                     Generic.debug(GEOID_RESOURCE + " is bad size - expected "
                             + SIZE + " got " + is.available(), null);
                 } else {
-                    geoid_delta = new byte[SIZE];
+                    final byte[] tmp_geoidDelta = new byte[SIZE]; 
                     is.read(geoid_delta);
                     is.close();
+                    // Only assigned in case no exception is thrown.
+                    geoid_delta = tmp_geoidDelta;
                     // for (int i = SIZE - 1; i > 0; i--) {
                     // geoid_delta[i] -= 120;
                     // }
@@ -80,6 +80,7 @@ public final class Geoid implements GeoidIF {
             geoid_delta = null;
             Generic.debug("Geoid resource loading", e);
         }
+        System.err.println("Result: "+((geoid_delta!=null)?geoid_delta.length:"null"));
         return geoid_delta != null;
     }
 
