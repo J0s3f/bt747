@@ -264,7 +264,7 @@ public class AppSettings {
     /**
      * Force NMEA utc offset to 0.
      */
-    public final static int NMEAUTC0 = 40;
+    public final static int NMEAUTC0 = 56;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;

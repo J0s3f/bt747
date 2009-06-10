@@ -44,13 +44,14 @@ public final class Geoid implements GeoidIF {
                 // Get the resource.
                 final InputStream is = Geoid.class
                         .getResourceAsStream(GEOID_RESOURCE);
-                System.err.println(Geoid.class.getResource(GEOID_RESOURCE).getPath());
+                System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
+                        .getPath());
                 if (is.available() != SIZE) {
                     Generic.debug(GEOID_RESOURCE + " is bad size - expected "
                             + SIZE + " got " + is.available(), null);
                 } else {
-                    final byte[] tmp_geoidDelta = new byte[SIZE]; 
-                    is.read(geoid_delta);
+                    final byte[] tmp_geoidDelta = new byte[SIZE];
+                    is.read(tmp_geoidDelta, 0, SIZE);
                     is.close();
                     // Only assigned in case no exception is thrown.
                     geoid_delta = tmp_geoidDelta;
@@ -80,7 +81,12 @@ public final class Geoid implements GeoidIF {
             geoid_delta = null;
             Generic.debug("Geoid resource loading", e);
         }
-        System.err.println("Result: "+((geoid_delta!=null)?geoid_delta.length:"null"));
+//        System.err.println("Result: "
+//                + ((geoid_delta != null) ? geoid_delta.length : "null"));
+//        for (byte x : geoid_delta) {
+//            System.err.print(String.format("%02x", x));
+//        }
+        System.err.println();
         return geoid_delta != null;
     }
 
