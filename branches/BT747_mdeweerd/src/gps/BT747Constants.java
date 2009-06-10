@@ -531,6 +531,13 @@ public final class BT747Constants { // dev as in device
     public static final int HOLUX_API_DT_HW_VERSION = 7;
     public static final int HOLUX_API_DT_TZ_OFFSET = 10;
 
+
+    /**
+     * Connection protocols.
+     */
+    public static final int PROTOCOL_MTK = 0;
+    public static final int PROTOCOL_DPL700 = 1;
+    public static final int PROTOCOL_PHLX = 2;
     
     /**
      * Default gps type selection (MTK Logger).

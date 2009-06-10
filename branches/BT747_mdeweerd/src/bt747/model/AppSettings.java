@@ -462,7 +462,7 @@ public class AppSettings {
             setBooleanOpt(AppSettings.IS_GPX_1_1, false);
             /* fall through */
         case 36:
-            setIntOpt(AppSettings.DEVICE_PROTOCOL, 0);
+            setIntOpt(AppSettings.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_MTK);
             /* fall through */
         case 37:
             // New field is coded on 4 byte (8 chars)

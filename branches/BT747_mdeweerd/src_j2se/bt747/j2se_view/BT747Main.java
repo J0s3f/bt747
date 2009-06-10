@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
+import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
 
@@ -456,9 +457,9 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private final void updateDownloadType() {
         final int type = m.getIntOpt(Model.DEVICE_PROTOCOL);
-        miMTKProtocol.setSelected(type == 0);
-        miSirfIIIProtocol.setSelected(type == 1);
-        miPHLXProtocol.setSelected(type == 2);
+        miMTKProtocol.setSelected(type == BT747Constants.PROTOCOL_MTK);
+        miSirfIIIProtocol.setSelected(type == BT747Constants.PROTOCOL_DPL700);
+        miPHLXProtocol.setSelected(type == BT747Constants.PROTOCOL_PHLX);
     }
 
     public void modelEvent(final ModelEvent e) {
@@ -1618,12 +1619,12 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_btToolInfoActionPerformed
 
     private void miMTKProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMTKProtocolActionPerformed
-        c.setIntOpt(Model.DEVICE_PROTOCOL, 0); // TODO: Use constant
+        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_MTK);
     }//GEN-LAST:event_miMTKProtocolActionPerformed
 
     private void miSirfIIIProtocolActionPerformed(
             java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSirfIIIProtocolActionPerformed
-        c.setIntOpt(Model.DEVICE_PROTOCOL, 1); // TODO: Use constant
+        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_DPL700);
     }//GEN-LAST:event_miSirfIIIProtocolActionPerformed
 
     private void tabbedPanelAllStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelAllStateChanged
@@ -1640,7 +1641,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_miUsePreciseGeoidStateChanged
 
     private void miPHLXProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPHLXProtocolActionPerformed
-        c.setIntOpt(Model.DEVICE_PROTOCOL, 2); // TODO: Use constant
+        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_PHLX);
     }//GEN-LAST:event_miPHLXProtocolActionPerformed
 
     // public static void main(String args) {
