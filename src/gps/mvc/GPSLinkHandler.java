@@ -66,10 +66,9 @@ public final class GPSLinkHandler {
      * 
      */
     public GPSLinkHandler() {
-        
+
     }
-    
-    
+
     public final void setGPSRxtx(final GPSrxtx gpsRxTx) {
         if (this.gpsRxTx != null) {
             // TODO Remove myself as listener
@@ -107,6 +106,7 @@ public final class GPSLinkHandler {
     }
 
     private boolean gpsDecode = true;
+
     /**
      * @return Returns the gpsDecode.
      */
@@ -120,19 +120,19 @@ public final class GPSLinkHandler {
     }
 
     private boolean logDownloadOngoing;
+
     private final boolean isLogDownloadOngoing() {
         return logDownloadOngoing;
     }
-    
+
     public final void setLogOrEraseOngoing(final boolean onGoing) {
         logDownloadOngoing = onGoing;
         updateIgnoreNMEA();
     }
-    
+
     public final void updateIgnoreNMEA() {
         setIgnoreNMEA((!gpsDecode) || isLogDownloadOngoing());
     }
-
 
     public final void setIgnoreNMEA(final boolean ignoreNMEA) {
         NMEADecoderState.setIgnoreNMEA(ignoreNMEA);
@@ -197,6 +197,9 @@ public final class GPSLinkHandler {
                     if (Generic.isDebug()) {
                         Generic.debug("Timeout: " + cTime + "-" + logTimer
                                 + ">" + downloadTimeOut, null);
+                        for (int i = 0; i < sentCmds.size(); i++) {
+                            Generic.debug("No ack:" + sentCmds.elementAt(i));
+                        }
                     }
                     // sentCmds.removeElementAt(0); // Previous cleaning
                     // Since the last command that was sent is a timeout ago,
