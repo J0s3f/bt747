@@ -76,6 +76,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     private PathSelectionScreen baseDirScreen;
     private CreditsScreen creditsScreen;
     private DeviceScreen logFieldSelectScreen;
+    private DelayedDialog connectConfig;
 
     private final java.util.Timer tm = new Timer();
     private TimerTask ttLabels;
@@ -149,6 +150,8 @@ public final class MainScreen extends Dialog implements ModelListener {
             initialiseGPSAlert = new InitializingGPSAlert(c, this);
             findingGPSDevicesAlert = new FindingGPSDevicesAlert(c, this,
                     initialiseGPSAlert);
+            connectConfig = new DelayedDialog(
+                    ScreenFactory.CONNECTCONFIGSCREEN, c, this, this);
             baseDirScreen = new PathSelectionScreen("Base directory", this,
                     m().getStringOpt(AppSettings.OUTPUTDIRPATH), true) {
                 protected void notifyPathSelected(final String path) {
@@ -294,6 +297,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             subMenu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
             subMenu.appendMenuOption("Find and Connect",
                     findingGPSDevicesAlert);
+            subMenu.appendMenuOption("Settings (protocol)", connectConfig);
             rootMenu.appendSubmenu(subMenu);
 
             subMenu = new Menu("Logger", rootMenu);

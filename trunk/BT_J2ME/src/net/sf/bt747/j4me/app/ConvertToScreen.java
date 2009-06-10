@@ -1,5 +1,6 @@
 package net.sf.bt747.j4me.app;
 
+import gps.BT747Constants;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 
 import org.j4me.ui.DeviceScreen;
@@ -126,11 +127,19 @@ public final class ConvertToScreen extends
             rbDevice = new RadioButton();
             rbDevice.append("Default device");
             rbDevice.append("Holux M-241");
-            if (!c.getAppModel().getBooleanOpt(AppSettings.FORCE_HOLUXM241)) {
-                rbDevice.setSelectedIndex(0);
-            } else {
-                rbDevice.setSelectedIndex(1);
+            rbDevice.append("Holux M-1000C / GR245");
+            switch(m().getIntOpt(AppSettings.DECODEGPS)) {
+            case BT747Constants.GPS_TYPE_DEFAULT:
+                index = 0;
+                break;
+            case BT747Constants.GPS_TYPE_HOLUX_M241:
+                index = 1;
+                break;
+            case BT747Constants.GPS_TYPE_HOLUX_GR245:
+                index = 2;
+                break;
             }
+            rbDevice.setSelectedIndex(index);
             append(rbDevice);
 
             rbFiles = new RadioButton();
@@ -213,6 +222,17 @@ public final class ConvertToScreen extends
         }
         c.setIntOpt(AppSettings.TRKSEP, Integer.parseInt(tbTrackSeparation
                 .getString()));
+        switch(rbDevice.getSelectedIndex()) {
+        case 0:
+            c.setIntOpt(AppSettings.DECODEGPS, BT747Constants.GPS_TYPE_DEFAULT);
+            break;
+        case 1:
+            c.setIntOpt(AppSettings.DECODEGPS, BT747Constants.GPS_TYPE_HOLUX_M241);
+            break;
+        case 2:
+            c.setIntOpt(AppSettings.DECODEGPS, BT747Constants.GPS_TYPE_HOLUX_GR245);
+            break;
+        }
         c.setBooleanOpt(AppSettings.FORCE_HOLUXM241, rbDevice
                 .getSelectedIndex() == 1);
         int index = 0;
