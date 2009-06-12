@@ -18,8 +18,7 @@ public final class Geoid implements GeoidIF {
 
     private static byte[] geoid_delta;
     private static GeoidIF instance;
-
-    private static final String GEOID_RESOURCE = "geoid1DEG.bin";
+    private static final String GEOID_RESOURCE = "/net/sf/bt747/j2se/app/utils/geoid1DEG.bin";
     private static final int SIZE = 360 * 179;
 
     public final static GeoidIF getInstance() {
@@ -36,7 +35,10 @@ public final class Geoid implements GeoidIF {
 
     }
 
-    private final static void init() {
+    /**
+     * @return true if success
+     */
+    private final static boolean init() {
         try {
             if (geoid_delta == null) {
                 // Get the resource.
@@ -46,11 +48,20 @@ public final class Geoid implements GeoidIF {
                 // .getPath());
                 if (is.available() != SIZE) {
                     Generic.debug(GEOID_RESOURCE + " is bad size - expected "
-                            + SIZE + " got " + is.available());
+                            + SIZE + " got " + is.available(), null);
                 } else {
-                    geoid_delta = new byte[SIZE];
-                    is.read(geoid_delta);
+                    final byte[] tmp_geoidDelta = new byte[SIZE];
+                    int cnt;
+                    int offset = 0;
+                    do {
+                        cnt = is.read(tmp_geoidDelta, offset, SIZE);
+                        if (cnt > 0) {
+                            offset += cnt;
+                        }
+                    } while (offset < SIZE && cnt >= 0);
                     is.close();
+                    // Only assigned in case no exception is thrown.
+                    geoid_delta = tmp_geoidDelta;
                     // for (int i = SIZE - 1; i > 0; i--) {
                     // geoid_delta[i] -= 120;
                     // }
@@ -77,6 +88,13 @@ public final class Geoid implements GeoidIF {
             geoid_delta = null;
             Generic.debug("Geoid resource loading", e);
         }
+        // System.err.println("Result: "
+        // + ((geoid_delta != null) ? geoid_delta.length : "null"));
+        // for (byte x : geoid_delta) {
+        // System.err.print(String.format("%02x", x));
+        // }
+        System.err.println();
+        return geoid_delta != null;
     }
 
     private static final int GEOID_ROW = 179;
