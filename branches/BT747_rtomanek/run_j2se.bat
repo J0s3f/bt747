@@ -24,7 +24,7 @@ goto end:
 java %MEM_HEAP_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :debug
-java %MEM_HEAP_OPTION% -verbose bt747.j2se_view.BT747Main | more
+java %MEM_HEAP_OPTION% -verbose bt747.j2se_view.BT747Main
 pause
 :end
 endlocal

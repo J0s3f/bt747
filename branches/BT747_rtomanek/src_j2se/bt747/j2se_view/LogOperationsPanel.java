@@ -1686,14 +1686,14 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }// GEN-LAST:event_endDateActionPerformed
 
     private void btDownloadActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btDownloadActionPerformed
-    	// the constants here need to be externalized ASAP
         switch (m.getIntOpt(Model.DEVICE_PROTOCOL)) {
-        case 0: // MTK
-        case 2: // PHLX
+        default:
+        case BT747Constants.PROTOCOL_MTK: // MTK
+        case BT747Constants.PROTOCOL_PHLX:
             setDownloadMethod();
             c.startDefaultDownload();
             break;
-        default:
+        case BT747Constants.PROTOCOL_DPL700:
             c.startDPL700Download();
         	break;
         }

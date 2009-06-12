@@ -55,7 +55,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         cbNotApplyUTCOffset.setSelected(m.getBooleanOpt(AppSettings.GPXUTC0));
         cbGPXTrkSegWhenSmall.setSelected(m
                 .getBooleanOpt(AppSettings.GPXTRKSEGBIG));
-        cbNotApplyUTCOffset.setSelected(m.getBooleanOpt(AppSettings.GPXUTC0));
+        cbNotApplyUTCOffsetForNMEA.setSelected(m.getBooleanOpt(AppSettings.NMEAUTC0));
         try {
             cbAltitudeMode.setSelectedIndex(m
                     .getIntOpt(AppSettings.KML_ALTITUDEMODE));
@@ -234,6 +234,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         btSetNMEAFileOutput = new javax.swing.JButton();
         lbNMEAFileMDBG = new javax.swing.JCheckBox();
         lbNMEAFileMCHN = new javax.swing.JCheckBox();
+        cbNotApplyUTCOffsetForNMEA = new javax.swing.JCheckBox();
         pnGPXFileSettings = new javax.swing.JPanel();
         cbNotApplyUTCOffset = new javax.swing.JCheckBox();
         cbGPXTrkSegWhenSmall = new javax.swing.JCheckBox();
@@ -376,23 +377,35 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                 .add(0, 0, Short.MAX_VALUE))
         );
 
+        cbNotApplyUTCOffsetForNMEA.setText(bundle.getString("AdvancedFileSettingsPanel.cbNotApplyUTCOffsetForNMEA.text")); // NOI18N
+        cbNotApplyUTCOffsetForNMEA.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbNotApplyUTCOffsetForNMEAStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout pnFileNMEAOutputLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutput);
         pnFileNMEAOutput.setLayout(pnFileNMEAOutputLayout);
         pnFileNMEAOutputLayout.setHorizontalGroup(
             pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFileNMEAOutputLayout.createSequentialGroup()
-                .add(pnFileNMEAOutLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnFileNMEAOutputLayout.createSequentialGroup()
+                        .add(pnFileNMEAOutLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(cbNotApplyUTCOffsetForNMEA))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnFileNMEAOutputLayout.setVerticalGroup(
             pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFileNMEAOutputLayout.createSequentialGroup()
+                .addContainerGap(0, Short.MAX_VALUE)
+                .add(cbNotApplyUTCOffsetForNMEA)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnFileNMEAOutLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
         pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
@@ -536,6 +549,10 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         c.setBooleanOpt(AppSettings.IS_GPX_1_1, cbGPX_1_1.isSelected());
 }//GEN-LAST:event_cbGPX_1_1StateChanged
 
+    private void cbNotApplyUTCOffsetForNMEAStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbNotApplyUTCOffsetForNMEAStateChanged
+        c.setBooleanOpt(AppSettings.NMEAUTC0, cbNotApplyUTCOffsetForNMEA.isSelected());
+}//GEN-LAST:event_cbNotApplyUTCOffsetForNMEAStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSetNMEAFileOutput;
     private javax.swing.JComboBox cbAltitudeMode;
@@ -543,6 +560,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JCheckBox cbGPXTrkSegWhenSmall;
     private javax.swing.JCheckBox cbGPX_1_1;
     private javax.swing.JCheckBox cbNotApplyUTCOffset;
+    private javax.swing.JCheckBox cbNotApplyUTCOffsetForNMEA;
     private javax.swing.JLabel lbAltitudeMode;
     private javax.swing.JCheckBox lbNMEAFileGGA;
     private javax.swing.JCheckBox lbNMEAFileGLL;
