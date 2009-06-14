@@ -25,6 +25,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="waba.applet.Applet"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="/w 320 /h 320 /x 600 /scale 1 /bpp 8 bt747.j2se_view.BT747"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT747"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT747_1.X"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.maven.ide.eclipse.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

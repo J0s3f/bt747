@@ -254,11 +254,11 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
         if (curLogFormat != logFormat) {
             updateLogFormat(gpsFile, curLogFormat);
         }
-        if (r.rcr == 0) {
-            r.rcr = 1; // Suppose time (for filter)
+        if (!r.hasRcr()) {
+            r.rcr = BT747Constants.RCR_TIME_MASK; // Suppose time (for filter)
         }
         // if (valid) {
-        if (r.valid == 0) {
+        if (!r.hasValid()) {
             r.valid = BT747Constants.VALID_SPS_MASK;
         }
 

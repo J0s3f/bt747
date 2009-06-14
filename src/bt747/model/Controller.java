@@ -22,8 +22,6 @@ import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.TracksAndWayPoints;
-import gps.log.in.BT747LogConvert;
-import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.MultiLogConvert;
@@ -92,7 +90,7 @@ public class Controller implements ModelListener {
     }
 
     public void setModel(final Model model) {
-        if(m!=null) {
+        if (m != null) {
             m.removeListener(this);
         }
         m = model;
@@ -102,13 +100,15 @@ public class Controller implements ModelListener {
     public Model getModel() {
         return m;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
     public void modelEvent(final ModelEvent e) {
-        if(e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
-            if(m.gpsModel().isLoggingDisabled()) {
+        if (e.getType() == ModelEvent.UPDATE_LOG_LOG_STATUS) {
+            if (m.gpsModel().isLoggingDisabled()) {
                 setAutoLog(true);
             }
         }
@@ -118,7 +118,7 @@ public class Controller implements ModelListener {
     public final void setAutoLog(final boolean enable) {
         m.gpsModel().setAutoLog(enable);
     }
-    
+
     /**
      * Called when the Controller starts. Used for initialization.
      */
@@ -260,8 +260,10 @@ public class Controller implements ModelListener {
 
     private void configureGpsFile(final GPSFile gpsFile) {
         if (gpsFile != null) {
-            if (!((gpsFile.getClass() == GPSGPXFile.class) && m
-                    .getBooleanOpt(AppSettings.GPXUTC0))) {
+            if (!(((gpsFile.getClass() == GPSGPXFile.class) && m
+                    .getBooleanOpt(AppSettings.GPXUTC0)) || ((gpsFile
+                    .getClass() == GPSNMEAFile.class) && m
+                    .getBooleanOpt(AppSettings.NMEAUTC0)))) {
                 gpsFile.setTimeOffset(m
                         .getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
                         * Controller.SECONDS_PER_HOUR);
@@ -488,8 +490,8 @@ public class Controller implements ModelListener {
         GPSLogConvertInterface lc;
         result = 0;
         configureGpsFile(gpsFile);
-        
-        if(logType == Model.OSM_LOGTYPE) {
+
+        if (logType == Model.OSM_LOGTYPE) {
             // For OSM output, we optimize the output file.
             gpsFile.setIncludeTrkComment(false);
             gpsFile.setIncludeTrkName(false);
@@ -543,7 +545,8 @@ public class Controller implements ModelListener {
     /**
      * Vector of LogFileInfo.
      */
-    public final static BT747Vector logFiles = JavaLibBridge.getVectorInstance();
+    public final static BT747Vector logFiles = JavaLibBridge
+            .getVectorInstance();
 
     /**
      * Convert the log into an array of trackpoints.
@@ -653,7 +656,7 @@ public class Controller implements ModelListener {
             m.getCard(), /* Card for file operations */
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_SMART,
-            m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
+                    m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
         } catch (final Exception e) {
             Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception
