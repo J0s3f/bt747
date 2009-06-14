@@ -417,7 +417,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }
 
     private final void updateDownloadType() {
-        final int type = m.getIntOpt(Model.DOWNLOAD_DEVICE);
+        final int type = m.getIntOpt(Model.DEVICE_PROTOCOL);
         miDownloadIBlue.setSelected(type == 0);
         DownloadSirf.setSelected(type == 1);
     }
@@ -433,7 +433,7 @@ public class BT747Main extends javax.swing.JFrame implements
             case Model.MAPTYPE:
                 updateMapType();
                 break;
-                case Model.DOWNLOAD_DEVICE:
+                case Model.DEVICE_PROTOCOL:
                     updateDownloadType();
             }
             break;
@@ -1328,11 +1328,11 @@ public class BT747Main extends javax.swing.JFrame implements
 }//GEN-LAST:event_btToolInfoActionPerformed
 
     private void miDownloadIBlueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDownloadIBlueActionPerformed
-                c.setIntOpt(Model.DOWNLOAD_DEVICE, 0);
+                c.setIntOpt(Model.DEVICE_PROTOCOL, 0);
 }//GEN-LAST:event_miDownloadIBlueActionPerformed
 
     private void DownloadSirfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DownloadSirfActionPerformed
-        c.setIntOpt(Model.DOWNLOAD_DEVICE, 1);
+        c.setIntOpt(Model.DEVICE_PROTOCOL, 1);
 }//GEN-LAST:event_DownloadSirfActionPerformed
 
     private void tabbedPanelAllStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelAllStateChanged

@@ -1,3 +1,7 @@
+Version 1.68.25
+* Due to changes in GPSRecord, NMEA input always resulted in all points being waypoints.
+  Solved.
+
 Version 1.68.24
 * M1000C decoding should work now.
 * Correction in CSV output when RCR field is not available
