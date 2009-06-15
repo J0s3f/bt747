@@ -1,7 +1,6 @@
 package net.sf.bt747.j4me.app.conn;
 
 import net.sf.bt747.j4me.app.AppController;
-import net.sf.bt747.j4me.app.LoggerStatusScreen;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
@@ -24,7 +23,7 @@ public class InitializingGPSAlert extends ProgressAlert {
      * The screen that came before this one. If the user cancels the the
      * process or if it fails it will be returned to.
      */
-    private DeviceScreen previous;
+    final private DeviceScreen previous;
 
     /**
      * Constructs the "Initializing GPS..." alert screen.
@@ -84,15 +83,22 @@ public class InitializingGPSAlert extends ProgressAlert {
                         .getGpsBluetoothConnection();
 
                 if (old != null) {
-                    old.close();
+                    try {
+                        old.close();
+                    } catch (Exception e) {
+                        Log.warn("While closing old connection", e);
+                    }
+                    c.getAppModel().setGpsBluetoothConnection(null);
                 }
 
                 // Get the new provider.
                 try {
                     provider = BluetoothLocationProvider.getInstance();
                 } catch (Exception e) {
+                    next = new ErrorAlert("GPS Error",
+                            "Can not get BT provider.",
+                            previous);
                     Log.error("Can not get BT provider", e);
-                    next = previous;
                 }
             }
 
