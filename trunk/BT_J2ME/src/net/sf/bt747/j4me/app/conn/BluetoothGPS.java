@@ -177,12 +177,15 @@ public class BluetoothGPS  {
                 nextTimeOut = 0; // Reinit timeout
                 provider.connected(true);
             } catch (final ConnectionNotFoundException e) {
+                Log.debug("Bluetooth connection not found", e);
                 connecting = false;
                 throw e;
             } catch (IOException e) {
+                Log.debug("Bluetooth IO Exception", e);
                 connecting = false;
                 throw e;
             } catch (SecurityException e) {
+                Log.debug("Bluetooth Security Exception", e);
                 connecting = false;
                 throw e;
             }
