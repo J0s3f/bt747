@@ -91,14 +91,14 @@ public final class GPSNMEAFile extends GPSFile {
                 }
             }
 
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
+                writeZDA(r, timeStr);
+            }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0) {
                 writeRMC(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0) {
                 writeGGA(r, timeStr);
-            }
-            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
-                writeZDA(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0) {
                 writeGSA(r, timeStr);
@@ -144,7 +144,7 @@ public final class GPSNMEAFile extends GPSFile {
         if ((r.hasValid() && selectedFileFields.hasValid())) {
             String tmp;
             switch (r.valid) {
-            case 0x0001:
+            case BT747Constants.VALID_NO_FIX_MASK:
                 tmp = ",V,"; // "No fix";
                 break;
             default:
@@ -296,16 +296,16 @@ public final class GPSNMEAFile extends GPSFile {
         if ((r.hasValid() && selectedFileFields.hasValid())) {
             String tmp = "";
             switch (r.valid) {
-            case 0x0001:
+            case BT747Constants.VALID_NO_FIX_MASK:
                 tmp = "0"; // "No fix";
                 break;
-            case 0x0002:
+            case BT747Constants.VALID_SPS_MASK:
                 tmp = "1"; // "SPS";
                 break;
-            case 0x0004:
+            case BT747Constants.VALID_DGPS_MASK:
                 tmp = "2"; // DGPS
                 break;
-            case 0x0008:
+            case BT747Constants.VALID_PPS_MASK:
                 tmp = "3"; // PPS, Military signal
                 break;
             case 0x0010:
@@ -314,13 +314,13 @@ public final class GPSNMEAFile extends GPSFile {
             case 0x0020:
                 tmp = "5";
                 break;
-            case 0x0040:
+            case BT747Constants.VALID_ESTIMATED_MASK:
                 // tmp+= "Estimated mode";
                 break;
-            case 0x0080:
+            case BT747Constants.VALID_MANUAL_MASK:
                 // tmp+= "Manual input mode";
                 break;
-            case 0x0100:
+            case BT747Constants.VALID_SIMULATOR_MASK:
                 // tmp+= "Simulator mode";
                 break;
             default:
@@ -334,6 +334,8 @@ public final class GPSNMEAFile extends GPSFile {
         if (r.hasNsat() && selectedFileFields.hasNsat()) {
             rec.append((r.nsat & 0xFF00) >> 8);
             // rec+="("+JavaLibBridge.toString(s.nsat&0xFF)+")";
+        } else {
+            rec.append("8");
         }
         rec.append(",");
 

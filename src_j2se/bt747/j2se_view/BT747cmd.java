@@ -24,6 +24,7 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 
 import java.io.File;
@@ -46,6 +47,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Int;
 
 /**
  * 
@@ -167,6 +169,10 @@ public class BT747cmd implements bt747.model.ModelListener {
     private static final String OPT_FILE_TIMEZONE = "tz";
     /** Specify the format for the tagged filename. */
     private static final String OPT_TARGET_TAGGED_FILENAME = "template-taggedfilename";
+    /** Specify AGPS url (and upload). */
+    private static final String OPT_AGPS_URL = "agps-url";
+    /** Request a clear of the AGPS data. */
+    private static final String OPT_AGPS_CLEAR = "agps-clear";
 
     /**
      * Set up system specific classes.
@@ -325,6 +331,12 @@ public class BT747cmd implements bt747.model.ModelListener {
         case ModelEvent.LOG_DOWNLOAD_SUCCESS:
             downloadIsSuccessFull = true;
             break;
+        case ModelEvent.AGPS_UPLOAD_DONE:
+            agpsProgressBarDone();
+            break;
+        case ModelEvent.AGPS_UPLOAD_PERCENT:
+            agpsProgressBarUpdate(((BT747Int) e.getArg()).getValue());
+            break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             if (overwriteDownloadOk) {
                 // // When the data on the device is not the same, overwrite
@@ -408,6 +420,31 @@ public class BT747cmd implements bt747.model.ModelListener {
                 }
             }
         }
+    }
+
+    private int prevAgpsPercent = 0;
+
+    /**
+     * Update the progress status
+     */
+    private void agpsProgressBarUpdate(final int percent) {
+        if (percent != prevAgpsPercent) {
+            while (prevAgpsPercent < percent) {
+                prevAgpsPercent++;
+                System.out.print('*');
+                if ((prevAgpsPercent % 10) == 0) {
+                    System.out.print("#" + percent + "%#");
+                    System.out.flush();
+                }
+            }
+        }
+    }
+
+    volatile boolean agpsUploadDone = false;
+
+    private void agpsProgressBarDone() {
+        System.out.println();
+        agpsUploadDone = true;
     }
 
     private void waitForErase() {
@@ -665,7 +702,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 || options.has(OPT_SET_LOG_CRITERIA)
                 || options.has(OPT_ERASE_MEMORY)
                 || options.has(OPT_SET_LOG_FIELDS)
-                || options.has(OPT_RECOVER_LOGGER)) {
+                || options.has(OPT_RECOVER_LOGGER)
+                || options.has(OPT_AGPS_CLEAR)
+                || options.has(OPT_AGPS_URL)) {
             c.connectGPS();
         }
 
@@ -748,6 +787,35 @@ public class BT747cmd implements bt747.model.ModelListener {
             // $fail_sectors);
             // printf(">> Retrieving %u (0x%08X) bytes of log data from
             // device...\n", $bytes_to_read, $bytes_to_read);
+
+            if (options.has(OPT_AGPS_CLEAR)) {
+                System.out.println(">> Clearing AGPS data\n");
+                c.gpsCmd(MtkController.CMD_EPO_CLEAR);
+            }
+
+            if (options.has(OPT_AGPS_URL)) {
+                final String url = options.argumentOf(OPT_AGPS_URL);
+                c.setStringOpt(AppSettings.AGPSURL, url);
+                System.out.println(">> Getting AGPS data from "
+                        + m.getStringOpt(AppSettings.AGPSURL) + "\n"
+                        + " and uploading to device.");
+
+                agpsUploadDone = false;
+                c.downloadAndUploadAgpsData();
+                while (!agpsUploadDone) {
+                    // Thread t=Thread.currentThread();
+                    try {
+                        // System.out.println("Waiting for cmds "
+                        // + m.getOutstandingCommandsCount());
+                        // System.out.flush();
+                        Thread.sleep(50);
+                    } catch (final Exception e) {
+                        e.printStackTrace();
+                        // Do nothing
+                    }
+                }
+
+            }
 
             if (options.has(OPT_SET_LOG_CRITERIA)) {
                 final List<?> list = options.valuesOf(OPT_SET_LOG_CRITERIA);
@@ -1150,7 +1218,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts(OPT_UTC, "Define UTC offset to apply to output file")
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
-                accepts(OPT_DEVICETYPE,
+                accepts(
+                        OPT_DEVICETYPE,
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245).")
                         .withRequiredArg().describedAs("DEVICE");
                 accepts(OPT_TRKPTINFO,
@@ -1204,6 +1273,17 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 + File.separator + "org.jpg\" to \"BT747"
                                 + File.separator + "org_tagged\".")
                         .withRequiredArg().describedAs("FORMAT");
+                accepts(
+                        OPT_AGPS_URL,
+                        "Specify the URL (file://, ftp://, http://) to the AGPS (EPO) data.\n"
+                                + "The basename of this file is usually MTK7d.EPO, MTK3d.EPO, MTK8d.EPO or MTK14.EPO\n"
+                                + "When you provide this option, the data will be uploaded to the device.")
+                        .withRequiredArg().describedAs("URL");
+                ;
+                accepts(OPT_AGPS_CLEAR,
+                        "Clears the AGPS data in the device (in case --"
+                                + OPT_AGPS_URL
+                                + " is provided, done before the upload.");
 
             }
         };

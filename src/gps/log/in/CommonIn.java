@@ -285,8 +285,6 @@ public final class CommonIn {
                 if (sNmea[8].length() != 0) {
                     gpsRec.hdop = (int) (JavaLibBridge.toFloat(sNmea[8]) * 100);
                     logFormat |= (1 << BT747Constants.FMT_HDOP_IDX);
-                } else {
-                    gpsRec.hdop = 999;
                 }
             } catch (final Exception e) {
                 debugInfo(sNmea, "GPGGA8", e);
@@ -305,8 +303,6 @@ public final class CommonIn {
                             && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
                         gpsRec.geoid = (float) Conv.wgs84Separation(
                                 gpsRec.latitude, gpsRec.longitude);
-                    } else {
-                        gpsRec.geoid = 0;
                     }
                 }
             } catch (final Exception e) {
