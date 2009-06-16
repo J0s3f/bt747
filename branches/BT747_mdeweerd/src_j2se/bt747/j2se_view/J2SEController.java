@@ -161,7 +161,7 @@ public class J2SEController extends Controller {
     }
 
     public final void downloadAndUploadAgpsData() {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        final Thread t = new Thread(new Runnable() {
             public final void run() {
                 final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
                 bt747.sys.Generic.debug("Getting data from <" + urlTxt + ">");
@@ -175,6 +175,6 @@ public class J2SEController extends Controller {
                 }
             }
         });
-
+        t.run();
     }
 }
