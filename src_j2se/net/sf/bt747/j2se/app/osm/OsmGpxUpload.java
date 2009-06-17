@@ -49,9 +49,9 @@ public class OsmGpxUpload {
      * @param gpxFile
      * @throws IOException
      */
-    public final void upload(final String username, final String password,
-            final String description, final String tags, final File gpxFile,
-            final boolean isPublic)
+    public final static void upload(final String username,
+            final String password, final String description,
+            final String tags, final File gpxFile, final boolean isPublic)
             throws IOException {
         Generic.debug("uploading " + gpxFile.getAbsolutePath()
                 + " to openstreetmap.org");
@@ -84,7 +84,7 @@ public class OsmGpxUpload {
             writeContentDispositionFile(out, "file", gpxFile);
             writeContentDisposition(out, "description", urlDesc);
             writeContentDisposition(out, "tags", urlTags);
-            writeContentDisposition(out, "public", isPublic?"1":"0");
+            writeContentDisposition(out, "public", isPublic ? "1" : "0");
 
             out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
             out.flush();
@@ -119,7 +119,7 @@ public class OsmGpxUpload {
      * @throws IOException
      *                 Throws io exceptions when trouble with streams.
      */
-    private final void writeContentDispositionFile(
+    private final static void writeContentDispositionFile(
             final DataOutputStream out, final String name, final File gpxFile)
             throws IOException {
         out.writeBytes("--" + BOUNDARY + LINE_END);
@@ -155,8 +155,9 @@ public class OsmGpxUpload {
      * @throws IOException
      *                 Exceptions related to output stream.
      */
-    public final void writeContentDisposition(final DataOutputStream out,
-            final String name, final String value) throws IOException {
+    public final static void writeContentDisposition(
+            final DataOutputStream out, final String name, final String value)
+            throws IOException {
         out.writeBytes("--" + BOUNDARY + LINE_END);
         out.writeBytes("Content-Disposition: form-data; name=\"" + name
                 + "\"" + LINE_END);

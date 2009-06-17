@@ -289,6 +289,7 @@ public final class J2SEAppController extends J2SEController {
      * @see Model#GPX_LOGTYPE
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
+     * @see Model#OSM_UPLOAD_LOGTYPE
      */
 
     public final void convertLog(final int logType) {
@@ -298,8 +299,18 @@ public final class J2SEAppController extends J2SEController {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         } else {
+            if(logType == Model.OSM_UPLOAD_LOGTYPE) {
+                if(m.getStringOpt(AppSettings.OSMLOGIN).length()==0||
+                m.getStringOpt(AppSettings.OSMPASS).length()==0) {
+                    reportError(-1, getString("OSM Login and Password must be set."));
+                    return;
+                }
+            }
             if (doConvertLog(logType) != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
+            }
+            if(logType == Model.OSM_UPLOAD_LOGTYPE) {
+                
             }
         }
         m.getPositionData().userWaypointsUpdated();

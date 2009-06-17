@@ -36,6 +36,15 @@ public final class GPSConversionParameters {
      * Defines the CSV date format (to be implemented).
      */
     public final static String CSV_DATE_FORMAT_INT = "csv-datefmt";
+    
+    /**
+     * OSM login (string).
+     */
+    public final static String OSM_LOGIN = "osm-login";
+    /**
+     * OSM Password (string).
+     */
+    public final static String OSM_PASS = "osm-pass";
 
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);

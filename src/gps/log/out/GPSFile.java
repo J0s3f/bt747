@@ -696,8 +696,14 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     protected void writeDataFooter() {
     };
 
+    private String currentFileName;
+    protected String getCurrentFileName() {
+        return currentFileName;
+    }
+    
     protected int createFile(final int utc, final String extra_ext,
             final boolean createNewFile) {
+        currentFileName = null;
         String fileName;
         fileName = filenameBuilder.getOutputFileName(basename, utc, ext,
                 extra_ext);
@@ -725,6 +731,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             errorInfo = fileName + "|" + outFile.getLastError();
             error = BT747Constants.ERROR_COULD_NOT_OPEN;
             outFile = null;
+        } else {
+            currentFileName = fileName;
         }
         return error;
     }
