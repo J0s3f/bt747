@@ -29,7 +29,7 @@ import bt747.sys.JavaLibBridge;
  * 
  * @author Mario De Weerd
  */
-public final class GPSGPXFile extends GPSFile {
+public class GPSGPXFile extends GPSFile {
     private final StringBuffer rec = new StringBuffer(1024); // reused
     // stringbuffer
 
@@ -60,7 +60,7 @@ public final class GPSGPXFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public final void initialiseFile(final String basename, final String ext,
+    public void initialiseFile(final String basename, final String ext,
             final int Card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         if (getParamObject().hasParam(
@@ -81,7 +81,7 @@ public final class GPSGPXFile extends GPSFile {
         isWayType = true;
     }
 
-    public final boolean nextPass() {
+    public boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             // if(m_multipleFiles) {
@@ -577,7 +577,7 @@ public final class GPSGPXFile extends GPSFile {
      * 
      * @see gps.GPSFile#FinaliseFile()
      */
-    public final void finaliseFile() {
+    public void finaliseFile() {
         if (isOpen()) {
             String footer;
             writeDataFooter();
