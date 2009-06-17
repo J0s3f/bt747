@@ -140,8 +140,8 @@ public final class GPSrxtx {
 
     public final int setFreeTextPortAndOpen(final String s) {
         int result;
-        Generic.debug("Class"+gpsPort.getClass().getName());
         if (gpsPort != null) {
+            Generic.debug("Class"+gpsPort.getClass().getName());
             gpsPort.setFreeTextPort(s);
             result = myOpenPort();
             Generic.debug("Port opened");

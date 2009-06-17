@@ -260,11 +260,19 @@ public class AppSettings {
      * Used to set some device dependent settings needed when no connection.
      */
     public static final int IS_FIRST_CONNECTION_TO_INIT = 55;
-
     /**
      * Force NMEA utc offset to 0.
      */
     public final static int NMEAUTC0 = 56;
+
+    /**
+     * OSM account.
+     */
+    public final static int OSMLOGIN = 57;
+    /**
+     * OSM password.
+     */
+    public final static int OSMPASS = 58;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -462,7 +470,8 @@ public class AppSettings {
             setBooleanOpt(AppSettings.IS_GPX_1_1, false);
             /* fall through */
         case 36:
-            setIntOpt(AppSettings.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_MTK);
+            setIntOpt(AppSettings.DEVICE_PROTOCOL,
+                    BT747Constants.PROTOCOL_MTK);
             /* fall through */
         case 37:
             // New field is coded on 4 byte (8 chars)
@@ -486,7 +495,11 @@ public class AppSettings {
             /* fall through */
         case 41:
             setBooleanOpt(NMEAUTC0, false);
-            setStringOpt(AppSettings.VERSION, "0.42");
+            /* fall through */
+        case 42:
+            setStringOpt(OSMLOGIN,"");
+            setStringOpt(OSMPASS, "");
+            setStringOpt(AppSettings.VERSION, "0.43");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1505,15 +1518,21 @@ public class AppSettings {
     private static final int C_NMEAUTC0_IDX = AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_IDX
             + AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE;
     private static final int C_NMEAUTC0_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_NMEAUTC0_IDX
+    private static final int C_OSMLOGIN_IDX = AppSettings.C_NMEAUTC0_IDX
             + AppSettings.C_NMEAUTC0_SIZE;
+    private static final int C_OSMLOGIN_SIZE = 4;
+    private static final int C_OSMPASS_IDX = AppSettings.C_OSMLOGIN_IDX
+            + AppSettings.C_OSMLOGIN_SIZE;
+    private static final int C_OSMPASS_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.C_OSMPASS_IDX
+            + AppSettings.C_OSMPASS_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
             + AppSettings.C_NEXT_SIZE;
 
-    public static int SIZE = C_NEW_NEXT_IDX;
+    public static final int SIZE = C_NEW_NEXT_IDX;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -1673,6 +1692,10 @@ public class AppSettings {
                     AppSettings.C_IS_FIRST_CONNECTION_TO_INIT_SIZE },
             { AppSettings.BOOL, AppSettings.NMEAUTC0,
                     AppSettings.C_NMEAUTC0_IDX, AppSettings.C_NMEAUTC0_SIZE },
+            { AppSettings.STRING, AppSettings.OSMLOGIN,
+                    AppSettings.C_OSMLOGIN_IDX, AppSettings.C_OSMLOGIN_SIZE },
+            { AppSettings.STRING, AppSettings.OSMPASS,
+                    AppSettings.C_OSMPASS_IDX, AppSettings.C_OSMPASS_SIZE },
 
     // End of list
     };
