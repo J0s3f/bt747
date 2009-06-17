@@ -838,7 +838,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * @author Mario De Weerd
      * 
      */
-    private final class PrivateData {
+    private final static class PrivateData {
         /**
          * The gpsModel communicates with the GPS device and stores some
          * information regarding the state of the GPS device.
