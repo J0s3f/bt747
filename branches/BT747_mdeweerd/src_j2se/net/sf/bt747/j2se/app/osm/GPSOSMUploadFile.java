@@ -31,7 +31,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  */
 public final class GPSOSMUploadFile extends GPSGPXFile {
 
-    private static final String filePrefix = "osm-tmp-";
+    private static final String basenamePostfix = "-osm-tmp";
 
     /**
      * 
@@ -47,7 +47,8 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
      */
     public final void initialiseFile(final String basename, final String ext,
             final int card, final int oneFilePerDay) {
-        super.initialiseFile(filePrefix + basename, ext, card, oneFilePerDay);
+        super.initialiseFile(basename + basenamePostfix, ext, card,
+                oneFilePerDay);
     }
 
     private final BT747Hashtable filenames = JavaLibBridge
@@ -64,9 +65,11 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
         final int error = super.createFile(utc, extra_ext, createNewFile);
 
         final String newFileName = getCurrentFileName();
-        if (newFileName != null && newFileName.length() > filePrefix.length()) {
-            final String orgFileName = newFileName.substring(filePrefix
-                    .length());
+        if (newFileName != null
+                && newFileName.length() > basenamePostfix.length()) {
+            int idx = newFileName.lastIndexOf(basenamePostfix);
+            final String orgFileName = newFileName.substring(0, idx)
+                    + newFileName.substring(idx + basenamePostfix.length());
             filenames.put(orgFileName, newFileName);
 
         }
@@ -89,7 +92,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                         GPSConversionParameters.OSM_LOGIN);
             }
             if (getParamObject().hasParam(GPSConversionParameters.OSM_PASS)) {
-                osmLogin = getParamObject().getStringParam(
+                osmPass = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_PASS);
             }
             // Start uploading data.

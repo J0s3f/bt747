@@ -366,6 +366,12 @@ public class Controller implements ModelListener {
                     m.getStringOpt(AppSettings.GOOGLEMAPKEY));
             gpsFile.getParamObject().setIntParam(
                     GPSConversionParameters.NMEA_OUTFIELDS, m.getNMEAset());
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.OSM_LOGIN,
+                    m.getStringOpt(AppSettings.OSMLOGIN));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.OSM_PASS,
+                    m.getStringOpt(AppSettings.OSMPASS));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:
