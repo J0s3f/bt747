@@ -106,6 +106,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                             .upload(osmLogin, osmPass, orgFileName,
                                     "bt747_direct", new File(newFileName),
                                     false /* isPublic */);
+                    (new File(newFileName)).delete();
                 } catch (Exception e) {
                     // TODO: improve upload error message handling.
                     Generic.debug("Upload for " + orgFileName + " failed", e);
