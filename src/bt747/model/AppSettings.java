@@ -1520,10 +1520,10 @@ public class AppSettings {
     private static final int C_NMEAUTC0_SIZE = 1;
     private static final int C_OSMLOGIN_IDX = AppSettings.C_NMEAUTC0_IDX
             + AppSettings.C_NMEAUTC0_SIZE;
-    private static final int C_OSMLOGIN_SIZE = 4;
+    private static final int C_OSMLOGIN_SIZE = 20;
     private static final int C_OSMPASS_IDX = AppSettings.C_OSMLOGIN_IDX
             + AppSettings.C_OSMLOGIN_SIZE;
-    private static final int C_OSMPASS_SIZE = 4;
+    private static final int C_OSMPASS_SIZE = 20;
     private static final int C_NEXT_IDX = AppSettings.C_OSMPASS_IDX
             + AppSettings.C_OSMPASS_SIZE;
 
