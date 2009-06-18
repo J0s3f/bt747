@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 
 <project name="BT747" basedir="." default="all">
 	<!-- Local properties (not in version control/local override) -->
@@ -197,7 +196,7 @@
           -keep public class bt747.j2se_view.BT747
 	      -keep public class sun.audio.AudioStream
           -keep public class * implements gps.log.in.GPSLogConvert
-	      -keep public class * implements gps.log.out.GPSConversionParameters(final static String *;}
+			-keep public class gps.log.out.GPSConversionParameters { public final static java.lang.String *;}
           -keep public class * extends waba.ui.MainWindow
  	      -keep public class * implements bt747.lang.TxtInterface
           -keep public class * extends gps.connection.GPSPort
@@ -557,7 +556,7 @@
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
 			            -keep public class gps.convert.GeoidIF { *; }
-		     -keep public class * implements gps.log.out.GPSConversionParameters(final static String *;}
+	         -keep public class gps.log.out.GPSConversionParameters { public static final java.lang.String *;}
 			-keep public class gps.convert.Conv { public *** setGeoidIF(...); }
 			-keep public class gps.convert.Geoid { }
 			            -keep public class gps.mvc.MtkModel { public static final int DATA_*;
@@ -731,7 +730,7 @@
 	         -keep public class bt747.sys.interfaces.* {
 	                        public *;
 	            }
-
+			-keep public class gps.log.out.GPSConversionParameters { public final static java.lang.String *;}
             -keep public class net.sf.bt747.j2se.filefilters.* { *; }
             -keep public class net.sf.bt747.j2se.map.* { *; }
 		        -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
