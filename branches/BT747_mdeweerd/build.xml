@@ -30,8 +30,8 @@
 	<property name="swinglayout.jar"
 	          value="${lib.dir}/swing-layout-1.0.3.jar"
 	/>
-    <property name="swingx.jar" value="${lib.dir}/swingx.jar" />
-    <property name="swingx-ws.jar" value="${lib.dir}/swingx-ws.jar" />
+	<property name="swingx.jar" value="${lib.dir}/swingx.jar" />
+	<property name="swingx-ws.jar" value="${lib.dir}/swingx-ws.jar" />
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
 
@@ -185,7 +185,7 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
-            <libraryjar file="${rxtxcomm.jar}" />
+			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${superwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/tmp.jar" />
 			<outjar path="${proguard.infile}" />
@@ -242,8 +242,8 @@
 	<path id="j2seclasspath">
 		<pathelement location="${dist}/lib${ant.project.name}.jar" />
 		<pathelement location="${jcalendar.jar}" />
-        <pathelement location="${swingx.jar}" />
-        <pathelement location="${swingx-ws.jar}" />
+		<pathelement location="${swingx.jar}" />
+		<pathelement location="${swingx-ws.jar}" />
 		<pathelement location="${jopt-simple.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
@@ -277,13 +277,12 @@
 		       debug="${java.debug}"
 		       classpathref="j2seclasspath"
 		       encoding="iso-8859-15"
-			
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
-			<compilerarg line="-Xlint:unchecked"/>
+			<compilerarg line="-Xlint:unchecked" />
 		</javac>
 
 		<!--
@@ -322,59 +321,61 @@
 
 	</target>
 
-    <target name="dist.j2se" depends="build.j2seapp">
-        <buildnumber file="build.num" />
-        <delete file="MANIFEST.MF" />
-        <manifest file="MANIFEST.MF">
-            <attribute name="Built-By" value="${user.name}" />
-            <attribute name="Main-Class" value="${j2se.main}" />
-            <attribute name="Implementation-Version"
-                       value="${full.build.version}"
-            />
-            <attribute name="Class-Path"
-                       value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx.jar lib/swingx-ws.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar"
-            />
-        </manifest>
-        <!-- It might be possible to read the version in the application:
+	<target name="dist.j2se" depends="build.j2seapp">
+		<buildnumber file="build.num" />
+		<delete file="MANIFEST.MF" />
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Main-Class" value="${j2se.main}" />
+			<attribute name="Implementation-Version"
+			           value="${full.build.version}"
+			/>
+			<attribute name="Class-Path"
+			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx.jar lib/swingx-ws.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar"
+			/>
+		</manifest>
+		<!-- It might be possible to read the version in the application:
                  TheMainClass.class.getPackage().getImplementationVersion() ); -->
 
-        <!-- 
+		<!-- 
         <jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar" compress="true">
             <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
         </jar>
         -->
 
-        <jar manifest="MANIFEST.MF"
-             jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-             compress="true"
-        >
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
-            <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
-        	<fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
-            <fileset dir="${src_j2se.dir}" includes="**/BT747base*.properties" />
-            <fileset dir="${src_j2se.dir}" includes="**/resources/*" />
-            <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
-        </jar>
+		<jar manifest="MANIFEST.MF"
+		     jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+		     compress="true"
+		>
+			<fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
+			<fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
+			<fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
+			<fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
+			<fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
+			<fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
+			<fileset dir="${src_j2se.dir}"
+			         includes="**/BT747base*.properties"
+			/>
+			<fileset dir="${src_j2se.dir}" includes="**/resources/*" />
+			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+		</jar>
 
-        <antcall target="proguard.j2seapp" />
+		<antcall target="proguard.j2seapp" />
 
-        <copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-              tofile="${dist}/${ant.project.name}_j2se.jar"
-        />
+		<copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+		      tofile="${dist}/${ant.project.name}_j2se.jar"
+		/>
 
-        <antcall target="sign">
-            <param name="jar.tosign"
-                   value="${dist}/${ant.project.name}_j2se.jar"
-            />
-        </antcall>
+		<antcall target="sign">
+			<param name="jar.tosign"
+			       value="${dist}/${ant.project.name}_j2se.jar"
+			/>
+		</antcall>
 
-    </target>
+	</target>
 
-	
-	
+
+
 
 	<target name="proguard.j2seapp_task" unless="skip.proguard">
 		<taskdef name="proguard"
@@ -396,11 +397,11 @@
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${jopt-simple.jar}" />
-            <libraryjar file="${jcalendar.jar}" />
-            <libraryjar file="${swingx.jar}" />
-            <libraryjar file="${swingx-ws.jar}" />
-            <libraryjar file="${swinglayout.jar}" />
-            <libraryjar file="${rxtxcomm.jar}" />
+			<libraryjar file="${jcalendar.jar}" />
+			<libraryjar file="${swingx.jar}" />
+			<libraryjar file="${swingx-ws.jar}" />
+			<libraryjar file="${swinglayout.jar}" />
+			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
@@ -415,28 +416,28 @@
 
 	<!-- OPTIMIZE THE WABA APPLICATION
 	  -->
-   <target name="proguard.wabaapp_task" unless="skip.proguard">
-        <taskdef name="proguard"
-                 classpath="${proguardLib}"
-                 classname="proguard.ant.ProGuardTask"
-        />
-        <move file="${wababuild.dir}/${ant.project.name}_waba.jar"
-              tofile="${wababuild.dir}/${ant.project.name}_waba_unopt.jar"
-        />
-        <proguard forceprocessing="true"
-                  shrink="${proguard.shrink}"
-                  defaultpackage=""
-                  optimize="${proguard.optimize}"
-                  obfuscate="false"
-                  printusage="false"
-                  overloadaggressively="false"
-                  verbose="true"
-                  ignorewarnings="true"
-        >
-            <libraryjar file="${proguard.java.rt.lib}" />
-            <libraryjar file="${superwaba.jar}" />
-            <libraryjar file="${dist}/lib${ant.project.name}.jar" />
-            <outjar path="${wababuild.dir}/${ant.project.name}_waba.jar" />
+	<target name="proguard.wabaapp_task" unless="skip.proguard">
+		<taskdef name="proguard"
+		         classpath="${proguardLib}"
+		         classname="proguard.ant.ProGuardTask"
+		/>
+		<move file="${wababuild.dir}/${ant.project.name}_waba.jar"
+		      tofile="${wababuild.dir}/${ant.project.name}_waba_unopt.jar"
+		/>
+		<proguard forceprocessing="true"
+		          shrink="${proguard.shrink}"
+		          defaultpackage=""
+		          optimize="${proguard.optimize}"
+		          obfuscate="false"
+		          printusage="false"
+		          overloadaggressively="false"
+		          verbose="true"
+		          ignorewarnings="true"
+		>
+			<libraryjar file="${proguard.java.rt.lib}" />
+			<libraryjar file="${superwaba.jar}" />
+			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
+			<outjar path="${wababuild.dir}/${ant.project.name}_waba.jar" />
               -injar ${wababuild.dir}/${ant.project.name}_waba_unopt.jar
               -injar ${swcollections.jar}(!META-INF/**)
               -optimizationpasses 3
@@ -453,11 +454,11 @@
               }
               -keep public class bt747.Version { *; }
             </proguard>
-    </target>
+	</target>
 
-    <target name="proguard.wabaapp" depends="proguard.wabaapp_task" />
+	<target name="proguard.wabaapp" depends="proguard.wabaapp_task" />
 
-	
+
 	<!-- BUILD WABA DISTRIBUTION
 	[Currently under debug]
 	1. BUILD THE WABA APP.
@@ -532,11 +533,11 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
-            <libraryjar file="${jcalendar.jar}" />
-            <libraryjar file="${swingx.jar}" />
-            <libraryjar file="${swingx-ws.jar}" />
-            <libraryjar file="${swinglayout.jar}" />
-            <libraryjar file="${rxtxcomm.jar}" />
+			<libraryjar file="${jcalendar.jar}" />
+			<libraryjar file="${swingx.jar}" />
+			<libraryjar file="${swingx-ws.jar}" />
+			<libraryjar file="${swinglayout.jar}" />
+			<libraryjar file="${rxtxcomm.jar}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
              	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
@@ -708,10 +709,10 @@
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
-		    <libraryjar file="${swingx.jar}" />
-		    <libraryjar file="${swingx-ws.jar}" />
-            <libraryjar file="${rxtxcomm.jar}" />
-            <libraryjar file="${superwaba.jar}" />
+			<libraryjar file="${swingx.jar}" />
+			<libraryjar file="${swingx-ws.jar}" />
+			<libraryjar file="${rxtxcomm.jar}" />
+			<libraryjar file="${superwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
@@ -900,8 +901,12 @@
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/bt747/*view/**" if="is.lib" />
-                <include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**" if="is.lib" />
-                <include name="${src_j2se.dir}/net/iharder/dnd/**" if="is.lib" />
+				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**"
+				         if="is.lib"
+				/>
+				<include name="${src_j2se.dir}/net/iharder/dnd/**"
+				         if="is.lib"
+				/>
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -1323,7 +1328,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB   -->
-	<target name="exegen-cab" depends="warp, prepare-exegen" >
+	<target name="exegen-cab" depends="warp, prepare-exegen">
 
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Exegen"
@@ -1675,17 +1680,15 @@
 	<!-- Common targets (generic tasks/targets)                     -->
 	<!-- ========================================================== -->
 
-
-	<!-- Update the language in some files -->
-	<target name="updatelang">
-	</target>
-
 	<property name="encoding" value="UTF-8" />
 	<!-- Version information from SVN -->
 	<!-- SVN revision information -->
 	<!-- To property build.current.revision -->
-	<exec outputproperty="build.current.revision" executable="${svnversion}"
-		failifexecutionfails="false" failonerror="false" >
+	<exec outputproperty="build.current.revision"
+	      executable="${svnversion}"
+	      failifexecutionfails="false"
+	      failonerror="false"
+	>
 		<arg line="-n -c" />
 		<redirector>
 			<outputfilterchain>
@@ -1698,8 +1701,11 @@
 
 	<!-- SVN Version information -->
 	<!-- To property build.current.version -->
-	<exec outputproperty="build.current.version" executable="${svn}"
-		failifexecutionfails="false" failonerror="false">
+	<exec outputproperty="build.current.version"
+	      executable="${svn}"
+	      failifexecutionfails="false"
+	      failonerror="false"
+	>
 		<arg line="info" />
 		<redirector>
 			<outputfilterchain>
@@ -1721,7 +1727,7 @@
 
 	<!-- Update version information in the Version.java file -->
 	<target name="updatedate"
-	        depends="initdate,updatelang"
+	        depends="initdate"
 	        description="increase build number and set release date"
 	>
 		<copy_src />
@@ -1769,6 +1775,12 @@
 			               replace='VERSION_NUMBER = "${build_version}.${build.current.revision}";'
 			/>
 
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
+			               encoding="${encoding}"
+			               match="AURL = [^\s]*;"
+			               replace='AURL = "${}";'
+			/>
+
 
 			<replace dir="@{dest.dir}"
 			         token="GPSWabaPort"
@@ -1779,12 +1791,12 @@
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
-			<echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
+			<echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
+			/>
 			<replace dir="@{dest.dir}"
 			         token="// #if RXTX"
 			         summary="yes"
 			         value=""
-				
 			>
 				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
 				/>
