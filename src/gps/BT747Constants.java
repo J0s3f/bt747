@@ -909,19 +909,19 @@ public final class BT747Constants { // dev as in device
 
     // private static final int SPI_MAN_ID_WINBOND = 0xDA;
 
-    // #define MX_29F002 0xB0
+    // define MX_29F002 0xB0
     // +/* MX25L chips are SPI, first byte of device id is memory type,
     // + second byte of device id is log(bitsize)-9 */
-    // +#define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
-    // +#define MX_25L1005 0x2011
-    // +#define MX_25L2005 0x2012
-    // +#define MX_25L4005 0x2013 /* MX25L4005{,A} */
-    // +#define MX_25L8005 0x2014
-    // +#define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
-    // +#define MX_25L3205 0x2016 /* MX25L3205{,A} */
-    // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
-    // +#define MX_25L1635D 0x2415
-    // +#define MX_25L3235D 0x2416
+    // +define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
+    // +define MX_25L1005 0x2011
+    // +define MX_25L2005 0x2012
+    // +define MX_25L4005 0x2013 /* MX25L4005{,A} */
+    // +define MX_25L8005 0x2014
+    // +define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
+    // +define MX_25L3205 0x2016 /* MX25L3205{,A} */
+    // +define MX_25L6405 0x2017 /* MX25L3205{,D} */
+    // +define MX_25L1635D 0x2415
+    // +define MX_25L3235D 0x2416
 
     public static final int getFlashSize(final int flashManuProdID) {
         int manufacturer;
@@ -938,16 +938,16 @@ public final class BT747Constants { // dev as in device
                 // +/* MX25L chips are SPI, first byte of device id is memory
                 // type,
                 // + second byte of device id is log(bitsize)-9 */
-                // +#define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
-                // +#define MX_25L1005 0x2011
-                // +#define MX_25L2005 0x2012
-                // +#define MX_25L4005 0x2013 /* MX25L4005{,A} */
-                // +#define MX_25L8005 0x2014
-                // +#define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
-                // +#define MX_25L3205 0x2016 /* MX25L3205{,A} */
-                // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
-                // +#define MX_25L1635D 0x2415
-                // +#define MX_25L3235D 0x2416
+                // +define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
+                // +define MX_25L1005 0x2011
+                // +define MX_25L2005 0x2012
+                // +define MX_25L4005 0x2013 /* MX25L4005{,A} */
+                // +define MX_25L8005 0x2014
+                // +define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
+                // +define MX_25L3205 0x2016 /* MX25L3205{,A} */
+                // +define MX_25L6405 0x2017 /* MX25L3205{,D} */
+                // +define MX_25L1635D 0x2415
+                // +define MX_25L3235D 0x2416
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
                 // flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
 
@@ -983,16 +983,16 @@ public final class BT747Constants { // dev as in device
                 // +/* MX25L chips are SPI, first byte of device id is memory
                 // type,
                 // + second byte of device id is log(bitsize)-9 */
-                // +#define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
-                // +#define MX_25L1005 0x2011
-                // +#define MX_25L2005 0x2012
-                // +#define MX_25L4005 0x2013 /* MX25L4005{,A} */
-                // +#define MX_25L8005 0x2014
-                // +#define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
-                // +#define MX_25L3205 0x2016 /* MX25L3205{,A} */
-                // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
-                // +#define MX_25L1635D 0x2415
-                // +#define MX_25L3235D 0x2416
+                // +define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
+                // +define MX_25L1005 0x2011
+                // +define MX_25L2005 0x2012
+                // +define MX_25L4005 0x2013 /* MX25L4005{,A} */
+                // +define MX_25L8005 0x2014
+                // +define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
+                // +define MX_25L3205 0x2016 /* MX25L3205{,A} */
+                // +define MX_25L6405 0x2017 /* MX25L3205{,D} */
+                // +define MX_25L1635D 0x2415
+                // +define MX_25L3235D 0x2416
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
                 flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
 
