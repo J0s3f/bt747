@@ -393,7 +393,7 @@ public class MtkModel {
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
-                // $PMTK182,3,TYPE,DATA
+                // PMTK182,3,TYPE,DATA
                 final int z_type = JavaLibBridge.toInt(sNmea[2]);
                 if (sNmea.length == 4) {
                     switch (z_type) {
@@ -479,7 +479,7 @@ public class MtkModel {
                 break;
             case BT747Constants.PMTK_LOG_DT_LOG:
                 // Data from the log
-                // $PMTK182,8,START_ADDRESS,DATA
+                // PMTK182,8,START_ADDRESS,DATA
 
                 try {
                     // Get the initial mode.

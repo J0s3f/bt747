@@ -1778,7 +1778,7 @@
 			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="AURL = [^\s]*;"
-			               replace='AURL = "${}";'
+			               replace='AURL = "${agpsurlbase}";'
 			/>
 
 
