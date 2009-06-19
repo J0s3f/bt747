@@ -32,6 +32,7 @@ public class AppSettings {
      * Google map file name (basename).
      */
     public static final String C_GMAP_KEY_FILENAME = "gmapkey.txt";
+    public static final String DUMMY_AGPS_STRING = "ftp://login:passwd@siteURL.com/MTK7d.EPO";
 
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 4000; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
@@ -480,7 +481,7 @@ public class AppSettings {
             /* fall through */
         case 38:
             setStringOpt(AppSettings.AGPSURL,
-                    "ftp://login:passwd@siteURL.com/MTK7d.EPO");
+                    DUMMY_AGPS_STRING);
             /* fall through */
         case 39:
             setBooleanOpt(AppSettings.IS_USE_PRECISE_GEOID, true);
