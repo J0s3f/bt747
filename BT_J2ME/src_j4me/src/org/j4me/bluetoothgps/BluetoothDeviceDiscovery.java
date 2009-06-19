@@ -1,5 +1,3 @@
-// #ifndef BLACKBERRY
-//
 // BlackBerry devices before JDE 4.2.1 did not support JSR-82 and
 // will fail to load because of this class. BlackBerry phones that
 // do support JSR-82 are the 8300 (Curve) and 8800 (other 8x00 can
@@ -415,5 +413,3 @@ class BluetoothDeviceDiscovery implements DiscoveryListener {
         return null;
     }
 }
-
-// #endif // BlackBerry
