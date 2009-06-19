@@ -52,9 +52,8 @@ public final class Version {
      * Done during build process.
      */
     // #ifdef nodefault
-//@    public static final String AURL = "http://bt747.free.fr/";
+    public static final String AURL = "http://bt747.free.fr/";
     // #else
-    // #expand public static final String AURL = "%AGPSURLBASE%";
-    public static final String AURL = "%AGPSURLBASE%";
+    // #expand public static final String AURL = "%agpsurlbase%";
     // #endif
 }
