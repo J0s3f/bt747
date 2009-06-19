@@ -144,8 +144,6 @@ public abstract class LocationProvider {
             SecurityException {
         String[][] devices = null;
 
-        // #ifndef BLACKBERRY
-
         // If the device doesn't support Bluetooth, just return null.
         if (LocationProvider.supportsBluetoothAPI() == false) {
             return null;
@@ -168,8 +166,6 @@ public abstract class LocationProvider {
         }
 
         devices = discoverer.discoverNearbyDeviceNamesAndAddresses();
-
-        // #endif // BlackBerry
 
         return devices;
     }
