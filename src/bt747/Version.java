@@ -46,4 +46,10 @@ public final class Version {
      * </ul>
      */
     public static final String VERSION_NUMBER = "2.dev";
+    
+    /**
+     * URL for base address of AGPS data.  Must be replaced by the actual one.
+     * Done during build process.
+     */
+    public static final String AURL = "http://bt747.free.fr/";
 }

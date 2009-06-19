@@ -53,6 +53,7 @@ public final class AgpsPanel extends javax.swing.JPanel
         m = c.getModel();
         m.addListener(this);
 
+        txtAgpsUrl.setVisible(false);
         updateConnected();
         updateAppURL();
         txtLogin.setText(m.getStringOpt(AppSettings.OSMLOGIN));
