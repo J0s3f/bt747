@@ -157,8 +157,8 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             // whole
                             // day...
                             // ($lon, $lat, $year, $month, $day, $hour,
-                            // $minute,
-                            // $second, $speed, $tag) =
+                            // minute, $second, $speed, $tag) =
+                            // 
                             // unpack( " V V C C C C C C C C", $_ );
                             // # _Longitude_ _Latitude__ YY MM DD HH MM SS
                             // SpdTag
