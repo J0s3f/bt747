@@ -153,16 +153,16 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             // if (( lc( $o{'i'} ) eq lc( 'iTrackU-Nemerix' )
                             // )
                             // or
-                            // # parse the record, this trick took me one
+                            // parse the record, this trick took me one
                             // whole
                             // day...
                             // ($lon, $lat, $year, $month, $day, $hour,
                             // minute, $second, $speed, $tag) =
                             // 
                             // unpack( " V V C C C C C C C C", $_ );
-                            // # _Longitude_ _Latitude__ YY MM DD HH MM SS
+                            // _Longitude_ _Latitude__ YY MM DD HH MM SS
                             // SpdTag
-                            // # ef f3 b7 00 d1 df 02 03 07 09 1d 06 01 2a 00
+                            // ef f3 b7 00 d1 df 02 03 07 09 1d 06 01 2a 00
                             // ff
 
                             // elsif (( lc( $o{'i'} ) eq lc( 'PhotoTrackr' ) )
@@ -172,9 +172,9 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             // ( lc( $o{'i'} ) eq 's' ) ) {
                             // ($lon, $lat, $date, $altitude, $speed, $tag) =
                             // unpack( " V V V s C C", $_ );
-                            // # _Longitude_ _Latitude__ ___Date____ _Alt_
+                            // _Longitude_ _Latitude__ ___Date____ _Alt_
                             // SpdTag
-                            // # bd 49 90 00 09 0c 1d 03 b4 eb a8 1e 3b 00 02
+                            // bd 49 90 00 09 0c 1d 03 b4 eb a8 1e 3b 00 02
                             // 63
 
                             int longitude;
