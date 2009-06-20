@@ -78,6 +78,10 @@
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
 	</path>
 
+	<path id="sputils">
+        <pathelement location="${superwaba_root}SP/lib/SuperWabaTools.jar" />
+        <pathelement location="${superwaba_root}SP/lib/SuperWaba.jar" />
+    </path>
 
 	<!-- Set some properties according to availability of files -->
 	<!-- Currently set in local.properties so that only the release
@@ -1347,6 +1351,26 @@
 
 	</target>
 
+	<!-- Execute EXEGEN with WinCE CAB   -->
+	<target name="exegensp-cab" depends="warp, prepare-exegen">
+
+		<java dir="${build.dir}"
+		      classname="superwaba.tools.Exegen"
+		      fork="true"
+		      classpathref="sputils"
+		>
+			<arg value="/I" />
+			<arg value="BT747_" />
+			<arg value="/c" />
+			<arg value="BT74" />
+			<arg value="/z" />
+			<arg value="${ant.project.name}" />
+			<arg value="" />
+			<arg value="${ant.project.name}" />
+		</java>
+
+	</target>
+
 	<!-- Execute WARP and populate distribution directory -->
 	<target name="all-warp" depends="warp">
 
@@ -1378,7 +1402,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-cab" depends="exegen-cab, all-warp">
+	<target name="all-exegen-cab" depends="exegensp-cab, exegen-cab, all-warp">
 
 		<move todir="${dist}">
 
@@ -1397,7 +1421,7 @@
 	<!--
 	Build the distribution for PDA's
 	-->
-	<target name="dist.pda" depends="exegen, exegen-exe, exegen-cab, all-warp">
+	<target name="dist.pda" depends="exegen, exegen-exe, exegensp-cab, exegen-cab, all-warp">
 		<move todir="${dist}">
 			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc" />
