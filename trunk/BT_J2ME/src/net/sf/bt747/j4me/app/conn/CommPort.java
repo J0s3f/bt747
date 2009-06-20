@@ -71,8 +71,7 @@ public class CommPort extends GPSPort {
         String[] result = null;
         try {
             if (midlet != null) {
-                final String ports = midlet
-                        .getAppProperty("microedition.commports");
+                final String ports = System.getProperty("microedition.commports");
                 if (ports != null) {
                     final BT747StringTokenizer fields = JavaLibBridge
                             .getStringTokenizerInstance(ports, ',');
