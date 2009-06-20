@@ -82,7 +82,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Best followed by eraseLog.
      * 
      * @param newLogFormat
-     *                The format to set.
+     *            The format to set.
      */
     public final void setLogFormat(final int newLogFormat) {
         // Ensure option consistency.
@@ -183,7 +183,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Perform a command.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean cmd(final int cmd) {
@@ -305,7 +305,8 @@ public class MtkController implements ProtectedDevControllerIF {
             mtkLogHandler.readLog(6, 2);
             return true;
         case MtkModel.DATA_LAST_LOG_BLOCK:
-            mtkLogHandler.readLog((m.getLogMemSize()-1)&0xFFFF0000, 8);
+            mtkLogHandler.readLog(((m.getLogMemSize() - 1) & 0xFFFF0000) + 6,
+                    4);
             return true;
         case MtkModel.DATA_LOG_TIME_INTERVAL:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
@@ -400,7 +401,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Check if a command is supported.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean isSupportedCmd(final int cmd) {
@@ -434,7 +435,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Perform a command.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean cmd(final int cmd, final CmdParam param) {
@@ -574,7 +575,7 @@ public class MtkController implements ProtectedDevControllerIF {
 
     /**
      * @param holuxName
-     *                The holuxName to set.
+     *            The holuxName to set.
      */
     private void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
@@ -586,8 +587,8 @@ public class MtkController implements ProtectedDevControllerIF {
      * Sets the current mac address for bluetooth (Holux 241 devices).
      * 
      * @param btMacAddr
-     *                The Mac address to set in the following format:<br>
-     *                00:1F:14:15:12:13.
+     *            The Mac address to set in the following format:<br>
+     *            00:1F:14:15:12:13.
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
@@ -682,7 +683,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *                If true, the existing log can be overwritten
+     *            If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);

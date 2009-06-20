@@ -512,9 +512,8 @@ public class MtkModel {
                         initialLogMode = (initialLogMode & 0xFF << 8)
                                 | (initialLogMode >> 8);
                         setAvailable(MtkModel.DATA_INITIAL_LOG);
-                    } else if (Conv.hex2Int(sNmea[2]) == ((getLogMemSize() - 1) & 0xFFFF0000)) {
-                        lastLogBlock = Conv
-                                .hex2Int(sNmea[3].substring(0, 16));
+                    } else if (Conv.hex2Int(sNmea[2]) == (((getLogMemSize() - 1) & 0xFFFF0000)) + 6) {
+                        lastLogBlock = Conv.hex2Int(sNmea[3].substring(0, 8));
                         // correct endian.
                         // lastLogBlock = (initialLogMode & 0xFF << 24)
                         // | (initialLogMode & 0xFF << 16)
