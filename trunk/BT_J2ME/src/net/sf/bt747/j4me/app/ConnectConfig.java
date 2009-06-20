@@ -4,6 +4,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
+import net.sf.bt747.j4me.app.conn.CommPort;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.ui.components.Label;
@@ -21,14 +22,15 @@ public class ConnectConfig extends BT747Dialog {
 
     private RadioButton rbProtocol;
 
+    private RadioButton rbPort;
+
     private void setupScreen() {
         if (!screenIsSetup) {
             screenIsSetup = true;
             deleteAll();
-            Label l;
-            l = new Label("Select output format:");
-            append(l);
+
             rbProtocol = new RadioButton();
+            rbProtocol.setLabel("Select output format:");
             rbProtocol.append("Default MTK");
             rbProtocol.append("Holux M1000C / GR245");
             // rbProtocol.append("DPL700 /SIRFIII (not working)");
@@ -47,6 +49,23 @@ public class ConnectConfig extends BT747Dialog {
             }
             rbProtocol.setSelectedIndex(index);
             append(rbProtocol);
+
+            rbPort = new RadioButton();
+            rbPort.setLabel("Port (not functional):");
+            rbPort.append("Bluetooth");
+            final String[] commPorts = CommPort.getAvailablePorts();
+            final String current = c.getModel().getStringOpt(Model.FREETEXTPORT);
+            index = 0;
+            if (commPorts != null) {
+                for (int i = 0; i < commPorts.length; i++) {
+                    rbPort.append(commPorts[i]);
+                    if(current != null && current.equals(commPorts[i])) {
+                        index = i + 1;
+                    }
+                }
+            }
+            rbPort.setSelectedIndex(index);
+            append(rbPort);
         }
     }
 
@@ -68,16 +87,26 @@ public class ConnectConfig extends BT747Dialog {
                             BT747Constants.PROTOCOL_DPL700);
             break;
         }
+        
+        switch(rbPort.getSelectedIndex()) {
+        case 0:
+            break;
+        default:
+            final String current =c.getModel().getStringOpt(Model.FREETEXTPORT);
+            if(!current.equals(rbPort.getSelectedValue())) {
+                c.setStringOpt(Model.FREETEXTPORT, rbPort.getSelectedValue());
+                // TODO: Update protocol.
+            }
+        }
         deleteAll();
         next.show();
         super.acceptNotify();
     }
-    
+
     protected void declineNotify() {
         deleteAll();
         previous.show();
         super.declineNotify();
     }
-
 
 }
