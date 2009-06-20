@@ -304,6 +304,9 @@ public class MtkController implements ProtectedDevControllerIF {
             // Required to know if log is in overwrite mode.
             mtkLogHandler.readLog(6, 2);
             return true;
+        case MtkModel.DATA_LAST_LOG_BLOCK:
+            mtkLogHandler.readLog((m.getLogMemSize()-1)&0xFFFF0000, 8);
+            return true;
         case MtkModel.DATA_LOG_TIME_INTERVAL:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
@@ -687,10 +690,10 @@ public class MtkController implements ProtectedDevControllerIF {
 
     public final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental, // True if incremental read
+            final boolean isSmart, // True if incremental read
             final boolean disableLogging) {
         mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
-                card, isIncremental, disableLogging);
+                card, isSmart, disableLogging);
     }
 
     /*

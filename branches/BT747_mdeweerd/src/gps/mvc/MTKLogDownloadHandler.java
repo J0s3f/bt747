@@ -114,7 +114,7 @@ final class MTKLogDownloadHandler {
         protected int logNextReqAddr;
         protected int logRequestStep;
 
-        protected boolean incremental = true;
+        protected boolean isSmart = true;
         protected boolean disableLogging;
         protected boolean loggingIsActiveBeforeDownload = false;
 
@@ -180,21 +180,21 @@ final class MTKLogDownloadHandler {
      *                Size of data to download with each request (chunk size).
      * @param fileName
      *                The filename to save to.
-     * @param isIncremental
+     * @param isSmart
      *                When true, perform incremental read.
      * @param disableLogging
      *                Disable logging during download when true.
      */
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental, final boolean disableLogging) {
+            final boolean isSmart, final boolean disableLogging) {
         context.startAddr = startAddr;
         context.endAddr = endAddr;
         // The size of each individual request.
         context.logRequestStep = requestStep;
         context.logFileName = fileName;
         context.logFileCard = card;
-        context.incremental = isIncremental;
+        context.isSmart = isSmart;
         context.disableLogging = disableLogging;
         MTKLogDownloadHandler.logInit(context);
     }
@@ -215,7 +215,7 @@ final class MTKLogDownloadHandler {
 
         if (Generic.isDebug()) {
             Generic
-                    .debug((context.incremental ? "Incremental d" : "D")
+                    .debug((context.isSmart ? "Smart d" : "D")
                             + "ownload request from "
                             + JavaLibBridge
                                     .unsigned2hex(context.startAddr, 8)
@@ -247,7 +247,7 @@ final class MTKLogDownloadHandler {
 
     private final void realDownloadStart() {
         try {
-            if (context.incremental
+            if (context.isSmart
                     && (new File(context.logFileName)).exists()) {
                 /**
                  * File already exists and incremental download requested.
