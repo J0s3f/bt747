@@ -119,7 +119,7 @@ public class GoogleMaps {
             dos.writeUTF(str);
             bytes = bos.toByteArray();
         } catch (final IOException e) {
-            // ignore
+            return null;
         }
         for (int i = 2; i < bytes.length; i++) {
             final byte b = bytes[i];

@@ -15,7 +15,7 @@ import bt747.model.Controller;
  * Maps the communications with a Bluetooth GPS device to the
  * <code>LocationProvider</code> interface.
  */
-public class BluetoothLocationProvider extends GPSPort {
+public class BluetoothPort extends GPSPort {
 
     /**
      * The protocol portion of the URL for Bluetooth addresses.
@@ -36,7 +36,7 @@ public class BluetoothLocationProvider extends GPSPort {
     /**
      * The instance of this class
      */
-    private static BluetoothLocationProvider instance = null;
+    private static BluetoothPort instance = null;
 
     /**
      * Holds the connection to the GPS device. Used to get coordinates from
@@ -71,20 +71,20 @@ public class BluetoothLocationProvider extends GPSPort {
      * Returns a <code>LocationProvider</code> for the GPS device connected
      * to via Bluetooth.
      */
-    public final static BluetoothLocationProvider getInstance()
+    public final static synchronized BluetoothPort getInstance()
             throws IOException {
         // Make sure we haven't given out our one Bluetooth GPS provider.
         // Bluetooth will only support a connection to a single other GPS
         // device so we cap out at one provider.
-        if (BluetoothLocationProvider.instance == null) {
-            BluetoothLocationProvider.instance = new BluetoothLocationProvider();
+        if (BluetoothPort.instance == null) {
+            BluetoothPort.instance = new BluetoothPort();
         }
 
-        return BluetoothLocationProvider.instance;
+        return BluetoothPort.instance;
     }
 
     public final static void setController(final Controller c) {
-        BluetoothLocationProvider.gpsController = c;
+        BluetoothPort.gpsController = c;
     }
 
     /*
@@ -140,7 +140,7 @@ public class BluetoothLocationProvider extends GPSPort {
             // Try a few channels
             for (int i = 1; i <= maxTries; i++) {
                 try {
-                    bluetoothURL = BluetoothLocationProvider.constructBTURL(
+                    bluetoothURL = BluetoothPort.constructBTURL(
                             remoteDeviceBTAddress, Integer.toString(i));
                     gps = connect(bluetoothURL);
                     break;
@@ -158,7 +158,7 @@ public class BluetoothLocationProvider extends GPSPort {
             }
         } else {
             // Connect to the remote GPS device
-            bluetoothURL = BluetoothLocationProvider.constructBTURL(
+            bluetoothURL = BluetoothPort.constructBTURL(
                     remoteDeviceBTAddress, channelId);
             gps = connect(bluetoothURL);
         }
@@ -207,10 +207,10 @@ public class BluetoothLocationProvider extends GPSPort {
 
         // Add the "btspp://" prefix (if not already there).
         if (deviceBluetoothAddress.substring(0,
-                BluetoothLocationProvider.BLUETOOTH_PROTOCOL.length())
+                BluetoothPort.BLUETOOTH_PROTOCOL.length())
                 .equalsIgnoreCase(
-                        BluetoothLocationProvider.BLUETOOTH_PROTOCOL) == false) {
-            url.append(BluetoothLocationProvider.BLUETOOTH_PROTOCOL);
+                        BluetoothPort.BLUETOOTH_PROTOCOL) == false) {
+            url.append(BluetoothPort.BLUETOOTH_PROTOCOL);
         }
 
         // Add the address.
@@ -218,14 +218,14 @@ public class BluetoothLocationProvider extends GPSPort {
 
         // Add the channel ID (if not already there).
         if (deviceBluetoothAddress.indexOf(':',
-                BluetoothLocationProvider.BLUETOOTH_PROTOCOL.length() + 1) < 0) {
+                BluetoothPort.BLUETOOTH_PROTOCOL.length() + 1) < 0) {
             url.append(':');
             url.append(channelId);
         }
 
         // Add the Bluetooth options (if not already there).
         if (deviceBluetoothAddress.indexOf(';') < 0) {
-            url.append(BluetoothLocationProvider.BLUETOOTH_GPS_OPTIONS);
+            url.append(BluetoothPort.BLUETOOTH_GPS_OPTIONS);
         }
 
         final String bturl = url.toString();
@@ -331,8 +331,8 @@ public class BluetoothLocationProvider extends GPSPort {
     }
 
     public final void connected(final boolean status) {
-        if ((BluetoothLocationProvider.gpsController != null) & status) {
-            BluetoothLocationProvider.gpsController
+        if ((BluetoothPort.gpsController != null) & status) {
+            BluetoothPort.gpsController
                     .performOperationsAfterGPSConnect();
         }
     }

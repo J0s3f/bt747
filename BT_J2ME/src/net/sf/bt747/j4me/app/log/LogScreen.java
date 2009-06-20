@@ -21,8 +21,8 @@ public class LogScreen extends Dialog {
      * Constructs the "Log" screen.
      * 
      * @param previous
-     *                is the screen that invoked this one. If this is <c>null</c>
-     *                the application will exit when this screen is dismissed.
+     *            is the screen that invoked this one. If this is <c>null</c>
+     *            the application will exit when this screen is dismissed.
      */
     public LogScreen(final DeviceScreen previous) {
         // Set the title.
@@ -51,15 +51,19 @@ public class LogScreen extends Dialog {
         LogStatement item = null;
         final LogMessage[] logs = Log.getLogMessages();
 
-        for (int i = 0; i < logs.length; i++) {
-            // Add a horizontal rule to demarkate it from the last.
-            if (i != 0) {
-                append(line);
-            }
+        try {
+            for (int i = 0; i < logs.length; i++) {
+                // Add a horizontal rule to demarkate it from the last.
+                if (i != 0) {
+                    append(line);
+                }
 
-            // Add a log statement component.
-            item = new LogStatement(logs[i]);
-            append(item);
+                // Add a log statement component.
+                item = new LogStatement(logs[i]);
+                append(item);
+            }
+        } catch (Exception e) {
+            Log.debug("Exception during LogScreen", e);
         }
 
         // Scroll to the last log statement.

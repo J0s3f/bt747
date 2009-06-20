@@ -14,7 +14,7 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import net.sf.bt747.j2me.system.J2MEJavaTranslations;
-import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
+import net.sf.bt747.j4me.app.conn.BluetoothPort;
 
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
@@ -61,6 +61,23 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         try {
             UIManager.init(this);
             MTKMidlet.setInstance(this);
+
+            BluetoothPort provider = null;
+            try {
+                provider = BluetoothPort.getInstance();
+//                Log.info("Provider ok " + provider);
+            } catch (Exception e) {
+                Log.error("Getting provider.", e);
+            }
+            try {
+                if (provider != null) {
+                    GPSrxtx.setDefaultGpsPortInstance(provider);
+                }
+//                Log.info("Port instance ok" + provider);
+            } catch (Exception e) {
+                Log.error("Setting port instance.", e);
+            }
+
             ok = true;
         } catch (final Throwable t) {
             displayThrowable(t, "MTKMidlet");
@@ -96,21 +113,6 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         try {
 //            Log.setLevel(Level.DEBUG);
 //            Log.info("Before appModel");
-            BluetoothLocationProvider provider = null;
-            try {
-                provider = BluetoothLocationProvider.getInstance();
-//                Log.info("Provider ok " + provider);
-            } catch (Exception e) {
-                Log.error("Getting provider.", e);
-            }
-            try {
-                if (provider != null) {
-                    GPSrxtx.setDefaultGpsPortInstance(provider);
-                }
-//                Log.info("Port instance ok" + provider);
-            } catch (Exception e) {
-                Log.error("Setting port instance.", e);
-            }
 
             AppController.initAppSettings();
             setAppModel(new AppModel());

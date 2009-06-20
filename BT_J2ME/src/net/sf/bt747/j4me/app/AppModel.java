@@ -1,6 +1,6 @@
 package net.sf.bt747.j4me.app;
 
-import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
+import net.sf.bt747.j4me.app.conn.BluetoothPort;
 
 import org.j4me.logging.Log;
 
@@ -23,7 +23,7 @@ public class AppModel extends Model {
      */
     private String gpsBluetoothURL;
 
-    private BluetoothLocationProvider gpsBluetoothConnection;
+    private BluetoothPort gpsBluetoothConnection;
 
     public AppModel() {
         // Must still get settings.
@@ -32,7 +32,7 @@ public class AppModel extends Model {
     /**
      * @return the gpsBluetoothConnection
      */
-    public final BluetoothLocationProvider getGpsBluetoothConnection() {
+    public final BluetoothPort getGpsBluetoothConnection() {
         return gpsBluetoothConnection;
     }
 
@@ -41,7 +41,7 @@ public class AppModel extends Model {
      *                the gpsBluetoothConnection to set
      */
     public final void setGpsBluetoothConnection(
-            final BluetoothLocationProvider gpsBluetoothConnection) {
+            final BluetoothPort gpsBluetoothConnection) {
         this.gpsBluetoothConnection = gpsBluetoothConnection;
     }
 
