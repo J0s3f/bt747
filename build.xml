@@ -1443,9 +1443,13 @@
 				<include name="*.bat" />
 				<include name="*.exe" />
 				<include name="${ant.project.name}.jar" />
-		        <include name="WindowsMobile" />
 			</fileset>
 		</move>
+        <move todir="${dist}/WindowsMobile">
+            <fileset dir="${build.dir}/WindowsMobile">
+                <include name="*" />
+            </fileset>
+        </move>
 		<antcall target="sign">
 			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
 		</antcall>
