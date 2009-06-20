@@ -1351,9 +1351,14 @@
 
 	</target>
 
-	<!-- Execute EXEGEN with WinCE CAB   -->
-	<target name="exegensp-cab" depends="warp, prepare-exegen">
-
+	<!-- Execute EXEGEN with WinCE CAB for SmartPhone   -->
+	<!-- SuperWaba documentation says SuperWabaSDK\bin\tools\makecab\CabwizSP.exe 
+	must be named Cabwiz.exe .
+	Created a SuperWabaSDK structure under ${superwaba_root}sp with this change
+	and referencing that here for the exegen.
+	 -->
+    <target name="exegensp-cab" depends="warp, prepare-exegen">
+		
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Exegen"
 		      fork="true"
@@ -1369,6 +1374,13 @@
 			<arg value="${ant.project.name}" />
 		</java>
 
+		<mkdir dir="${build.dir}/WindowsMobile" />
+		<move todir="${build.dir}/WindowsMobile">
+	         <fileset dir="${build.dir}">
+	         	 <include name="*.CAB" />
+	         	<include name="${ant.project.name}_Install.*" />
+	       	</fileset>
+		</move>
 	</target>
 
 	<!-- Execute WARP and populate distribution directory -->
@@ -1431,6 +1443,7 @@
 				<include name="*.bat" />
 				<include name="*.exe" />
 				<include name="${ant.project.name}.jar" />
+		        <include name="WindowsMobile" />
 			</fileset>
 		</move>
 		<antcall target="sign">

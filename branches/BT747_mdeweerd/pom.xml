@@ -8,10 +8,5 @@
   <repositories>
   </repositories>
   <dependencies>
-  	<dependency>
-  		<groupId>net.sf.jopt-simple</groupId>
-  		<artifactId>jopt-simple</artifactId>
-  		<version>2.4.1</version>
-  	</dependency>
   </dependencies>
 </project>
