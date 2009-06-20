@@ -57,8 +57,8 @@ public class Controller implements BT747Thread, ProtocolConstants,
      * Refactoring will change this code but in principle not its interface.
      * 
      * @param newProtocol
-     *                The new protocol. Chosen from {@link #PROTOCOL_MTK},
-     *                {@link #PROTOCOL_SIRFIII}, {@link #PROTOCOL_HOLUX_PHLX}
+     *            The new protocol. Chosen from {@link #PROTOCOL_MTK},
+     *            {@link #PROTOCOL_SIRFIII}, {@link #PROTOCOL_HOLUX_PHLX}
      */
     public final void setProtocol(final int newProtocol) {
         if (protocol != newProtocol && mtkC != null) {
@@ -124,7 +124,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
             Generic.debug("Data request of " + dataType + " skipped");
         }
     }
-    
+
     public final void reqDeviceInfo() {
         setDataNeeded(MtkModel.DATA_MTK_RELEASE);
         setDataNeeded(MtkModel.DATA_MTK_VERSION);
@@ -216,7 +216,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
         nextValueToCheck = next;
     }
 
-    private DeviceOperationHandlerIF operationHandler;
+    private volatile DeviceOperationHandlerIF operationHandler;
 
     public final void setDeviceOperationHandler(
             final DeviceOperationHandlerIF h) {
@@ -236,56 +236,61 @@ public class Controller implements BT747Thread, ProtocolConstants,
      * @see waba.sys.Thread#run()
      */
     public final void run() {
-        final int timeStamp = Generic.getTimeStamp();
-        if (timeStamp >= nextRun) {
-            nextRun = timeStamp + 10;
-            int loopsToGo = 0; // Setting to 0 for more responsiveness
-            if (handler.isConnected()) {
-                mtkC.notifyRun();
-                {
-                    // local value
-                    final DeviceOperationHandlerIF h = operationHandler;
-                    if (h != null) {
-                        try {
-                            if (!h.notifyRun(handler)) {
-                                setDeviceOperationHandler(null);
-                            }
-                        } catch (BT747Exception e) {
-                            Generic.debug("Handler: ", e);
-                            gpsM.postEvent(new GpsEvent(GpsEvent.EXCEPTION,e));
-                            setDeviceOperationHandler(null);
-                        }
-                    }
-                }
-                final DeviceOperationHandlerIF h = operationHandler;
-                do {
-                    final Object lastResponse = handler.getResponse();
-                    if (lastResponse != null) {
+        try {
+            final int timeStamp = Generic.getTimeStamp();
+            if (timeStamp >= nextRun) {
+                nextRun = timeStamp + 10;
+                int loopsToGo = 0; // Setting to 0 for more responsiveness
+                if (handler.isConnected()) {
+                    mtkC.notifyRun();
+                    {
+                        // local value
+                        final DeviceOperationHandlerIF h = operationHandler;
                         if (h != null) {
-                            if (h.analyseResponse(lastResponse)) {
-                                continue; // Skip other analyzers.
+                            try {
+                                if (!h.notifyRun(handler)) {
+                                    setDeviceOperationHandler(null);
+                                }
+                            } catch (BT747Exception e) {
+                                setDeviceOperationHandler(null);
+                                Generic.debug("Handler: ", e);
+                                gpsM.postEvent(new GpsEvent(
+                                        GpsEvent.EXCEPTION, e));
                             }
                         }
-                        gpsM.analyseResponse(lastResponse);
-                    } else {
-                        loopsToGo = 0; // Exit do/while
                     }
-                    handler.checkSendCmdFromQueue();
-                } while ((loopsToGo-- > 0));
-                if ((nextAvailableRun < timeStamp)
-                        && (handler.getOutStandingCmdsCount() == 0)
-                        && !mtkM.isLogDownloadOngoing()) {
-                    if (eraseRequested) {
-                        eraseRequested = false; // Erase request handled
-                        mtkC.cmd(MtkController.CMD_ERASE_LOG);
+                    final DeviceOperationHandlerIF h = operationHandler;
+                    do {
+                        final Object lastResponse = handler.getResponse();
+                        if (lastResponse != null) {
+                            if (h != null) {
+                                if (h.analyseResponse(lastResponse)) {
+                                    continue; // Skip other analyzers.
+                                }
+                            }
+                            gpsM.analyseResponse(lastResponse);
+                        } else {
+                            loopsToGo = 0; // Exit do/while
+                        }
+                        handler.checkSendCmdFromQueue();
+                    } while ((loopsToGo-- > 0));
+                    if ((nextAvailableRun < timeStamp)
+                            && (handler.getOutStandingCmdsCount() == 0)
+                            && !mtkM.isLogDownloadOngoing()) {
+                        if (eraseRequested) {
+                            eraseRequested = false; // Erase request handled
+                            mtkC.cmd(MtkController.CMD_ERASE_LOG);
+                        }
+                        nextAvailableRun = nextRun + 300;
+                        checkNextAvailable();
                     }
-                    nextAvailableRun = nextRun + 300;
-                    checkNextAvailable();
+                } else {
+                    Generic.removeThread(this);
+                    mtkC.notifyDisconnected();
                 }
-            } else {
-                Generic.removeThread(this);
-                mtkC.notifyDisconnected();
             }
+        } catch (Exception e) {
+            Generic.debug("Exception in Controller run", e);
         }
     }
 

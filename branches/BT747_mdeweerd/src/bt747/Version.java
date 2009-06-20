@@ -51,9 +51,5 @@ public final class Version {
      * URL for base address of AGPS data. Must be replaced by the actual one.
      * Done during build process.
      */
-    // #ifdef nodefault
     public static final String AURL = "http://bt747.free.fr/";
-    // #else
-    // #expand public static final String AURL = "%agpsurlbase%";
-    // #endif
 }
