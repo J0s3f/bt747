@@ -16,6 +16,7 @@ import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.TextBox;
 
+import bt747.Version;
 import bt747.model.AppSettings;
 
 public final class AgpsScreen extends BT747Dialog {
@@ -67,11 +68,25 @@ public final class AgpsScreen extends BT747Dialog {
     }
 
     private final void uploadAgps() {
+        String tmp = m().getStringOpt(AppSettings.AGPSURL);
+        if (tmp.length() < 6 || tmp.equals(AppSettings.DUMMY_AGPS_STRING)) {
+            // #ifdef nodefault
+//@            tmp = Version.AURL + "MTK7d.EPO";
+            // #else
+            // This URL is only for BT747!
+            // #define agpsurlbase = 'ftp://tsi0013:wrqttr@210.68.183.169/'
+            // #expand tmp = "%agpsurlbase%MTK7d.EPO";
+            tmp = "ftp://tsi0013:wrqttr@210.68.183.169/MTK7d.EPO";
+            // #endif
+
+        }
+        final String srcUrl = tmp;
         new Thread(new Runnable() {
+            final String url = srcUrl;
+
             public void run() {
                 // Next line for debug (need to modify login and pass!).
                 // c.setStringOpt(AppSettings.AGPSURL,"ftp://bt747p:ass@ftpperso.free.fr/MTK7d.EPO");
-                final String url = m().getStringOpt(AppSettings.AGPSURL);
 
                 byte[] agpsData = null;
                 try {
@@ -115,7 +130,7 @@ public final class AgpsScreen extends BT747Dialog {
                             }
 
                             if (Log.isDebugEnabled()) {
-                                Log.debug("<User>" + user + "<Pass>" + pass
+                                Log.debug("<User>" + user //+ "<Pass>" + pass
                                         + "<Site>" + hostname + "<Dir>" + dir
                                         + "<name>" + name);
                             }
@@ -133,6 +148,7 @@ public final class AgpsScreen extends BT747Dialog {
                             os.close();
                         }
                     } else {
+                        Log.debug("URL = " + url);
                         // ServerSocketConnection
                         // Socket
 
@@ -141,23 +157,20 @@ public final class AgpsScreen extends BT747Dialog {
                                 Connector.READ); // ,true
                         final InputStream is = con.openInputStream();
                         con = null;
-                        byte[] b = new byte[120 * 1024];
+                        final ByteArrayOutputStream os = new ByteArrayOutputStream(
+                                120 * 1024);
                         byte[] buf = new byte[1024];
                         int i = 0;
                         while (true) {
-                            final int n = is.read(buf);
+                            final int n = is.read(buf,0,1024);
                             if (n == -1) {
                                 break;
                             }
-                            // Copy buffer
-                            for (int j = 0; i < b.length && j < n; j++, i++) {
-                                b[i] = buf[j];
-                            }
+                            os.write(buf,0,n);
                         }
                         is.close();
-                        agpsData = b;
-                        b = null;
                         buf = null;
+                        agpsData = os.toByteArray();
                     }
                 } catch (Exception e) {
                     Log.debug("Problem during AGPS download", e);
@@ -165,9 +178,18 @@ public final class AgpsScreen extends BT747Dialog {
                             + e.getMessage(), UIManager.getScreen())).show();
                 }
                 if (agpsData != null) {
-                    Log.info("Got AGPS data");
-                    c.setAgpsData(agpsData);
-                    Log.info("AGPS upload initiated");
+                    Log.debug("Array size = " + agpsData.length);
+                    try {
+                        Log.info("Got AGPS data");
+                        c.setAgpsData(agpsData);
+                        Log.info("AGPS upload initiated");
+                    } catch (Exception e) {
+                        Log.debug("Problem during AGPS upload", e);
+                        (new ErrorAlert("Error",
+                                "Problem during AGPS upload\n"
+                                        + e.getMessage(), UIManager
+                                        .getScreen())).show();
+                    }
                 }
             }
         }).start();

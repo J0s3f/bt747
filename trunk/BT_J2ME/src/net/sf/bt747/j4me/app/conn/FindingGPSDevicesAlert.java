@@ -88,7 +88,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
             // Stop any providers in case they were using Bluetooth and
             // therefore have
             // a lock on the Bluetooth socket.
-            final BluetoothLocationProvider provider = c.getAppModel()
+            final BluetoothPort provider = c.getAppModel()
                     .getGpsBluetoothConnection();
 
             if (provider != null) {

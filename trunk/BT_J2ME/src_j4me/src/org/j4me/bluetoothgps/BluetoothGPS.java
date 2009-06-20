@@ -242,9 +242,9 @@ class BluetoothGPS implements Runnable {
                 // rate
                 // to be changed. It is usually 38400 or higher.
                 // The SiRF input sentence that controls output sentences is:
-                // $PSRF103,05,00,01,01*20
+                // PSRF103,05,00,01,01*20
                 // where
-                // $PSRF103
+                // PSRF103
                 // 05 00=GGA
                 // 01=GLL
                 // 02=GSA
@@ -318,7 +318,7 @@ class BluetoothGPS implements Runnable {
                 // http://www.garmin.com/manuals/GPS10_TechnicalSpecifications.pdf
                 //
                 // Output sentence enable/disable (PGRMO). The format is:
-                // $PGRMO,<1>,<2>*hh\r\n
+                // PGRMO,<1>,<2>*hh\r\n
                 // where
                 // <1> Target sentence description (e.g. GPGSV)
                 // <2> Mode where:
@@ -351,7 +351,7 @@ class BluetoothGPS implements Runnable {
                 // http://www.transystem.com.tw/driver_manual/EB-230-Data-Sheet-V1.2.pdf
                 //
                 // Output sentence to enable frequency of input sentences is:
-                // $PMTK314,<0>,...,<18>*hh\r\n
+                // PMTK314,<0>,...,<18>*hh\r\n
                 // where each field
                 // 0=off, 1=every second, 2=every two seconds, etc.
                 // and the field numbers are

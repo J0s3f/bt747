@@ -56,7 +56,7 @@ public class InitializingGPSAlert extends ProgressAlert {
      * will set the next screen when it is done.
      */
     protected final DeviceScreen doWork() {
-        BluetoothLocationProvider provider = null;
+        BluetoothPort provider = null;
 
         final String deviceName = c.getAppModel().getBluetoothGPSName();
 
@@ -79,7 +79,7 @@ public class InitializingGPSAlert extends ProgressAlert {
                 // switching
                 // to
                 // another.
-                final BluetoothLocationProvider old = c.getAppModel()
+                final BluetoothPort old = c.getAppModel()
                         .getGpsBluetoothConnection();
 
                 if (old != null) {
@@ -93,7 +93,7 @@ public class InitializingGPSAlert extends ProgressAlert {
 
                 // Get the new provider.
                 try {
-                    provider = BluetoothLocationProvider.getInstance();
+                    provider = BluetoothPort.getInstance();
                 } catch (Exception e) {
                     next = new ErrorAlert("GPS Error",
                             "Can not get BT provider.",

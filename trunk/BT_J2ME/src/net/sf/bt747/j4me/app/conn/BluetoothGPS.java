@@ -88,7 +88,7 @@ public class BluetoothGPS  {
      */
     private String url;
     
-    private final BluetoothLocationProvider provider;
+    private final BluetoothPort provider;
 
     /**
      * Creates new receiver. Does not start automatically, use start()
@@ -97,7 +97,7 @@ public class BluetoothGPS  {
      * @param url -
      *                URL of bluetooth device to connect to.
      */
-    public BluetoothGPS(final BluetoothLocationProvider provider,
+    public BluetoothGPS(final BluetoothPort provider,
             final String url) {
         this.url = url;
         this.provider = provider;

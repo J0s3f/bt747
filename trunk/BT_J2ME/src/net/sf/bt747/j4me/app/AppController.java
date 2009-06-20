@@ -14,7 +14,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
-import net.sf.bt747.j4me.app.conn.BluetoothLocationProvider;
+import net.sf.bt747.j4me.app.conn.BluetoothPort;
 import net.sf.bt747.j4me.app.screens.FileManager;
 
 import org.j4me.logging.Log;
@@ -35,7 +35,7 @@ public class AppController extends Controller {
         this.m = m;
         super.setModel(m);
 
-        BluetoothLocationProvider.setController(this);
+        BluetoothPort.setController(this);
 
         appInit();
         super.init();
