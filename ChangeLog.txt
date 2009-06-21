@@ -1,3 +1,7 @@
+Version 1.68.27
+* If the interface is set to traversable, do not change tabs
+  'automatically' - this seems to give problems on certain devices.
+
 Version 1.68.26
 * Added build for SmartPhone (WindowsMobile) which is different.
 
