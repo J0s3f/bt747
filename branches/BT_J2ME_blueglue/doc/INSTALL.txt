@@ -1,0 +1,89 @@
+============
+Introduction
+============
+
+Any phone not being to strict on 'security' (read: operator revenue protection)
+with a CLDC 1.1 / MIDP 2.0 profile and JSR82 support (bluetooth library) should
+be able to run the J2ME version of BT747 (if the specification says MIDP2.0,
+it is probably OK. For a list of known phones, see further below
+(leave a message in the forum if your phone is not on the list).
+
+The best overview that you can get right now of the J2ME version is on Dirk Haase's
+site: http://www.haased.de/gps_ge/bt747_anleitung_mp.html .
+
+The J2ME version of BT747 is still in beta and corresponds to different binaries
+than the SuperWaba or J2SE versions! Look in the discussion pages to find out more
+about it.
+
+===========================
+BLACKBERRY - BT_J2ME.cod
+===========================
+BT_J2ME.cod - This file is for blackberry only (if available).
+
+===========================
+INSTALLING the J2ME Version
+===========================
+
+Method 1)
+
+Copy the '.jar' file to your phone. Open it in the file explorer - the phone should
+prompt you to install.
+Sometimes you need to delete the previous version first.
+On some phones the '.jar' is not enough and you need the '.jad' too.
+
+Method 2)
+Provide the internet URL of the '.jar' (or '.jad') when following the phone's procedure
+to install a java procedure
+
+Method 3)
+Right click on the '.jar' on your PC and do 'Open with' -> 'Nokia application installer'.
+
+Currently the application comes unsigned. For (some) Sony Ericsson phones you can
+self-sign the application. Look form 'Halmer' or 'EQHalmer' in your favorate search
+tool. When making an official distribution, a signed version of the app will be
+added for phones that support self-signing. For other phones, an expensive
+certificat must be bought. If we (author) would get $1 for every download, then
+that would be feasible in a week (@180 downloads/day) for one certificate.
+Compared to $45 as is charged for a Mac only solution, this is not a lot.
+Without signing, your phone will regurarly ask to confirm authorisation to access
+the filesystem, bluetooth, etc. . It is obvious that for this application to run
+that you need to reply 'yes' every time.
+
+You can hack your phone to disable these limitations. We do not recommend this but
+provide the information to avoid you having to ask the question. Here are some links
+to topics that explain how to do so at your own risk.
+http://www.symbaali.info/2007/10/hacking-s60-3rd-edition-firmware.html as a first method
+and http://symbianhack.site666.info/ to install ROMPatcher followed by
+http://www.mobilesmania.com/forum/index.php?showtopic=53542&mode=threaded as a second
+method.
+
+
+How was it built?
+Basically, the same core code as the original BT747 application is used. Of course,
+the 'system layer' had to be changed and the GUI layer too. For the GUI, modified
+"J4ME" library is used to build the J2ME version of the application - see www.j4me.org.
+
+
+==================
+Compatibility list
+==================
+
+The phone in this search (http://www.gsmarena.com/results.php3?sName=&idMaker=0&idAvailability=0&nPriceLow=0&nPriceHigh=0&idCurrency=0&idFormFactor=0&HeightMax=0&WidthMax=0&ThicknessMax=0&WeightMax=0&idAntenna=0&idOS=0&idDisplay=0&idDisplayRes=0&fDisplaySize=0&idTouchscreen=0&idCamera=0&idCameraFlash=0&idVideoRecorder=0&idExpansionCard=0&idGPS=0&bWLAN=0&bEDGE=0&bGPRS=0&idBluetooth=0&bIR=0&bEmail=0&bWAP=0&bJava=1&idRadio=0&bMMS=0&idRingtones=0&bGames=0&sColor=&StandBy=0&TalkTime=0&sFreeText=)
+are potentially compatible (if they list as Java MIDP2.0).
+And here is another list (http://www.jsr82.com/15-most-popular-phones-with-jsr-82-bluetooth-api/)
+
+The next list is built manually based on user feedback:
+
+Nokia
+
+    * 6120 Classic (no branding)
+    * E51
+    * E61
+    * E65
+    * N70
+    * N73
+
+SonyEricsson
+
+    * K610i
+    * W800i
