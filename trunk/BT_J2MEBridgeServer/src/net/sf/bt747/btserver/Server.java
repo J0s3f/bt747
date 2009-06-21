@@ -49,7 +49,7 @@ public class Server implements SerialPortEventListener, Runnable {
     private int connectLocalSerial() {
         int result = -1;
         try {
-            String portStr = "COM4";
+            String portStr = "COM21";
             System.out.println("Info: trying to open " + portStr);
             CommPortIdentifier portIdentifier;
             portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
