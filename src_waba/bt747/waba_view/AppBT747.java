@@ -687,7 +687,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
         case ModelEvent.CONNECTED:
-            tabPanel.setActiveTab(AppBT747.TAB_LOG_GET_IDX);
+            if(!waba.sys.Settings.keyboardFocusTraversable) {
+                tabPanel.setActiveTab(AppBT747.TAB_LOG_GET_IDX);
+            }
             break;
         case GpsEvent.DOWNLOAD_STATE_CHANGE:
         case GpsEvent.LOG_DOWNLOAD_STARTED:
