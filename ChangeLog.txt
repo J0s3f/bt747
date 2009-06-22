@@ -1,3 +1,6 @@
+Version 1.68.28
+* Adjusted filter to take to account missing rcr field for 'TIME'.
+
 Version 1.68.27
 * If the interface is set to traversable, do not change tabs
   'automatically' - this seems to give problems on certain devices.
