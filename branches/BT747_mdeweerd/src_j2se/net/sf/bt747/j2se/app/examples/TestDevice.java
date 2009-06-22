@@ -146,17 +146,9 @@ public class TestDevice implements bt747.model.ModelListener {
         //agpsFetcher.getBytesFromUrl("ftp://tsi0001:passwd@www.transystem.com.tw/MTK7d.EPO")
         byte[] agpsData = J2SEAGPS.getBytesFromUrl("http://bt747.free.fr/MTK7d.EPO");
         
-        // Initialise the handler.
-        AgpsUploadHandler handler = new AgpsUploadHandler();
-        handler.setAgpsData(agpsData);
-        // Handler initialised.
 
-        c.setDeviceOperationHandler(handler);
+        c.setAgpsData(agpsData);
         
-        /* Enter AGPS programming mode */
-        // Checked: the sent packet corresponds to what is needed. (seen in a
-        // trace)
-        c.sendCmd(new SetMtkBinModeCommand());
 
         // getOutstandingCmds();
         if (false) {

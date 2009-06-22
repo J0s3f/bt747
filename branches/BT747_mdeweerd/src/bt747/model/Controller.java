@@ -1595,20 +1595,7 @@ public class Controller implements ModelListener {
         Controller.logFiles.addElement(loginfo);
     }
 
-    public final void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
-        getGpsC().setDeviceOperationHandler(h);
-    }
-
     public final void setAgpsData(final byte[] agpsData) {
-        // Initialise the handler (will respond/send data).
-        final AgpsUploadHandler handler = new AgpsUploadHandler(m);
-        handler.setAgpsData(agpsData);
-
-        // TODO: Move part of this to the MtkController.
-        // Set the handler
-        setDeviceOperationHandler(handler);
-        // Enter binary sending so that the handler can do his work.
-        sendCmd(new SetMtkBinModeCommand());
-
+        getGpsC().setAgpsData(agpsData);
     }
 }

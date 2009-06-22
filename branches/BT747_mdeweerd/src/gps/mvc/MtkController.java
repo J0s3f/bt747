@@ -3,11 +3,14 @@
  */
 package gps.mvc;
 
+import org.omg.CORBA.DATA_CONVERSION;
+
 import gps.BT747Constants;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -24,12 +27,14 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  */
 public class MtkController implements ProtectedDevControllerIF {
     private MtkModel m;
+    private Controller c;
     private final MTKLogDownloadHandler mtkLogHandler;
 
     /** Default prefix to MTK command. */
     protected static final String PMTK = "PMTK";
 
-    MtkController(final MtkModel m) {
+    MtkController(final Controller c, final MtkModel m) {
+        this.c = c;
         this.m = m;
         mtkLogHandler = new MTKLogDownloadHandler(this, m);
         // TODO: Log handler should be split in model and controller
@@ -397,6 +402,19 @@ public class MtkController implements ProtectedDevControllerIF {
         }
     }
 
+    public void setAgpsData(final byte[] agpsData) {
+        // Initialise the handler (will respond/send data).
+        final AgpsUploadHandler handler = new AgpsUploadHandler(m);
+        handler.setAgpsData(agpsData);
+
+        // TODO: Move part of this to the MtkController.
+        // Set the handler
+        c.setDeviceOperationHandler(handler);
+        // Enter binary sending so that the handler can do his work.
+        sendCmd(new SetMtkBinModeCommand());
+        m.setUnAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
+        c.setDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
+    }
     /**
      * Check if a command is supported.
      * 

@@ -79,10 +79,10 @@ public class Controller implements BT747Thread, ProtocolConstants,
         default:
         case PROTOCOL_MTK:
         case PROTOCOL_SIRFIII:
-            mtkC = new MtkController(mtkM);
+            mtkC = new MtkController(this, mtkM);
             break;
         case PROTOCOL_HOLUX_PHLX:
-            mtkC = new HoluxController(mtkM);
+            mtkC = new HoluxController(this, mtkM);
             break;
         }
 
@@ -338,5 +338,10 @@ public class Controller implements BT747Thread, ProtocolConstants,
     public final boolean isSupportedCmd(int cmd) {
         return mtkC.isSupportedCmd(cmd);
     }
+    
+    public final void setAgpsData(final byte[] agpsData) {
+        mtkC.setAgpsData(agpsData);
+    }
+
 
 }

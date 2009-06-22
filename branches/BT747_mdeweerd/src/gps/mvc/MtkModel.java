@@ -9,6 +9,8 @@ import gps.convert.Conv;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import net.sf.bt747.util.GpsConvert;
 
+import bt747.model.EventPoster;
+import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Int;
@@ -22,7 +24,7 @@ import bt747.sys.interfaces.BT747Time;
  * @author Mario De Weerd.
  * 
  */
-public class MtkModel {
+public class MtkModel implements EventPoster {
     private final GPSLinkHandler handler;
     protected MTKLogDownloadHandler mtkLogHandler;
 
@@ -129,6 +131,10 @@ public class MtkModel {
     public MtkModel(final Model context, final GPSLinkHandler handler) {
         this.handler = handler;
         this.context = context;
+    }
+    
+    public final Model getContext() {
+        return context;
     }
 
     /**
@@ -343,7 +349,16 @@ public class MtkModel {
     }
 
     protected final void setAvailable(final int dataType) {
-        dataAvailable[dataType] = true;
+        setAvailable(dataType, true);
+    }
+    
+    protected final void setUnAvailable(final int dataType) {
+        setAvailable(dataType, false);
+    }
+    
+    protected final void setAvailable(final int dataType, final boolean isAvailable) {
+        dataAvailable[dataType] = isAvailable;
+        if(!isAvailable) return;
         switch (dataType) {
         case DATA_FLASH_TYPE:
 
@@ -792,6 +807,14 @@ public class MtkModel {
     protected final void postEvent(final int eventNbr, final Object o) {
         context.postGpsEvent(eventNbr, o);
     }
+    
+    /* (non-Javadoc)
+     * @see bt747.model.EventPoster#postEvent(bt747.model.ModelEvent)
+     */
+    public void postEvent(ModelEvent e) {
+        context.postEvent(e);       
+    }
+
 
     /*************************************************************************
      * Getters and setters.
@@ -1147,4 +1170,5 @@ public class MtkModel {
     public final boolean hasAgps() {
         return hasAgps;
     }
+
 }
