@@ -162,14 +162,20 @@ public class J2SEController extends Controller {
     }
 
     public final void downloadAndUploadAgpsData() {
+        final String urlTxt = Version.AURL + "MTK7d.EPO";
+        bt747.sys.Generic.debug("Getting MTK7d.EPO data.");
+        downloadAndUploadAgpsData(urlTxt);
+    }
+    
+    public final void downloadAndUploadAgpsData(final String url) {
+        final String urlTxt = url;
         final Thread t = new Thread(new Runnable() {
+            final String urlT = urlTxt;
             public final void run() {
 //                final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
 //                bt747.sys.Generic.debug("Getting data from <" + urlTxt + ">");
-                final String urlTxt = Version.AURL + "MTK7d.EPO";
-                bt747.sys.Generic.debug("Getting MTK7d.EPO data.");
                 try {
-                final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlTxt);
+                final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlT);
 //                bt747.sys.Generic.debug("Finished getting data from <"
 //                        + urlTxt + ">");
                 setAgpsData(agpsData);

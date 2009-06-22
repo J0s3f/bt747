@@ -173,6 +173,8 @@ public class BT747cmd implements bt747.model.ModelListener {
     private static final String OPT_AGPS_URL = "agps-url";
     /** Request a clear of the AGPS data. */
     private static final String OPT_AGPS_CLEAR = "agps-clear";
+    /** Request AGPS upload from the default URL. */
+    private static final String OPT_AGPS = "agps";
 
     /**
      * Set up system specific classes.
@@ -703,7 +705,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 || options.has(OPT_ERASE_MEMORY)
                 || options.has(OPT_SET_LOG_FIELDS)
                 || options.has(OPT_RECOVER_LOGGER)
-                || options.has(OPT_AGPS_CLEAR)
+                || options.has(OPT_AGPS_CLEAR) || options.has(OPT_AGPS)
                 || options.has(OPT_AGPS_URL)) {
             c.connectGPS();
         }
@@ -793,15 +795,22 @@ public class BT747cmd implements bt747.model.ModelListener {
                 c.gpsCmd(MtkController.CMD_EPO_CLEAR);
             }
 
+            String agpsUrl = null;
             if (options.has(OPT_AGPS_URL)) {
-                final String url = options.argumentOf(OPT_AGPS_URL);
-                c.setStringOpt(AppSettings.AGPSURL, url);
-                System.out.println(">> Getting AGPS data from "
-                        + m.getStringOpt(AppSettings.AGPSURL) + "\n"
-                        + " and uploading to device.");
+                agpsUrl = options.argumentOf(OPT_AGPS_URL);
+            }
 
+            if (options.has(OPT_AGPS) || agpsUrl != null) {
                 agpsUploadDone = false;
-                c.downloadAndUploadAgpsData();
+                if (agpsUrl != null) {
+                    System.out.println(">> Using " + agpsUrl + "\n"
+                            + " and uploading to device.");
+                    c.downloadAndUploadAgpsData(agpsUrl);
+                } else {
+                    // Default url.
+                    c.downloadAndUploadAgpsData();
+                }
+
                 while (!agpsUploadDone) {
                     // Thread t=Thread.currentThread();
                     try {
@@ -1147,7 +1156,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     /**
      * @param args
-     *                the command line arguments
+     *            the command line arguments
      */
     public static void main(final String args[]) {
         boolean success = true;
@@ -1277,13 +1286,14 @@ public class BT747cmd implements bt747.model.ModelListener {
                         OPT_AGPS_URL,
                         "Specify the URL (file://, ftp://, http://) to the AGPS (EPO) data.\n"
                                 + "The basename of this file is usually MTK7d.EPO, MTK3d.EPO, MTK8d.EPO or MTK14.EPO\n"
-                                + "When you provide this option, the data will be uploaded to the device.")
+                                + "Implies " + OPT_AGPS + " option.")
                         .withRequiredArg().describedAs("URL");
                 ;
                 accepts(OPT_AGPS_CLEAR,
-                        "Clears the AGPS data in the device (in case --"
-                                + OPT_AGPS_URL
-                                + " is provided, done before the upload.");
+                        "Clears the AGPS data in the device (done before the upload.");
+                accepts(
+                        OPT_AGPS,
+                        "Upload APGS data using the default URL (or the provided url when available).");
 
             }
         };
