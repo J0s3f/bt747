@@ -14,6 +14,8 @@
 // *** *********************************************************** ***
 package gps.log;
 
+import gps.BT747Constants;
+
 import bt747.sys.JavaLibBridge;
 
 /**
@@ -78,24 +80,24 @@ public class GPSFilter {
      * Sets the 'RCR' filter mask for the given filter type and the currently
      * active filters.
      * 
-     * Use the following constants:<br>-
-     * {@link gps.BT747Constants#RCR_TIME_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_SPEED_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP0_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP1_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP2_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP3_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP4_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP5_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP6_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP7_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP8_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APP9_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APPY_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APPZ_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_ALL_APP_MASK}
+     * Use the following constants:<br>
+     * - {@link gps.BT747Constants#RCR_TIME_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_SPEED_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP0_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP1_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP2_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP3_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP4_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP5_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP6_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP7_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP8_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APP9_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APPY_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_APPZ_MASK}<br>
+     * - {@link gps.BT747Constants#RCR_ALL_APP_MASK}
      * 
      */
     public final int getRcrMask() {
@@ -107,25 +109,25 @@ public class GPSFilter {
      * active filters.
      * 
      * @param rcrMask
-     *                The filter mask to set for the rcr filter. Use the
-     *                following constants:<br>-
-     *                {@link gps.BT747Constants#RCR_TIME_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_SPEED_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP0_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP1_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP2_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP3_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP4_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP5_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP6_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP7_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP8_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APP9_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APPY_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_APPZ_MASK}<br>-
-     *                {@link gps.BT747Constants#RCR_ALL_APP_MASK}
+     *            The filter mask to set for the rcr filter. Use the following
+     *            constants:<br>
+     *            - {@link gps.BT747Constants#RCR_TIME_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_SPEED_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP0_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP1_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP2_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP3_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP4_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP5_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP6_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP7_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP8_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APP9_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APPY_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_APPZ_MASK}<br>
+     *            - {@link gps.BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setRcrMask(final int rcrMask) {
         this.rcrMask = rcrMask;
@@ -134,16 +136,16 @@ public class GPSFilter {
     /**
      * Gets the 'Valid' filter mask.
      * 
-     * Use the following constants:<br>-
-     * {@link gps.BT747Constants#VALID_NO_FIX_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_SPS_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_DGPS_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_PPS_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_RTK_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_FRTK_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_ESTIMATED_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_MANUAL_MASK} <br>-
-     * {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
+     * Use the following constants:<br>
+     * - {@link gps.BT747Constants#VALID_NO_FIX_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_SPS_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_DGPS_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_PPS_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_RTK_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_FRTK_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_ESTIMATED_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_MANUAL_MASK} <br>
+     * - {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
      * 
      */
     public final int getValidMask() {
@@ -154,17 +156,17 @@ public class GPSFilter {
      * Sets the 'Valid' filter mask.
      * 
      * @param validMask
-     *                The filter mask to set for the validity filter. Use the
-     *                following constants:<br>-
-     *                {@link gps.BT747Constants#VALID_NO_FIX_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_SPS_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_DGPS_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_PPS_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_RTK_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_FRTK_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_ESTIMATED_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_MANUAL_MASK} <br>-
-     *                {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>
+     *            - {@link gps.BT747Constants#VALID_NO_FIX_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_SPS_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_DGPS_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_PPS_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_RTK_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_FRTK_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_ESTIMATED_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_MANUAL_MASK} <br>
+     *            - {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
      * 
      */
     public final void setValidMask(final int validMask) {
@@ -175,14 +177,15 @@ public class GPSFilter {
      * Filter the GPS record
      * 
      * @param r
-     *                The GPS record
+     *            The GPS record
      * @return true if the record is selected by the filter
      */
     public boolean doFilter(final GPSRecord r) {
         // Filter the record information
         final boolean result = (((r.utc >= 0) && (r.utc <= 3600 * 24)) || ((r.utc >= startTime) && (r.utc <= endTime)))
                 && (!r.hasValid() || ((r.valid & validMask) != 0))
-                && (!r.hasRcr() || ((r.rcr & rcrMask) != 0));
+                && ((!r.hasRcr() && ((rcrMask & BT747Constants.RCR_TIME_MASK) != 0)) || (r
+                        .hasRcr() && (r.rcr & rcrMask) != 0));
         // bt747.sys.Generic.debug(r.toString()+" "+result);
         return result;
     }
@@ -194,8 +197,8 @@ public class GPSFilter {
      */
     public String toString() {
         return startTime + "<UTC<" + endTime + "\n" + "VALIDMASK="
-                + JavaLibBridge.unsigned2hex(validMask, 8) + "\n" + "RCRMASK="
-                + JavaLibBridge.unsigned2hex(rcrMask, 8) + "\n";
+                + JavaLibBridge.unsigned2hex(validMask, 8) + "\n"
+                + "RCRMASK=" + JavaLibBridge.unsigned2hex(rcrMask, 8) + "\n";
         // return super.toString();
     }
 }
