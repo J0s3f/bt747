@@ -112,7 +112,7 @@
 	<!-- package - create distribution zip        -->
 	<!-- ======================================== -->
 	<target name="package" if="do.package">
-		<exec executable="package.bat" failifexecutionfails="false" />
+		<exec command="package.bat" failifexecutionfails="false" />
 	</target>
 
 	<target name="upload-jnlp" if="do.upload">
