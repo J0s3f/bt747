@@ -20,6 +20,7 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
 
+import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.ComboBox;
@@ -231,12 +232,15 @@ public final class GPSLogFile extends Container implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        // switch (event.getType()) {
-        // case ModelEvent.LOGFILEPATH_UPDATE:
-        // case ModelEvent.OUTPUTFILEPATH_UPDATE:
-        // case ModelEvent.WORKDIRPATH_UPDATE:
-        // updateValues();
-        // break;
-        // }
+        switch (event.getType()) {
+        case ModelEvent.SETTING_CHANGE:
+            final int arg = Convert.toInt((String) event.getArg());
+            switch (arg) {
+            case AppSettings.OUTPUTDIRPATH:
+            case AppSettings.REPORTFILEBASE:
+            case AppSettings.LOGFILERELPATH:
+                updateValues();
+            }
+        }
     }
 }
