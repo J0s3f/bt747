@@ -16,7 +16,6 @@ import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.TextBox;
 
-import bt747.Version;
 import bt747.model.AppSettings;
 
 public final class AgpsScreen extends BT747Dialog {
@@ -198,7 +197,7 @@ public final class AgpsScreen extends BT747Dialog {
     protected void acceptNotify() {
         setSettings();
         uploadAgps();
-        previous.show();
+        (new AgpsUploadProgressScreen(c, previous)).show();
         super.acceptNotify();
     }
 
