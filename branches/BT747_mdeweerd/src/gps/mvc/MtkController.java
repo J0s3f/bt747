@@ -3,8 +3,6 @@
  */
 package gps.mvc;
 
-import org.omg.CORBA.DATA_CONVERSION;
-
 import gps.BT747Constants;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
