@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;

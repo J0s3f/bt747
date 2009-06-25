@@ -36,7 +36,7 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  */
 public final class GPSRxTxPort extends GPSPort {
-    private SerialPort sp = null;
+    private CommPort sp = null;
 
     private OutputStream ds = null;
     private InputStream in = null;
