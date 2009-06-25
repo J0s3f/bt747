@@ -4,15 +4,40 @@
 package net.sf.bt747.iphone.app;
 
 /**
- * @author Mario
+ * @author Mario De Weerd
+ * 
+ * Currently just a copy of test application (to start from).
  * 
  */
 
+import gps.connection.GPSrxtx;
+
+import bt747.model.Controller;
+
 import java.awt.Color;
+
+import net.sf.bt747.iphone.system.IphoneJavaTranslations;
 
 import org.xmlvm.iphone.*;
 
+import bt747.model.Model;
+import bt747.sys.JavaLibBridge;
+
 public class Main extends UIApplication {
+
+    /**
+     * Initialize the lower level interface class. Needed for BT747 to work.
+     */
+    static {
+        JavaLibBridge
+                .setJavaLibImplementation(new IphoneJavaTranslations());
+        // Set the serial port class instance to use (also system specific).
+        if (!GPSrxtx.hasDefaultPortInstance()) {
+            //TODO: Create Bluetooth connection protocol.
+//            GPSrxtx
+//                    .setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
+        }
+    }
 
     public void applicationDidFinishLaunching(UIApplication app) {
         UIScreen screen = UIScreen.mainScreen();
@@ -165,6 +190,16 @@ public class Main extends UIApplication {
     }
 
     public static void main(String[] args) {
+//        final J2SEAppModel m = new J2SEAppModel();
+//        final J2SEAppController c = new J2SEAppController(m);
+
+        // Shoul load settings
+        //Controller.initAppSettings();
+        
+        final Model m = new Model();
+        m.init(); // Doing init because initAppSettings missing.
+        final Controller c = new Controller(m);
+
         UIApplication.main(args, Main.class);
     }
 }
