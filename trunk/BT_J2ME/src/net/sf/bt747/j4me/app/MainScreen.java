@@ -113,9 +113,9 @@ public final class MainScreen extends Dialog implements ModelListener {
      * Constructs the "Main" screen.
      * 
      * @param c
-     *                Reference to the application controller
+     *            Reference to the application controller
      * @param midlet
-     *                Reference to the midlet object.
+     *            Reference to the midlet object.
      */
     public MainScreen(final AppController c, final MTKMidlet midlet) {
         this.c = c;
@@ -308,6 +308,39 @@ public final class MainScreen extends Dialog implements ModelListener {
                     ScreenFactory.LOGCONDITIONSCONFIGSCREEN, c, this, this));
             subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
             subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
+            subMenu.appendMenuOption(new MenuItem() {
+                public final String getText() {
+                    if (c.isEnableStoreOK()) {
+                        return "Store Volatile Set";
+                    } else {
+                        return "- Getting values -";
+                    }
+                }
+
+                public final void onSelection() {
+                    c.storeSetting1();
+                }
+            });
+            subMenu.appendMenuOption(new MenuItem() {
+                private boolean firstTime = true;
+
+                public final String getText() {
+                    if (!m().isStoredSetting1()) {
+                        c.reqSettingsForStorage();
+                        firstTime = false;
+                    }
+                    if (m().isStoredSetting1()) {
+                        return "Restore Volatile Set";
+                    } else {
+                        return "- No stored settings -";
+                    }
+                }
+
+                public final void onSelection() {
+                    c.restoreSetting1();
+                }
+            });
+
             subMenu.appendMenuOption(new MenuItem() {
                 public final String getText() {
                     return "Erase";
@@ -564,7 +597,7 @@ public final class MainScreen extends Dialog implements ModelListener {
      * This is synchronized to avoid potential problems from multiple threads.
      * 
      * @param i
-     *                The index of the label to be highlighted.
+     *            The index of the label to be highlighted.
      */
     private synchronized void hightlightLabel(final int i) {
         if ((labels != null) && (i < labels.length)) {
