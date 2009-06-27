@@ -22,11 +22,14 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747Thread;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd
  */
-public class AppSettings {
+public class AppSettings implements BT747Thread {
 
     /**
      * Google map file name (basename).
@@ -83,27 +86,28 @@ public class AppSettings {
      * <br>
      * The bits can be defined using a bitwise OR of expressions like<br>
      * (1<< IDX) <br>
-     * where IDX is one of the following:<br> -
-     * {@link BT747Constants#FMT_UTC_IDX} <br> -
-     * {@link BT747Constants#FMT_VALID_IDX} <br> -
-     * {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
-     * {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
-     * {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
-     * {@link BT747Constants#FMT_SPEED_IDX} <br> -
-     * {@link BT747Constants#FMT_HEADING_IDX} <br> -
-     * {@link BT747Constants#FMT_DSTA_IDX} <br> -
-     * {@link BT747Constants#FMT_DAGE_IDX} <br> -
-     * {@link BT747Constants#FMT_PDOP_IDX} <br> -
-     * {@link BT747Constants#FMT_HDOP_IDX} <br> -
-     * {@link BT747Constants#FMT_VDOP_IDX} <br> -
-     * {@link BT747Constants#FMT_NSAT_IDX} <br> -
-     * {@link BT747Constants#FMT_SID_IDX} <br> -
-     * {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
-     * {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
-     * {@link BT747Constants#FMT_SNR_IDX} <br> -
-     * {@link BT747Constants#FMT_RCR_IDX} <br> -
-     * {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     * {@link BT747Constants#FMT_DISTANCE_IDX} <br> - <br>
+     * where IDX is one of the following:<br>
+     * - {@link BT747Constants#FMT_UTC_IDX} <br>
+     * - {@link BT747Constants#FMT_VALID_IDX} <br>
+     * - {@link BT747Constants#FMT_LATITUDE_IDX} <br>
+     * - {@link BT747Constants#FMT_LONGITUDE_IDX} <br>
+     * - {@link BT747Constants#FMT_HEIGHT_IDX} <br>
+     * - {@link BT747Constants#FMT_SPEED_IDX} <br>
+     * - {@link BT747Constants#FMT_HEADING_IDX} <br>
+     * - {@link BT747Constants#FMT_DSTA_IDX} <br>
+     * - {@link BT747Constants#FMT_DAGE_IDX} <br>
+     * - {@link BT747Constants#FMT_PDOP_IDX} <br>
+     * - {@link BT747Constants#FMT_HDOP_IDX} <br>
+     * - {@link BT747Constants#FMT_VDOP_IDX} <br>
+     * - {@link BT747Constants#FMT_NSAT_IDX} <br>
+     * - {@link BT747Constants#FMT_SID_IDX} <br>
+     * - {@link BT747Constants#FMT_ELEVATION_IDX} <br>
+     * - {@link BT747Constants#FMT_AZIMUTH_IDX} <br>
+     * - {@link BT747Constants#FMT_SNR_IDX} <br>
+     * - {@link BT747Constants#FMT_RCR_IDX} <br>
+     * - {@link BT747Constants#FMT_MILLISECOND_IDX} <br>
+     * - {@link BT747Constants#FMT_DISTANCE_IDX} <br>
+     * - <br>
      */
     public static final int FILEFIELDFORMAT = 7;
 
@@ -168,10 +172,10 @@ public class AppSettings {
      * (needed in cases where the type can not be automatically detected).
      * 
      * @param gpsType
-     *                A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
-     *                {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
-     *                {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
-     *                {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
      */
     public static final int GPSTYPE = 23;
     /**
@@ -233,7 +237,7 @@ public class AppSettings {
      * time or more, a track separation is inserted.
      * 
      * @param value
-     *                Time in minutes for a track separation.
+     *            Time in minutes for a track separation.
      */
     public final static int TRKSEP = 47;
     /**
@@ -319,6 +323,7 @@ public class AppSettings {
                     + mVersion.substring(2, 4));
         }
         updateSettings(VersionX100);
+        Generic.addThread(this, true);
     }
 
     private static String defaultBaseDirPath = "";
@@ -480,8 +485,7 @@ public class AppSettings {
                     getIntOpt(AppSettings.FILETIMEOFFSETOLD));
             /* fall through */
         case 38:
-            setStringOpt(AppSettings.AGPSURL,
-                    DUMMY_AGPS_STRING);
+            setStringOpt(AppSettings.AGPSURL, DUMMY_AGPS_STRING);
             /* fall through */
         case 39:
             setBooleanOpt(AppSettings.IS_USE_PRECISE_GEOID, true);
@@ -498,7 +502,7 @@ public class AppSettings {
             setBooleanOpt(NMEAUTC0, false);
             /* fall through */
         case 42:
-            setStringOpt(OSMLOGIN,"");
+            setStringOpt(OSMLOGIN, "");
             setStringOpt(OSMPASS, "");
             setStringOpt(AppSettings.VERSION, "0.43");
             /* fall through */
@@ -644,7 +648,7 @@ public class AppSettings {
      * Set the chunk size.
      * 
      * @param chunkSize
-     *                The ChunkSize to set as a default.
+     *            The ChunkSize to set as a default.
      */
     public final void setChunkSize(final int chunkSize) {
         setLocalIntOpt(0, chunkSize, AppSettings.C_CHUNKSIZE_IDX,
@@ -666,7 +670,7 @@ public class AppSettings {
 
     /**
      * @param downloadTimeOut
-     *                The DownloadTimeOut to set as a default.
+     *            The DownloadTimeOut to set as a default.
      */
     public final void setDownloadTimeOut(final int downloadTimeOut) {
         setLocalIntOpt(0, downloadTimeOut, AppSettings.C_DOWNLOADTIMEOUT_IDX,
@@ -687,7 +691,7 @@ public class AppSettings {
 
     /**
      * @param card
-     *                The Card to set as a default.
+     *            The Card to set as a default.
      */
     public final void setCard(final int card) {
         setLocalIntOpt(0, card, AppSettings.C_CARD_IDX,
@@ -706,7 +710,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *                The default value for opening the port.
+     *            The default value for opening the port.
      */
     protected final void setWayPtRCR(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_WAYPT_RCR_IDX,
@@ -721,7 +725,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *                The default value for opening the port.
+     *            The default value for opening the port.
      */
     protected final void setWayPtValid(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_WAYPT_VALID_IDX,
@@ -736,7 +740,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *                The default value for opening the port.
+     *            The default value for opening the port.
      */
     protected final void setTrkPtRCR(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_TRKPT_RCR_IDX,
@@ -751,7 +755,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *                The default value for opening the port.
+     *            The default value for opening the port.
      */
     protected final void setTrkPtValid(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_TRKPT_VALID_IDX,
@@ -764,10 +768,8 @@ public class AppSettings {
     public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
 
     /**
-     * The way we split the input track:<br>
-     * {@link #SPLIT_ONE_FILE}<br>
-     * {@link #SPLIT_ONE_FILE_PER_DAY}<br>
-     * {@link #SPLIT_ONE_FILE_PER_TRACK}
+     * The way we split the input track:<br> {@link #SPLIT_ONE_FILE}<br>
+     * {@link #SPLIT_ONE_FILE_PER_DAY}<br> {@link #SPLIT_ONE_FILE_PER_TRACK}
      * 
      * @return Current setting.
      */
@@ -777,13 +779,11 @@ public class AppSettings {
     }
 
     /**
-     * The way we split the input track:<br>
-     * {@link #SPLIT_ONE_FILE}<br>
-     * {@link #SPLIT_ONE_FILE_PER_DAY}<br>
-     * {@link #SPLIT_ONE_FILE_PER_TRACK}
+     * The way we split the input track:<br> {@link #SPLIT_ONE_FILE}<br>
+     * {@link #SPLIT_ONE_FILE_PER_DAY}<br> {@link #SPLIT_ONE_FILE_PER_TRACK}
      * 
      * @param value
-     *                New setting
+     *            New setting
      */
     protected final void setOutputFileSplitType(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_ONEFILEPERDAY_IDX,
@@ -810,8 +810,8 @@ public class AppSettings {
 
     /**
      * @param value
-     *                {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the
-     *                WGS84 height to MSL height.
+     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the
+     *            WGS84 height to MSL height.
      */
     public final void setHeightConversionMode(final int value) {
         setLocalIntOpt(0, value, AppSettings.C_WGS84_TO_MSL_IDX,
@@ -821,21 +821,21 @@ public class AppSettings {
     /**
      * Gets the NMEA string types to write to the NMEA output file format.
      * 
-     * Bit format using following bit indexes:<br>-
-     * {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     * {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     * Bit format using following bit indexes:<br>
+     * - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     * - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
 
     public final int getNMEAset() {
@@ -847,21 +847,21 @@ public class AppSettings {
      * Sets the NMEA string types to write to the NMEA output file format.
      * 
      * @param formatNMEA
-     *                Bit format using following bit indexes:<br>-
-     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *            Bit format using following bit indexes:<br>
+     *            - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     protected final void setNMEAset(final int formatNMEA) {
         setLocalIntOpt(0, formatNMEA, AppSettings.C_NMEASET_IDX,
@@ -878,7 +878,7 @@ public class AppSettings {
 
     /**
      * @param maxDist
-     *                The maxDist to setFilter.
+     *            The maxDist to setFilter.
      */
     protected final void setFilterMaxDist(final float maxDist) {
         setFloatOpt(0, maxDist, AppSettings.C_MAX_DISTANCE_IDX,
@@ -895,7 +895,7 @@ public class AppSettings {
 
     /**
      * @param maxHDOP
-     *                The maxHDOP to setFilter.
+     *            The maxHDOP to setFilter.
      */
     protected final void setFilterMaxHDOP(final float maxHDOP) {
         setFloatOpt(0, maxHDOP, AppSettings.C_maxHDOP_IDX,
@@ -912,7 +912,7 @@ public class AppSettings {
 
     /**
      * @param maxPDOP
-     *                The maxPDOP to setFilter.
+     *            The maxPDOP to setFilter.
      */
     protected final void setFilterMaxPDOP(final float maxPDOP) {
         setFloatOpt(0, maxPDOP, AppSettings.C_maxPDOP_IDX,
@@ -929,7 +929,7 @@ public class AppSettings {
 
     /**
      * @param maxRecCnt
-     *                The maxRecCnt to setFilter.
+     *            The maxRecCnt to setFilter.
      */
     protected final void setFilterMaxRecCount(final int maxRecCnt) {
         setLocalIntOpt(0, maxRecCnt, AppSettings.C_maxRecCount_IDX,
@@ -946,7 +946,7 @@ public class AppSettings {
 
     /**
      * @param maxSpeed
-     *                The maxSpeed to setFilter.
+     *            The maxSpeed to setFilter.
      */
     protected final void setFilterMaxSpeed(final float maxSpeed) {
         setFloatOpt(0, maxSpeed, AppSettings.C_maxSpeed_IDX,
@@ -963,7 +963,7 @@ public class AppSettings {
 
     /**
      * @param maxVDOP
-     *                The maxVDOP to setFilter.
+     *            The maxVDOP to setFilter.
      */
     protected final void setFilterMaxVDOP(final float maxVDOP) {
         setFloatOpt(0, maxVDOP, AppSettings.C_maxVDOP_IDX,
@@ -980,7 +980,7 @@ public class AppSettings {
 
     /**
      * @param minDist
-     *                The minDist to setFilter.
+     *            The minDist to setFilter.
      */
     protected final void setFilterMinDist(final float minDist) {
         setFloatOpt(0, minDist, AppSettings.C_minDist_IDX,
@@ -997,7 +997,7 @@ public class AppSettings {
 
     /**
      * @param minNSAT
-     *                The minNSAT to setFilter.
+     *            The minNSAT to setFilter.
      */
     protected final void setFilterMinNSAT(final int minNSAT) {
         setLocalIntOpt(0, minNSAT, AppSettings.C_minNSAT_IDX,
@@ -1014,7 +1014,7 @@ public class AppSettings {
 
     /**
      * @param minRecCnt
-     *                The minRecCnt to setFilter.
+     *            The minRecCnt to setFilter.
      */
     protected final void setFilterMinRecCount(final int minRecCnt) {
         setLocalIntOpt(0, minRecCnt, AppSettings.C_minRecCount_IDX,
@@ -1031,7 +1031,7 @@ public class AppSettings {
 
     /**
      * @param minSpeed
-     *                The minSpeed to setFilter.
+     *            The minSpeed to setFilter.
      */
     protected final void setFilterMinSpeed(final float minSpeed) {
         setFloatOpt(0, minSpeed, AppSettings.C_minSpeed_IDX,
@@ -1047,7 +1047,7 @@ public class AppSettings {
 
     /**
      * @param solveMacLagProblem
-     *                The solveMacLagProblem to set.
+     *            The solveMacLagProblem to set.
      */
     public final static void setSolveMacLagProblem(final boolean arg) {
         AppSettings.solveMacLagProblem = arg;
@@ -1126,7 +1126,7 @@ public class AppSettings {
 
     /**
      * @param defaultTraversable
-     *                the defaultTraversable to set
+     *            the defaultTraversable to set
      */
     public static void setDefaultTraversable(final boolean defaultTraversable) {
         AppSettings.defaultTraversable = defaultTraversable;
@@ -1141,7 +1141,7 @@ public class AppSettings {
 
     /**
      * @param defaultChunkSize
-     *                the defaultChunkSize to set
+     *            the defaultChunkSize to set
      */
     public static void setDefaultChunkSize(final int defaultChunkSize) {
         AppSettings.defaultChunkSize = defaultChunkSize;
@@ -1156,7 +1156,7 @@ public class AppSettings {
 
     /**
      * @param defaultBaseDirPath
-     *                the defaultBaseDirPath to set
+     *            the defaultBaseDirPath to set
      */
     public static void setDefaultBaseDirPath(final String defaultBaseDirPath) {
         AppSettings.defaultBaseDirPath = defaultBaseDirPath;
@@ -1248,46 +1248,172 @@ public class AppSettings {
      * Event posting
      */
 
-    private final BT747HashSet listeners = JavaLibBridge.getHashSetInstance();
+    /**
+     * Can't use synchronisation here because SuperWaba does not support it.
+     * Therefore using semaphores (making things more complex ;( ).
+     */
 
+    /**
+     * List of listeners.
+     */
+    private final BT747HashSet listeners = JavaLibBridge.getHashSetInstance();
+    private final BT747Semaphore listenerSema = JavaLibBridge
+            .getSemaphoreInstance(1);
+    /**
+     * List of actions regarding listeners.
+     * Protected with listenerActionsSema.
+     */
+    private final BT747Vector listenerActions = JavaLibBridge
+            .getVectorInstance();
+    private final BT747Semaphore listenerActionsSema = JavaLibBridge
+            .getSemaphoreInstance(1);
+
+    private static final class ListenerAction {
+        public static final int ADD = 0;
+        public static final int REMOVE = 1;
+        public static final int EVENT = 2;
+        protected ModelListener listener;
+        protected int action;
+        protected ModelEvent e;
+
+        public ListenerAction(final ModelListener l, final int action) {
+            this.listener = l;
+            this.action = action;
+        }
+
+        public ListenerAction(final ModelEvent e) {
+            this.action = ListenerAction.EVENT;
+            this.e = e;
+        }
+    }
+
+    /**
+     * Indicates if there are changes to the listeners that are waiting in the action list.
+     * Protected with listenerActionsSema.
+     */
+    private boolean hasListenerChangeAction = false;
     /** add a listener to event thrown by this class */
     public final void addListener(final ModelListener l) {
-        listeners.add(l);
+        listenerActionsSema.down();
+        listenerActions.addElement(new ListenerAction(l, ListenerAction.ADD));
+        hasListenerChangeAction = true;
+        listenerActionsSema.up();
     }
 
     public final void removeListener(final ModelListener l) {
-        listeners.remove(l);
+        listenerActionsSema.down();
+        listenerActions.addElement(new ListenerAction(l,
+                ListenerAction.REMOVE));
+        hasListenerChangeAction = true;
+        listenerActionsSema.up();
+    }
+
+    /**
+     * Upon call, listener sema must be reserved already.
+     */
+    private final void updateListeners() {
+        listenerActionsSema.down();
+        if (hasListenerChangeAction && listenerActions.size() != 0) {
+            // listenerSema.down(); // done in parent
+            for (int i = 0; i < listenerActions.size(); /* update in case */) {
+                final ListenerAction la = (ListenerAction) listenerActions
+                        .elementAt(i);
+                switch (la.action) {
+                case ListenerAction.ADD:
+                    listeners.add(la.listener);
+                    // Remove element, no increment of index!
+                    listenerActions.removeElementAt(i);
+                    break;
+                case ListenerAction.REMOVE:
+                    listeners.remove(la.listener);
+                    listenerActions.removeElementAt(i);
+                    break;
+                case ListenerAction.EVENT:
+                    i++;
+                    break;
+                default:
+                    i++;
+                    Generic.debug("Internal problem in ListenerAction");
+                }
+            }
+            // listenerSema.up(); // done in parent
+            hasListenerChangeAction = false; // All listener change actions treated
+        }
+        listenerActionsSema.up();
     }
 
     protected final void postEvent(final int type, final Object o) {
-        final BT747HashSet it = listeners.iterator();
-        while (it.hasNext()) {
-            final ModelListener l = (ModelListener) it.next();
-            final ModelEvent e = new ModelEvent(type, o);
-            try {
-                l.modelEvent(e);
-            } catch (final Exception evt) {
-                Generic.debug("Listener " + l.getClass(), evt);
-            }
-        }
+        postEvent(new ModelEvent(type, o));
     }
 
     protected final void postEvent(final int type) {
-        final BT747HashSet it = listeners.iterator();
-        while (it.hasNext()) {
-            final ModelListener l = (ModelListener) it.next();
-            final ModelEvent e = new ModelEvent(type, null);
-            l.modelEvent(e);
-        }
+        postEvent(type, null);
     }
 
     public final void postEvent(final ModelEvent e) {
+        listenerActionsSema.down();
+        //Generic.debug("Adding "+e);
+        listenerActions.addElement(new ListenerAction(e));
+        listenerActionsSema.up();
+    }
+    
+    private final void doEvent(final ModelEvent e) {
+        listenerSema.down();
+        // Update list of listeners just before posting events.
+        // This way the listeners list should be ok.
         final BT747HashSet it = listeners.iterator();
+        //Generic.debug("Sending "+e);
         while (it.hasNext()) {
             final ModelListener l = (ModelListener) it.next();
             l.modelEvent(new ModelEvent(e));
         }
+        listenerSema.up();
     }
+    
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Thread#run()
+     */
+    public void run() {
+        updateListeners();
+        listenerActionsSema.down();
+        // Get current number of events - only handle as many in this 'run'.
+        int maxNumEvents = listenerActions.size(); 
+        listenerActionsSema.up();
+        ListenerAction la;
+        while(maxNumEvents>0) {
+            updateListeners();
+            listenerActionsSema.down();
+            la = null;
+            if(listenerActions.size()>0) {
+                la = (ListenerAction) listenerActions.elementAt(0);
+                if(la.action == ListenerAction.EVENT) {
+                listenerActions.removeElementAt(0);
+                maxNumEvents--;
+                }
+            }
+            listenerActionsSema.up();
+            if(la != null && la.action == ListenerAction.EVENT) {
+                doEvent(la.e);
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Thread#started()
+     */
+    public void started() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Thread#stopped()
+     */
+    public void stopped() {
+        // TODO Auto-generated method stub
+        
+    }
+
 
     private static final int C_PORTNBR_IDX = 0;
     private static final int C_PORTNBR_SIZE = 8;
