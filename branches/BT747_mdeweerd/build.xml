@@ -79,9 +79,9 @@
 	</path>
 
 	<path id="sputils">
-        <pathelement location="${superwaba_root}SP/lib/SuperWabaTools.jar" />
-        <pathelement location="${superwaba_root}SP/lib/SuperWaba.jar" />
-    </path>
+		<pathelement location="${superwaba_root}SP/lib/SuperWabaTools.jar" />
+		<pathelement location="${superwaba_root}SP/lib/SuperWaba.jar" />
+	</path>
 
 	<!-- Set some properties according to availability of files -->
 	<!-- Currently set in local.properties so that only the release
@@ -97,6 +97,18 @@
 	<target name="all" depends="clean,dist" />
 
 	<target name="all.package" depends="all,package" />
+
+	<target name="javanativecompile.pda">
+		<exec dir="${javanativecompiler}"
+		executable="./AutoCompiler.exe">
+		    <arg value="${project.dir}/dev/bt747.jnc"/>
+		</exec>
+	</target>
+
+	<target name="javanativecompile.j2se">
+        <exec dir="${javanativecompiler}"
+        command="AutoCompiler.exe ${project.dir}/dev/bt747_j2se.jnc"/>
+	</target>
 
 	<!-- ======================================== -->
 	<!-- clean - Clean directories and files      -->
@@ -1357,8 +1369,8 @@
 	Created a SuperWabaSDK structure under ${superwaba_root}sp with this change
 	and referencing that here for the exegen.
 	 -->
-    <target name="exegensp-cab" depends="warp, prepare-exegen">
-		
+	<target name="exegensp-cab" depends="warp, prepare-exegen">
+
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Exegen"
 		      fork="true"
@@ -1376,10 +1388,10 @@
 
 		<mkdir dir="${build.dir}/WindowsMobile" />
 		<move todir="${build.dir}/WindowsMobile">
-	         <fileset dir="${build.dir}">
-	         	 <include name="*.CAB" />
-	         	<include name="${ant.project.name}_Install.*" />
-	       	</fileset>
+			<fileset dir="${build.dir}">
+				<include name="*.CAB" />
+				<include name="${ant.project.name}_Install.*" />
+			</fileset>
 		</move>
 	</target>
 
@@ -1433,7 +1445,9 @@
 	<!--
 	Build the distribution for PDA's
 	-->
-	<target name="dist.pda" depends="exegen, exegen-exe, exegensp-cab, exegen-cab, all-warp">
+	<target name="dist.pda"
+	        depends="exegen, exegen-exe, exegensp-cab, exegen-cab, all-warp"
+	>
 		<move todir="${dist}">
 			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc" />
@@ -1445,11 +1459,11 @@
 				<include name="${ant.project.name}.jar" />
 			</fileset>
 		</move>
-        <move todir="${dist}/WindowsMobile">
-            <fileset dir="${build.dir}/WindowsMobile">
-                <include name="*" />
-            </fileset>
-        </move>
+		<move todir="${dist}/WindowsMobile">
+			<fileset dir="${build.dir}/WindowsMobile">
+				<include name="*" />
+			</fileset>
+		</move>
 		<antcall target="sign">
 			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
 		</antcall>
