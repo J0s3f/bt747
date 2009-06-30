@@ -99,15 +99,22 @@
 	<target name="all.package" depends="all,package" />
 
 	<target name="javanativecompile.pda">
-		<exec dir="${javanativecompiler}"
-		executable="./AutoCompiler.exe">
-		    <arg value="${project.dir}/dev/bt747.jnc"/>
+		<exec dir="${javanativecompiler}" executable="./AutoCompiler.exe">
+			<arg value="${project.dir}/dev/bt747.jnc" />
 		</exec>
 	</target>
 
-	<target name="javanativecompile.j2se">
-        <exec dir="${javanativecompiler}"
-        command="AutoCompiler.exe ${project.dir}/dev/bt747_j2se.jnc"/>
+	<target name="javanativecompile.j2se_trial">
+		<exec dir="${javanativecompiler}"
+		      command="AutoCompiler.exe ${project.dir}/dev/bt747_j2se.jnc"
+		/>
+	</target>
+
+	<target name="javanativecompile.j2se" depends="dist.j2se,proguard.jnc_task">
+		<delete file="${dist}/${ant.project.name}_jnc-win.jar"/>
+        <exec dir="${javanativecompiler}" executable="${javanativecompiler}/AutoCompiler.exe">
+            <arg value="${project.dir}/dev/bt747_j2se_opt.jnc" />
+		</exec>
 	</target>
 
 	<!-- ======================================== -->
@@ -429,6 +436,37 @@
 
 	<target name="proguard.j2seapp" depends="proguard.j2seapp_task" />
 
+
+	<target name="proguard.jnc_task">
+		<taskdef name="proguard"
+		         classpath="${proguardLib}"
+		         classname="proguard.ant.ProGuardTask"
+		/>
+		<proguard forceprocessing="true"
+		          shrink="${proguard.shrink}"
+		          defaultpackage=""
+		          optimize="false"
+		          obfuscate="false"
+		          printusage="false"
+		          overloadaggressively="false"
+		          verbose="true"
+		          ignorewarnings="true"
+		>
+			<libraryjar file="${proguard.java.rt.lib}" />
+			<libraryjar file="${rxtxcomm.jar}" />
+            <libraryjar file="${jopt-simple.jar}" />
+			<outjar path="${dist}/${ant.project.name}_jnc.jar" />
+	        	-injar ${dist}/${ant.project.name}_j2se.jar
+	            -injar ${dist}/lib${ant.project.name}.jar
+	        	-injar ${jcalendar.jar}
+	        	-injar ${swingx.jar}
+	        	-injar ${swingx-ws.jar}
+	        	-injar ${swinglayout.jar}
+	                     -optimizationpasses 1
+	                     -keepclasseswithmembers public class bt747.j2se_view.* {
+	                          public static void main(java.lang.String[]); }
+	            </proguard>
+	</target>
 
 	<!-- OPTIMIZE THE WABA APPLICATION
 	  -->

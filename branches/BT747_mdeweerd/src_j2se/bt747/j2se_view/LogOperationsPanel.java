@@ -35,6 +35,7 @@ import net.sf.bt747.j2se.app.filefilters.GPXFileFilter;
 import net.sf.bt747.j2se.app.filefilters.HoluxTRLFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.filefilters.NMEAFileFilter;
+import net.sf.bt747.j2se.app.utils.Utils;
 
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -168,22 +169,17 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }
 
     private final void updateGPSData(final GPSRecord gps) {
-
         if (m.isConnected() && gps.hasPosition()) {
-            txtLatitude.setText(String.format((Locale) null, "%.8f",
-                    gps.latitude)); // NOI18N
+            txtLatitude.setText(Utils.format("%.8f", gps.latitude)); // NOI18N
             // lbHeight.setText(String.valueOf(gps.height,3)+"m");
-            txtLongitude.setText(String.format((Locale) null, "%.8f",
-                    gps.longitude)); // NOI18N
+            txtLongitude.setText(Utils.format("%.8f", gps.longitude)); // NOI18N
             if (gps.hasHeight()) {
-                txtGeoid.setText(String.format((Locale) null, "%.1f",
-                        gps.geoid) // NOI18N
+                txtGeoid.setText(Utils.format("%.1f", gps.geoid) // NOI18N
                         + getString("m")
-                        + " " +getString("(calc:")
-                        + String
-                                .format((Locale) null, "%.1f", Conv
-                                        .wgs84Separation(gps.latitude,
-                                                gps.longitude))
+                        + " "
+                        + getString("(calc:")
+                        + Utils.format("%.1f", Conv.wgs84Separation(
+                                gps.latitude, gps.longitude))
                         + getString("m") + ")"); // NOI18N
             }
         }

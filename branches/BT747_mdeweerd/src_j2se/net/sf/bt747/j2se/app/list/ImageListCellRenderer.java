@@ -6,20 +6,18 @@ package net.sf.bt747.j2se.app.list;
 import gps.log.out.CommonOut;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.io.FileInputStream;
+import java.awt.MediaTracker;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
 import bt747.j2se_view.model.ImageData;
 
@@ -31,6 +29,8 @@ import bt747.j2se_view.model.ImageData;
 public final class ImageListCellRenderer implements WaypointListCellComponent {
 
     private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();
+
+    private MediaTracker mediaTracker = null;
 
     private final static ExecutorService loader = Executors
             .newCachedThreadPool(new ThreadFactory() {
@@ -62,6 +62,9 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
         if (pn == null) {
             pn = new ImageListPanel();
             pn.setLabel(getText(v));
+            if (mediaTracker == null) {
+                mediaTracker = new MediaTracker(new Container());
+            }
             loader.execute(new IconLoader(pn, path, list, index));
         }
         pn.setOpaque(false);
@@ -86,7 +89,8 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
         private ImageListPanel pn;
         private String path;
         private JList c;
-        //private int index;
+
+        // private int index;
 
         IconLoader(final ImageListPanel pn, final String path, final JList c,
                 final int index) {
@@ -96,7 +100,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
             this.pn = pn;
             this.path = path;
             this.c = c;
-            //this.index = index;
+            // this.index = index;
             pn.setIconPreferredSize(dim);
         }
 
@@ -108,12 +112,17 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                 availThreads.acquire();
                 try {
                     Icon icon;
-                    final java.io.File file = new java.io.File(path);
-                    FileInputStream fis = new FileInputStream(file);
-                    icon = new ImageIcon(GraphicsUtilities.createThumbnail(
-                            ImageIO.read(fis), 80));
-                    fis.close();
-                    fis = null;
+                    // Removed dependency on Graphics utilities to remove
+                    // restriction
+                    // on JavaNativeCompiler.
+                    // final java.io.File file = new java.io.File(path);
+                    // FileInputStream fis = new FileInputStream(file);
+                    // icon = new ImageIcon(GraphicsUtilities.createThumbnail(
+                    // ImageIO.read(fis), 80));
+                    // fis.close();
+                    // fis = null;
+                    icon = new ImageIcon(MyThumbNail.createThumbnail(
+                            mediaTracker, path, 80, 70));
                     pn.setIcon(icon);
                     c.validate();
                     // c.doLayout();
@@ -162,7 +171,9 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
     /*
      * (non-Javadoc)
      * 
-     * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java.lang.Object)
+     * @see
+     * net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java
+     * .lang.Object)
      */
     public final boolean isRendererOf(final Object wp) {
         return ImageData.class.isInstance(wp);

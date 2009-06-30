@@ -15,6 +15,9 @@
 package bt747.j2se_view;
 
 import java.awt.Component;
+import java.util.Formatter;
+
+import net.sf.bt747.j2se.app.utils.Utils;
 
 import gps.log.out.CommonOut;
 import gps.mvc.MtkController;
@@ -97,6 +100,8 @@ public final class AgpsPanel extends javax.swing.JPanel
         }
     }
 
+    
+   
     private final void updateAgps() {
         final Component[] components = { lbAgpsUrl, txtAgpsUrl, btClearAgpsData };
         final MtkModel mtk = m.mtkModel();
@@ -106,11 +111,11 @@ public final class AgpsPanel extends javax.swing.JPanel
         }
         btUploadAgpsData.setEnabled(hasAgps && m.isConnected());
         if (mtk.hasAgps()) {
-            final String text1 = String.format(J2SEAppController
+            final String text1 = Utils.format(J2SEAppController
                     .getString("AGPSINFO1"), mtk.getAgpsDataCount(),
                     CommonOut.getDateTimeStr(mtk.getAgpsStartTime()),
                     CommonOut.getDateTimeStr(mtk.getAgpsEndTime()));
-            final String text2 = String.format(J2SEAppController
+            final String text2 = Utils.format(J2SEAppController
                     .getString("AGPSINFO2"), CommonOut.getDateTimeStr(mtk
                     .getAgpsStart2Time()), CommonOut.getDateTimeStr(mtk
                     .getAgpsEnd2Time()));
