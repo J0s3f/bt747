@@ -12,7 +12,9 @@ COSMETIC IMPROVEMENTS
 * Remove all GUI data when the input file is changed.
   Potentially make this configureable.
 * Show #position logged instead of memory.
-* Ue part of file name in KML output (and others) in stead of GPS-extratext.
+* Use part of file name in KML output (and others) in stead of GPS-extratext.
+* Use BT address in output file.
+* Use log on/off info in track to split log.    
 
 IMPROVEMENTS
 (Things not very visible to the user).
