@@ -7,7 +7,6 @@ import gps.BT747Constants;
 import net.sf.bt747.j4me.app.conn.CommPort;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
-import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
 
 import bt747.model.Model;

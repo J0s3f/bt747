@@ -137,7 +137,7 @@ public final class GpsPositionScreen extends
      * Adds components for a new section of information.
      * 
      * @param title
-     *                is the name of the section.
+     *            is the name of the section.
      */
     private void createNewSection(final String title) {
         append(new HorizontalRule());
@@ -274,17 +274,18 @@ public final class GpsPositionScreen extends
                 latitude.setLabel(g.latitude, 6);
                 longitude.setLabel(g.longitude, 6);
                 NSAT.setLabel((g.nsat / 256)
-                        + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
+                        + (((g.nsat&0xFF) < 255) ? "" : "(" + (g.nsat & 0xFF) + ")"));
                 {
                     String mslStr;
-                    mslStr = JavaLibBridge.toString(g.height, 1);
+                    mslStr = JavaLibBridge.toString(g.height - g.geoid, 1);
                     mslStr += "(calc: ";
-                    mslStr += JavaLibBridge.toString(Conv.wgs84Separation(
-                            g.height + g.geoid - g.latitude, g.longitude), 1);
+                    mslStr += JavaLibBridge.toString(g.height - g.geoid
+                            + Conv.wgs84Separation(g.latitude, g.longitude),
+                            1);
                     mslStr += ")";
                     fvAltitude.setLabel(mslStr);
                 }
-                fvHdop.setLabel(g.hdop / 100, 2);
+                fvHdop.setLabel(g.hdop / 100f, 2);
                 fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
                 updateValidColor(g.valid);
                 repaint();
