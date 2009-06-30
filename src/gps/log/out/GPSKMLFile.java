@@ -352,7 +352,8 @@ public class GPSKMLFile extends GPSFile {
                     }
 
                     if ((r.hasRcr())
-                            && (selectedFileFields.hasRcr())) {
+                            //&& (selectedFileFields.hasRcr())
+                            ) {
                         rec.append("<styleUrl>");
                         String style = CommonOut.getRCRstr(r);
 

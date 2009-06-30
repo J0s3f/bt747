@@ -306,7 +306,7 @@ public final class J2SEAppController extends J2SEController {
             if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
                     || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
                 reportError(-1,
-                        getString("OSM Login and Password must be set."));
+                        getString("OSM_LOGIN_AND_PASS_SET"));
                 return;
             }
             if (doConvertLog(Model.OSM_LOGTYPE, new GPSOSMUploadFile(),

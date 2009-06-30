@@ -1299,11 +1299,12 @@ public class BT747cmd implements bt747.model.ModelListener {
         };
 
         try {
-            final OptionSet options = parser.parse(args);
             System.out
-                    .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
-                            + " build " + bt747.Version.BUILD_STR
-                            + " GPL V3 LICENSE");
+            .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
+                    + " build " + bt747.Version.BUILD_STR
+                    + " GPL V3 LICENSE");
+
+            final OptionSet options = parser.parse(args);
             if (options.has(OPT_HELP)) {
                 parser.printHelpOn(System.out);
             } else if (options.has(OPT_VERSION_ONLY)) {

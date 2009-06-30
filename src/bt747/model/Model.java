@@ -26,7 +26,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
 /**
- * The model in the Model-Controller-View schematic. Information regarding the
+ * The model in the Model-View-Controller pattern. Information regarding the
  * state of the GPS device or settings must use this model interface.
  * 
  * @author Mario De Weerd
