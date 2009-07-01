@@ -8,6 +8,7 @@ import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
+import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -24,12 +25,14 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  */
 public class MtkController implements ProtectedDevControllerIF {
     private MtkModel m;
+    private Controller c;
     private final MTKLogDownloadHandler mtkLogHandler;
 
     /** Default prefix to MTK command. */
     protected static final String PMTK = "PMTK";
 
-    MtkController(final MtkModel m) {
+    MtkController(final Controller c, final MtkModel m) {
+        this.c = c;
         this.m = m;
         mtkLogHandler = new MTKLogDownloadHandler(this, m);
         // TODO: Log handler should be split in model and controller
@@ -82,7 +85,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Best followed by eraseLog.
      * 
      * @param newLogFormat
-     *                The format to set.
+     *            The format to set.
      */
     public final void setLogFormat(final int newLogFormat) {
         // Ensure option consistency.
@@ -183,7 +186,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Perform a command.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean cmd(final int cmd) {
@@ -304,6 +307,10 @@ public class MtkController implements ProtectedDevControllerIF {
             // Required to know if log is in overwrite mode.
             mtkLogHandler.readLog(6, 2);
             return true;
+        case MtkModel.DATA_LAST_LOG_BLOCK:
+            mtkLogHandler.readLog(((m.getLogMemSize() - 1) & 0xFFFF0000) + 6,
+                    4);
+            return true;
         case MtkModel.DATA_LOG_TIME_INTERVAL:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
@@ -393,11 +400,24 @@ public class MtkController implements ProtectedDevControllerIF {
         }
     }
 
+    public void setAgpsData(final byte[] agpsData) {
+        // Initialise the handler (will respond/send data).
+        final AgpsUploadHandler handler = new AgpsUploadHandler(m);
+        handler.setAgpsData(agpsData);
+
+        // TODO: Move part of this to the MtkController.
+        // Set the handler
+        c.setDeviceOperationHandler(handler);
+        // Enter binary sending so that the handler can do his work.
+        sendCmd(new SetMtkBinModeCommand());
+        m.setUnAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
+        c.setDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
+    }
     /**
      * Check if a command is supported.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean isSupportedCmd(final int cmd) {
@@ -431,7 +451,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * Perform a command.
      * 
      * @param cmd
-     *                Command identification.
+     *            Command identification.
      * @return true is command is supported.
      */
     public boolean cmd(final int cmd, final CmdParam param) {
@@ -571,7 +591,7 @@ public class MtkController implements ProtectedDevControllerIF {
 
     /**
      * @param holuxName
-     *                The holuxName to set.
+     *            The holuxName to set.
      */
     private void setHoluxName(final String holuxName) {
         sendCmd(BT747Constants.HOLUX_MAIN_CMD
@@ -583,8 +603,8 @@ public class MtkController implements ProtectedDevControllerIF {
      * Sets the current mac address for bluetooth (Holux 241 devices).
      * 
      * @param btMacAddr
-     *                The Mac address to set in the following format:<br>
-     *                00:1F:14:15:12:13.
+     *            The Mac address to set in the following format:<br>
+     *            00:1F:14:15:12:13.
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
@@ -679,7 +699,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *                If true, the existing log can be overwritten
+     *            If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
@@ -687,10 +707,10 @@ public class MtkController implements ProtectedDevControllerIF {
 
     public final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental, // True if incremental read
+            final boolean isSmart, // True if incremental read
             final boolean disableLogging) {
         mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
-                card, isIncremental, disableLogging);
+                card, isSmart, disableLogging);
     }
 
     /*

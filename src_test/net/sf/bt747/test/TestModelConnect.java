@@ -22,7 +22,7 @@ public class TestModelConnect {
     final static PipedInputStream modelIs = new PipedInputStream();
     static PipedOutputStream appOs;
     static PipedOutputStream modelOs;
-    static GPSPort appPort;
+    protected static GPSPort appPort;
 
     /**
      * Initialize the bridge to the platform. Required for BT747 that runs on

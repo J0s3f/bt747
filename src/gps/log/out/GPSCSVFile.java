@@ -189,7 +189,10 @@ public final class GPSCSVFile extends GPSFile {
             if (r.hasRecCount()) {
                 rec.append(r.getRecCount());
             }
-            if ((r.hasRcr()) && (selectedFileFields.hasRcr())) {
+            if ((selectedFileFields.hasRcr())) {
+                if (r.hasRcr()) {
+                    rec.append(CommonOut.getRCRstr(r));
+                }
                 rec.append(fieldSep);
             }
             /* DATE , TIME */
@@ -218,8 +221,7 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep);
             }
 
-            if ((r.hasLatitude())
-                    && (selectedFileFields.hasLatitude())) {
+            if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
                 rec.append(JavaLibBridge.toString(r.latitude, 6));
                 if (r.latitude >= 0) {
@@ -231,8 +233,7 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }
-            if ((r.hasLongitude())
-                    && (selectedFileFields.hasLongitude())) {
+            if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
                 rec.append(JavaLibBridge.toString(r.longitude, 6));
                 if (r.longitude >= 0) {
@@ -244,14 +245,13 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }
-            if ((r.hasHeight())
-                    && (selectedFileFields.hasHeight())) {
+            if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
                 if (!imperial) {
                     rec.append(JavaLibBridge.toString(r.height, 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(r.height * 3.28083989501312,
-                            3));
+                    rec.append(JavaLibBridge.toString(
+                            r.height * 3.28083989501312, 3));
                 }
 
                 // Add field concerning geoid separation.
@@ -268,14 +268,13 @@ public final class GPSCSVFile extends GPSFile {
                 if (!imperial) {
                     rec.append(JavaLibBridge.toString(r.speed, 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(r.speed * 0.621371192237334,
-                            3));
+                    rec.append(JavaLibBridge.toString(
+                            r.speed * 0.621371192237334, 3));
                 }
             } else if ((selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
             }
-            if ((r.hasHeading())
-                    && (selectedFileFields.hasHeading())) {
+            if ((r.hasHeading()) && (selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
                 rec.append(JavaLibBridge.toString(r.heading, 6));
             } else if ((selectedFileFields.hasHeading())) {
@@ -318,8 +317,7 @@ public final class GPSCSVFile extends GPSFile {
             } else if ((selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
             }
-            if ((r.hasDistance())
-                    && (selectedFileFields.hasDistance())) {
+            if ((r.hasDistance()) && (selectedFileFields.hasDistance())) {
                 rec.append(fieldSep);
                 if (!imperial) {
                     rec.append(JavaLibBridge.toString(r.distance, 2));
@@ -418,7 +416,8 @@ public final class GPSCSVFile extends GPSFile {
                 if (r.logDistance % 10 == 0) {
                     rec.append(r.logDistance / 10);
                 } else {
-                    rec.append(JavaLibBridge.toString(r.logDistance / 10.0, 1));
+                    rec.append(JavaLibBridge
+                            .toString(r.logDistance / 10.0, 1));
                 }
                 rec.append(fieldSep);
                 if (r.logSpeed % 10 == 0) {

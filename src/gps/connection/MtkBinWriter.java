@@ -19,6 +19,7 @@ public final class MtkBinWriter {
     public final static void sendCmd(final GPSrxtx context,
             final MtkBinTransportMessageModel msg) {
         final boolean isConnected = context.isConnected();
+        try {
         if (Generic.isDebug()) {
             final String debugText = ">" + msg + " " + isConnected;
             if (Generic.getDebugLevel() > 1) {
@@ -28,6 +29,9 @@ public final class MtkBinWriter {
         }
         if (isConnected) {
             context.write(msg.getMessage());
+        }
+        } catch (Exception e) {
+            Generic.debug("During sendCmd " + context + " " + context.getGpsPort(), e);
         }
     }
 

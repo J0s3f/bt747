@@ -1,25 +1,26 @@
 package bt747.waba_view;
 
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
+// *** The application was written using the SuperWaba toolset. ***
+// *** This is a proprietary development environment based in ***
+// *** part on the Waba development environment developed by ***
+// *** WabaSoft, Inc. ***
+// ********************************************************************
 
+import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.ComboBox;
@@ -37,8 +38,10 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.File;
+import bt747.sys.interfaces.BT747Int;
 import bt747.waba_view.ui.FileSelect;
 
 /**
@@ -66,8 +69,8 @@ public final class GPSLogFile extends Container implements ModelListener {
     private ComboBox cbVolumes;
     private ComboBox cblogReqAhead;
 
-    private static final String[] C_LOG_REQ_AHEAD = { "0", "1", "2", "3", "4",
-            "5" };
+    private static final String[] C_LOG_REQ_AHEAD = { "0", "1", "2", "3",
+            "4", "5" };
 
     private Button btChangeSettings;
     private Button btDefaultSettings;
@@ -127,8 +130,8 @@ public final class GPSLogFile extends Container implements ModelListener {
                 idx = v.size() - 1;
             }
             add(new Label(Txt.getString(Txt.CARD_VOL)), LEFT, AFTER); //$NON-NLS-1$
-            add(cbVolumes = new ComboBox((String[]) v.toObjectArray()), AFTER,
-                    SAME);
+            add(cbVolumes = new ComboBox((String[]) v.toObjectArray()),
+                    AFTER, SAME);
             cbVolumes.select(idx);
         }
 
@@ -146,8 +149,8 @@ public final class GPSLogFile extends Container implements ModelListener {
     private final void updateValues() {
         if (!setting) {
             edBaseDirName.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
-            edReportBaseName
-                    .setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
+            edReportBaseName.setText(m
+                    .getStringOpt(AppSettings.REPORTFILEBASE));
             edLogFileName.setText(m.getStringOpt(AppSettings.LOGFILERELPATH));
             edChunkSize.setText("" + m.getChunkSize());
             edTimeout.setText("" + m.getDownloadTimeOut());
@@ -173,13 +176,15 @@ public final class GPSLogFile extends Container implements ModelListener {
                 c.setOutputFileRelPath(edReportBaseName.getText());
                 updateFullPath();
                 c.setChunkSize(JavaLibBridge.toInt(edChunkSize.getText()));
-                c.setDownloadTimeOut(JavaLibBridge.toInt(edTimeout.getText()));
+                c
+                        .setDownloadTimeOut(JavaLibBridge.toInt(edTimeout
+                                .getText()));
                 if (Settings.platform.startsWith("Palm")) {
                     c.setCard(JavaLibBridge.toInt((String) cbVolumes
                             .getSelectedItem()));
                 }
-                c.setLogRequestAhead(JavaLibBridge.toInt((String) cblogReqAhead
-                        .getSelectedItem()));
+                c.setLogRequestAhead(JavaLibBridge
+                        .toInt((String) cblogReqAhead.getSelectedItem()));
                 setting = false;
                 updateValues();
                 c.saveSettings(); // Explicitally save settings
@@ -231,12 +236,15 @@ public final class GPSLogFile extends Container implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        // switch (event.getType()) {
-        // case ModelEvent.LOGFILEPATH_UPDATE:
-        // case ModelEvent.OUTPUTFILEPATH_UPDATE:
-        // case ModelEvent.WORKDIRPATH_UPDATE:
-        // updateValues();
-        // break;
-        // }
+        switch (event.getType()) {
+        case ModelEvent.SETTING_CHANGE:
+            final int arg = Convert.toInt((String) event.getArg());
+            switch (arg) {
+            case AppSettings.OUTPUTDIRPATH:
+            case AppSettings.REPORTFILEBASE:
+            case AppSettings.LOGFILERELPATH:
+                updateValues();
+            }
+        }
     }
 }

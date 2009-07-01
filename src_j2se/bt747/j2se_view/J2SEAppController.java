@@ -49,6 +49,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.sf.bt747.j2se.app.BT747Translation;
+import net.sf.bt747.j2se.app.osm.GPSOSMUploadFile;
 
 import bt747.Version;
 import bt747.model.AppSettings;
@@ -101,13 +102,13 @@ public final class J2SEAppController extends J2SEController {
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         super.modelEvent(e);
-        switch(e.getType()) {
+        switch (e.getType()) {
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
             if (!loggerNeedsFormatQuestionAsked && m.isLoggerNeedsFormat()) {
                 loggerNeedsFormatQuestionAsked = true;
                 askLoggerNeedsFormat();
             }
-        break;
+            break;
         case ModelEvent.CONNECTED:
             resetValuesAfterConnect();
             break;
@@ -116,10 +117,10 @@ public final class J2SEAppController extends J2SEController {
             break;
         }
     }
-    
+
     private final void notifyBT747Exception(final BT747Exception e) {
-        JOptionPane.showMessageDialog(rootFrame,
-                "<html><b>"+e.getCause()+"</b><br><p>"+e.getMessage(),
+        JOptionPane.showMessageDialog(rootFrame, "<html><b>" + e.getCause()
+                + "</b><br><p>" + e.getMessage(),
                 getString("OPERATION_FAILED"), // TITLE
                 JOptionPane.ERROR_MESSAGE);
     }
@@ -289,18 +290,35 @@ public final class J2SEAppController extends J2SEController {
      * @see Model#GPX_LOGTYPE
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
+     * @see Model#OSM_UPLOAD_LOGTYPE
      */
 
     public final void convertLog(final int logType) {
         c.setUserWayPoints(m.getPositionData().getSortedGPSRecords());
-        if (logType == Model.KMZ_LOGTYPE) {
+        switch (logType) {
+        case Model.KMZ_LOGTYPE:
             if (doConvertLog(logType, new GPSKMZFile(), ".kmz") != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
-        } else {
+            break;
+        case Model.OSM_UPLOAD_LOGTYPE:
+
+            if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
+                    || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
+                reportError(-1,
+                        getString("OSM_LOGIN_AND_PASS_SET"));
+                return;
+            }
+            if (doConvertLog(Model.OSM_LOGTYPE, new GPSOSMUploadFile(),
+                    ".gpx") != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
+            }
+            break;
+        default:
             if (doConvertLog(logType) != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
+            break;
         }
         m.getPositionData().userWaypointsUpdated();
     }

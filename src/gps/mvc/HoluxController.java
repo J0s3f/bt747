@@ -17,8 +17,8 @@ public class HoluxController extends MtkController {
 	/**
 	 * @param m
 	 */
-	public HoluxController(MtkModel m) {
-		super(m);
+	public HoluxController(final Controller c, final MtkModel m) {
+		super(c, m);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -85,6 +85,9 @@ public abstract class GPSPort {
 
     private String freeTextPort = "";
 
+    /** Set the "Free text port" - does not open it.
+     * @param s
+     */
     public void setFreeTextPort(final String s) {
         freeTextPort = s;
     }

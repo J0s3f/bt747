@@ -285,8 +285,6 @@ public final class CommonIn {
                 if (sNmea[8].length() != 0) {
                     gpsRec.hdop = (int) (JavaLibBridge.toFloat(sNmea[8]) * 100);
                     logFormat |= (1 << BT747Constants.FMT_HDOP_IDX);
-                } else {
-                    gpsRec.hdop = 999;
                 }
             } catch (final Exception e) {
                 debugInfo(sNmea, "GPGGA8", e);
@@ -305,8 +303,6 @@ public final class CommonIn {
                             && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
                         gpsRec.geoid = (float) Conv.wgs84Separation(
                                 gpsRec.latitude, gpsRec.longitude);
-                    } else {
-                        gpsRec.geoid = 0;
                     }
                 }
             } catch (final Exception e) {
@@ -348,15 +344,15 @@ public final class CommonIn {
     public static final int analyzeGPGSV(final String[] sNmea,
             final GPSRecord gpsRec) {
 
-        // $GPGSV
+        // GPGSV
         // GPS Satellites in view
         //
         // eg.
-        // $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
-        // $GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
-        // $GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
+        // GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
+        // GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
+        // GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
         //
-        // $GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
+        // GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
         //
         // 1 = Total number of messages of this type in this cycle
         // 2 = Message number

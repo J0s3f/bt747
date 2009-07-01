@@ -100,7 +100,7 @@ public class TestDevice implements bt747.model.ModelListener {
         c.setAutoFetch(false); // Not sending commands outside the program
         // control.
         // Make the connection
-        c.openFreeTextPort("COM4");
+        c.openFreeTextPort("COM18");
         // Successfull connection will result in modelEvent.
         // The next release will have an isConnected method in the model.
 
@@ -146,25 +146,19 @@ public class TestDevice implements bt747.model.ModelListener {
         //agpsFetcher.getBytesFromUrl("ftp://tsi0001:passwd@www.transystem.com.tw/MTK7d.EPO")
         byte[] agpsData = J2SEAGPS.getBytesFromUrl("http://bt747.free.fr/MTK7d.EPO");
         
-        // Initialise the handler.
-        AgpsUploadHandler handler = new AgpsUploadHandler();
-        handler.setAgpsData(agpsData);
-        // Handler initialised.
 
-        c.setDeviceOperationHandler(handler);
+        //c.setAgpsData(agpsData);
         
-        /* Enter AGPS programming mode */
-        // Checked: the sent packet corresponds to what is needed. (seen in a
-        // trace)
-        c.sendCmd(new SetMtkBinModeCommand());
 
         // getOutstandingCmds();
-        if (false) {
+        if (true||false) {
             /* Wild guess at a packet to see if that works too. */
             /*
              * Exluded because entering and exiting the mode does not work on
              * my device
              */
+            c.sendCmd(new SetMtkBinModeCommand());
+
             byte[] payload;
             payload = new byte[4];
             payload[0] = (byte) (BT747Constants.PMTK_LOG_Q);
