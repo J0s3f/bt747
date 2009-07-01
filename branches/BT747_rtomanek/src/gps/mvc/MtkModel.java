@@ -9,6 +9,8 @@ import gps.convert.Conv;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import net.sf.bt747.util.GpsConvert;
 
+import bt747.model.EventPoster;
+import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Int;
@@ -22,7 +24,7 @@ import bt747.sys.interfaces.BT747Time;
  * @author Mario De Weerd.
  * 
  */
-public class MtkModel {
+public class MtkModel implements EventPoster {
     private final GPSLinkHandler handler;
     protected MTKLogDownloadHandler mtkLogHandler;
 
@@ -42,6 +44,8 @@ public class MtkModel {
 
     private int logStatus = 0;
     private int initialLogMode = 0;
+
+    private int lastLogBlock = 0;
 
     public int logNbrLogPts = 0;
 
@@ -128,11 +132,14 @@ public class MtkModel {
         this.handler = handler;
         this.context = context;
     }
+    
+    public final Model getContext() {
+        return context;
+    }
 
     /**
-     * <code>dataOK</code> indicates if all volatile data from the device
-     * has been fetched. This is useful to know if the settings can be backed
-     * up.
+     * <code>dataOK</code> indicates if all volatile data from the device has
+     * been fetched. This is useful to know if the settings can be backed up.
      */
     protected int dataOK = 0;
 
@@ -165,6 +172,7 @@ public class MtkModel {
             false, // DATA_INITIAL_LOG
             true, // DATA_LOG_STATUS
             false, // DATA_LOG_VERSION
+            true, // DATA_LAST_LOG_BLOCK
     };
     public final static int DATA_FLASH_TYPE = 0;
     /** The number of positions logged in logger memory. */
@@ -180,18 +188,25 @@ public class MtkModel {
     /**
      * Get logger status.<br>
      * Retrieve actual values through getters: one can retrieve the data
-     * using:<br> - {@link #isLoggingActive()} <br> - {@link #loggerIsFull}
-     * (not currently public)<br> - {@link #isLoggerNeedsFormat()} <br> -
-     * {@link #isLoggingDisabled()} (not currently public)<br>
+     * using:<br>
+     * - {@link #isLoggingActive()} <br>
+     * - {@link #loggerIsFull} (not currently public)<br>
+     * - {@link #isLoggerNeedsFormat()} <br>
+     * - {@link #isLoggingDisabled()} (not currently public)<br>
      */
     public final static int DATA_LOG_STATUS = 7;
     /** The Logger Version. Get value using {@link #getMtkLogVersion()}. */
     public final static int DATA_LOG_VERSION = 8;
-    protected final static int DATA_LAST_AUTO_INDEX = 8; // The last
+    /**
+     * Some significant data in the last block. If not 0xFFFFFFFF, last block
+     * is in use.
+     */
+    public final static int DATA_LAST_LOG_BLOCK = 9;
+    protected final static int DATA_LAST_AUTO_INDEX = 9; // The last
     // possible index
 
     /** The Holux name of the device. */
-    public final static int DATA_DEVICE_NAME = 9;
+    public final static int DATA_DEVICE_NAME = 10;
 
     /** FREE SPOT #10 */
     /**
@@ -239,7 +254,8 @@ public class MtkModel {
     public final static int DATA_SBAS_STATUS = 20;
     /**
      * Indicates the power save status (for testing only).<br>
-     * Need to get the actual setting later with {@link #isPowerSaveEnabled()}.
+     * Need to get the actual setting later with {@link #isPowerSaveEnabled()}
+     * .
      */
     public final static int DATA_POWERSAVE_STATUS = 21;
     /**
@@ -260,12 +276,18 @@ public class MtkModel {
      * The User Configurable Options stored in flash.<br>
      * 
      * Request the flash user settings from the device. Following the relevant
-     * event, the settings must be retrieved using {@link #getDtUpdateRate()}<br> -
-     * {@link #getDtGLL_Period()}<br> - {@link #getDtRMC_Period()}<br> -
-     * {@link #getDtVTG_Period()}<br> - {@link #getDtGSA_Period()}<br> -
-     * {@link #getDtGSV_Period()}<br> - {@link #getDtGGA_Period()}<br> -
-     * {@link #getDtZDA_Period()}<br> - {@link #getDtMCHN_Period()}<br> -
-     * {@link #getDtBaudRate()}<br> - {@link #getDtUserOptionTimesLeft()}<br> -
+     * event, the settings must be retrieved using {@link #getDtUpdateRate()}<br>
+     * - {@link #getDtGLL_Period()}<br>
+     * - {@link #getDtRMC_Period()}<br>
+     * - {@link #getDtVTG_Period()}<br>
+     * - {@link #getDtGSA_Period()}<br>
+     * - {@link #getDtGSV_Period()}<br>
+     * - {@link #getDtGGA_Period()}<br>
+     * - {@link #getDtZDA_Period()}<br>
+     * - {@link #getDtMCHN_Period()}<br>
+     * - {@link #getDtBaudRate()}<br>
+     * - {@link #getDtUserOptionTimesLeft()}<br>
+     * -
      */
     public final static int DATA_FLASH_USER_OPTION = 26;
 
@@ -327,13 +349,26 @@ public class MtkModel {
     }
 
     protected final void setAvailable(final int dataType) {
-        dataAvailable[dataType] = true;
+        setAvailable(dataType, true);
+    }
+    
+    protected final void setUnAvailable(final int dataType) {
+        setAvailable(dataType, false);
+    }
+    
+    protected final void setAvailable(final int dataType, final boolean isAvailable) {
+        dataAvailable[dataType] = isAvailable;
+        if(!isAvailable) return;
         switch (dataType) {
         case DATA_FLASH_TYPE:
 
             break;
         case DATA_LOG_FORMAT:
             dataOK |= MtkModel.C_OK_FORMAT;
+            break;
+        case DATA_LAST_LOG_BLOCK:
+            // Do not request too often.
+            dataRequested[DATA_LAST_LOG_BLOCK] += 30000;
             break;
         default:
         case DATA_MEM_USED:
@@ -371,11 +406,11 @@ public class MtkModel {
 
     /**
      * @param sNmea
-     *                Elements of the NMEA packet to analyze. <br>
-     *                Example: PMTK182,3,4 <br>
-     *                nmea[0] PMTK182 <br>
-     *                nmea[1] 3 <br>
-     *                nmea[2] 4
+     *            Elements of the NMEA packet to analyze. <br>
+     *            Example: PMTK182,3,4 <br>
+     *            nmea[0] PMTK182 <br>
+     *            nmea[1] 3 <br>
+     *            nmea[2] 4
      * @return
      * @see #reqInitialLogMode()
      */
@@ -393,7 +428,7 @@ public class MtkModel {
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
-                // $PMTK182,3,TYPE,DATA
+                // PMTK182,3,TYPE,DATA
                 final int z_type = JavaLibBridge.toInt(sNmea[2]);
                 if (sNmea.length == 4) {
                     switch (z_type) {
@@ -479,7 +514,7 @@ public class MtkModel {
                 break;
             case BT747Constants.PMTK_LOG_DT_LOG:
                 // Data from the log
-                // $PMTK182,8,START_ADDRESS,DATA
+                // PMTK182,8,START_ADDRESS,DATA
 
                 try {
                     // Get the initial mode.
@@ -492,6 +527,14 @@ public class MtkModel {
                         initialLogMode = (initialLogMode & 0xFF << 8)
                                 | (initialLogMode >> 8);
                         setAvailable(MtkModel.DATA_INITIAL_LOG);
+                    } else if (Conv.hex2Int(sNmea[2]) == (((getLogMemSize() - 1) & 0xFFFF0000)) + 6) {
+                        lastLogBlock = Conv.hex2Int(sNmea[3].substring(0, 8));
+                        // correct endian.
+                        // lastLogBlock = (initialLogMode & 0xFF << 24)
+                        // | (initialLogMode & 0xFF << 16)
+                        // | (initialLogMode & 0xFF << 8)
+                        // | (initialLogMode >> 8);
+                        setAvailable(MtkModel.DATA_LAST_LOG_BLOCK);
                     }
                 } catch (final Exception e) {
                     // Do not care about exception
@@ -764,6 +807,14 @@ public class MtkModel {
     protected final void postEvent(final int eventNbr, final Object o) {
         context.postGpsEvent(eventNbr, o);
     }
+    
+    /* (non-Javadoc)
+     * @see bt747.model.EventPoster#postEvent(bt747.model.ModelEvent)
+     */
+    public void postEvent(ModelEvent e) {
+        context.postEvent(e);       
+    }
+
 
     /*************************************************************************
      * Getters and setters.
@@ -822,7 +873,7 @@ public class MtkModel {
 
     /**
      * @param forceHolux
-     *                Indicates if this device needs special holux decoding.
+     *            Indicates if this device needs special holux decoding.
      */
     public final void setHolux(final boolean forceHolux) {
         holux = forceHolux;
@@ -912,7 +963,8 @@ public class MtkModel {
     }
 
     public final boolean isInitialLogOverwrite() {
-        return (initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
+        return ((initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0)
+                && ((lastLogBlock & 0xFFFFFFFF) != 0xFFFFFFFF);
     }
 
     public final int getDgpsMode() {
@@ -921,7 +973,7 @@ public class MtkModel {
 
     /**
      * @param loggingActive
-     *                the loggingActive to set
+     *            the loggingActive to set
      */
     protected void setLoggingActive(final boolean loggingActive) {
         this.loggingActive = loggingActive;
@@ -1006,7 +1058,7 @@ public class MtkModel {
      * Get the amount of memory used.
      * 
      * @param logMemUsed
-     *                the logMemUsed to set
+     *            the logMemUsed to set
      */
     private void setLogMemUsed(final int logMemUsed) {
         this.logMemUsed = logMemUsed;
@@ -1063,7 +1115,7 @@ public class MtkModel {
 
     /**
      * @param nextReadAddr
-     *                the nextReadAddr to set
+     *            the nextReadAddr to set
      */
     protected void setNextReadAddr(final int nextReadAddr) {
         this.nextReadAddr = nextReadAddr;
@@ -1118,4 +1170,5 @@ public class MtkModel {
     public final boolean hasAgps() {
         return hasAgps;
     }
+
 }

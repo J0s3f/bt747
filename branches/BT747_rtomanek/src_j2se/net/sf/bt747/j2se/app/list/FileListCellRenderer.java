@@ -6,7 +6,9 @@ package net.sf.bt747.j2se.app.list;
 import gps.log.out.CommonOut;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.MediaTracker;
 import java.io.FileInputStream;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ExecutorService;
@@ -33,6 +35,8 @@ import bt747.j2se_view.model.FileWaypoint;
 public final class FileListCellRenderer implements WaypointListCellComponent {
 
     private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();
+
+    private MediaTracker mediaTracker = null;
 
     private static ExecutorService loader = Executors
             .newCachedThreadPool(new ThreadFactory() {
@@ -64,6 +68,9 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
         if (pn == null) {
             pn = new ImageListPanel();
             pn.setLabel(getText(v));
+            if (mediaTracker == null) {
+                mediaTracker = new MediaTracker(new Container());
+            }
             loader.execute(new IconLoader(pn, path, list, index));
         }
         pn.setOpaque(false);
@@ -110,12 +117,14 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
                 availThreads.acquire();
                 try {
                     Icon icon;
-                    final java.io.File file = new java.io.File(path);
-                    FileInputStream fis = new FileInputStream(file);
-                    icon = new ImageIcon(GraphicsUtilities.createThumbnail(
-                            ImageIO.read(fis), 80));
-                    fis.close();
-                    fis = null;
+//                    final java.io.File file = new java.io.File(path);
+//                    FileInputStream fis = new FileInputStream(file);
+//                    icon = new ImageIcon(GraphicsUtilities.createThumbnail(
+//                            ImageIO.read(fis), 80));
+//                    fis.close();
+//                    fis = null;
+                    icon = new ImageIcon(MyThumbNail.createThumbnail(
+                            mediaTracker, path, 80, 70));
                     pn.setIcon(icon);
                     c.validate();
                     // c.doLayout();

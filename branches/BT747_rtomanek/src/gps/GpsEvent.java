@@ -151,7 +151,7 @@ public class GpsEvent {
      * Constructor of new Event with given type and no argument.
      * 
      * @param type
-     *                Type of event.
+     *            Type of event.
      */
     public GpsEvent(final int type) {
         this.type = type;
@@ -162,9 +162,9 @@ public class GpsEvent {
      * Constructor of new Event with given type and argument.
      * 
      * @param type
-     *                Type number.
+     *            Type number.
      * @param arg
-     *                Argument.
+     *            Argument.
      */
     public GpsEvent(final int type, final Object arg) {
         this.type = type;
@@ -187,6 +187,15 @@ public class GpsEvent {
      */
     public final Object getArg() {
         return arg;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return super.toString() + " Event: " + getType() + " Arg:" + getArg();
     }
 
 }

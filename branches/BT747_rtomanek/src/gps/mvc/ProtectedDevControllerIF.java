@@ -26,4 +26,6 @@ interface ProtectedDevControllerIF extends DeviceControllerIF {
      * The environment indicates a disconnect happened.
      */
     public void notifyDisconnected();
+    
+    public void setAgpsData(final byte[] agpsData);
 }

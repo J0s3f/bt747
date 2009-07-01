@@ -91,14 +91,14 @@ public final class GPSNMEAFile extends GPSFile {
                 }
             }
 
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
+                writeZDA(r, timeStr);
+            }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0) {
                 writeRMC(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0) {
                 writeGGA(r, timeStr);
-            }
-            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
-                writeZDA(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0) {
                 writeGSA(r, timeStr);
@@ -112,7 +112,7 @@ public final class GPSNMEAFile extends GPSFile {
 
     private void writeRMC(final GPSRecord r, final String timeStr) {
         // eg4.
-        // $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
+        // GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
         // 1 = UTC of position fix (hhmmss.ss)
         // 2 = Data status (V=navigation receiver warning) (A)
         // 3 = Latitude of fix (llll.ll)
@@ -128,9 +128,9 @@ public final class GPSNMEAFile extends GPSFile {
         // Transystem extrafield: A=Autonomous, D=DGPS
         // 12 = Checksum
         // From the device (position values changed, so checksum incorrect):
-        // $GPRMC,hhmmss.ss, A,llll.ll, a,yyyyy.yy, a,x.x, x.x
+        // GPRMC,hhmmss.ss, A,llll.ll, a,yyyyy.yy, a,x.x, x.x
         // ,ddmmyy,x.x,a*hh
-        // $GPRMC,190633.500,A,4800.0000,N,00200.0000,E,0.31,123.10,261007,,,A*68
+        // GPRMC,190633.500,A,4800.0000,N,00200.0000,E,0.31,123.10,261007,,,A*68
 
         rec.setLength(0);
         rec.append("GPRMC,");
@@ -144,7 +144,7 @@ public final class GPSNMEAFile extends GPSFile {
         if ((r.hasValid() && selectedFileFields.hasValid())) {
             String tmp;
             switch (r.valid) {
-            case 0x0001:
+            case BT747Constants.VALID_NO_FIX_MASK:
                 tmp = ",V,"; // "No fix";
                 break;
             default:
@@ -296,16 +296,16 @@ public final class GPSNMEAFile extends GPSFile {
         if ((r.hasValid() && selectedFileFields.hasValid())) {
             String tmp = "";
             switch (r.valid) {
-            case 0x0001:
+            case BT747Constants.VALID_NO_FIX_MASK:
                 tmp = "0"; // "No fix";
                 break;
-            case 0x0002:
+            case BT747Constants.VALID_SPS_MASK:
                 tmp = "1"; // "SPS";
                 break;
-            case 0x0004:
+            case BT747Constants.VALID_DGPS_MASK:
                 tmp = "2"; // DGPS
                 break;
-            case 0x0008:
+            case BT747Constants.VALID_PPS_MASK:
                 tmp = "3"; // PPS, Military signal
                 break;
             case 0x0010:
@@ -314,13 +314,13 @@ public final class GPSNMEAFile extends GPSFile {
             case 0x0020:
                 tmp = "5";
                 break;
-            case 0x0040:
+            case BT747Constants.VALID_ESTIMATED_MASK:
                 // tmp+= "Estimated mode";
                 break;
-            case 0x0080:
+            case BT747Constants.VALID_MANUAL_MASK:
                 // tmp+= "Manual input mode";
                 break;
-            case 0x0100:
+            case BT747Constants.VALID_SIMULATOR_MASK:
                 // tmp+= "Simulator mode";
                 break;
             default:
@@ -334,6 +334,8 @@ public final class GPSNMEAFile extends GPSFile {
         if (r.hasNsat() && selectedFileFields.hasNsat()) {
             rec.append((r.nsat & 0xFF00) >> 8);
             // rec+="("+JavaLibBridge.toString(s.nsat&0xFF)+")";
+        } else {
+            rec.append("8");
         }
         rec.append(",");
 
@@ -381,15 +383,15 @@ public final class GPSNMEAFile extends GPSFile {
     }
 
     private void writeGSV(final GPSRecord r, final String timeStr) {
-        // $GPGSV
+        // GPGSV
         // GPS Satellites in view
         //
         // eg.
-        // $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
-        // $GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
-        // $GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
+        // GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
+        // GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
+        // GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
         //
-        // $GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
+        // GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
         //
         // 1 = Total number of messages of this type in this cycle
         // 2 = Message number
@@ -488,12 +490,12 @@ public final class GPSNMEAFile extends GPSFile {
                 && selectedFileFields.hasPdop() || r.hasHdop()
                 && selectedFileFields.hasHdop() || r.hasVdop()
                 && selectedFileFields.hasVdop()) {
-            // $GPGSA
+            // GPGSA
             // GPS DOP and active satellites
             //
-            // eg1. $GPGSA,A,3,,,,,,16,18,,22,24,,,3.6,2.1,2.2*3C
-            // eg2. $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*34
-            // $GPGSA,A,3,15, 9,22,28,18,26, , ,,,,,4.4,1.9,4.0*17
+            // eg1. GPGSA,A,3,,,,,,16,18,,22,24,,,3.6,2.1,2.2*3C
+            // eg2. GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*34
+            // GPGSA,A,3,15, 9,22,28,18,26, , ,,,,,4.4,1.9,4.0*17
             //
             // 1 = Mode:
             // M=Manual, forced to operate in 2D or 3D

@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
@@ -366,6 +365,12 @@ public class Controller implements ModelListener {
                     m.getStringOpt(AppSettings.GOOGLEMAPKEY));
             gpsFile.getParamObject().setIntParam(
                     GPSConversionParameters.NMEA_OUTFIELDS, m.getNMEAset());
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.OSM_LOGIN,
+                    m.getStringOpt(AppSettings.OSMLOGIN));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.OSM_PASS,
+                    m.getStringOpt(AppSettings.OSMPASS));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:
@@ -1589,20 +1594,7 @@ public class Controller implements ModelListener {
         Controller.logFiles.addElement(loginfo);
     }
 
-    public final void setDeviceOperationHandler(DeviceOperationHandlerIF h) {
-        getGpsC().setDeviceOperationHandler(h);
-    }
-
-    public final void setAgpsData(byte[] agpsData) {
-        // Initialise the handler (will respond/send data).
-        AgpsUploadHandler handler = new AgpsUploadHandler(m);
-        handler.setAgpsData(agpsData);
-
-        // TODO: Move part of this to the MtkController.
-        // Set the handler
-        setDeviceOperationHandler(handler);
-        // Enter binary sending so that the handler can do his work.
-        sendCmd(new SetMtkBinModeCommand());
-
+    public final void setAgpsData(final byte[] agpsData) {
+        getGpsC().setAgpsData(agpsData);
     }
 }

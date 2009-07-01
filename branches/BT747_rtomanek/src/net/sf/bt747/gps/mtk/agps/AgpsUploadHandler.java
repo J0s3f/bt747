@@ -39,6 +39,8 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
 
     /** Next index to increment percent. */
     private int nextPacketPercentIdx;
+    private int nextPacketPercentOffset;
+    private int percentBytes = (32 * 60 * 4 * 14) / 100; // Max 14d data
 
     private final static int PERCENT_STEP = 10;
     private final EventPoster poster;
@@ -100,7 +102,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
                         Generic
                                 .debug("Error packet from device during AGPS upload.");
                     }
-                    if (pkt >= nxtPacketIdx -1) {
+                    if (pkt >= nxtPacketIdx - 1) {
                         sendNextOK = true;
                     }
                     // else : Do not care for now - the device sometimes sends
@@ -144,7 +146,8 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         if (errorCnt >= MAX_ERROR_CNT) {
             /* Max error count exceeded - stop. */
             stopUploadMode(handler);
-            throw new BT747Exception(I18N.i18n("Too many errors during AGPS upload"));
+            throw new BT747Exception(I18N
+                    .i18n("Too many errors during AGPS upload"));
         }
         if (sendNextOK) {
             // OK to send data
@@ -155,12 +158,14 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
              */
             cmd = getNextPacketCmd();
             MtkBinWriter.sendCmd(handler, cmd);
-            if (nxtPacketIdx > nextPacketPercentIdx) {
-                notifyPercent(percent);
+            if (nxtPacketIdx * AGPS_PAYLOAD > nextPacketPercentOffset) {
                 percent++;
-                nextPacketPercentIdx += PERCENT_STEP;
+                nextPacketPercentOffset += percentBytes;
+                notifyPercent(percent);
             }
-            Generic.debug("Sent AGPS data:" + cmd.toString());
+            if (Generic.isDebug()) {
+                Generic.debug("Sent AGPS data:" + cmd.toString());
+            }
             resetTimeOut();
         }
         return true; // Continue to run.
@@ -180,6 +185,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         errorCnt = 0;
         percent = 0;
         nextPacketPercentIdx = PERCENT_STEP;
+        nextPacketPercentOffset = percentBytes;
     }
 
     /**
@@ -188,6 +194,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      * @param data
      */
     public final void setAgpsData(final byte[] data) {
+        percentBytes = data.length / 100;
         setAgpsData(new ByteDataStream(data));
     }
 

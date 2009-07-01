@@ -15,6 +15,9 @@
 package bt747.j2se_view;
 
 import java.awt.Component;
+import java.util.Formatter;
+
+import net.sf.bt747.j2se.app.utils.Utils;
 
 import gps.log.out.CommonOut;
 import gps.mvc.MtkController;
@@ -53,8 +56,11 @@ public final class AgpsPanel extends javax.swing.JPanel
         m = c.getModel();
         m.addListener(this);
 
+        txtAgpsUrl.setVisible(false);
         updateConnected();
         updateAppURL();
+        txtLogin.setText(m.getStringOpt(AppSettings.OSMLOGIN));
+        txtPassword.setText(m.getStringOpt(AppSettings.OSMPASS));
     }
 
     private final void updateAppURL() {
@@ -74,6 +80,12 @@ public final class AgpsPanel extends javax.swing.JPanel
             case AppSettings.AGPSURL:
                 txtAgpsUrl.setText(m.getStringOpt(AppSettings.AGPSURL));
                 break;
+            case AppSettings.OSMLOGIN:
+                txtLogin.setText(m.getStringOpt(AppSettings.OSMLOGIN));
+                break;
+            case AppSettings.OSMPASS:
+                txtPassword.setText(m.getStringOpt(AppSettings.OSMPASS));
+                break;
             default:
                 break;
             }
@@ -88,8 +100,10 @@ public final class AgpsPanel extends javax.swing.JPanel
         }
     }
 
+    
+   
     private final void updateAgps() {
-        final Component[] components = { lbAgpsUrl, txtAgpsUrl };
+        final Component[] components = { lbAgpsUrl, txtAgpsUrl, btClearAgpsData };
         final MtkModel mtk = m.mtkModel();
         final boolean hasAgps = mtk.hasAgps();
         for (final Component panel : components) {
@@ -97,11 +111,11 @@ public final class AgpsPanel extends javax.swing.JPanel
         }
         btUploadAgpsData.setEnabled(hasAgps && m.isConnected());
         if (mtk.hasAgps()) {
-            final String text1 = String.format(J2SEAppController
+            final String text1 = Utils.format(J2SEAppController
                     .getString("AGPSINFO1"), mtk.getAgpsDataCount(),
                     CommonOut.getDateTimeStr(mtk.getAgpsStartTime()),
                     CommonOut.getDateTimeStr(mtk.getAgpsEndTime()));
-            final String text2 = String.format(J2SEAppController
+            final String text2 = Utils.format(J2SEAppController
                     .getString("AGPSINFO2"), CommonOut.getDateTimeStr(mtk
                     .getAgpsStart2Time()), CommonOut.getDateTimeStr(mtk
                     .getAgpsEnd2Time()));
@@ -110,7 +124,7 @@ public final class AgpsPanel extends javax.swing.JPanel
         }
         txtAgpsInfo1.setVisible(mtk.hasAgps());
         txtAgpsInfo2.setVisible(mtk.hasAgps());
-        osmAccountPanel.setVisible(false);
+        //osmAccountPanel.setVisible(false);
         btDownloadAgpsData.setVisible(false);
     }
 
@@ -216,16 +230,26 @@ public final class AgpsPanel extends javax.swing.JPanel
                 .add(txtAgpsInfo2))
         );
 
-        osmAccountPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AgpsPanel.osmAccountPanel.border.title"))); // NOI18N
         osmAccountPanel.setToolTipText(bundle.getString("AgpsPanel.osmAccountPanel.toolTipText")); // NOI18N
+        osmAccountPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AgpsPanel.osmAccountPanel.border.title"))); // NOI18N
 
         lbLogin.setText(bundle.getString("AgpsPanel.lbLogin.text")); // NOI18N
 
         txtLogin.setText(bundle.getString("AgpsPanel.txtLogin.text")); // NOI18N
+        txtLogin.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLoginFocusLost(evt);
+            }
+        });
 
         lbPassword.setText(bundle.getString("AgpsPanel.lbPassword.text")); // NOI18N
 
         txtPassword.setText(bundle.getString("AgpsPanel.txtPassword.text")); // NOI18N
+        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPasswordFocusLost(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout osmAccountPanelLayout = new org.jdesktop.layout.GroupLayout(osmAccountPanel);
         osmAccountPanel.setLayout(osmAccountPanelLayout);
@@ -284,6 +308,14 @@ public final class AgpsPanel extends javax.swing.JPanel
     private void btClearAgpsDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearAgpsDataActionPerformed
         c.gpsCmd(MtkController.CMD_EPO_CLEAR);
     }//GEN-LAST:event_btClearAgpsDataActionPerformed
+
+    private void txtLoginFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLoginFocusLost
+        c.setStringOpt(AppSettings.OSMLOGIN, txtLogin.getText());
+    }//GEN-LAST:event_txtLoginFocusLost
+
+    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
+        c.setStringOpt(AppSettings.OSMPASS, String.copyValueOf(txtPassword.getPassword()));
+    }//GEN-LAST:event_txtPasswordFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel agpsPanel;

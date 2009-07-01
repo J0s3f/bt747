@@ -15,6 +15,8 @@ import bt747.model.ModelListener;
 import java.awt.Component;
 import java.util.Locale;
 
+import net.sf.bt747.j2se.app.utils.Utils;
+
 /**
  *
  * @author  Mario
@@ -39,22 +41,22 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbAdvancedActive.setSelected(m.getBooleanOpt(AppSettings.ADVFILTACTIVE));
         updateAdvancedFilter();
 
-        txtPDOPMax.setText(String.format((Locale) null, "%.2f", m
+        txtPDOPMax.setText(Utils.format( "%.2f", m
                 .getFilterMaxPDOP()));  // NOI18N
-        txtHDOPMax.setText(String.format((Locale) null, "%.2f", m
+        txtHDOPMax.setText(Utils.format("%.2f", m
                 .getFilterMaxHDOP())); // NOI18N
-        txtVDOPMax.setText(String.format((Locale) null, "%.2f", m
+        txtVDOPMax.setText(Utils.format("%.2f", m
                 .getFilterMaxVDOP())); // NOI18N
         txtNSATMin.setText(Integer.toString(m.getFilterMinNSAT()));
         txtRecCntMin.setText(Integer.toString(m.getFilterMinRecCount()));
         txtRecCntMax.setText(Integer.toString(m.getFilterMaxRecCount()));
-        txtDistanceMin.setText(String.format((Locale) null, "%.2f", m
+        txtDistanceMin.setText(Utils.format("%.2f", m
                 .getFilterMinDist())); // NOI18N
-        txtDistanceMax.setText(String.format((Locale) null, "%.2f", m
+        txtDistanceMax.setText(Utils.format("%.2f", m
                 .getFilterMaxDist())); // NOI18N
-        txtSpeedMin.setText(String.format((Locale) null, "%.2f", m
+        txtSpeedMin.setText(Utils.format("%.2f", m
                 .getFilterMinSpeed())); // NOI18N
-        txtSpeedMax.setText(String.format((Locale) null, "%.2f", m
+        txtSpeedMax.setText(Utils.format("%.2f", m
                 .getFilterMaxSpeed())); // NOI18N
 
     }

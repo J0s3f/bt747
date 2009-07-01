@@ -26,7 +26,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
 /**
- * The model in the Model-Controller-View schematic. Information regarding the
+ * The model in the Model-View-Controller pattern. Information regarding the
  * state of the GPS device or settings must use this model interface.
  * 
  * @author Mario De Weerd
@@ -124,6 +124,12 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      */
     public static final int OSM_LOGTYPE = 14;
 
+    /**
+     * Upload GPX for OSM (upload handled by caller, specific output file).
+     */
+    public static final int OSM_UPLOAD_LOGTYPE = 15;
+
+    
     /**
      * The number of seconds in a day.
      */
@@ -838,7 +844,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * @author Mario De Weerd
      * 
      */
-    private final class PrivateData {
+    private final static class PrivateData {
         /**
          * The gpsModel communicates with the GPS device and stores some
          * information regarding the state of the GPS device.
