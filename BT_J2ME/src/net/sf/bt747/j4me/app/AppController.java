@@ -1,7 +1,6 @@
 package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
-import gps.connection.GPSrxtx;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -80,7 +79,6 @@ public class AppController extends Controller {
     }
 
     private void initAppSettingsPart2() {
-        Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));
         RecordStore recordStore;
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
