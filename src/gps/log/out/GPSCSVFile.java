@@ -190,10 +190,10 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(r.getRecCount());
             }
             if ((selectedFileFields.hasRcr())) {
+                rec.append(fieldSep);
                 if (r.hasRcr()) {
                     rec.append(CommonOut.getRCRstr(r));
                 }
-                rec.append(fieldSep);
             }
             /* DATE , TIME */
             if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
