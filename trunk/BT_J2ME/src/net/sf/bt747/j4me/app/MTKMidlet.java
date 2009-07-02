@@ -34,6 +34,10 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     static {
         JavaLibBridge.setJavaLibImplementation(new J2MEJavaTranslations());
+        if (false) {
+            Log.setOutputStream(System.out);
+            Log.setLevel(Level.DEBUG);
+        }
     }
 
     private static AppModel m;
@@ -65,7 +69,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             BluetoothPort provider = null;
             try {
                 provider = BluetoothPort.getInstance();
-//                Log.info("Provider ok " + provider);
+                // Log.info("Provider ok " + provider);
             } catch (Exception e) {
                 Log.error("Getting provider.", e);
             }
@@ -73,7 +77,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
                 if (provider != null) {
                     GPSrxtx.setDefaultGpsPortInstance(provider);
                 }
-//                Log.info("Port instance ok" + provider);
+                // Log.info("Port instance ok" + provider);
             } catch (Exception e) {
                 Log.error("Setting port instance.", e);
             }
@@ -111,12 +115,12 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         }
         // Initialize the J4ME UI manager.
         try {
-//            Log.setLevel(Level.DEBUG);
-//            Log.info("Before appModel");
+            // Log.setLevel(Level.DEBUG);
+            // Log.info("Before appModel");
 
             AppController.initAppSettings();
             setAppModel(new AppModel());
-//            Log.info("Before appController");
+            // Log.info("Before appController");
             setAppController(new AppController(MTKMidlet.m));
 
             final DeviceScreen main = new MainScreen(MTKMidlet.c, this);
@@ -239,8 +243,9 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.microedition.lcdui.CommandListener#commandAction(javax.microedition.lcdui.Command,
-     *      javax.microedition.lcdui.Displayable)
+     * @see
+     * javax.microedition.lcdui.CommandListener#commandAction(javax.microedition
+     * .lcdui.Command, javax.microedition.lcdui.Displayable)
      */
     public void commandAction(final Command c, final Displayable s) {
         // lors du clic sur le bouton Exit
