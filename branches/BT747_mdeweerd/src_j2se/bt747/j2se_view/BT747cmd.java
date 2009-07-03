@@ -298,6 +298,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     // }
 
     private volatile boolean downloadIsSuccessFull = true;
+    private volatile Boolean eraseStarted = Boolean.FALSE;
     private volatile Boolean eraseOngoing = Boolean.FALSE;
     private long conversionStartTime;
     private long downloadStartTime;
@@ -451,7 +452,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     private void waitForErase() {
         flushOutstandingCmds();
-        while (getEraseOngoing()) {
+        while (!eraseStarted || getEraseOngoing()) {
             try {
                 Thread.sleep(50);
             } catch (final Exception e) {
@@ -998,17 +999,27 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             }
 
-            if (options.has(OPT_ERASE_MEMORY) && downloadIsSuccessFull) {
-                System.out.println(">> Erasing log memory...\n");
-                c.eraseLog();
-                waitForErase();
+            if (options.has(OPT_ERASE_MEMORY)) {
+                if (downloadIsSuccessFull) {
+                    System.out.println(">> Erasing log memory...\n");
+                    c.eraseLog();
+                    waitForErase();
+                } else {
+                    System.out
+                            .println(">> Not erasing memory - download failed.\n");
+                }
             }
 
-            if (options.has(OPT_RECOVER_LOGGER) && downloadIsSuccessFull) {
-                System.out.println(">> Recover from disable log:"
-                        + " ENABLE LOG and FORMAT LOG ALL...\n");
-                c.recoveryEraseLog();
-                waitForErase();
+            if (options.has(OPT_RECOVER_LOGGER)) {
+                if (downloadIsSuccessFull) {
+                    System.out.println(">> Recover from disable log:"
+                            + " ENABLE LOG and FORMAT LOG ALL...\n");
+                    c.recoveryEraseLog();
+                    waitForErase();
+                } else {
+                    System.out
+                            .println(">> Not recovering memory - download failed.\n");
+                }
             }
             c.closeGPS();
         }
@@ -1300,9 +1311,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         try {
             System.out
-            .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
-                    + " build " + bt747.Version.BUILD_STR
-                    + " GPL V3 LICENSE");
+                    .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
+                            + " build " + bt747.Version.BUILD_STR
+                            + " GPL V3 LICENSE");
 
             final OptionSet options = parser.parse(args);
             if (options.has(OPT_HELP)) {
@@ -1366,6 +1377,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     private final void setEraseOngoing(final boolean eraseOngoing) {
         synchronized (this.eraseOngoing) {
+            this.eraseStarted = true;
             this.eraseOngoing = Boolean.valueOf(eraseOngoing);
         }
     }
