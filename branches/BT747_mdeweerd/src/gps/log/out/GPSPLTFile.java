@@ -118,13 +118,13 @@ public final class GPSPLTFile extends GPSFile {
             // Field 1 : Latitude - decimal degrees.
             if ((r.hasLatitude())
                     && (selectedFileFields.hasLatitude())) {
-                rec += JavaLibBridge.toString(r.latitude, 6);
+                rec += JavaLibBridge.toString(r.getLatitude(), 6);
             }
             rec += ",";
             // Field 2 : Longitude - decimal degrees.
             if ((r.hasLongitude())
                     && (selectedFileFields.hasLongitude())) {
-                rec += JavaLibBridge.toString(r.longitude, 6);
+                rec += JavaLibBridge.toString(r.getLongitude(), 6);
             }
             rec += ",";
             // Field 3 : Code - 0 if normal, 1 if break in track line
@@ -134,7 +134,7 @@ public final class GPSPLTFile extends GPSFile {
             // Field 4 : Altitude in feet (-777 if not valid)
             if ((r.hasHeight())
                     && (selectedFileFields.hasHeight())) {
-                rec += ((int) (r.height * 3.2808398950131233595800524934383));
+                rec += ((int) (r.getHeight() * 3.2808398950131233595800524934383f));
             } else {
                 rec += "-777";
             }
@@ -150,7 +150,7 @@ public final class GPSPLTFile extends GPSFile {
             if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec += JavaLibBridge
                         .toString(
-                                (r.utc + ((r.hasMillisecond())
+                                (r.getUtc() + ((r.hasMillisecond())
                                         && (selectedFileFields
                                                 .hasMillisecond()) ? (r.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days

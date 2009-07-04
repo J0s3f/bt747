@@ -21,6 +21,7 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.waba_view.GPSLogFormat;
 
 /**
  * This class is used to convert the binary log to a new format. Basically
@@ -76,13 +77,15 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
     private static final int minValidUtcTime = JavaLibBridge.getDateInstance(
             1, 1, 1995).dateToUTCepoch1970();
 
+    int recCount;
+
     /**
      * Parse the binary input file and convert it.
      * 
      * @return non zero in case of err. The error text can be retrieved using
      *         {@link #getErrorInfo()}.
-     * @param gpsFile -
-     *                object doing actual write to files
+     * @param gpsFile
+     *            - object doing actual write to files
      * 
      */
     public final int parseFile(final Object file,
@@ -92,7 +95,6 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         byte[] bytes;
         int sizeToRead;
         int nextAddrToRead;
-        int recCount;
         int fileSize;
         int satCntIdx;
         int satcnt;
@@ -177,7 +179,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 newLogFormat = (0xFF & bytes[2]) << 0
                         | (0xFF & bytes[3]) << 8 | (0xFF & bytes[4]) << 16
                         | (0xFF & bytes[5]) << 24;
-                logMode = (0xFF & bytes[6]) << 0 | (0xFF & bytes[7]) << 8;
+                setLogMode(gpsFile,(0xFF & bytes[6]) << 0 | (0xFF & bytes[7]) << 8);
 
                 isBlockStartOverwrite = (logMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
                 // Generic.debug("OVERWRITE? "
@@ -504,7 +506,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
     /*
      * (non-Javadoc)
      * 
-     * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
+     * @see
+     * gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
     protected void closeFileObject(final Object o) {
         ((WindowedFile) o).close();
@@ -549,7 +552,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
     /**
      * @param holux
-     *                The holux to set.
+     *            The holux to set.
      */
     public final void setHolux(final boolean holux) {
         this.holux = holux;
@@ -601,7 +604,11 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[offsetInBuffer + 10]) << 16
                     | (0xFF & bytes[offsetInBuffer + 11]) << 24;
             // There is a special operation here
-            switch (0xFF & bytes[offsetInBuffer + 7]) {
+            final int type = 0xFF & bytes[offsetInBuffer + 7];
+            if(type!=7&&type!=3&&type!=4&&type!=5) {
+            System.out.println("Type = "+type + ", value = " + value);
+            }
+            switch (type) {
             case 0x02: // logBitMaskChange
                 newLogFormat = value;
                 if (newLogFormat != logFormat) {
@@ -638,24 +645,18 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 // bt747.sys.Generic.debug("Log speed set to :"+value);
                 break;
             case 0x06: // value: 0x0106= logger on 0x0107= logger off
-                // 0x104=??
-                logMode = value;
-                // Generic.debug("OVERWRITE? "
-                // + JavaLibBridge.unsigned2hex(offsetInBuffer, 8) + " "
-                // + JavaLibBridge.unsigned2hex(logMode, 8) + " "
-                // + ((logMode &
-                // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0));
-                // // bt747.sys.Generic.debug("Logger off :"+value);
+                setLogMode(gpsFile, value);
                 break;
             case 0x07: // value: 0x0106= logger on 0x0107= logger off
                 // 0x104=??
-                logMode = value;
+                // System.out.println(offsetInBuffer+" "+value);
                 // Generic.debug("OVERWRITE? "
                 // + JavaLibBridge.unsigned2hex(offsetInBuffer, 8) + " "
                 // + JavaLibBridge.unsigned2hex(logMode, 8) + " "
                 // + ((logMode &
                 // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0));
                 // // bt747.sys.Generic.debug("Logger off :"+value);
+                setLogMode(gpsFile, value);
                 break;
             default:
                 break; // Added to set SW breakpoint to discover other
@@ -706,6 +707,21 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         return nbrBytesDone;
     }
 
+    
+    private int prevLogModeRecNbr = 0;
+    private final void setLogMode(final GPSFileConverterInterface gpsFile, final int value) {
+        System.out.println("diff "+value+" "+logMode+" "+prevLogModeRecNbr+" "+recCount);
+        if (((logMode & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))>
+                ((value & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))
+                && (prevLogModeRecNbr==recCount)) {
+            final GPSRecord logOnRecord = GPSRecord
+                    .getLogFormatRecord(0);
+            logOnRecord.setVoxStr(GPSRecord.VOX_LOG_ON_OFF);
+            gpsFile.addLogRecord(logOnRecord);
+        }
+        prevLogModeRecNbr = recCount;
+        logMode = value;
+    }
     /**
      * Tries to find a normal record at the indicated offset.
      * 
@@ -838,7 +854,6 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         /*
          * Need to do this after SPEED and HEIGHT field because some holux
          * loggers interchange these.
-         * 
          */
         if (r.hasHeight()) {
             if (valid) {

@@ -128,11 +128,11 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             rec.append("T  A ");
 
             if ((s.hasLatitude()) && (selectedFileFields.hasLatitude())) {
-                if (s.latitude >= 0) {
-                    rec.append(JavaLibBridge.toString(s.latitude, 8)
+                if (s.getLatitude() >= 0) {
+                    rec.append(JavaLibBridge.toString(s.getLatitude(), 8)
                             + ((char) 0xBA) + "N");
                 } else {
-                    rec.append(JavaLibBridge.toString(-s.latitude, 8)
+                    rec.append(JavaLibBridge.toString(-s.getLatitude(), 8)
                             + ((char) 0xBA) + "S");
                 }
             } else {
@@ -141,11 +141,11 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
 
             rec.append(" ");
             if ((s.hasLongitude()) && (selectedFileFields.hasLongitude())) {
-                if (s.longitude >= 0) {
-                    rec.append(JavaLibBridge.toString(s.longitude, 8)
+                if (s.getLongitude() >= 0) {
+                    rec.append(JavaLibBridge.toString(s.getLongitude(), 8)
                             + ((char) 0xBA) + "E");
                 } else {
-                    rec.append(JavaLibBridge.toString(-s.longitude, 8)
+                    rec.append(JavaLibBridge.toString(-s.getLongitude(), 8)
                             + ((char) 0xBA) + "W");
                 }
             } else {
@@ -204,9 +204,9 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             rec.append("s ");
 
             if ((s.hasHeight()) && (selectedFileFields.hasHeight())) {
-                rec.append(JavaLibBridge.toString(s.height, 1));
+                rec.append(JavaLibBridge.toString(s.getHeight(), 1));
                 if (waypt) {
-                    wrec.append(JavaLibBridge.toString(s.height, 1));
+                    wrec.append(JavaLibBridge.toString(s.getHeight(), 1));
                 }
             } else {
                 rec.append("0.0");
@@ -219,7 +219,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             // wrec.append("Description")
             // }
             if ((s.hasNsat()) && (selectedFileFields.hasNsat())) {
-                rec.append((s.nsat & 0xFF00) >> 8); // in use
+                rec.append((s.getNsat() & 0xFF00) >> 8); // in use
                 rec.append(" ");
             } else {
                 rec.append("-1 ");

@@ -511,37 +511,33 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
                 if (!isWayType && cachedRecordIsNeeded(r)) {
                     // Update map boundaries
-                    if (r.latitude < minlat) {
-                        minlat = r.latitude;
+                    if (r.getLatitude() < minlat) {
+                        minlat = r.getLatitude();
                     }
-                    if (r.latitude > maxlat) {
-                        maxlat = r.latitude;
+                    if (r.getLatitude() > maxlat) {
+                        maxlat = r.getLatitude();
                     }
-                    if (r.longitude < minlon) {
-                        minlon = r.longitude;
+                    if (r.getLongitude() < minlon) {
+                        minlon = r.getLongitude();
                     }
-                    if (r.longitude > maxlon) {
-                        maxlon = r.longitude;
+                    if (r.getLongitude() > maxlon) {
+                        maxlon = r.getLongitude();
                     }
                 }
             } else {
                 // This log item is to be transcribed in the output file.
 
                 if (!isWayType) {
-                    // StringBuffer rec=new StringBuffer(1024);
-                    boolean isTimeSPlit;
-                    isTimeSPlit = (r.hasUtc())
-                            && ((r.utc - previousTime) > trackSepTime);
                     rec.setLength(0);
-                    if (isNewTrack || isTimeSPlit) {
+                    if (isNewTrack || needsToSplitTrack) {
                         isNewTrack = false;
                         if ((r.hasLatitude())
                                 && (r.hasLongitude())) {
-                            if (!isTimeSPlit) {
+                            if (!needsToSplitTrack) {
                                 track.addTrackpoint(new Trackpoint(
-                                        r.latitude, r.longitude));
+                                        r.getLatitude(), r.getLongitude()));
                                 if ((r.hasUtc())) {
-                                    previousTime = r.utc;
+                                    previousTime = r.getUtc();
                                     previousRec = r.recCount;
                                 }
                                 endTrack(badTrackColor);
@@ -566,8 +562,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
 
                 if ((r.hasUtc())) {
-                    previousTime = r.utc;
-                    previousRec = r.recCount;
+                    previousTime = r.getUtc();
+                    previousRec = r.getRecCount();
                 }
                 // " <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 // " <ele>12.863281</ele>"+
@@ -590,8 +586,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     // rec.append(',');
                     // rec.append(JavaLibBridge.toString(s.longitude,6));
                     // rec.append("));");
-                    final Trackpoint tp = new Trackpoint(r.latitude,
-                            r.longitude);
+                    final Trackpoint tp = new Trackpoint(r.getLatitude(),
+                            r.getLongitude());
                     //                    
                     track.addTrackpoint(tp);
 
@@ -612,8 +608,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
                 if (isWayType && (r.hasLatitude())
                         && (r.hasLongitude())) {
-                    waypoints.addTrackpoint(new Trackpoint(r.latitude,
-                            r.longitude));
+                    waypoints.addTrackpoint(new Trackpoint(r.getLatitude(),
+                            r.getLongitude()));
                     infoHtmls.append("\"");
                     final String rcrStr = CommonOut.getRCRstr(r);
                     String icon = "";

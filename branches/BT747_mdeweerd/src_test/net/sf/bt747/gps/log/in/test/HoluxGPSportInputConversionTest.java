@@ -45,13 +45,13 @@ public class HoluxGPSportInputConversionTest extends TestConvertInBase {
 //        assertEquals("Geoid", false, trkPt1.hasGeoid());
 //        assertEquals("Hdop", 199, trkPt1.hdop);
 //        assertEquals("Heading", 230.70735, trkPt1.heading, .00001);
-        assertEquals("Height", 23.029865, trkPt1.height, 0.00001);
+        assertEquals("Height", 23.029865, trkPt1.getHeight(), 0.00001);
         assertEquals("Logdistance", 0, trkPt1.logDistance);
         assertEquals("Logspeed", 0, trkPt1.logSpeed);
         assertEquals("LogPeriod", 50, trkPt1.logPeriod);
-        assertEquals("Latitude", 33.87514877319336, trkPt1.latitude,
+        assertEquals("Latitude", 33.87514877319336, trkPt1.getLatitude(),
                 0.000000000000001);
-        assertEquals("Longitude", -117.91815948486328, trkPt1.longitude,
+        assertEquals("Longitude", -117.91815948486328, trkPt1.getLongitude(),
                 0.000000000000001);
         assertEquals("Milisecond", 0, trkPt1.milisecond);
         //assertEquals("Nsat", 1545, trkPt1.getNsat());
@@ -64,9 +64,9 @@ public class HoluxGPSportInputConversionTest extends TestConvertInBase {
         //assertEquals("sid[6]", 17, trkPt1.sid[6]);
         //assertEquals("sidinuse[5]", true, trkPt1.sidinuse[5]);
         //assertEquals("snr[8]", 21, trkPt1.snr[8]);
-        assertEquals("speed", 1.6559999, trkPt1.speed, 0.00000001);
+        assertEquals("speed", 1.6559999, trkPt1.getSpeed(), 0.00000001);
         assertEquals("tagutc", 0, trkPt1.tagutc);
-        assertEquals("utc", 1235679127, trkPt1.utc);
+        assertEquals("utc", 1235679127, trkPt1.getUtc());
         assertEquals("valid", false, trkPt1.hasValid());
         //assertEquals("vdop", 401, trkPt1.vdop);
         assertEquals("voxStr", false, trkPt1.hasVoxStr());

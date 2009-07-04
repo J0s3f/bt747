@@ -216,15 +216,15 @@ public final class GPSCSVFile extends GPSFile {
 
             if ((r.hasValid()) && (selectedFileFields.hasValid())) {
                 rec.append(fieldSep);
-                rec.append(CommonOut.getFixText(r.valid));
+                rec.append(CommonOut.getFixText(r.getValid()));
             } else if ((selectedFileFields.hasValid())) {
                 rec.append(fieldSep);
             }
 
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.latitude, 6));
-                if (r.latitude >= 0) {
+                rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                if (r.getLatitude() >= 0) {
                     rec.append(fieldSep + "N");
                 } else {
                     rec.append(fieldSep + "S");
@@ -235,8 +235,8 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.longitude, 6));
-                if (r.longitude >= 0) {
+                rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                if (r.getLongitude() >= 0) {
                     rec.append(fieldSep + "E");
                 } else {
                     rec.append(fieldSep + "W");
@@ -248,10 +248,10 @@ public final class GPSCSVFile extends GPSFile {
             if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.height, 3));
+                    rec.append(JavaLibBridge.toString(r.getHeight(), 3));
                 } else {
                     rec.append(JavaLibBridge.toString(
-                            r.height * 3.28083989501312, 3));
+                            r.getHeight() * 3.28083989501312f, 3));
                 }
 
                 // Add field concerning geoid separation.
@@ -266,54 +266,54 @@ public final class GPSCSVFile extends GPSFile {
             if ((r.hasSpeed()) && (selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.speed, 3));
+                    rec.append(JavaLibBridge.toString(r.getSpeed(), 3));
                 } else {
                     rec.append(JavaLibBridge.toString(
-                            r.speed * 0.621371192237334, 3));
+                            r.getSpeed() * 0.621371192237334f, 3));
                 }
             } else if ((selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
             }
             if ((r.hasHeading()) && (selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.heading, 6));
+                rec.append(JavaLibBridge.toString(r.getHeading(), 6));
             } else if ((selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
             }
             if ((r.hasDsta()) && (selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
-                rec.append(r.dsta);
+                rec.append(r.getDsta());
             } else if ((selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
             }
             if ((r.hasDage()) && (selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
-                rec.append(r.dage);
+                rec.append(r.getDage());
             } else if ((selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
             }
             if ((r.hasPdop()) && (selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.pdop / 100.0, 2));
+                rec.append(JavaLibBridge.toString(r.getPdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
             }
             if ((r.hasHdop()) && (selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.hdop / 100.0, 2));
+                rec.append(JavaLibBridge.toString(r.getHdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
             }
             if ((r.hasVdop()) && (selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.vdop / 100.0, 2));
+                rec.append(JavaLibBridge.toString(r.getVdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
             }
             if ((r.hasNsat()) && (selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
-                rec.append((r.nsat & 0xFF00) >> 8);
-                rec.append("(" + (r.nsat & 0xFF) + ")");
+                rec.append((r.getNsat() & 0xFF00) >> 8);
+                rec.append("(" + (r.getNsat() & 0xFF) + ")");
             } else if ((selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
             }

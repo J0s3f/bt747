@@ -107,7 +107,7 @@ public class BT747TrackRenderer implements TrackRenderer {
                     continue;
                 }
                 final Point2D point = map.getTileFactory().geoToPixel(
-                        new GeoPosition(tp.latitude, tp.longitude),
+                        new GeoPosition(tp.getLatitude(), tp.getLongitude()),
                         map.getZoom());
                 boolean show = true;
                 // This has to be refactored.

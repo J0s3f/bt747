@@ -35,7 +35,7 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         GPSRecord trkPt1;
         trkPt1 = trackPoints[5];
         // Expected values for record:
-        assertEquals("Height", 299.82812, trkPt1.height, 0.00001);
+        assertEquals("Height", 299.82812, trkPt1.getHeight(), 0.00001);
         //assertEquals("speed", 0.20044835, trkPt1.speed, 0.00000001);
         assertEquals("speed", false, trkPt1.hasSpeed());
     }
@@ -55,7 +55,7 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         // Expected values for record:
         //assertEquals("Height", 299.82812, trkPt1.height, 0.00001);
         assertEquals("false", false, trkPt1.hasHeight());
-        assertEquals("speed", 0.036, trkPt1.speed, 0.0001);
+        assertEquals("speed", 0.036, trkPt1.getSpeed(), 0.0001);
         //assertEquals("speed", false, trkPt1.hasSpeed());
     }
 
@@ -72,8 +72,8 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         GPSRecord trkPt1;
         trkPt1 = trackPoints[7];
         // Expected values for record:
-        assertEquals("Height", 300.1875, trkPt1.height, 0.00001);
-        assertEquals("speed", 0.82799995, trkPt1.speed, 0.00000001);
+        assertEquals("Height", 300.1875, trkPt1.getHeight(), 0.00001);
+        assertEquals("speed", 0.82799995, trkPt1.getSpeed(), 0.00000001);
         //assertEquals("speed", false, trkPt1.hasSpeed());
     }
 

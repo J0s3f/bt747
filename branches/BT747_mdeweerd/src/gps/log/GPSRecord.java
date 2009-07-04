@@ -66,6 +66,11 @@ public class GPSRecord {
     // points
 
     public String voxStr; // Voice recording reference.
+    
+    public static final String VOX_LOG_ON_OFF = "logon";
+    public final boolean isLogOn() {
+        return voxStr.equals(VOX_LOG_ON_OFF);
+    }
 
     private static final int NO_RCR = 0x80000000
             | BT747Constants.RCR_DISTANCE_MASK

@@ -205,8 +205,8 @@ public class SimpleExample implements bt747.model.ModelListener {
             // Print the first ten positions
             for (int i = 0; i < positions.length && i < 10; i++) {
                 GPSRecord record = positions[i];
-                System.out.println("Position " + i + ":" + record.latitude
-                        + "," + record.longitude);
+                System.out.println("Position " + i + ":" + record.getLatitude()
+                        + "," + record.getLongitude());
             }
         }
 

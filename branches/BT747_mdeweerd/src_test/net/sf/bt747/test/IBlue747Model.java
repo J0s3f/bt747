@@ -20,10 +20,14 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEAWriter;
 import gps.convert.Conv;
+import gps.log.GPSRecord;
+import gps.log.out.GPSNMEAFile;
 import gps.mvc.commands.GpsRxtxExecCommand;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,7 +60,7 @@ public class IBlue747Model {
     private HlxController hlxController = new HlxController(this);
 
     private byte[] logData = null;
-    private static final String logFile = "c:/bt747/Test.bin";
+    private static String logFile = "c:/bt747/Test.bin";
 
     /**
      * Set up system specific classes.
@@ -70,14 +74,15 @@ public class IBlue747Model {
             GPSrxtx
                     .setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
         }
-
+        logFile = "C:\\BT747\\20090629_747A+GNB.bin";
     }
 
     /**
      * 
      */
     public IBlue747Model() {
-        setupModel(DeviceModelType.HOLUXM1000C);
+        //setupModel(DeviceModelType.HOLUXM1000C);
+        setupModel(DeviceModelType.IBLUE747PLUS);
     }
 
     /**
@@ -85,9 +90,12 @@ public class IBlue747Model {
      * 
      * Should be called after instantiation.
      * 
+     * @throws IOException
+     * @throws FileNotFoundException
+     * 
      * 
      */
-    public void onStart() {
+    public void onStart() throws FileNotFoundException, IOException {
         if (IBlue747Model.modelPort != null) {
             gpsRxTx = new GPSrxtx(IBlue747Model.modelPort);
         } else {
@@ -95,7 +103,10 @@ public class IBlue747Model {
         }
         gpsRxTx.setDefaults(20, 115200);
         gpsRxTx.openPort();
+        gpsTimerTask.setGpsRxTx(gpsRxTx);
         // addTimer(10); // Palm minimum timer resolution= 10 ms
+
+        getLogData();
 
         TimerTask t;
         t = new TimerTask() {
@@ -132,7 +143,83 @@ public class IBlue747Model {
         };
         final Timer tm = new Timer();
         tm.scheduleAtFixedRate(t, 100, 100);
+
+        final Timer gpsTm = new Timer();
+        gpsTm.scheduleAtFixedRate(gpsTimerTask, 1000, 1000);
     }
+
+    private static GpsTimerTask gpsTimerTask = new GpsTimerTask();
+
+    private static class GpsTimerTask extends TimerTask {
+        GPSRecord r = GPSRecord.getLogFormatRecord(0);
+        GPSrxtx gpsRxTx = null;
+        boolean sendPosition = true;
+
+        public void setGpsRxTx(final GPSrxtx gpsRxTx) {
+            this.gpsRxTx = gpsRxTx;
+        }
+        
+        public void setSendGpsPosition(final boolean sendPosition) {
+            this.sendPosition = sendPosition;
+        }
+
+        /**
+         * 
+         */
+        public GpsTimerTask() {
+            r.setLatitude(51.0);
+            r.setLongitude(51.0);
+            r.setHdop(98);
+            r.setVdop(99);
+            r.setPdop(120);
+            r.setNsat((10 << 8) | 10);
+            r.setEle(new int[] { 1, 2 });
+            r.setAzi(new int[] { 1, 2 });
+            r.setSid(new int[] { 1, 2 });
+            r.setSnr(new int[] { 5, 1 });
+            r.setGeoid(42);
+            r.setHeading(50);
+            r.setMilisecond(0);
+            r.setSpeed(10);
+            r.setValid(BT747Constants.VALID_SPS_MASK);
+            r.setUtc(JavaLibBridge.getDateInstance().dateToUTCepoch1970());
+        }
+
+        private final void sendPacketWithChecksum(final String n) {
+            if (gpsRxTx != null) {
+                NMEAWriter.sendPacket(gpsRxTx, n);
+            }
+        }
+
+        volatile int pauseTime = 0;
+        public void pause(int timems) {
+            pauseTime = timems;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Thread#run()
+         */
+        @Override
+        public void run() {
+            synchronized (r) {
+                
+                int timepassed = 1000;
+                r.milisecond += timepassed %1000;
+                r.utc += r.milisecond/1000;
+                pauseTime -= timepassed;
+                if(pauseTime<0) {
+                    pauseTime = 0;
+                    if (sendPosition) {
+                        sendPacketWithChecksum(GPSNMEAFile.toGGA(r));
+                        sendPacketWithChecksum(GPSNMEAFile.toRMC(r));
+                    }
+                }
+                
+            }
+        }
+    };
 
     /**
      * Possible communication modes the device is in.
@@ -227,12 +314,17 @@ public class IBlue747Model {
         public int logFormat = 0x000215FF;
         public int logPoints = 0x231;
         public int memUsed = 0x00019D0;
-        public DeviceModelType modelType = DeviceModelType.QST1300;
+        public DeviceModelType modelType = DeviceModelType.IBLUE747PLUS;
         public String modelNumber = "";
         public String modelRef = null;
         public String swVersion = "1.0";
+        public int logVersion = 139;
         public String mainVersion = null;
         public String releaseNumber = null;
+        public int logTimeInterval = 0;
+        public int logDistanceInterval = 100;
+        public int logSpeedInterval = 50;
+        public int recMethod = 2;   // (2) Stop or (1) overwrite
     }
 
     public final MtkDataModel mtkData = new MtkDataModel();
@@ -272,8 +364,16 @@ public class IBlue747Model {
      */
     public int replyLogNmea(final String[] p_nmea) {
         try {
-            replyMTK_Log_Ack(p_nmea);
             switch (JavaLibBridge.toInt(p_nmea[1])) {
+            case BT747Constants.PMTK_LOG_SET:
+                final int z_setType = JavaLibBridge.toInt(p_nmea[2]);
+                if (p_nmea.length >= 3) {
+                    switch (z_setType) {
+                    default:
+                        break;
+                    }
+                }
+                break;
             case BT747Constants.PMTK_LOG_Q:
                 // Parameter information
                 // TYPE = Parameter type
@@ -298,12 +398,32 @@ public class IBlue747Model {
                         );
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
+                        sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
+                                + BT747Constants.PMTK_LOG_TIME_INTERVAL + ","
+                                + mtkData.logTimeInterval);
+
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
+                        // public int logTimeInterval = 0;
+                        // public int logDistanceInterval = 100;
+                        // public int logSpeedInterval = 50;
+                        sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
+                                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL + ","
+                                + mtkData.logDistanceInterval);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
+                        sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
+                                + BT747Constants.PMTK_LOG_SPEED_INTERVAL
+                                + "," + mtkData.logSpeedInterval);
                         break;
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
+                        sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
+                                + BT747Constants.PMTK_LOG_REC_METHOD
+                                + "," + mtkData.recMethod);
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2
                         // =
@@ -350,6 +470,17 @@ public class IBlue747Model {
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
+                        
+                    case BT747Constants.PMTK_LOG_VERSION:
+                        sendPacket("PMTK"
+                                + BT747Constants.PMTK_CMD_LOG
+                                + ","
+                                + BT747Constants.PMTK_LOG_DT
+                                + ","
+                                + BT747Constants.PMTK_LOG_VERSION
+                                + ","
+                                + mtkData.logVersion);
+                        
                     default:
                     }
                 }
@@ -357,13 +488,7 @@ public class IBlue747Model {
             case BT747Constants.PMTK_LOG_Q_LOG:
                 // Send data from the log
                 // $PMTK182,7,START_ADDRESS,DATA
-                if (logData == null) {
-                    final File f = new File(IBlue747Model.logFile);
-                    final FileInputStream fi = new FileInputStream(f);
-                    logData = new byte[fi.available()];
-                    fi.read(logData);
-                    fi.close();
-                }
+                getLogData();
                 int address = Conv.hex2Int(p_nmea[2]);
                 final StringBuffer s = new StringBuffer(Conv
                         .hex2Int(p_nmea[3]) * 2);
@@ -420,8 +545,28 @@ public class IBlue747Model {
         } catch (final Exception e) {
             // TODO: handle exception
         }
+        replyMTK_Log_Ack(p_nmea);
         return 0; // Done.
 
+    }
+
+    /**
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    private void getLogData() throws FileNotFoundException, IOException {
+        if (logData == null) {
+            final File f = new File(IBlue747Model.logFile);
+            final FileInputStream fi = new FileInputStream(f);
+            logData = new byte[fi.available()];
+            fi.read(logData);
+            fi.close();
+            int i;
+            for (i = logData.length - 1; i > 0
+                    && ((logData[i] & 0xFF) == 0xFF); i--)
+                ;
+            mtkData.memUsed = i + 1;
+        }
     }
 
     public int analyseNMEA(final String[] p_nmea) {
@@ -534,7 +679,8 @@ public class IBlue747Model {
             case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
                 break;
             default:
-                acknowledge = new Acknowledge(p_nmea, BT747Constants.PMTK_ACK_UNSUPPORTED);
+                acknowledge = new Acknowledge(p_nmea,
+                        BT747Constants.PMTK_ACK_UNSUPPORTED);
                 System.err.println("Not supported in model:" + z_Cmd);
             } // End switch
         } else if (p_nmea[0].startsWith("PTSI")) {
@@ -543,6 +689,25 @@ public class IBlue747Model {
             replyMTK_Ack(p_nmea);
 
             switch (z_Cmd) {
+            case 000:
+                if (p_nmea[1].equals("TSI")) {
+                    response = "PTSI001," + mtkData.modelRef;
+                }
+                break;
+            case 2: {
+                int opt = JavaLibBridge.toInt(p_nmea[1]);
+                switch (opt) {
+                case 2:
+
+                    break;
+
+                default:
+                    break;
+                }
+            }
+                break;
+            case 11:
+                break;
             case 999:
                 if (p_nmea[1].equals("IAMAP")) {
                     response = "PTSI999,IAMAP";
@@ -560,9 +725,11 @@ public class IBlue747Model {
         if (response != null) {
             if (response instanceof String) {
                 final String resp = (String) response;
-                sendPacket(resp);
-                if (z_Result == -1) {
-                    z_Result = 0;
+                if (resp.length() != 0) {
+                    sendPacket(resp);
+                    if (z_Result == -1) {
+                        z_Result = 0;
+                    }
                 }
             }
         }
@@ -599,7 +766,8 @@ public class IBlue747Model {
             mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
             mtkData.modelNumber = "0006";
             mtkData.modelRef = "TSI_747A+";
-            mtkData.swVersion = "1.39";
+            mtkData.swVersion = "1.0";
+            mtkData.logVersion = 139;
             mtkData.flashCode = 0x1C20161C;
             break;
         case ML7:
@@ -681,7 +849,15 @@ public class IBlue747Model {
             // Controller c = new Controller(m);
 
             public void run() {
-                (new IBlue747Model()).onStart();
+                try {
+                    (new IBlue747Model()).onStart();
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         });
         Generic.setDebugLevel(1);
