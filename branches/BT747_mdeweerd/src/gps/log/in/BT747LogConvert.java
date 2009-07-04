@@ -21,7 +21,6 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
-import bt747.waba_view.GPSLogFormat;
 
 /**
  * This class is used to convert the binary log to a new format. Basically
