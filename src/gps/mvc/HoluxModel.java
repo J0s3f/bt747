@@ -83,6 +83,25 @@ public class HoluxModel extends MtkModel {
             if (this.isEraseOngoing()) {
             	mtkLogHandler.signalEraseDone();
             }
+		} else if (cmd.equals(HoluxConstants.PHLX_LOG_GET_CRITERIA_RESPONSE)) {
+			if (sNmea[1].equals(HoluxConstants.PHLX_LOG_CRITERIUM_TIME_PARAM)) {
+	            logTimeInterval = JavaLibBridge.toInt(sNmea[2]);
+				logDistanceInterval = 0;
+			} else if (sNmea[1].equals(HoluxConstants.PHLX_LOG_CRITERIUM_DISTANCE_PARAM)) {
+	            logTimeInterval = 0;
+	            logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
+			} else {
+				// better error handling should be here
+				return result;
+			}
+			
+            dataOK |= MtkModel.C_OK_TIME;
+            setAvailable(MtkModel.DATA_LOG_TIME_INTERVAL);
+            postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
+            
+            dataOK |= MtkModel.C_OK_DIST;
+            setAvailable(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+            postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
 		}
 		
 		return result;		

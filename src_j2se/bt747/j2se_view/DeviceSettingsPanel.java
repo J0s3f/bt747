@@ -123,8 +123,12 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 break;
             case MtkModel.DATA_LOG_TIME_INTERVAL:
                 ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-                txtLogTimeInterval.setText(JavaLibBridge.toString(
-                        m.getLogTimeInterval() / 10., 1));
+                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
+                	txtLogTimeInterval.setText("" + m.getLogTimeInterval());
+                } else {
+                	txtLogTimeInterval.setText(JavaLibBridge.toString(
+                			m.getLogTimeInterval() / 10., 1));                	
+                }
                 break;
             case MtkModel.DATA_LOG_SPEED_INTERVAL:
                 ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
@@ -133,8 +137,12 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 break;
             case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
                 ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
-                txtLogDistanceInterval.setText(JavaLibBridge.toString(m
-                        .getLogDistanceInterval() / 10., 1));
+                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
+                	txtLogDistanceInterval.setText("" + m.getLogDistanceInterval());
+                } else {
+                	txtLogDistanceInterval.setText(JavaLibBridge.toString(m
+                			.getLogDistanceInterval() / 10., 1));
+                }
                 break;
             case MtkModel.DATA_FIX_PERIOD:
                 txtFixPeriod.setText(""+m.getLogFixPeriod());
@@ -510,6 +518,13 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbKMH.setText(bundle.getString("BT747Main.lbKMH.text")); // NOI18N
 
         ckLogTimeActive.setText(bundle.getString("BT747Main.ckLogTimeActive.text")); // NOI18N
+        ckLogTimeActive.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+            	if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX 
+            			&& ckLogTimeActive.isSelected())
+            			ckLogDistanceActive.setSelected(false);
+            }
+        });
 
         lbAbove.setText(bundle.getString("BT747Main.lbAbove.text")); // NOI18N
 
@@ -518,6 +533,13 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbDistanceEvery.setText(bundle.getString("BT747Main.lbDistanceEvery.text")); // NOI18N
 
         ckLogDistanceActive.setText(bundle.getString("BT747Main.ckLogDistanceActive.text")); // NOI18N
+        ckLogDistanceActive.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+            	if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX 
+            			&& ckLogDistanceActive.isSelected())
+            			ckLogTimeActive.setSelected(false);
+            }
+        });
 
         txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
         txtLogSpeedInterval.setInputVerifier(c.IntVerifier);
@@ -1168,26 +1190,39 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
 
     private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         try {
+        	boolean isPHLX = (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX);
             int value;
             if (ckLogTimeActive.isSelected()) {
-                value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval.getText()) * 10);
+                if (isPHLX)
+                	value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval.getText()));
+                else
+                	value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval.getText()) * 10);
             } else {
                 value = 0;
             }
-            c.setLogTimeInterval(value);
+            if (ckLogTimeActive.isSelected() || (!ckLogTimeActive.isSelected() && !isPHLX))
+            	c.setLogTimeInterval(value);
+            
             if (ckLogSpeedActive.isSelected()) {
                 value = (int) (JavaLibBridge.toDouble(txtLogSpeedInterval.getText()));
             } else {
                 value = 0;
             }
             c.setLogSpeedInterval(value);
+            
             if (ckLogDistanceActive.isSelected()) {
-                value = (int) (JavaLibBridge.toDouble(txtLogDistanceInterval
-                        .getText()) * 10);
+                if (isPHLX)
+                	value = (int) (JavaLibBridge.toDouble(txtLogDistanceInterval
+                			.getText()));
+                else
+                	value = (int) (JavaLibBridge.toDouble(txtLogDistanceInterval
+                			.getText()) * 10);
             } else {
                 value = 0;
             }
-            c.setLogDistanceInterval(value);
+            if (ckLogDistanceActive.isSelected() || (!ckLogDistanceActive.isSelected() && !isPHLX))
+            	c.setLogDistanceInterval(value);
+            
             c.setFixInterval(JavaLibBridge.toInt(txtFixPeriod.getText()));
         } catch (Exception e) {
             Generic
