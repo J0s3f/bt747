@@ -36,11 +36,11 @@ public class MtkModel implements EventPoster {
 
     private int logFormat = 0;
 
-    private int logTimeInterval = 0;
+    protected int logTimeInterval = 0;
 
     private int logSpeedInterval = 0;
 
-    private int logDistanceInterval = 0;
+    protected int logDistanceInterval = 0;
 
     private int logStatus = 0;
     private int initialLogMode = 0;

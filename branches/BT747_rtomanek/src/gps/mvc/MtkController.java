@@ -493,7 +493,7 @@ public class MtkController implements ProtectedDevControllerIF {
         return true;
     }
 
-    private final void setLogTimeInterval(final int value) {
+    protected void setLogTimeInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -503,7 +503,7 @@ public class MtkController implements ProtectedDevControllerIF {
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
 
-    private final void setLogDistanceInterval(final int value) {
+    protected void setLogDistanceInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
@@ -518,7 +518,7 @@ public class MtkController implements ProtectedDevControllerIF {
                 + z_value);
     }
 
-    private final void setLogSpeedInterval(final int value) {
+    protected void setLogSpeedInterval(final int value) {
         int z_value = value;
         if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
