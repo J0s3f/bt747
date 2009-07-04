@@ -205,22 +205,22 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // }
                 if (r.hasPosition()) {
                     rec.append("points.push(new GLatLng(");
-                    rec.append(JavaLibBridge.toString(r.latitude, 6));
+                    rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
                     rec.append(',');
-                    rec.append(JavaLibBridge.toString(r.longitude, 6));
+                    rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
                     rec.append("));");
 
-                    if (r.latitude < minlat) {
-                        minlat = r.latitude;
+                    if (r.getLatitude() < minlat) {
+                        minlat = r.getLatitude();
                     }
-                    if (r.latitude > maxlat) {
-                        maxlat = r.latitude;
+                    if (r.getLatitude() > maxlat) {
+                        maxlat = r.getLatitude();
                     }
-                    if (r.longitude < minlon) {
-                        minlon = r.longitude;
+                    if (r.getLongitude() < minlon) {
+                        minlon = r.getLongitude();
                     }
-                    if (r.longitude > maxlon) {
-                        maxlon = r.longitude;
+                    if (r.getLongitude() > maxlon) {
+                        maxlon = r.getLongitude();
                     }
                 }
                 // //

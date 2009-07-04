@@ -270,195 +270,178 @@ public class GPSKMLFile extends GPSFile {
     public final void writeRecord(final GPSRecord r) {
         super.writeRecord(r);
 
-            rec.setLength(0);
-            if (ptFilters[currentFilter].doFilter(r)) {
-                String dateString = "";
-                if (r.hasUtc()) {
-                    dateString = t.getYear() + "-"
-                            + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
-                            + "-" + (t.getDay() < 10 ? "0" : "") + t.getDay();
+        rec.setLength(0);
+        if (ptFilters[currentFilter].doFilter(r)) {
+            String dateString = "";
+            if (r.hasUtc()) {
+                dateString = t.getYear() + "-"
+                        + (t.getMonth() < 10 ? "0" : "") + t.getMonth() + "-"
+                        + (t.getDay() < 10 ? "0" : "") + t.getDay();
+            }
+
+            if (isWayType
+                    || (isTrackType && (isIncludeTrkName || isTrkComment))) {
+                if (isDateFolder) {
+                    if (!dateString.equals(currentWayFolderDate)) {
+                        rec.append("</Folder>");
+                        isDateFolder = false;
+                    }
+                }
+                if (!isDateFolder) {
+                    rec.append("<Folder><name>");
+                    currentWayFolderDate = dateString;
+                    rec.append(dateString);
+                    rec.append("</name>\r\n");
+                    isDateFolder = true;
+                }
+                rec.append("<Placemark>\r\n");
+                if (!isTrackType || isIncludeTrkName) {
+                    rec.append("<name>");
+                    if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
+                        rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
+                                + t.getHour() + ":"
+                                + (t.getMinute() < 10 ? "0" : "")
+                                + t.getMinute() + ":"
+                                + (t.getSecond() < 10 ? "0" : "")
+                                + t.getSecond());
+                    } else {
+                        if (r.hasRecCount()) {
+                            rec.append("IDX: ");
+                            rec.append(r.getRecCount());
+                        }
+                    }
+                    rec.append("</name>\r\n");
+                }
+                if (isTrackType) {
+                    rec.append("<visibility>0</visibility>\r\n");
                 }
 
-                if (isWayType
-                        || (isTrackType && (isIncludeTrkName || isTrkComment))) {
-                    if (isDateFolder) {
-                        if (!dateString.equals(currentWayFolderDate)) {
-                            rec.append("</Folder>");
-                            isDateFolder = false;
-                        }
-                    }
-                    if (!isDateFolder) {
-                        rec.append("<Folder><name>");
-                        currentWayFolderDate = dateString;
-                        rec.append(dateString);
-                        rec.append("</name>\r\n");
-                        isDateFolder = true;
-                    }
-                    rec.append("<Placemark>\r\n");
-                    if (!isTrackType || isIncludeTrkName) {
-                        rec.append("<name>");
-                        if ((r.hasUtc())
-                                && (selectedFileFields.hasUtc())) {
-                            rec.append("TIME: "
-                                    + (t.getHour() < 10 ? "0" : "")
-                                    + t.getHour() + ":"
-                                    + (t.getMinute() < 10 ? "0" : "")
-                                    + t.getMinute() + ":"
-                                    + (t.getSecond() < 10 ? "0" : "")
-                                    + t.getSecond());
+                if (isWayType || isTrkComment) {
+                    rec.append("<description>");
+                    rec.append("<![CDATA[");
+                    CommonOut.getHtml(rec, r, selectedFileFields, t,
+                            recordNbrInLogs, imperial);
+                    rec.append("]]>");
+                    rec.append("</description>");
+                }
+
+                if (((r.hasUtc()) && (selectedFileFields.hasUtc()))) {
+                    rec.append("<TimeStamp><when>");
+                    if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
+                        rec.append(dateString + "T"
+                                + (t.getHour() < 10 ? "0" : "") + t.getHour()
+                                + ":" + (t.getMinute() < 10 ? "0" : "")
+                                + t.getMinute() + ":"
+                                + (t.getSecond() < 10 ? "0" : ""));
+                        if (r.milisecond == 0) {
+                            rec.append(t.getSecond());
                         } else {
-                            if (r.hasRecCount()) {
-                                rec.append("IDX: ");
-                                rec.append(r.getRecCount());
-                            }
+                            rec.append(JavaLibBridge.toString((float) t
+                                    .getSecond()
+                                    + r.milisecond / 1000.0, 3));
                         }
-                        rec.append("</name>\r\n");
+                        rec.append("Z");
                     }
-                    if (isTrackType) {
-                        rec.append("<visibility>0</visibility>\r\n");
+                    rec.append("</when></TimeStamp>\r\n");
+                }
+
+                if ((r.hasRcr())
+                // && (selectedFileFields.hasRcr())
+                ) {
+                    rec.append("<styleUrl>");
+                    String style = CommonOut.getRCRstr(r);
+
+                    if ((style.length() > 1)
+                            && ((r.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
+                        style = "M";
                     }
+                    rec.append("#Style");
+                    rec.append(style);
+                    rec.append("</styleUrl>\r\n");
+                }
 
-                    if (isWayType || isTrkComment) {
-                        rec.append("<description>");
-                        rec.append("<![CDATA[");
-                        CommonOut.getHtml(rec, r,
-                                selectedFileFields, t, recordNbrInLogs,
-                                imperial);
-                        rec.append("]]>");
-                        rec.append("</description>");
-                    }
-
-                    if (((r.hasUtc()) && (selectedFileFields
-                            .hasUtc()))) {
-                        rec.append("<TimeStamp><when>");
-                        if ((r.hasUtc())
-                                && (selectedFileFields.hasUtc())) {
-                            rec.append(dateString + "T"
-                                    + (t.getHour() < 10 ? "0" : "")
-                                    + t.getHour() + ":"
-                                    + (t.getMinute() < 10 ? "0" : "")
-                                    + t.getMinute() + ":"
-                                    + (t.getSecond() < 10 ? "0" : ""));
-                            if (r.milisecond == 0) {
-                                rec.append(t.getSecond());
-                            } else {
-                                rec.append(JavaLibBridge.toString((float) t
-                                        .getSecond()
-                                        + r.milisecond / 1000.0, 3));
-                            }
-                            rec.append("Z");
-                        }
-                        rec.append("</when></TimeStamp>\r\n");
-                    }
-
-                    if ((r.hasRcr())
-                            //&& (selectedFileFields.hasRcr())
-                            ) {
-                        rec.append("<styleUrl>");
-                        String style = CommonOut.getRCRstr(r);
-
-                        if ((style.length() > 1)
-                                && ((r.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
-                            style = "M";
-                        }
-                        rec.append("#Style");
-                        rec.append(style);
-                        rec.append("</styleUrl>\r\n");
-                    }
-
-                    if (((r.hasLongitude()) && (selectedFileFields
-                            .hasLongitude()))
-                            && ((r.hasLatitude()) && (selectedFileFields
-                                    .hasLatitude()))) {
-                        rec.append("<Point>\r\n");
-                        rec.append("<coordinates>");
-                        rec.append(JavaLibBridge.toString(r.longitude, 6));
+                if (r.hasPosition() && selectedFileFields.hasPosition()) {
+                    rec.append("<Point>\r\n");
+                    rec.append("<coordinates>");
+                    rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                    rec.append(",");
+                    rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                    if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                         rec.append(",");
-                        rec.append(JavaLibBridge.toString(r.latitude, 6));
+                        rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                    }
+                    rec.append("</coordinates>");
+                    rec.append("</Point>\r\n");
+                }
+
+                rec.append("</Placemark>\r\n");
+                writeTxt(rec.toString());
+                rec.setLength(0);
+            } else if (isPathType) {
+                rec.setLength(0);
+                if (r.hasPosition() && selectedFileFields.hasPosition()) {
+                    boolean isChangeLineString = false;
+
+                    if (needsToSplitTrack) {
+                        endTrack();
+                    }
+                    if (!trackStarted) {
+                        String name = "";
+                        if (r.hasUtc()) {
+                            name = CommonOut.getDateTimeStr(r.getUtc());
+                        }
+                        startTrack(name);
+                    }
+                    if (((r.hasHeight()) && (selectedFileFields.hasHeight())) != (altitudeMode == 0)) {
+                        // Must change altitude mode because height
+                        // availability changed.
+                        isChangeLineString = true;
+                    }
+
+                    if (isLineString && (isChangeLineString)) {
+                        rec.append("</coordinates>");
+                        rec.append("</LineString>");
+                        isLineString = false;
+                    }
+                    if (!isLineString) {
+                        isLineString = true;
+                        rec.append("<LineString>\r\n"
+                                + "    <extrude>1</extrude>\r\n"
+                                + "    <tessellate>1</tessellate>\r\n"
+                                + "    <altitudeMode>");
                         if ((r.hasHeight())
                                 && (selectedFileFields.hasHeight())) {
-                            rec.append(",");
-                            rec.append(JavaLibBridge.toString(r.height, 3));
+                            altitudeMode = 0;
+                            // clampToGround, relativeToGround, absolute
+                            rec.append(altitudeModeIfHeight);
+                        } else {
+                            rec.append(GPSKMLFile.CLAMPED_HEIGHT);
+                            altitudeMode = 1;
                         }
-                        rec.append("</coordinates>");
-                        rec.append("</Point>\r\n");
+                        rec.append("</altitudeMode><coordinates>\r\n");
                     }
-
-                    rec.append("</Placemark>\r\n");
+                    rec.append("        ");
+                    rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                    rec.append(",");
+                    rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                    if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
+                        rec.append(",");
+                        rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                    }
+                    rec.append("\r\n");
                     writeTxt(rec.toString());
                     rec.setLength(0);
-                } else if (isPathType) {
-                    rec.setLength(0);
-                    if ((r.hasLongitude())
-                            && (selectedFileFields.hasLongitude())
-                            && (r.hasLatitude())
-                            && (selectedFileFields.hasLatitude())) {
-                        boolean isChangeLineString = false;
-
-                        boolean isTimeSplit;
-                        isTimeSplit = (r.hasUtc())
-                                && ((r.utc - previousTime) > trackSepTime);
-                        if (isTimeSplit) {
-                            endTrack();
-                        }
-                        if (!trackStarted) {
-                            String name = "";
-                            if (r.hasUtc()) {
-                                name = CommonOut.getDateTimeStr(r.utc);
-                            }
-                            startTrack(name);
-                        }
-                        if (((r.hasHeight()) && (selectedFileFields
-                                .hasHeight())) != (altitudeMode == 0)) {
-                            // Must change altitude mode because height
-                            // availability changed.
-                            isChangeLineString = true;
-                        }
-
-                        if (isLineString && (isChangeLineString)) {
-                            rec.append("</coordinates>");
-                            rec.append("</LineString>");
-                            isLineString = false;
-                        }
-                        if (!isLineString) {
-                            isLineString = true;
-                            rec.append("<LineString>\r\n"
-                                    + "    <extrude>1</extrude>\r\n"
-                                    + "    <tessellate>1</tessellate>\r\n"
-                                    + "    <altitudeMode>");
-                            if ((r.hasHeight())
-                                    && (selectedFileFields.hasHeight())) {
-                                altitudeMode = 0;
-                                // clampToGround, relativeToGround, absolute
-                                rec.append(altitudeModeIfHeight);
-                            } else {
-                                rec.append(GPSKMLFile.CLAMPED_HEIGHT);
-                                altitudeMode = 1;
-                            }
-                            rec.append("</altitudeMode><coordinates>\r\n");
-                        }
-                        rec.append("        ");
-                        rec.append(JavaLibBridge.toString(r.longitude, 6));
-                        rec.append(",");
-                        rec.append(JavaLibBridge.toString(r.latitude, 6));
-                        if ((r.hasHeight())
-                                && (selectedFileFields.hasHeight())) {
-                            rec.append(",");
-                            rec.append(JavaLibBridge.toString(r.height, 3));
-                        }
-                        rec.append("\r\n");
-                        writeTxt(rec.toString());
-                        rec.setLength(0);
-                    }
                 }
-
             }
+
+        }
     }
 
     /*
      * (non-Javadoc)
      * 
      * @see gps.log.out.GPSFile#createFile(int, java.lang.String, boolean)
+     * 
      * @Override
      */
     protected int createFile(final int utc, final String extra_ext,

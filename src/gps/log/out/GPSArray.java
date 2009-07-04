@@ -127,13 +127,11 @@ public final class GPSArray extends GPSFile {
             // This log item is to be transcribed in the output file.
 
             // StringBuffer rec=new StringBuffer(1024);
-            boolean isTimeSPlit;
-            isTimeSPlit = (s.hasUtc())
-                    && ((s.utc - previousTime) > trackSepTime);
-            if (isNewTrack || isTimeSPlit) {
+
+            if (isNewTrack || needsToSplitTrack) {
                 isNewTrack = false;
                 if ((s.hasPosition())) {
-                    if (!isTimeSPlit) {
+                    if (!needsToSplitTrack) {
                         track.addElement(s.cloneRecord());
                         endTrack();
                     } else {

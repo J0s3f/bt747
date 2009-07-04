@@ -278,6 +278,10 @@ public class AppSettings implements BT747Thread {
      * OSM password.
      */
     public final static int OSMPASS = 58;
+    /**
+     * New track when logger is switched on.
+     */
+    public final static int IS_NEW_TRACK_WHEN_LOG_ON = 59;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -504,7 +508,9 @@ public class AppSettings implements BT747Thread {
         case 42:
             setStringOpt(OSMLOGIN, "");
             setStringOpt(OSMPASS, "");
-            setStringOpt(AppSettings.VERSION, "0.43");
+        case 43:
+            setBooleanOpt(IS_NEW_TRACK_WHEN_LOG_ON, false);
+            setStringOpt(AppSettings.VERSION, "0.44");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1192,6 +1198,8 @@ public class AppSettings implements BT747Thread {
 
     private final void setStringOpt(final int eventType, final String src,
             final int idx, final int size) {
+        boolean change;
+        change = getStringOpt(idx, size).equals(src);
         Settings
                 .setAppSettings(Settings.getAppSettings().substring(0, idx)
                         + src.substring(0, (src.length() < size) ? src
@@ -1203,7 +1211,7 @@ public class AppSettings implements BT747Thread {
                                 .getAppSettings().substring(idx + size,
                                         Settings.getAppSettings().length())
                                 : ""));
-        if (eventType != 0) {
+        if (change && eventType != 0) {
             postEvent(ModelEvent.SETTING_CHANGE, "" + eventType);
         }
     }
@@ -1260,8 +1268,8 @@ public class AppSettings implements BT747Thread {
     private final BT747Semaphore listenerSema = JavaLibBridge
             .getSemaphoreInstance(1);
     /**
-     * List of actions regarding listeners.
-     * Protected with listenerActionsSema.
+     * List of actions regarding listeners. Protected with
+     * listenerActionsSema.
      */
     private final BT747Vector listenerActions = JavaLibBridge
             .getVectorInstance();
@@ -1288,10 +1296,11 @@ public class AppSettings implements BT747Thread {
     }
 
     /**
-     * Indicates if there are changes to the listeners that are waiting in the action list.
-     * Protected with listenerActionsSema.
+     * Indicates if there are changes to the listeners that are waiting in the
+     * action list. Protected with listenerActionsSema.
      */
     private boolean hasListenerChangeAction = false;
+
     /** add a listener to event thrown by this class */
     public final void addListener(final ModelListener l) {
         listenerActionsSema.down();
@@ -1337,7 +1346,8 @@ public class AppSettings implements BT747Thread {
                 }
             }
             // listenerSema.up(); // done in parent
-            hasListenerChangeAction = false; // All listener change actions treated
+            hasListenerChangeAction = false; // All listener change actions
+                                             // treated
         }
         listenerActionsSema.up();
     }
@@ -1352,68 +1362,73 @@ public class AppSettings implements BT747Thread {
 
     public final void postEvent(final ModelEvent e) {
         listenerActionsSema.down();
-        //Generic.debug("Adding "+e);
+        // Generic.debug("Adding "+e);
         listenerActions.addElement(new ListenerAction(e));
         listenerActionsSema.up();
     }
-    
+
     private final void doEvent(final ModelEvent e) {
         listenerSema.down();
         // Update list of listeners just before posting events.
         // This way the listeners list should be ok.
         final BT747HashSet it = listeners.iterator();
-        //Generic.debug("Sending "+e);
+        // Generic.debug("Sending "+e);
         while (it.hasNext()) {
             final ModelListener l = (ModelListener) it.next();
             l.modelEvent(new ModelEvent(e));
         }
         listenerSema.up();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.BT747Thread#run()
      */
     public void run() {
         updateListeners();
         listenerActionsSema.down();
         // Get current number of events - only handle as many in this 'run'.
-        int maxNumEvents = listenerActions.size(); 
+        int maxNumEvents = listenerActions.size();
         listenerActionsSema.up();
         ListenerAction la;
-        while(maxNumEvents>0) {
+        while (maxNumEvents > 0) {
             updateListeners();
             listenerActionsSema.down();
             la = null;
-            if(listenerActions.size()>0) {
+            if (listenerActions.size() > 0) {
                 la = (ListenerAction) listenerActions.elementAt(0);
-                if(la.action == ListenerAction.EVENT) {
-                listenerActions.removeElementAt(0);
-                maxNumEvents--;
+                if (la.action == ListenerAction.EVENT) {
+                    listenerActions.removeElementAt(0);
+                    maxNumEvents--;
                 }
             }
             listenerActionsSema.up();
-            if(la != null && la.action == ListenerAction.EVENT) {
+            if (la != null && la.action == ListenerAction.EVENT) {
                 doEvent(la.e);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.BT747Thread#started()
      */
     public void started() {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.BT747Thread#stopped()
      */
     public void stopped() {
         // TODO Auto-generated method stub
-        
-    }
 
+    }
 
     private static final int C_PORTNBR_IDX = 0;
     private static final int C_PORTNBR_SIZE = 8;
@@ -1651,8 +1666,11 @@ public class AppSettings implements BT747Thread {
     private static final int C_OSMPASS_IDX = AppSettings.C_OSMLOGIN_IDX
             + AppSettings.C_OSMLOGIN_SIZE;
     private static final int C_OSMPASS_SIZE = 20;
-    private static final int C_NEXT_IDX = AppSettings.C_OSMPASS_IDX
+    private static final int C_ISNEWTRACKWHENLOGON_IDX = AppSettings.C_OSMPASS_IDX
             + AppSettings.C_OSMPASS_SIZE;
+    private static final int C_ISNEWTRACKWHENLOGON_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.C_ISNEWTRACKWHENLOGON_IDX
+            + AppSettings.C_ISNEWTRACKWHENLOGON_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1823,6 +1841,9 @@ public class AppSettings implements BT747Thread {
                     AppSettings.C_OSMLOGIN_IDX, AppSettings.C_OSMLOGIN_SIZE },
             { AppSettings.STRING, AppSettings.OSMPASS,
                     AppSettings.C_OSMPASS_IDX, AppSettings.C_OSMPASS_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_NEW_TRACK_WHEN_LOG_ON,
+                    AppSettings.C_ISNEWTRACKWHENLOGON_IDX,
+                    AppSettings.C_ISNEWTRACKWHENLOGON_SIZE },
 
     // End of list
     };

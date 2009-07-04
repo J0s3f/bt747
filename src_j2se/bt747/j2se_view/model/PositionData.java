@@ -394,22 +394,22 @@ public class PositionData extends AbstractBean {
             break;
         case DataTypes.UTC_VALUE:
             if (g.hasUtc()) {
-                return Long.valueOf(g.utc);
+                return Long.valueOf(g.getUtc());
             }
             break;
         case DataTypes.GPS_DATE:
             if (g.hasUtc()) {
-                return CommonOut.getDateStr(g.utc);
+                return CommonOut.getDateStr(g.getUtc());
             }
             break;
         case DataTypes.GPS_TIME:
             if (g.hasUtc()) {
-                return CommonOut.getTimeStr(g.utc);
+                return CommonOut.getTimeStr(g.getUtc());
             }
             break;
         case DataTypes.GPS_DATETIME:
             if (g.hasUtc()) {
-                return CommonOut.getDateTimeStr(g.utc);
+                return CommonOut.getDateTimeStr(g.getUtc());
             }
             break;
 
@@ -430,89 +430,89 @@ public class PositionData extends AbstractBean {
             break;
         case DataTypes.FIX_VALID:
             if (g.hasValid()) {
-                return CommonOut.getFixText(g.valid);
+                return CommonOut.getFixText(g.getValid());
             }
             break;
         case DataTypes.LATITUDE_POSITIVE:
             if (g.hasLatitude()) {
-                if (g.latitude < 0.) {
-                    return -g.latitude;
+                if (g.getLatitude() < 0.) {
+                    return -g.getLatitude();
                 } else {
-                    return g.latitude;
+                    return g.getLatitude();
                 }
             }
             break;
         case DataTypes.LONGITUDE_POSITIVE:
             if (g.hasLongitude()) {
-                if (g.longitude < 0.) {
-                    return -g.longitude;
+                if (g.getLongitude() < 0.) {
+                    return -g.getLongitude();
                 } else {
-                    return g.longitude;
+                    return g.getLongitude();
                 }
             }
             break;
         case DataTypes.LATITUDE:
             if (g.hasLatitude()) {
-                return Double.valueOf(g.latitude);
+                return Double.valueOf(g.getLatitude());
             }
             break;
         case DataTypes.LONGITUDE:
             if (g.hasLongitude()) {
-                return Double.valueOf(g.longitude);
+                return Double.valueOf(g.getLongitude());
             }
             break;
         case DataTypes.HEIGHT_METERS:
             if (g.hasHeight()) {
-                return Float.valueOf(g.height);
+                return Float.valueOf(g.getHeight());
             }
             break;
         case DataTypes.HEIGHT_FEET:
             break;
         case DataTypes.SPEED:
             if (g.hasSpeed()) {
-                return Float.valueOf(g.speed);
+                return Float.valueOf(g.getSpeed());
             }
             break;
         case DataTypes.SPEED_MPH:
             break;
         case DataTypes.HEADING:
             if (g.hasHeading()) {
-                return Float.valueOf(g.heading);
+                return Float.valueOf(g.getHeading());
             }
             break;
         case DataTypes.DSTA:
             if (g.hasDsta()) {
-                return Integer.valueOf(g.dsta);
+                return Integer.valueOf(g.getDsta());
             }
             break;
         case DataTypes.DAGE:
             if (g.hasDage()) {
-                return Integer.valueOf(g.dage);
+                return Integer.valueOf(g.getDage());
             }
             break;
         case DataTypes.PDOP:
             if (g.hasPdop()) {
-                return Float.valueOf(g.pdop / 100.0f);
+                return Float.valueOf(g.getPdop() / 100.0f);
             }
             break;
         case DataTypes.HDOP:
             if (g.hasHdop()) {
-                return Float.valueOf(g.hdop / 100.0f);
+                return Float.valueOf(g.getHdop() / 100.0f);
             }
             break;
         case DataTypes.VDOP:
             if (g.hasVdop()) {
-                return Float.valueOf(g.vdop / 100.0f);
+                return Float.valueOf(g.getVdop() / 100.0f);
             }
             break;
         case DataTypes.NSAT:
             if (g.hasNsat()) {
-                return Integer.valueOf(g.nsat);
+                return Integer.valueOf(g.getNsat());
             }
             break;
         case DataTypes.FIXMODE:
             if (g.hasValid()) {
-                return CommonOut.getFixText(g.valid);
+                return CommonOut.getFixText(g.getValid());
             }
             break;
         case DataTypes.SID:
@@ -581,7 +581,7 @@ public class PositionData extends AbstractBean {
                 g.latitude = (Double) value;
                 break;
             case DataTypes.LONGITUDE:
-                g.longitude = g.longitude;
+                g.longitude = (Double) value;;
                 break;
             case DataTypes.HEIGHT_METERS:
                 break;

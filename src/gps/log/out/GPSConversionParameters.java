@@ -45,6 +45,11 @@ public final class GPSConversionParameters {
      * OSM Password (string).
      */
     public final static String OSM_PASS = "osm-pass";
+    
+    /**
+     * Indicates if a new track is needed when the logger is switched on.
+     */
+    public final static String NEW_TRACK_WHEN_LOG_ON = "log-on-trk";
 
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);

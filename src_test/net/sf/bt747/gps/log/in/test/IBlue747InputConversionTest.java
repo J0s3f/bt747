@@ -34,24 +34,24 @@ public class IBlue747InputConversionTest extends TestConvertInBase {
         assertEquals("Idx", 2, trkPt1.recCount);
         assertEquals("Azi len", 9, trkPt1.azi.length);
         assertEquals("Azi[2]", 318, trkPt1.azi[2]);
-        assertEquals("Dage", 0, trkPt1.dage);
-        assertEquals("Dsta", 0, trkPt1.dsta);
+        assertEquals("Dage", 0, trkPt1.getDage());
+        assertEquals("Dsta", 0, trkPt1.getDsta());
         assertEquals("Ele len", 9, trkPt1.ele.length);
         assertEquals("Ele[5]",49 , trkPt1.ele[5]);
         assertEquals("Geoid", false, trkPt1.hasGeoid());
-        assertEquals("Hdop", 199, trkPt1.hdop);
-        assertEquals("Heading", 230.70735, trkPt1.heading, .00001);
-        assertEquals("Height", 142.15157, trkPt1.height, 0.00001);
+        assertEquals("Hdop", 199, trkPt1.getHdop());
+        assertEquals("Heading", 230.70735, trkPt1.getHeading(), .00001);
+        assertEquals("Height", 142.15157, trkPt1.getHeight(), 0.00001);
         assertEquals("Logdistance", 100, trkPt1.logDistance);
         assertEquals("Logspeed", 0, trkPt1.logSpeed);
         assertEquals("LogPeriod", 10, trkPt1.logPeriod);
-        assertEquals("Latitude", 48.939801305310034, trkPt1.latitude,
+        assertEquals("Latitude", 48.939801305310034, trkPt1.getLatitude(),
                 0.000000000000001);
-        assertEquals("Longitude", 2.208577351858054, trkPt1.longitude,
+        assertEquals("Longitude", 2.208577351858054, trkPt1.getLongitude(),
                 0.000000000000001);
         assertEquals("Milisecond", 500, trkPt1.milisecond);
         assertEquals("Nsat", 1545, trkPt1.getNsat());
-        assertEquals("PDOP", 447, trkPt1.pdop);
+        assertEquals("PDOP", 447, trkPt1.getPdop());
         assertEquals("RCR", 1, trkPt1.rcr);
         assertEquals("recCount", 2, trkPt1.recCount);
         assertEquals("sid", 9, trkPt1.sid.length);
@@ -60,11 +60,11 @@ public class IBlue747InputConversionTest extends TestConvertInBase {
         assertEquals("sid[6]", 17, trkPt1.sid[6]);
         assertEquals("sidinuse[5]", true, trkPt1.sidinuse[5]);
         assertEquals("snr[8]", 21, trkPt1.snr[8]);
-        assertEquals("speed", 0.20044835, trkPt1.speed, 0.00000001);
+        assertEquals("speed", 0.20044835, trkPt1.getSpeed(), 0.00000001);
         assertEquals("tagutc", 0, trkPt1.tagutc);
-        assertEquals("utc", 1217076501, trkPt1.utc);
-        assertEquals("valid", 2, trkPt1.valid);
-        assertEquals("vdop", 401, trkPt1.vdop);
+        assertEquals("utc", 1217076501, trkPt1.getUtc());
+        assertEquals("valid", 2, trkPt1.getValid());
+        assertEquals("vdop", 401, trkPt1.getVdop());
         assertEquals("voxStr", false, trkPt1.hasVoxStr());
     }
 
