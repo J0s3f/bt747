@@ -604,9 +604,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[offsetInBuffer + 11]) << 24;
             // There is a special operation here
             final int type = 0xFF & bytes[offsetInBuffer + 7];
-            if(type!=7&&type!=3&&type!=4&&type!=5) {
-            System.out.println("Type = "+type + ", value = " + value);
-            }
+//            if(type!=7&&type!=3&&type!=4&&type!=5) {
+//            System.out.println("Type = "+type + ", value = " + value);
+//            }
             switch (type) {
             case 0x02: // logBitMaskChange
                 newLogFormat = value;
@@ -709,7 +709,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
     
     private int prevLogModeRecNbr = 0;
     private final void setLogMode(final GPSFileConverterInterface gpsFile, final int value) {
-        System.out.println("diff "+value+" "+logMode+" "+prevLogModeRecNbr+" "+recCount);
+        //System.out.println("diff "+value+" "+logMode+" "+prevLogModeRecNbr+" "+recCount);
         if (((logMode & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))>
                 ((value & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))
                 && (prevLogModeRecNbr==recCount)) {
