@@ -198,21 +198,42 @@ public class GPSGPXFile extends GPSFile {
      */
     private static final char[] zeros = "0000000".toCharArray();
 
+    private boolean isNeedTrackSegment = false;
+
     public final void writeRecord(final GPSRecord r) {
         super.writeRecord(r);
 
-        if (!ptFilters[currentFilter].doFilter(r)) {
-            // The track is interrupted by a removed log item.
-            // Break the track in the output file
-            if (!isWayType && !isNewTrack && !firstRecord && !ignoreBadPoints) {
-                if (isTrkSegSplitOnlyWhenSmall && needsToSplitTrack && !logOn) {
-                    writeTrkSegSplit();
+        final boolean isNeededRecord = ptFilters[currentFilter].doFilter(r);
+        boolean isNeedTrackSplit = needsToSplitTrack;
+        /**
+         * Handle split of track.
+         */
+        if (!isNeededRecord) {
+            // The current position is not used in the track.
+            // Three possibilies:
+            // - No track splitting;
+            // - Create a track segment;
+            // - Create a new track.
+
+            if (!isWayType // Do nothing if we are handling waypoints
+            ) {
+                if (isTrkSegSplitOnlyWhenSmall) {
+                    isNeedTrackSegment = true;
                 } else {
-                    writeDataFooter();
-                    writeDataHeader();
+                    isNeedTrackSplit |= !ignoreBadPoints;
                 }
             }
-        } else {
+        }
+        if (!isNewTrack && !firstRecord) {
+            // Only if we do not have a first track and we have written some
+            // records.
+            if (isNeedTrackSplit) {
+                writeDataFooter();
+                writeDataHeader();
+            }
+        }
+
+        if (isNeededRecord) {
             // This log item is to be transcribed in the output file.
 
             String timeStr = ""; // String that will represent time
@@ -304,6 +325,8 @@ public class GPSGPXFile extends GPSFile {
                 }
 
                 writeActualDataHeader();
+            } else if (isNeedTrackSegment) {
+                writeTrkSegSplit();
             }
             // " <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
             // " <ele>12.863281</ele>"+
@@ -547,6 +570,7 @@ public class GPSGPXFile extends GPSFile {
             rec.setLength(0);
 
             isNewTrack = false;
+            isNeedTrackSegment = false;
 
         }
     }
