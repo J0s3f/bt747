@@ -49,6 +49,7 @@ public final class WabaGeneric {
     // TODO: Improve next code - for the moment it is functional.
 
     public final static void addThread(final BT747Thread t, final boolean b) {
+        System.out.println("AddThread"+t+" "+b);
         // MainWindow.getMainWindow().addThread(t, b);
         if (!oos.contains(t)) {
             removeIfStoppedThread(t);
