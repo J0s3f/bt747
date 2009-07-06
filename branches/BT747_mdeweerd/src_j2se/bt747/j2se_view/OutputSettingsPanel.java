@@ -96,6 +96,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
 
         tfTrackSeparationTime.setText(Integer.toString(m
                 .getIntOpt(AppSettings.TRKSEP)));
+        tfTrackSeparationDistance.setText(Integer.toString(m
+                .getIntOpt(AppSettings.SPLIT_DISTANCE)));
         int index = 0;
         switch (m.getOutputFileSplitType()) {
         case 0:
@@ -188,6 +190,9 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         tfTrackSeparationTime = new javax.swing.JTextField();
         lbMinPause = new javax.swing.JLabel();
         cbNewTrackWhenLogOn = new javax.swing.JCheckBox();
+        lbNewTrackAfterDistance = new javax.swing.JLabel();
+        tfTrackSeparationDistance = new javax.swing.JTextField();
+        lbMetersAfter = new javax.swing.JLabel();
         pnFileOutputFields = new javax.swing.JPanel();
         pnFileOutputFieldInner = new javax.swing.JPanel();
         pnFileReason = new javax.swing.JPanel();
@@ -375,6 +380,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
 
         tfTrackSeparationTime.setText(bundle.getString("BT747Main.tfTrackSeparationTime.text")); // NOI18N
         tfTrackSeparationTime.setToolTipText(bundle.getString("BT747Main.tfTrackSeparationTime.toolTipText")); // NOI18N
+        tfTrackSeparationTime.setInputVerifier(c.IntVerifier);
         tfTrackSeparationTime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfTrackSeparationTimeFocusLost(evt);
@@ -391,20 +397,38 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             }
         });
 
+        lbNewTrackAfterDistance.setText(bundle.getString("OutputSettingsPanel.lbNewTrackAfterDistance.text")); // NOI18N
+        lbNewTrackAfterDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+
+        tfTrackSeparationDistance.setText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.text")); // NOI18N
+        tfTrackSeparationDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+        tfTrackSeparationDistance.setInputVerifier(c.IntVerifier);
+        tfTrackSeparationDistance.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfTrackSeparationDistanceFocusLost(evt);
+            }
+        });
+
+        lbMetersAfter.setText(bundle.getString("OutputSettingsPanel.lbMetersAfter.text")); // NOI18N
+        lbMetersAfter.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+
         org.jdesktop.layout.GroupLayout pnSeparationLayout = new org.jdesktop.layout.GroupLayout(pnSeparation);
         pnSeparation.setLayout(pnSeparationLayout);
         pnSeparationLayout.setHorizontalGroup(
             pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnSeparationLayout.createSequentialGroup()
-                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnSeparationLayout.createSequentialGroup()
-                        .add(lbNewTrackAfter)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(lbMinPause))
-                    .add(cbNewTrackWhenLogOn))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(lbNewTrackAfter)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbMinPause))
+            .add(pnSeparationLayout.createSequentialGroup()
+                .add(lbNewTrackAfterDistance)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbMetersAfter))
+            .add(cbNewTrackWhenLogOn)
         );
         pnSeparationLayout.setVerticalGroup(
             pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -414,8 +438,12 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                     .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lbMinPause))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbNewTrackWhenLogOn)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbNewTrackAfterDistance)
+                    .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbMetersAfter))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbNewTrackWhenLogOn))
         );
 
         pnFileOutputFields.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileOutputFields.border.title"))); // NOI18N
@@ -1216,6 +1244,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 evt.getStateChange() == java.awt.event.ItemEvent.SELECTED);
     }//GEN-LAST:event_cbNewTrackWhenLogOnItemStateChanged
 
+    private void tfTrackSeparationDistanceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTrackSeparationDistanceFocusLost
+                c.setIntOpt(AppSettings.SPLIT_DISTANCE, Integer
+                .parseInt(tfTrackSeparationDistance.getText()));
+}//GEN-LAST:event_tfTrackSeparationDistanceFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
@@ -1254,8 +1287,10 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbLanguage;
+    private javax.swing.JLabel lbMetersAfter;
     private javax.swing.JLabel lbMinPause;
     private javax.swing.JLabel lbNewTrackAfter;
+    private javax.swing.JLabel lbNewTrackAfterDistance;
     private javax.swing.JPanel pnFileOutputFieldInner;
     private javax.swing.JPanel pnFileOutputFields;
     private javax.swing.JPanel pnFilePosition;
@@ -1267,6 +1302,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel pnSeparation;
     private javax.swing.JPanel pnTrackPoints;
     private javax.swing.JPanel pnVarious;
+    private javax.swing.JTextField tfTrackSeparationDistance;
     private javax.swing.JTextField tfTrackSeparationTime;
     private javax.swing.JLabel txtHeight;
     private javax.swing.JLabel txtTimeZone;

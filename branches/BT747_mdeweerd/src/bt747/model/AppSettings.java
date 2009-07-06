@@ -282,6 +282,7 @@ public class AppSettings implements BT747Thread {
      * New track when logger is switched on.
      */
     public final static int IS_NEW_TRACK_WHEN_LOG_ON = 59;
+    public final static int SPLIT_DISTANCE = 60;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -508,9 +509,14 @@ public class AppSettings implements BT747Thread {
         case 42:
             setStringOpt(OSMLOGIN, "");
             setStringOpt(OSMPASS, "");
+            /* fall through */
         case 43:
             setBooleanOpt(IS_NEW_TRACK_WHEN_LOG_ON, false);
-            setStringOpt(AppSettings.VERSION, "0.44");
+            /* fall through */
+        case 44:
+            setIntOpt(SPLIT_DISTANCE, 0);
+
+            setStringOpt(AppSettings.VERSION, "0.45");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1347,7 +1353,7 @@ public class AppSettings implements BT747Thread {
             }
             // listenerSema.up(); // done in parent
             hasListenerChangeAction = false; // All listener change actions
-                                             // treated
+            // treated
         }
         listenerActionsSema.up();
     }
@@ -1669,8 +1675,11 @@ public class AppSettings implements BT747Thread {
     private static final int C_ISNEWTRACKWHENLOGON_IDX = AppSettings.C_OSMPASS_IDX
             + AppSettings.C_OSMPASS_SIZE;
     private static final int C_ISNEWTRACKWHENLOGON_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.C_ISNEWTRACKWHENLOGON_IDX
+    private static final int C_SPLIT_DISTANCE_IDX = AppSettings.C_ISNEWTRACKWHENLOGON_IDX
             + AppSettings.C_ISNEWTRACKWHENLOGON_SIZE;
+    private static final int C_SPLIT_DISTANCE_SIZE = 8;
+    private static final int C_NEXT_IDX = AppSettings.C_SPLIT_DISTANCE_IDX
+            + AppSettings.C_SPLIT_DISTANCE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1844,6 +1853,9 @@ public class AppSettings implements BT747Thread {
             { AppSettings.BOOL, AppSettings.IS_NEW_TRACK_WHEN_LOG_ON,
                     AppSettings.C_ISNEWTRACKWHENLOGON_IDX,
                     AppSettings.C_ISNEWTRACKWHENLOGON_SIZE },
+            { AppSettings.INT, AppSettings.SPLIT_DISTANCE,
+                    AppSettings.C_SPLIT_DISTANCE_IDX,
+                    AppSettings.C_SPLIT_DISTANCE_SIZE },
 
     // End of list
     };

@@ -51,6 +51,11 @@ public final class GPSConversionParameters {
      */
     public final static String NEW_TRACK_WHEN_LOG_ON = "log-on-trk";
 
+    /**
+     * Indicates if a new track is needed when the logger is switched on.
+     */
+    public final static String SPLIT_DISTANCE = "split-d";
+
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);
 

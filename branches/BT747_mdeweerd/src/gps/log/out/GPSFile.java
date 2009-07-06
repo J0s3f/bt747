@@ -16,6 +16,7 @@ package gps.log.out;
 
 import gps.BT747Constants;
 import gps.Txt;
+import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.log.in.GPSFileConverterInterface;
@@ -117,6 +118,11 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     protected int previousTime = 0;
     protected int nextPreviousTime = 0;
 
+    private double previousLat = 0;
+    private double previousLon = 0;
+    private double nextPreviousLat = 0;
+    private double nextPreviousLon = 0;
+
     /**
      * When two points are more than this time apart, a new track segment is
      * created. The default value is Time needed between points to separate
@@ -169,6 +175,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     public final static int FILE_SPLIT_ONE_FILE_PER_DAY = 1;
     public final static int FILE_SPLIT_ONE_FILE_PER_TRACK = 2;
 
+    private boolean calcDistance = false;
+    private int splitDistance = 0;
+    protected double distanceWithPrevious;
+
     /**
      * This function has to be called at some time to initialize the file
      * conversion. Other parameters can be set through other methods.
@@ -216,6 +226,17 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                     GPSConversionParameters.NEW_TRACK_WHEN_LOG_ON);
         } else {
             isTrackSplitOnLogOn = false;
+        }
+        if (getParamObject().hasParam(GPSConversionParameters.SPLIT_DISTANCE)) {
+            splitDistance = getParamObject().getIntParam(
+                    GPSConversionParameters.SPLIT_DISTANCE);
+        } else {
+            splitDistance = 0;
+        }
+        if (splitDistance != 0) {
+            // When splitting according to distance, we need to calculate
+            // the distance between positions.
+            calcDistance = true;
         }
         initPass();
     };
@@ -566,6 +587,39 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         boolean newDate = false;
         int dateref = 0;
         previousTime = nextPreviousTime;
+        needsToSplitTrack = (logOn && isTrackSplitOnLogOn);
+
+        if (calcDistance) {
+            if (cachedRecordIsNeeded(r) && r.hasPosition()) {
+                previousLat = nextPreviousLat;
+                previousLon = nextPreviousLon;
+                nextPreviousLat = r.getLatitude();
+                nextPreviousLon = r.getLongitude();
+                if (!firstRecord) {
+                    distanceWithPrevious = Conv.earthDistance(previousLat,
+                            previousLon, nextPreviousLat, nextPreviousLon);
+                    if (splitDistance != 0) {
+                        needsToSplitTrack |= (splitDistance <= distanceWithPrevious);
+                        if ((splitDistance <= distanceWithPrevious)) {
+
+                            Generic.debug(r.getRecCount()
+                                    + ":"
+                                    + previousLat
+                                    + " "
+                                    + previousLon
+                                    + " "
+                                    + nextPreviousLat
+                                    + " "
+                                    + nextPreviousLon
+                                    + " = "
+                                    + Conv.earthDistance(previousLat,
+                                            previousLon, nextPreviousLat,
+                                            nextPreviousLon));
+                        }
+                    }
+                }
+            }
+        }
         // bt747.sys.Generic.debug("Adding\n"+r.toString());
 
         if (r.hasUtc()) {
@@ -578,11 +632,12 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                 // 128 + day
                 newDate = (dateref > previousDate);
             }
+            if (trackSepTime != 0) {
+                needsToSplitTrack |= ((r
 
+                .getUtc() > previousTime + trackSepTime));
+            }
         }
-
-        needsToSplitTrack = ((logOn && isTrackSplitOnLogOn) || (r.hasUtc() && (r
-                .getUtc() > previousTime + trackSepTime)));
 
         if (((((oneFilePerDay && newDate) && activeFields.hasUtc()) || firstRecord) || (oneFilePerTrack && needsToSplitTrack))
                 && cachedRecordIsNeeded(r)) {
@@ -707,6 +762,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         previousDate = 0;
         previousTime = 0;
         nextPreviousTime = 0;
+        previousLat = 0;
+        previousLon = 0;
+        nextPreviousLat = 0;
+        nextPreviousLon = 0;
         firstRecord = true;
         initWayPointUserListSetup();
         prevRecord = null;
