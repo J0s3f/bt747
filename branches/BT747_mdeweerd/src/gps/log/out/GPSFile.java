@@ -600,22 +600,22 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                             previousLon, nextPreviousLat, nextPreviousLon);
                     if (splitDistance != 0) {
                         needsToSplitTrack |= (splitDistance <= distanceWithPrevious);
-                        if ((splitDistance <= distanceWithPrevious)) {
-
-                            Generic.debug(r.getRecCount()
-                                    + ":"
-                                    + previousLat
-                                    + " "
-                                    + previousLon
-                                    + " "
-                                    + nextPreviousLat
-                                    + " "
-                                    + nextPreviousLon
-                                    + " = "
-                                    + Conv.earthDistance(previousLat,
-                                            previousLon, nextPreviousLat,
-                                            nextPreviousLon));
-                        }
+//                        if ((splitDistance <= distanceWithPrevious)) {
+//
+//                            Generic.debug(r.getRecCount()
+//                                    + ":"
+//                                    + previousLat
+//                                    + " "
+//                                    + previousLon
+//                                    + " "
+//                                    + nextPreviousLat
+//                                    + " "
+//                                    + nextPreviousLon
+//                                    + " = "
+//                                    + Conv.earthDistance(previousLat,
+//                                            previousLon, nextPreviousLat,
+//                                            nextPreviousLon));
+//                        }
                     }
                 }
             }
