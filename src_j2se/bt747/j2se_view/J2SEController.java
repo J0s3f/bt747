@@ -15,7 +15,6 @@ import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
 import bt747.Version;
 import bt747.j2se_view.model.ImageData;
-import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -46,6 +45,42 @@ public class J2SEController extends Controller {
      */
     public J2SEController() {
         super();
+
+        // Some information gathered regarding proxies.
+        // In JDK 5 apparently you can set the java.net.useSystemProxies to
+        // true and Java will pickup and use the proxies set in Windows (or
+        // Gnome). That's a great feature! (From Kohsuke Kawaguchi).
+        //
+        // http://java.sun.com/javase/6/docs/technotes/guides/net/proxies.html
+        //         
+        //         
+        // System.getProperties().put( "proxySet", "true" );
+        // System.getProperties().put( "proxyHost", "myProxyMachineName" );
+        // System.getProperties().put( "proxyPort", "85" );
+        //         
+        //         
+        // URLConnection connection = url.openConnection();
+        // String password = "username:password";
+        // String encodedPassword = base64Encode( password );
+        // connection.setRequestProperty( "Proxy-Authorization",
+        // encodedPassword );
+        //         
+        //         
+        //
+        // defaultProperties.put( "ftpProxySet", "true" );
+        // defaultProperties.put( "ftpProxyHost", "proxy-host-name" );
+        // defaultProperties.put( "ftpProxyPort", "85" );
+        //
+        //         
+        //
+        // URL url = new
+        // URL("ftp://ftp.netscape.com/pub/navigator/3.04/windows/readme.txt"
+        // );
+        //
+        // http://www.java-tips.org/java.net/how-to-detect-proxy-settings-for-internet-connection.html
+        
+        // Currently usingn the simple hint:
+        System.setProperty("java.net.useSystemProxies", "true");
     }
 
     /**
@@ -62,7 +97,9 @@ public class J2SEController extends Controller {
         /*
          * (non-Javadoc)
          * 
-         * @see bt747.model.GPSOutputFactory#getInputConversionInstance(java.lang.String)
+         * @see
+         * bt747.model.GPSOutputFactory#getInputConversionInstance(java.lang
+         * .String)
          */
         @Override
         public final GPSLogConvertInterface getInputConversionInstance(
@@ -109,14 +146,14 @@ public class J2SEController extends Controller {
         GeoidIF geoidIF = null;
         if (m.getBooleanOpt(Model.IS_USE_PRECISE_GEOID)) {
             geoidIF = net.sf.bt747.j2se.app.utils.Geoid.getInstance();
-            if(geoidIF==null) {
+            if (geoidIF == null) {
                 Generic.debug("Precise Geoid loading failed");
                 super.setBooleanOpt(Model.IS_USE_PRECISE_GEOID, false);
             }
         } else {
             geoidIF = gps.convert.Geoid.getInstance();
         }
-        //Generic.debug("Set geoid to "+geoidIF);
+        // Generic.debug("Set geoid to "+geoidIF);
         if (geoidIF != null) {
             Conv.setGeoidIF(geoidIF);
         }
@@ -166,20 +203,22 @@ public class J2SEController extends Controller {
         bt747.sys.Generic.debug("Getting MTK7d.EPO data.");
         downloadAndUploadAgpsData(urlTxt);
     }
-    
+
     public final void downloadAndUploadAgpsData(final String url) {
         final String urlTxt = url;
         final Thread t = new Thread(new Runnable() {
             final String urlT = urlTxt;
+
             public final void run() {
-//                final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
-//                bt747.sys.Generic.debug("Getting data from <" + urlTxt + ">");
+                // final String urlTxt = m.getStringOpt(AppSettings.AGPSURL);
+                // bt747.sys.Generic.debug("Getting data from <" + urlTxt +
+                // ">");
                 try {
-                final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlT);
-//                bt747.sys.Generic.debug("Finished getting data from <"
-//                        + urlTxt + ">");
-                setAgpsData(agpsData);
-                bt747.sys.Generic.debug("MTK7d.EPO data fetched.");
+                    final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlT);
+                    // bt747.sys.Generic.debug("Finished getting data from <"
+                    // + urlTxt + ">");
+                    setAgpsData(agpsData);
+                    bt747.sys.Generic.debug("MTK7d.EPO data fetched.");
                 } catch (final BT747Exception b) {
                     m.postEvent(new ModelEvent(ModelEvent.EXCEPTION, b));
                 }
