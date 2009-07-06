@@ -394,9 +394,7 @@ public final class Conv {
     public static final double calcR(final double p_lat) /* FOLD00 */
     {
         final double a = 6378.137;
-        double r, sc, x, y, z;
-        final double e2 = 0.081082 * 0.081082;
-        double lat;
+        final double e2 = 0.081082 * 0.081082;        
         /*
          * the radius of curvature of an ellipsoidal Earth in the plane of the
          * meridian is given by
@@ -411,14 +409,12 @@ public final class Conv {
          * distance) e = 0.081082 Eccentricity
          */
 
-        lat = p_lat * Math.PI / 180.0;
-        sc = Math.sin(lat);
-        x = a * (1.0 - e2);
-        z = 1.0 - e2 * sc * sc;
-        y = bt747.sys.Generic.pow(z, 1.5);
-        r = x / y;
-
-        r = r * 1000.0;
+        final double lat = p_lat * Math.PI / 180.0;
+        final double sc = Math.sin(lat);
+        final double x = a * (1.0 - e2);
+        final double z = 1.0 - e2 * sc * sc;
+        final double y = bt747.sys.Generic.pow(z, 1.5);
+        final double r = 1000. * x / y;
         return r;
     }
 }

@@ -373,6 +373,8 @@ public class Controller implements ModelListener {
                     m.getStringOpt(AppSettings.OSMPASS));
             gpsFile.getParamObject().setBoolParam(GPSConversionParameters.NEW_TRACK_WHEN_LOG_ON,
                     m.getBooleanOpt(AppSettings.IS_NEW_TRACK_WHEN_LOG_ON));
+            gpsFile.getParamObject().setIntParam(GPSConversionParameters.SPLIT_DISTANCE,
+                    m.getIntOpt(AppSettings.SPLIT_DISTANCE));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:
