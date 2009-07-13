@@ -22,7 +22,7 @@ CLASSPATH=${ROOT_DIR}/dist/BT747_j2se.jar:$CLASSPATH
  RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
   # ARCH=`arch`  # The old way
  ARCH=`$JAVA -jar ${ROOT_DIR}/dist/BT747_j2se.jar arch`
- if [ $ARCH = 'amd64' ] ; then
+ if [[ $ARCH = 'amd64' ]] ; then
    # Substitute for equivalent architecture.
    ARCH=x86_64
    # Use new library if available.
@@ -34,7 +34,7 @@ CLASSPATH=${ROOT_DIR}/dist/BT747_j2se.jar:$CLASSPATH
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
  RXTXJAR=${RXTXPATH}/RXTXcomm.jar
- if [ -r ${TMPRXTXPATH} ] ; then
+ if [[ -r ${TMPRXTXPATH} ]] ; then
    RXTXLIBPATH=${TMPRXTXPATH}
  else
   # Did not find binary - look on system.
