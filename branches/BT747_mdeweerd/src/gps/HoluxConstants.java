@@ -51,4 +51,38 @@ public class HoluxConstants {
      * Parameters: none
      */  
     public static final String PHLX_LOG_ERASE_ACK = "PHLX870";
+    
+    /**
+     * To GPS: Set logging criteria.
+     * Parameters:
+     * - PHLX_LOG_CRITERIUM_TIME_PARAM ^ PHLX_LOG_CRITERIUM_DISTANCE_PARAM
+     * - time [s] (1-120)
+     * - distance [m] (1-1000)
+     */  
+    public static final String PHLX_LOG_SET_CRITERIA = "PHLX834";
+    
+    /**
+     * Parameter: Logging based on time interval.
+     */  
+    public static final String PHLX_LOG_CRITERIUM_TIME_PARAM = "0";
+
+    /**
+     * Parameter: Logging based on distance interval.
+     */  
+    public static final String PHLX_LOG_CRITERIUM_DISTANCE_PARAM = "1";
+    
+    /**
+     * To GPS: Get logging criteria.
+     * Parameters: none
+     */  
+    public static final String PHLX_LOG_GET_CRITERIA_REQUEST = "PHLX833";
+    
+    /**
+     * From GPS: current logging criteria.
+     * Parameters:
+     * - PHLX_LOG_CRITERIUM_TIME_PARAM ^ PHLX_LOG_CRITERIUM_DISTANCE_PARAM
+     * - time [s] (1-120)
+     * - distance [m] (1-1000)
+     */  
+    public static final String PHLX_LOG_GET_CRITERIA_RESPONSE = "PHLX866";
 }
