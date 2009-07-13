@@ -71,13 +71,13 @@ public final class GPSrxtx {
     private final BT747Semaphore writeOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
-    /** Semaphore to avodi that two resources are reading the link. */
+    /** Semaphore to avoid that two resources are reading the link. */
     private final BT747Semaphore getResponseOngoing = JavaLibBridge
             .getSemaphoreInstance(1);
 
     public static final void setDefaultGpsPortInstance(
             final GPSPort portInstance) {
-        Generic.debug("Setting GPS port");
+        //Generic.debug("Setting GPS port");
         GPSrxtx.defaultGpsPort = portInstance;
     }
 
