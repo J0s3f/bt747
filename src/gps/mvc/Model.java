@@ -46,7 +46,9 @@ public class Model implements ProtocolConstants {
     private final GPSLinkHandler handler;
     // For the moment pointing to 'this' for the MtkModel.
     // After refactoring this should be effectively fully delegated.
-    private final MtkModel mtkModel;
+    private MtkModel mtkModel;
+
+    private int protocol = -1;
 
     /**
      * Initialiser.
@@ -56,20 +58,27 @@ public class Model implements ProtocolConstants {
     public Model(final GPSrxtx gpsRxTx, final int protocol) {
         handler = new GPSLinkHandler();
 
-        switch (protocol) {
-        case PROTOCOL_MTK:
-        case PROTOCOL_SIRFIII:
-            mtkModel = new MtkModel(this, handler);
-            break;
-        case PROTOCOL_HOLUX_PHLX:
-            mtkModel = new HoluxModel(this, handler);
-            break;
-        default:
-            // TODO: This should probably be handled through an exception
-            mtkModel = null;
-            break;
-        }
+        setProtocol(protocol);
         setGPSRxtx(gpsRxTx);
+    }
+
+    public final void setProtocol(final int protocol) {
+        if (this.protocol != protocol) {
+            this.protocol = protocol;
+            switch (protocol) {
+            case PROTOCOL_MTK:
+            case PROTOCOL_SIRFIII:
+                mtkModel = new MtkModel(this, handler);
+                break;
+            case PROTOCOL_HOLUX_PHLX:
+                mtkModel = new HoluxModel(this, handler);
+                break;
+            default:
+                // TODO: This should probably be handled through an exception
+                mtkModel = null;
+                break;
+            }
+        }
     }
 
     public final MtkModel getMtkModel() {
@@ -95,15 +104,15 @@ public class Model implements ProtocolConstants {
     }
 
     /**
-     * Indicates if statistics regarding the link should be fetched.
-     * No actual implementation currently.
+     * Indicates if statistics regarding the link should be fetched. No actual
+     * implementation currently.
      */
     private boolean GPS_STATS = false; // (!Settings.onDevice);
 
     public final void setStats(final boolean stats) {
         GPS_STATS = stats;
     }
-    
+
     public final boolean getStats() {
         return GPS_STATS;
     }
@@ -180,7 +189,7 @@ public class Model implements ProtocolConstants {
     }
 
     public final int analyseNMEA(final String[] sNmea) {
-        //final int cmd;
+        // final int cmd;
         int result;
         result = 0;
         try {
@@ -244,8 +253,8 @@ public class Model implements ProtocolConstants {
 
     /**
      * @param gpsDecode
-     *                Activate gps decoding if true, do not decode if false.
-     *                This may improve performance.
+     *            Activate gps decoding if true, do not decode if false. This
+     *            may improve performance.
      */
     public final void setGpsDecode(final boolean gpsDecode) {
         handler.setGpsDecode(gpsDecode);
@@ -287,7 +296,7 @@ public class Model implements ProtocolConstants {
      * checksum - this is added by the method.
      * 
      * @param s
-     *                NMEA string to send.
+     *            NMEA string to send.
      */
     public final void sendCmd(final Object s) {
         handler.sendCmd(s);
@@ -343,7 +352,7 @@ public class Model implements ProtocolConstants {
     public final int getEndAddr() {
         return mtkModel.getEndAddr();
     }
-    
+
     /**
      * Get 'download ongoing' status.
      * 

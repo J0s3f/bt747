@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 
 package bt747.j2se_view;
 
@@ -26,11 +26,12 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Int;
 
 /**
- *
- * @author  Mario
+ * 
+ * @author Mario
  */
 public class DeviceSettingsPanel extends javax.swing.JPanel implements
         ModelListener {
@@ -41,19 +42,20 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     private static final long serialVersionUID = 7501598981469723355L;
     private J2SEAppController c;
     private Model m;
-    
+
     /** Creates new form DeviceSettingsPanel */
     public DeviceSettingsPanel() {
         initComponents();
-        
-        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("No_DGPS"), getString("RTCM"), getString("WAAS") }));
+
+        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { getString("No_DGPS"), getString("RTCM"),
+                        getString("WAAS") }));
         cbStopOrOverwriteWhenFull
                 .setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                        getString("Stop_when_full"), getString("Overwrite_when_full") }));
+                        getString("Stop_when_full"),
+                        getString("Overwrite_when_full") }));
 
     }
-
 
     public void init(J2SEAppController pC) {
         c = pC;
@@ -67,10 +69,9 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         updateEstimatedNbrRecords();
         updateConnected(m.isConnected());
 
-
     }
 
-    private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_DeviceSettingsPanelFocusGained
+    private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_DeviceSettingsPanelFocusGained
         c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
         c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
         c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
@@ -81,14 +82,13 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
         c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
         c.setMtkDataNeeded(MtkModel.DATA_DATUM_MODE);
-    }// GEN-LAST:event_DeviceSettingsPanelFocusGained
-
+    }//GEN-LAST:event_DeviceSettingsPanelFocusGained
 
     private final void updateStoreButtons() {
         btStoreSettings.setEnabled(c.isEnableStoreOK());
         btRestoreSettings.setEnabled(m.isStoredSetting1());
     }
-    
+
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
         int type = e.getType();
@@ -114,7 +114,6 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             break;
         }
 
-
         switch (type) {
         case ModelEvent.DATA_UPDATE:
             switch (((BT747Int) e.getArg()).getValue()) {
@@ -123,21 +122,30 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 break;
             case MtkModel.DATA_LOG_TIME_INTERVAL:
                 ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-                txtLogTimeInterval.setText(JavaLibBridge.toString(
-                        m.getLogTimeInterval() / 10., 1));
+                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
+                    txtLogTimeInterval.setText("" + m.getLogTimeInterval());
+                } else {
+                    txtLogTimeInterval.setText(JavaLibBridge.toString(m
+                            .getLogTimeInterval() / 10., 1));
+                }
                 break;
             case MtkModel.DATA_LOG_SPEED_INTERVAL:
                 ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
-                txtLogSpeedInterval.setText(""+m
-                        .getLogSpeedInterval());
+                txtLogSpeedInterval.setText("" + m.getLogSpeedInterval());
                 break;
             case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
-                ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
-                txtLogDistanceInterval.setText(JavaLibBridge.toString(m
-                        .getLogDistanceInterval() / 10., 1));
+                ckLogDistanceActive
+                        .setSelected(m.getLogDistanceInterval() != 0);
+                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
+                    txtLogDistanceInterval.setText(""
+                            + m.getLogDistanceInterval());
+                } else {
+                    txtLogDistanceInterval.setText(JavaLibBridge.toString(m
+                            .getLogDistanceInterval() / 10., 1));
+                }
                 break;
             case MtkModel.DATA_FIX_PERIOD:
-                txtFixPeriod.setText(""+m.getLogFixPeriod());
+                txtFixPeriod.setText("" + m.getLogFixPeriod());
                 break;
             }
             break;
@@ -159,15 +167,16 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 cbDGPSType.setSelectedIndex(m.getDgpsMode());
             } catch (Exception ee) {
                 // TODO: handle exception
-                Generic.debug(getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
+                Generic.debug(getString("Unknown_DGPS_Mode")
+                        + m.getDgpsMode(), ee);
             }
             break;
 
-            // TODO
-            // cbDGPSMode.select(m.getDgpsMode());
-            // if (ENABLE_PWR_SAVE_CONTROL) {
-            // chkPowerSaveOnOff.setChecked(m.isPowerSaveEnabled());
-            // }
+        // TODO
+        // cbDGPSMode.select(m.getDgpsMode());
+        // if (ENABLE_PWR_SAVE_CONTROL) {
+        // chkPowerSaveOnOff.setChecked(m.isPowerSaveEnabled());
+        // }
         case ModelEvent.UPDATE_DATUM:
             try {
                 // jComboBox23.setSelectedIndex(m.getDatum());
@@ -176,8 +185,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 Generic.debug(getString("Unknown_DATUM") + m.getDatum(), ee);
             }
             break;
-            // TODO
-            // cbDatumMode.select(m.getDatum());
+        // TODO
+        // cbDatumMode.select(m.getDatum());
         case ModelEvent.UPDATE_HOLUX_NAME:
             txtHoluxName.setText(m.getHoluxName());
             /* Fall through */
@@ -185,28 +194,27 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             updateEstimatedNbrRecords();
             break;
         case ModelEvent.UPDATE_LOG_REC_METHOD:
-            cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 1
-                    : 0);
+            cbStopOrOverwriteWhenFull
+                    .setSelectedIndex(m.isLogFullOverwrite() ? 1 : 0);
             break;
         }
     }
 
     private final void updateConnected(final boolean connected) {
-        JPanel[] panels = { 
-                pnLogFormat, pnGPSStart, pnLogBy, pnSBAS,
-                pnHoluxSettings};
+        JPanel[] panels = { pnLogFormat, pnGPSStart, pnLogBy, pnSBAS,
+                pnHoluxSettings };
 
         for (JPanel panel : panels) {
-            J2SEAppController.enableComponentHierarchy(panel,connected);
+            J2SEAppController.enableComponentHierarchy(panel, connected);
         }
-        if(connected) {
+        if (connected) {
             updateSatGuiItems();
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
+    /**
+     * This method is called from within the constructor to initialize the
+     * form. WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
@@ -510,6 +518,11 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbKMH.setText(bundle.getString("BT747Main.lbKMH.text")); // NOI18N
 
         ckLogTimeActive.setText(bundle.getString("BT747Main.ckLogTimeActive.text")); // NOI18N
+        ckLogTimeActive.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ckLogTimeActiveItemStateChanged(evt);
+            }
+        });
 
         lbAbove.setText(bundle.getString("BT747Main.lbAbove.text")); // NOI18N
 
@@ -518,6 +531,11 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbDistanceEvery.setText(bundle.getString("BT747Main.lbDistanceEvery.text")); // NOI18N
 
         ckLogDistanceActive.setText(bundle.getString("BT747Main.ckLogDistanceActive.text")); // NOI18N
+        ckLogDistanceActive.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ckLogDistanceActiveItemStateChanged(evt);
+            }
+        });
 
         txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
         txtLogSpeedInterval.setInputVerifier(c.IntVerifier);
@@ -1122,198 +1140,254 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         );
     }//GEN-END:initComponents
 
-private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
-   DeviceSettingsPanelFocusGained(evt);
-}//GEN-LAST:event_formFocusGained
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+        DeviceSettingsPanelFocusGained(evt);
+    }//GEN-LAST:event_formFocusGained
 
-private void btRestoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRestoreSettingsActionPerformed
-  c.restoreSetting1();
-}//GEN-LAST:event_btRestoreSettingsActionPerformed
+    private void btRestoreSettingsActionPerformed(
+            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRestoreSettingsActionPerformed
+        c.restoreSetting1();
+    }//GEN-LAST:event_btRestoreSettingsActionPerformed
 
-private void btStoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStoreSettingsActionPerformed
-   c.storeSetting1();
-}//GEN-LAST:event_btStoreSettingsActionPerformed
+    private void btStoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStoreSettingsActionPerformed
+        c.storeSetting1();
+    }//GEN-LAST:event_btStoreSettingsActionPerformed
 
-private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbStopOrOverwriteWhenFullItemStateChanged
-    if(cbStopOrOverwriteWhenFull.hasFocus()) {
-        sendStopOrOverwrite();
-    }
-}//GEN-LAST:event_cbStopOrOverwriteWhenFullItemStateChanged
+    private void cbStopOrOverwriteWhenFullItemStateChanged(
+            java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbStopOrOverwriteWhenFullItemStateChanged
+        if (cbStopOrOverwriteWhenFull.hasFocus()) {
+            sendStopOrOverwrite();
+        }
+    }//GEN-LAST:event_cbStopOrOverwriteWhenFullItemStateChanged
 
-    private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {                                           
         c.setHoluxName(txtHoluxName.getText());
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
-    private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {                                           
         c.setSBASEnabled(cbUseSBAS.isSelected());
         c.setSBASTestEnabled(cbIncludeTestSBAS.isSelected());
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
-    private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {                                           
         c.gpsCmd(MtkController.CMD_HOTSTART);
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
-    private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {                                           
         c.gpsCmd(MtkController.CMD_WARMSTART);
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
-    private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {                                           
         c.gpsCmd(MtkController.CMD_COLDSTART);
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
     private void btFactoryResetDeviceActionPerformed(
-            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+            java.awt.event.ActionEvent evt) {                                           
         c.doFactoryReset();
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }                                          
 
-    private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private final boolean isTimeAndDistanceExclusive() {
+        final MtkModel mtk = m.mtkModel();
+        return mtk.isTimeDistanceLogConditionExclusive();
+    }
+    private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHotStartActionPerformed
         try {
+            final MtkModel mtk = m.mtkModel();
+            boolean isTimeAndDistanceExclusive = isTimeAndDistanceExclusive();
+
+            /*
+             * Defense in Depth - check that time and distance are exclusive
+             * (if required).
+             */
+
+            if (isTimeAndDistanceExclusive) {
+                if (ckLogTimeActive.isSelected()
+                        && ckLogDistanceActive.isSelected()) {
+                    ckLogDistanceActive.setSelected(false);
+                    Generic
+                            .debug(
+                                    null,
+                                    new BT747Exception(
+                                            "Time and Distance log conditions both active"
+                                                    + " while the device requires exclusive operation."
+                                                    + "  Time condition selected."));
+                }
+            }
             int value;
             if (ckLogTimeActive.isSelected()) {
-                value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval.getText()) * 10);
+                value = (int) (JavaLibBridge.toDouble(txtLogTimeInterval
+                        .getText()) * 10);
             } else {
                 value = 0;
             }
-            c.setLogTimeInterval(value);
+            if (ckLogTimeActive.isSelected() || !isTimeAndDistanceExclusive)
+                // If time & distance are exclusive, do not set the unselected
+                // 0 value.
+                c.setLogTimeInterval(value);
+
             if (ckLogSpeedActive.isSelected()) {
-                value = (int) (JavaLibBridge.toDouble(txtLogSpeedInterval.getText()));
+                value = (int) (JavaLibBridge.toDouble(txtLogSpeedInterval
+                        .getText()));
             } else {
                 value = 0;
             }
             c.setLogSpeedInterval(value);
+
             if (ckLogDistanceActive.isSelected()) {
                 value = (int) (JavaLibBridge.toDouble(txtLogDistanceInterval
                         .getText()) * 10);
             } else {
                 value = 0;
             }
-            c.setLogDistanceInterval(value);
+            if (ckLogDistanceActive.isSelected()
+                    || !isTimeAndDistanceExclusive) {
+                // If time & distance are exclusive, do not set the unselected
+                // 0 value.
+                c.setLogDistanceInterval(value);
+            }
+
             c.setFixInterval(JavaLibBridge.toInt(txtFixPeriod.getText()));
         } catch (Exception e) {
             Generic
-                    .debug(
-                            getString("Problem_in_Apply_Log_conditions_-_probably_non-numeric_value"),
-                            e);
+                    .debug(null,
+                            new BT747Exception("Apply log conditions", e));
         }
-    }// GEN-LAST:event_btHotStartActionPerformed
+    }//GEN-LAST:event_btHotStartActionPerformed
 
-    
     private void sendStopOrOverwrite() {
         boolean newSetting = (cbStopOrOverwriteWhenFull.getSelectedIndex() == 1);
-        if(newSetting!=m.isLogFullOverwrite()) {
+        if (newSetting != m.isLogFullOverwrite()) {
             c.setLogOverwrite(newSetting);
         }
     }
-    private void cbStopOrOverwriteWhenFullFocusLost( java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
+
+    private void cbStopOrOverwriteWhenFullFocusLost(
+            java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
         sendStopOrOverwrite();
-    }// GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
+    }//GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
 
-    
-    private void cbUTCTimeupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbUTCTimeupdateLogRecordEstCount
+    private void cbUTCTimeupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUTCTimeupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbUTCTimeupdateLogRecordEstCount
+    }//GEN-LAST:event_cbUTCTimeupdateLogRecordEstCount
 
-    private void cbMilliSecondsupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbMilliSecondsupdateLogRecordEstCount
+    private void cbMilliSecondsupdateLogRecordEstCount(
+            java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbMilliSecondsupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbMilliSecondsupdateLogRecordEstCount
+    }//GEN-LAST:event_cbMilliSecondsupdateLogRecordEstCount
 
-    private void cbLatupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbLatupdateLogRecordEstCount
+    private void cbLatupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLatupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbLatupdateLogRecordEstCount
+    }//GEN-LAST:event_cbLatupdateLogRecordEstCount
 
-    private void cbLongupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbLongupdateLogRecordEstCount
+    private void cbLongupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLongupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbLongupdateLogRecordEstCount
+    }//GEN-LAST:event_cbLongupdateLogRecordEstCount
 
-    private void cbHeightupdateLogRecordEstCount(
-            java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbHeightupdateLogRecordEstCount
+    private void cbHeightupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbHeightupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbHeightupdateLogRecordEstCount
+    }//GEN-LAST:event_cbHeightupdateLogRecordEstCount
 
-    private void cbSpeedupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbSpeedupdateLogRecordEstCount
+    private void cbSpeedupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSpeedupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbSpeedupdateLogRecordEstCount
+    }//GEN-LAST:event_cbSpeedupdateLogRecordEstCount
 
-    private void cbHeadingupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbHeadingupdateLogRecordEstCount
+    private void cbHeadingupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbHeadingupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbHeadingupdateLogRecordEstCount
+    }//GEN-LAST:event_cbHeadingupdateLogRecordEstCount
 
-    private void cbDistanceupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbDistanceupdateLogRecordEstCount
+    private void cbDistanceupdateLogRecordEstCount(
+            java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDistanceupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbDistanceupdateLogRecordEstCount
+    }//GEN-LAST:event_cbDistanceupdateLogRecordEstCount
 
-    private void cbDSTAupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbDSTAupdateLogRecordEstCount
+    private void cbDSTAupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDSTAupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbDSTAupdateLogRecordEstCount
+    }//GEN-LAST:event_cbDSTAupdateLogRecordEstCount
 
-    private void cbDAGEupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbDAGEupdateLogRecordEstCount
+    private void cbDAGEupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDAGEupdateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbDAGEupdateLogRecordEstCount
+    }//GEN-LAST:event_cbDAGEupdateLogRecordEstCount
 
-    private void cbHDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbPDOP1updateLogRecordEstCount
+    private void cbHDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbPDOP1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbPDOP1updateLogRecordEstCount
+    }//GEN-LAST:event_cbPDOP1updateLogRecordEstCount
 
-    private void cbPDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbHDOP1updateLogRecordEstCount
+    private void cbPDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbHDOP1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbHDOP1updateLogRecordEstCount
+    }//GEN-LAST:event_cbHDOP1updateLogRecordEstCount
 
-    private void cbVDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbVDOP1updateLogRecordEstCount
+    private void cbVDOPupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbVDOP1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbVDOP1updateLogRecordEstCount
+    }//GEN-LAST:event_cbVDOP1updateLogRecordEstCount
 
-    private void cbFixTypeupdateLogRecordEstCount(
-            java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbFixType1updateLogRecordEstCount
+    private void cbFixTypeupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFixType1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbFixType1updateLogRecordEstCount
+    }//GEN-LAST:event_cbFixType1updateLogRecordEstCount
 
-    private void cbNSATupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbNSAT1updateLogRecordEstCount
+    private void cbNSATupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbNSAT1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbNSAT1updateLogRecordEstCount
+    }//GEN-LAST:event_cbNSAT1updateLogRecordEstCount
 
-    private void cbElevationupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbElevation1updateLogRecordEstCount
+    private void cbElevationupdateLogRecordEstCount(
+            java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbElevation1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbElevation1updateLogRecordEstCount
+    }//GEN-LAST:event_cbElevation1updateLogRecordEstCount
 
-    private void cbAzimuthupdateLogRecordEstCount( java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbAzimuth1updateLogRecordEstCount
+    private void cbAzimuthupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAzimuth1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbAzimuth1updateLogRecordEstCount
+    }//GEN-LAST:event_cbAzimuth1updateLogRecordEstCount
 
-    private void cbSNRupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbSNR1updateLogRecordEstCount
+    private void cbSNRupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSNR1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbSNR1updateLogRecordEstCount
+    }//GEN-LAST:event_cbSNR1updateLogRecordEstCount
 
-    private void cbRCRupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbRCR1updateLogRecordEstCount
+    private void cbRCRupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {                                               
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbRCR1updateLogRecordEstCount
+    }                                              
 
-    private void cbValidFixOnlyupdateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbRCR1updateLogRecordEstCount
+    private void cbValidFixOnlyupdateLogRecordEstCount(
+            java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbRCR1updateLogRecordEstCount
         updateEstimatedNbrRecords();
-    }// GEN-LAST:event_cbRCR1updateLogRecordEstCount
+    }//GEN-LAST:event_cbRCR1updateLogRecordEstCount
 
-    private void btFormatAndEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatAndEraseActionPerformed
+    private void btFormatAndEraseActionPerformed(
+            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFormatAndEraseActionPerformed
 
         c.changeLogFormatAndErase(getUserLogFormat());
-    }// GEN-LAST:event_btFormatAndEraseActionPerformed
+    }//GEN-LAST:event_btFormatAndEraseActionPerformed
 
-    private void btFormatActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatActionPerformed
+    private void btFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFormatActionPerformed
 
         c.changeLogFormat(getUserLogFormat());
-    }// GEN-LAST:event_btFormatActionPerformed
+    }//GEN-LAST:event_btFormatActionPerformed
 
-    private void btEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btEraseActionPerformed
+    private void btEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEraseActionPerformed
 
         c.eraseLogWithDialogs();
-    }// GEN-LAST:event_btEraseActionPerformed
+    }//GEN-LAST:event_btEraseActionPerformed
 
-    private void btRecoverMemoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRecoverMemoryActionPerformed
+    private void btRecoverMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRecoverMemoryActionPerformed
 
         c.recoveryErase();
-    }// GEN-LAST:event_btRecoverMemoryActionPerformed
+    }//GEN-LAST:event_btRecoverMemoryActionPerformed
 
-    private void cbSIDItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbSIDItemStateChanged
+    private void cbSIDItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSIDItemStateChanged
         updateSatGuiItems();
-    }// GEN-LAST:event_cbSIDItemStateChanged
+    }//GEN-LAST:event_cbSIDItemStateChanged
+
+    private void ckLogTimeActiveItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ckLogTimeActiveItemStateChanged
+        if (isTimeAndDistanceExclusive()
+                && (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED)) {
+            ckLogDistanceActive.setSelected(false);
+        }
+    }//GEN-LAST:event_ckLogTimeActiveItemStateChanged
+
+    private void ckLogDistanceActiveItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ckLogDistanceActiveItemStateChanged
+        if (isTimeAndDistanceExclusive()
+                && evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            ckLogTimeActive.setSelected(false);
+        }
+    }//GEN-LAST:event_ckLogDistanceActiveItemStateChanged
 
     private void updateSatGuiItems() {
         boolean enable;
@@ -1353,13 +1427,16 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
                 .setSelected((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0);
         cbNSAT
                 .setSelected((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0);
-        cbSID.setSelected((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0);
+        cbSID
+                .setSelected((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0);
         cbElevation
                 .setSelected((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0);
         cbAzimuth
                 .setSelected((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0);
-        cbSNR.setSelected((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0);
-        cbRCR.setSelected((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0);
+        cbSNR
+                .setSelected((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0);
+        cbRCR
+                .setSelected((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0);
         cbMilliSeconds
                 .setSelected((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0);
         cbDistance
