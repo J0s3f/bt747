@@ -20,6 +20,7 @@ import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
+import gps.mvc.DeviceDirector;
 import gps.mvc.MtkModel;
 
 import bt747.sys.Generic;
@@ -183,14 +184,19 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         gpsRxTx = new GPSrxtx();
 
         /** Setting up the GPS Model and GPS Controller */
+        data.device = new DeviceDirector();
         final int protocol = getIntOpt(AppSettings.DEVICE_PROTOCOL);
-        data.setGpsM(new gps.mvc.Model(gpsRxTx, protocol));
-        data.setGpsC(gps.mvc.Controller.getInstance(gpsM(), protocol));
-        
-        gpsC().getModel().addListener(this);
-        // gpsModel.setGPSRxtx(gpsRxTx);
+        setProtocol(protocol);
     }
 
+    protected final void setProtocol(int protocol) {
+        if(data.device.model!=null) {
+            data.device.model.removeListener(this);
+        }
+        data.device.setProtocol(gpsRxTx, protocol);
+        data.device.model.addListener(this);
+    }
+    
     /* TODO: This is here during refactoring - should be in controller later */
 
     /**
@@ -211,7 +217,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * @return The Mtk GPS instantiation.
      */
     protected final gps.mvc.MtkController gpsMtkC() {
-        return gpsC().getMtkController();
+        return data.device.mtkControl;
     }
 
     /**
@@ -525,7 +531,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * @return The gpsModel instantiation.
      */
     public final MtkModel mtkModel() {
-        return gpsC().getModel().getMtkModel();
+        return data.device.mtkModel;
     }
     
     /**
@@ -839,28 +845,17 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * 
      */
     private final static class PrivateData {
-        /**
-         * The gpsModel communicates with the GPS device and stores some
-         * information regarding the state of the GPS device.
-         */
-        private gps.mvc.Model gpsM; // Previous model had both M and C.
-        private gps.mvc.Controller gpsC;
+        private DeviceDirector device;
 
         protected final gps.mvc.Model gpsM() {
-            return gpsM;
+            return device.model;
         }
         
-        protected final void setGpsM(final gps.mvc.Model m) {
-            gpsM = m;
-        }
 
         protected final gps.mvc.Controller gpsC() {
-            return gpsC;
+            return device.devController;
         }
         
-        protected final void setGpsC(final gps.mvc.Controller c) {
-            gpsC = c;
-        }
     }
 
 }

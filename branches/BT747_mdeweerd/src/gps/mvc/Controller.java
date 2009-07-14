@@ -27,12 +27,6 @@ public class Controller implements BT747Thread, ProtocolConstants,
 
     private final GPSLinkHandler handler;
 
-    public final static Controller getInstance(final GPSrxtx gpsRxTx,
-            final int protocol) {
-        final Model m = new Model(gpsRxTx, protocol);
-        return Controller.getInstance(m, protocol);
-    }
-
     public final static Controller getInstance(final Model model,
             final int protocol) {
         return new Controller(model, protocol);
@@ -68,9 +62,8 @@ public class Controller implements BT747Thread, ProtocolConstants,
                 handler.getGPSRxtx().closePort();
             }
             mtkC = null;
-            gpsM.setProtocol(protocol);
-            mtkM = gpsM.getMtkModel();
         }
+        mtkM = gpsM.getMtkModel();
         if (mtkC != null) {
             /** Previous controller is still valid. */
             return;

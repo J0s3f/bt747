@@ -34,4 +34,12 @@ public interface DeviceControllerIF {
      * @return true is command is supported.
      */
     public boolean cmd(final int cmd, final CmdParam param);
+    
+    /**
+     * Check if the data is available and if it is not, requests it.
+     * 
+     * @param dataType
+     * @return
+     */
+    //public void setDataNeeded(final int dataType);
 }
