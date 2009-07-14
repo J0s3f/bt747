@@ -6,8 +6,13 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>antenna.eclipse.preprocessor.appbuilder</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/antenna.eclipse.preprocessor.appbuilder.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
@@ -16,8 +21,13 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>eclipseme.core.preverifier</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/eclipseme.core.preverifier.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
@@ -28,9 +38,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>BT747_PROJECT_COMMON_SRC</name>
+			<name>common_src</name>
 			<type>2</type>
-			<locationURI>BT747_PROJECT_COMMON_SRC</locationURI>
+			<location>C:/dev/workspace/BT747/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
