@@ -6,6 +6,7 @@ package net.sf.bt747.j2se.app.exiftool;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.bt747.j2se.app.utils.StreamConnector;
 
@@ -70,6 +71,26 @@ public final class ExifTool {
      */
     private static byte[] execExifTool(String[] args) throws IOException,
             InterruptedException {
+        final ArrayList<String> argsList = new ArrayList<String>();
+
+        /* User arguments */
+        for (String s : args) {
+            argsList.add(s);
+        }
+
+        return execExifTool(args);
+    }
+
+    /**
+     * check if exiftool can be executed and set the available field
+     * accordingly.
+     * 
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static byte[] execExifTool(final List<String> args)
+            throws IOException, InterruptedException {
+
         /* Setup the command */
         final ArrayList<String> exifCommand = new ArrayList<String>();
 

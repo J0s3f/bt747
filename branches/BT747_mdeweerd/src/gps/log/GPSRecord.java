@@ -673,7 +673,7 @@ public class GPSRecord {
             rec.append("\nVALID:" + JavaLibBridge.unsigned2hex(valid, 8));
         }
         if (hasLatitude()) {
-            rec.append("\nLAT;" + latitude);
+            rec.append("\nLAT:" + latitude);
         }
         if (hasLongitude()) {
             rec.append("\nLON:" + longitude);
