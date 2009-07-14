@@ -136,7 +136,7 @@ public class Controller implements ModelListener {
             final int setting = JavaLibBridge.toInt((String) e.getArg());
             switch (setting) {
             case Model.DEVICE_PROTOCOL:
-                getGpsC().setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
+                m.setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
             }
         }
         }
