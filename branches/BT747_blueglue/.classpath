@@ -8,7 +8,6 @@
 	<classpathentry kind="src" path="src_waba"/>
 	<classpathentry kind="src" path="src_test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SuperwabaSDK"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar"/>
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar" sourcepath="C:/eclipse_extensions/eclipse/plugins/gnu.io.rxtx.source_2.1.7.4_v20071016/src/gnu.io.rxtx_2.1.7.4_v20071016/src.zip"/>
 	<classpathentry kind="lib" path="lib/Waba_only.jar" sourcepath="c:/SuperWabaSDK/src/java"/>
