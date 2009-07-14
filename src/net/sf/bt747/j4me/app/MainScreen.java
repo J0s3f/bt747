@@ -77,6 +77,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     private CreditsScreen creditsScreen;
     private DeviceScreen logFieldSelectScreen;
     private DelayedDialog connectConfig;
+    private PosSrvMonitorScreen posSrvScreen;
 
     private final java.util.Timer tm = new Timer();
     private TimerTask ttLabels;
@@ -163,6 +164,9 @@ public final class MainScreen extends Dialog implements ModelListener {
             logFieldSelectScreen = new DelayedDialog(
                     ScreenFactory.LOGFIELDSELECTSCREEN, c, this, this);
 
+            // fun
+            posSrvScreen = new PosSrvMonitorScreen(c, this);
+            
             // Call here for debug
             // c.doConvertLog(Model.GPX_LOGTYPE);
             rootMenu = new Menu("Log", this);
@@ -198,6 +202,9 @@ public final class MainScreen extends Dialog implements ModelListener {
             rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
                     ScreenFactory.GPSPOSITIONSCREEN, c, this, this));
 
+            // fun
+            rootMenu.appendMenuOption("Position Server", posSrvScreen);
+            
             Menu subMenu;
 
             subMenu = new Menu("AGPS", rootMenu);

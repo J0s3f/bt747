@@ -83,7 +83,7 @@ public final class GpsPositionScreen extends
      * The time of the last location.
      */
     private FieldValue fvTime = new FieldValue("");
-
+    
     private boolean screenSetup = false;
 
     public void setupScreen() {
@@ -108,7 +108,9 @@ public final class GpsPositionScreen extends
             append(fvFix);
             append(latitude);
             append(longitude);
+            
             append(new HorizontalRule());
+
             // append(horizontalAccuracy);
             // append(new Label()); // Blank line
             append(fvAltitude);
