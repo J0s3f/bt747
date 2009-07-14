@@ -1386,7 +1386,7 @@
 	<!-- Execute WARP and populate distribution directory -->
 	<target name="all-warp" depends="warp">
 
-		<move file="${build.dir}/${ant.project.name}.pdb" todir="${dist}" />
+		<move failonerror="false" file="${build.dir}/${ant.project.name}.pdb" todir="${dist}" />
 
 	</target>
 
