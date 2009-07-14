@@ -36,11 +36,11 @@ public class MtkModel implements EventPoster {
 
     private int logFormat = 0;
 
-    protected int logTimeInterval = 0;
+    protected int logTimeIntervalX100ms = 0;
 
     private int logSpeedInterval = 0;
 
-    protected int logDistanceInterval = 0;
+    protected int logDistanceIntervalDm = 0;
 
     private int logStatus = 0;
     private int initialLogMode = 0;
@@ -443,13 +443,13 @@ public class MtkModel implements EventPoster {
                         postEvent(GpsEvent.UPDATE_LOG_FORMAT);
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
-                        logTimeInterval = JavaLibBridge.toInt(sNmea[3]);
+                        logTimeIntervalX100ms = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= MtkModel.C_OK_TIME;
                         setAvailable(MtkModel.DATA_LOG_TIME_INTERVAL);
                         postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
-                        logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
+                        logDistanceIntervalDm = JavaLibBridge.toInt(sNmea[3]);
                         dataOK |= MtkModel.C_OK_DIST;
                         setAvailable(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
                         postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
@@ -935,7 +935,7 @@ public class MtkModel implements EventPoster {
     }
 
     public final int getLogTimeInterval() {
-        return logTimeInterval;
+        return logTimeIntervalX100ms;
     }
 
     public final int getLogSpeedInterval() {
@@ -943,7 +943,7 @@ public class MtkModel implements EventPoster {
     }
 
     public final int getLogDistanceInterval() {
-        return logDistanceInterval;
+        return logDistanceIntervalDm;
     }
 
     public final int getLogFixPeriod() {
@@ -1170,5 +1170,8 @@ public class MtkModel implements EventPoster {
     public final boolean hasAgps() {
         return hasAgps;
     }
-
+    
+    public boolean isTimeDistanceLogConditionExclusive() {
+        return false;
+    }
 }

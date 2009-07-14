@@ -575,6 +575,9 @@
                       <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.ckLogTimeActive.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="ckLogTimeActiveItemStateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbAbove">
                   <Properties>
@@ -603,6 +606,9 @@
                       <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.ckLogDistanceActive.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="ckLogDistanceActiveItemStateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtLogSpeedInterval">
                   <Properties>

@@ -21,7 +21,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
         DeviceControllerIF {
 
     private final Model gpsM;
-    private final MtkModel mtkM;
+    private MtkModel mtkM;
     // private MtkController mtkC;
     private ProtectedDevControllerIF mtkC;
 
@@ -63,11 +63,13 @@ public class Controller implements BT747Thread, ProtocolConstants,
     public final void setProtocol(final int newProtocol) {
         if (protocol != newProtocol && mtkC != null) {
             /* Need only change if protocol changed. */
-            if (mtkM.getHandler().isConnected()) {
+            if (handler.isConnected()) {
                 // TODO: Revisit to review code leading to this long path:
-                mtkM.getHandler().getGPSRxtx().closePort();
+                handler.getGPSRxtx().closePort();
             }
             mtkC = null;
+            gpsM.setProtocol(protocol);
+            mtkM = gpsM.getMtkModel();
         }
         if (mtkC != null) {
             /** Previous controller is still valid. */
@@ -238,6 +240,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
     public final void run() {
         try {
             final int timeStamp = Generic.getTimeStamp();
+            final ProtectedDevControllerIF mtkC = this.mtkC;
             if (timeStamp >= nextRun) {
                 nextRun = timeStamp + 10;
                 int loopsToGo = 0; // Setting to 0 for more responsiveness

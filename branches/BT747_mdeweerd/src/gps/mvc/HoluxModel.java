@@ -87,12 +87,12 @@ public class HoluxModel extends MtkModel {
             }
         } else if (cmd.equals(HoluxConstants.PHLX_LOG_GET_CRITERIA_RESPONSE)) {
             if (sNmea[1].equals(HoluxConstants.PHLX_LOG_CRITERIUM_TIME_PARAM)) {
-                logTimeInterval = JavaLibBridge.toInt(sNmea[2]);
-                logDistanceInterval = 0;
+                logTimeIntervalX100ms = JavaLibBridge.toInt(sNmea[2])*10;
+                logDistanceIntervalDm = 0;
             } else if (sNmea[1]
                     .equals(HoluxConstants.PHLX_LOG_CRITERIUM_DISTANCE_PARAM)) {
-                logTimeInterval = 0;
-                logDistanceInterval = JavaLibBridge.toInt(sNmea[3]);
+                logTimeIntervalX100ms = 0;
+                logDistanceIntervalDm = JavaLibBridge.toInt(sNmea[3])*10;
             } else {
                 // better error handling should be here
                 return result;
@@ -110,4 +110,7 @@ public class HoluxModel extends MtkModel {
         return result;
     }
 
+    public boolean isTimeDistanceLogConditionExclusive() {
+        return true;
+    }
 }

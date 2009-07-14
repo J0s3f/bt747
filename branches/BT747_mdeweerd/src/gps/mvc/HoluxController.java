@@ -36,6 +36,7 @@ public class HoluxController extends MtkController {
         return true;
     }
 
+    
     /**
      * Handles commands with a parameter Support for Holux-specific commands,
      * otherwise delegates to standard MTK
@@ -55,6 +56,13 @@ public class HoluxController extends MtkController {
             return super.cmd(cmd, param);
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see gps.mvc.MtkController#isSupportedCmd(int)
+     */
+    public boolean isSupportedCmd(int cmd) {
+        return super.isSupportedCmd(cmd);
     }
 
     /**
@@ -100,7 +108,7 @@ public class HoluxController extends MtkController {
      * functionality will be gradually implemented via PHLX commands.
      */
     private void setLogTimeInterval(final int value) {
-        int z_value = value;
+        int z_value = (value+5)/10; // Scale value to seconds.
         if (z_value > 120) {
             z_value = 120;
         } else if (z_value < 1) {
@@ -121,7 +129,7 @@ public class HoluxController extends MtkController {
      * functionality will be gradually implemented via PHLX commands.
      */
     private void setLogDistanceInterval(final int value) {
-        int z_value = value;
+        int z_value = (value+5)/10; // Scale value to meters.
         if (z_value > 1000) {
             z_value = 1000;
         } else if (z_value < 1) {
