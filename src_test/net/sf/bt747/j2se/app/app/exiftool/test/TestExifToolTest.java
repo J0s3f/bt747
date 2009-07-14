@@ -34,13 +34,14 @@ public class TestExifToolTest extends TestCase {
         ed.setPath(imgPath);
         GPSRecord r = ed.getGpsRecord();
         GPSRecord ref = GPSRecord.getLogFormatRecord(0);
-        ref.tagutc = 1235139881;
+        ref.tagutc = 1235139881;  // Should recover tagutc.
         ref.valid = 0x00000080;
         ref.latitude = 45.83736936118868;
         ref.longitude = 6.573693555725945;
         ref.rcr = 260;  // To check what the correct value is - ImageData says 257
         ref.height = 1080.29f;
 
+        // Development is unfinished so test currently fails.
         TestUtils.assertEquals(imgPath, ref, r);
     }
 }

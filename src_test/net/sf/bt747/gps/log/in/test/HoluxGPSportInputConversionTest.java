@@ -14,7 +14,7 @@ import gps.log.in.BT747LogConvert;
  */
 public class HoluxGPSportInputConversionTest extends TestConvertInBase {
 
-    public static final String TEST_HolusGPSport_FILE = "logfiles/HoluxGPSport.bin";
+    public static final String TEST_HoluxGPSport_FILE = "logfiles/HoluxGPSport.bin";
 
     public String getResourcePath(String rsc) {
         return getClass().getResource(rsc).getPath(); // getClass().getResource("test1.csv")
@@ -26,7 +26,7 @@ public class HoluxGPSportInputConversionTest extends TestConvertInBase {
         converterSetup();
         lc.setLoggerType(BT747Constants.GPS_TYPE_HOLUX_GR245);
         /* Any settings changing from test defaults */
-        result = doConvert(getResourcePath(TEST_HolusGPSport_FILE));
+        result = doConvert(getResourcePath(TEST_HoluxGPSport_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
         GPSRecord[] wayPoints = result.getWayPoints();
