@@ -78,7 +78,7 @@ public final class ExifTool {
             argsList.add(s);
         }
 
-        return execExifTool(args);
+        return execExifTool(argsList);
     }
 
     /**

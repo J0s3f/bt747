@@ -41,7 +41,7 @@ public final class GPSArray extends GPSFile {
      * (non-Javadoc)
      * 
      * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
-     *      java.lang.String, int, int)
+     * java.lang.String, int, int)
      */
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
@@ -107,41 +107,29 @@ public final class GPSArray extends GPSFile {
                 gpsWayPoints.addElement(s.cloneRecord());
             }
         }
+        /**
+         * Handle split of track
+         */
+        final boolean isTrackneededRecord = ptFilters[GPSFilter.TRKPT]
+                .doFilter(s);
+        boolean isNeedTrackSplit = needsToSplitTrack;
 
-        if (!ptFilters[GPSFilter.TRKPT].doFilter(s)) {
-            // The track is interrupted by a removed log item.
-            // Break the track in the output file
-            if (!isNewTrack && !firstRecord && !ignoreBadPoints) {
-                isNewTrack = true;
-                if (track.size() != 0) {
-                    // Get the last position of previous track for the bad
-                    // track.
-                    // Trackpoint tp = track.get(track.size() - 1);
-                    endTrack();
-                    // Not logging bad tracks here! [currently at least]
-                    // track.addElement(s.cloneRecord());
-                }
+        if (!isTrackneededRecord) {
+            isNeedTrackSplit |= !ignoreBadPoints;
+        }
+
+        if (!isNewTrack && !firstRecord) {
+            // Only if we do not have a first track and we have written some
+            // records.
+            if (needsToSplitTrack) {
+                endTrack();
             }
-        } else {
-            // This is a trackpoint
-            // This log item is to be transcribed in the output file.
+        }
 
-            // StringBuffer rec=new StringBuffer(1024);
+        if (isTrackneededRecord) {
+            // This is a selected trackpoint.
 
-            if (isNewTrack || needsToSplitTrack) {
-                isNewTrack = false;
-                if ((s.hasPosition())) {
-                    if (!needsToSplitTrack) {
-                        track.addElement(s.cloneRecord());
-                        endTrack();
-                    } else {
-                        // points quite separated -
-                        // No line, but separate track
-                        // bt747.sys.Vm.debug(""+(s.utc-previousTime)+":"+isTimeSPlit);
-                        endTrack();
-                    }
-                }
-            }
+            isNewTrack = false;  // Something was actually added to the track.
             track.addElement(s.cloneRecord());
         }
     }
