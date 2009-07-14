@@ -14,6 +14,8 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import fun.HttpLocationSender;
+import fun.LocationSender;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
@@ -835,8 +837,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     public final void gpsEvent(final GpsEvent event) {
         postEvent(new ModelEvent(event));
     }
-    
-    
+
     /**
      * This private data class enables forcing the use of the getter and the
      * setter.
@@ -868,5 +869,31 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
             gpsC = c;
         }
     }
+
+    /**
+	 * Create a LocationSender instance. Currently this is hard coded to be an
+	 * HttpLocationSender however this may be changed to create other Subclasses
+	 * of LocationSender perhaps based on application settings. If available a
+	 * LocationSenderFactory should then be used.
+	 * 
+	 * @return a new LocationSender instance
+	 * @author Florian Unger
+	 */
+	LocationSender createAndConfigureLocationSender() {
+		HttpLocationSender ls = new HttpLocationSender(this);
+		ls.setUpdatePeriod(1000 * getIntOpt(AppSettings.POS_SRV_PERIOD));
+		ls.setTargetFile(getStringOpt(AppSettings.POS_SRV_FILE));
+		ls.setTargetHostname(getStringOpt(AppSettings.POS_SRV_HOSTNAME));
+		ls.setTargetPort(getIntOpt(AppSettings.POS_SRV_PORT));
+		ls.setUser(getStringOpt(POS_SRV_USER));
+		ls.setPassword(getStringOpt(POS_SRV_PASS));
+		if (isConnected())
+		{
+			// without connection there is probably no such address available ...
+			ls.setBluetoothAdress(getBTAddr());
+		}
+		return ls;
+	}
+
 
 }
