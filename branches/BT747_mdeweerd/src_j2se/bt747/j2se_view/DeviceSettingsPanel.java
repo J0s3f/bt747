@@ -122,12 +122,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 break;
             case MtkModel.DATA_LOG_TIME_INTERVAL:
                 ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
-                    txtLogTimeInterval.setText("" + m.getLogTimeInterval());
-                } else {
                     txtLogTimeInterval.setText(JavaLibBridge.toString(m
                             .getLogTimeInterval() / 10., 1));
-                }
                 break;
             case MtkModel.DATA_LOG_SPEED_INTERVAL:
                 ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
@@ -136,13 +132,9 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
                 ckLogDistanceActive
                         .setSelected(m.getLogDistanceInterval() != 0);
-                if (m.getIntOpt(Model.DEVICE_PROTOCOL) == BT747Constants.PROTOCOL_PHLX) {
-                    txtLogDistanceInterval.setText(""
-                            + m.getLogDistanceInterval());
-                } else {
-                    txtLogDistanceInterval.setText(JavaLibBridge.toString(m
-                            .getLogDistanceInterval() / 10., 1));
-                }
+
+                txtLogDistanceInterval.setText(JavaLibBridge.toString(m
+                        .getLogDistanceInterval() / 10., 1));
                 break;
             case MtkModel.DATA_FIX_PERIOD:
                 txtFixPeriod.setText("" + m.getLogFixPeriod());
@@ -1204,13 +1196,11 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 if (ckLogTimeActive.isSelected()
                         && ckLogDistanceActive.isSelected()) {
                     ckLogDistanceActive.setSelected(false);
-                    Generic
-                            .debug(
-                                    null,
-                                    new BT747Exception(
-                                            "Time and Distance log conditions both active"
-                                                    + " while the device requires exclusive operation."
-                                                    + "  Time condition selected."));
+                    c
+                            .sendBT747Exception(new BT747Exception(
+                                    "Time and Distance log conditions both active"
+                                            + " while the device requires exclusive operation."
+                                            + "  Time condition selected."));
                 }
             }
             int value;
@@ -1220,10 +1210,14 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             } else {
                 value = 0;
             }
-            if (ckLogTimeActive.isSelected() || !isTimeAndDistanceExclusive)
+            
+            if (ckLogTimeActive.isSelected()
+                    || (isTimeAndDistanceExclusive && !ckLogDistanceActive
+                            .isSelected()) || !isTimeAndDistanceExclusive) {
                 // If time & distance are exclusive, do not set the unselected
-                // 0 value.
+                // 0 value unless distance is not selected.
                 c.setLogTimeInterval(value);
+            }
 
             if (ckLogSpeedActive.isSelected()) {
                 value = (int) (JavaLibBridge.toDouble(txtLogSpeedInterval
@@ -1248,9 +1242,9 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
 
             c.setFixInterval(JavaLibBridge.toInt(txtFixPeriod.getText()));
         } catch (Exception e) {
-            Generic
-                    .debug(null,
-                            new BT747Exception("Apply log conditions", e));
+            c
+                    .sendBT747Exception(new BT747Exception(
+                            "Apply log conditions", e));
         }
     }//GEN-LAST:event_btHotStartActionPerformed
 

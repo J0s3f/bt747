@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import sun.net.www.http.PosterOutputStream;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
@@ -48,6 +49,7 @@ import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -1600,5 +1602,9 @@ public class Controller implements ModelListener {
 
     public final void setAgpsData(final byte[] agpsData) {
         getGpsC().setAgpsData(agpsData);
+    }
+    
+    public final void sendBT747Exception(final BT747Exception e) {
+        m.postEvent(GpsEvent.EXCEPTION, e);
     }
 }
