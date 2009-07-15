@@ -3,8 +3,11 @@ package net.sf.bt747.j4me.app;
 import gps.GpsEvent;
 import gps.mvc.MtkModel;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
+import net.sf.bt747.j4me.app.screens.ErrorAlert;
 
 import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.components.Label;
 import org.j4me.ui.components.TextBox;
 
 import bt747.model.ModelEvent;
@@ -22,11 +25,20 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
 
     boolean screenSetup = false;
 
+    private final boolean isTimeAndDistanceExclusive() {
+        final MtkModel mtk = m().mtkModel();
+        return mtk.isTimeDistanceLogConditionExclusive();
+    }
+
     private void setupScreen() {
         if (!screenSetup) {
             screenSetup = true;
             setTitle("Configure log conditions");
 
+            if (isTimeAndDistanceExclusive()) {
+                append(new Label(
+                        "Time and Distance conditions are mutually exclusive!"));
+            }
             tbTime = new TextBox();
             tbTime.setForDecimalOnly();
             tbTime.setLabel("Time period (s)");
@@ -61,7 +73,13 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
             isDataRequested = true;
             c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
-            c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL); // TODO: Should be done on actual initial
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL); // TODO:
+            // Should
+            // be
+            // done
+            // on
+            // actual
+            // initial
             // entry
             c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
             updateButtons();
@@ -75,8 +93,8 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
     }
 
     public final void updateButtons() {
-        tbTime.setString(JavaLibBridge.toString(
-                ((float) m().getLogTimeInterval()) / 10, 1));
+        tbTime.setString(JavaLibBridge.toString(((float) m()
+                .getLogTimeInterval()) / 10, 1));
         tbSpeed.setString("" + m().getLogSpeedInterval());
         tbDistance.setString(JavaLibBridge.toString((float) m()
                 .getLogDistanceInterval() / 10, 1));
@@ -84,13 +102,29 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
         repaint();
     }
 
-    public final void setSettings() {
-        c
-                .setLogTimeInterval((int) (10 * JavaLibBridge.toFloat(tbTime
-                        .getString())));
+    public DeviceScreen setSettings() {
+        DeviceScreen nextScreen = null;
         c.setLogSpeedInterval(JavaLibBridge.toInt(tbSpeed.getString()));
-        c.setLogDistanceInterval((int) (10 * JavaLibBridge.toFloat(tbDistance
-                .getString())));
+        int timeCond;
+        int distCond;
+        timeCond = (int) (10 * JavaLibBridge.toFloat(tbTime.getString()));
+        distCond = (int) (10 * JavaLibBridge.toFloat(tbDistance.getString()));
+        if (isTimeAndDistanceExclusive() && timeCond != 0 && distCond != 0) {
+            distCond = 0;
+            nextScreen = new ErrorAlert(
+                    "Time & Distance",
+                    "Time and distance conditions mutually exclusive."
+                            + "  Only time has been used, distance was ignored.",
+                    previous);
+        }
+        if (!isTimeAndDistanceExclusive() || distCond == 0) {
+            c.setLogTimeInterval((int) (10 * JavaLibBridge.toFloat(tbTime
+                    .getString())));
+        }
+        if (!isTimeAndDistanceExclusive() || distCond != 0) {
+            c.setLogDistanceInterval((int) (10 * JavaLibBridge
+                    .toFloat(tbDistance.getString())));
+        }
         c.setFixInterval((JavaLibBridge.toInt(tbFix.getString())));
         Log.debug("Log condition settings updated");
         // c.setFixInterval(JavaLibBridge.toInt(edFix.getText()));
@@ -98,12 +132,18 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements
         c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
         c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
         c.setMtkDataNeeded(MtkModel.DATA_FIX_PERIOD);
+        return nextScreen;
     }
 
     protected void acceptNotify() {
         m().removeListener(this);
-        setSettings();
-        previous.show();
+        DeviceScreen errorScreen;
+        errorScreen = setSettings();
+        if (errorScreen != null) {
+            errorScreen.show();
+        } else {
+            previous.show();
+        }
         super.acceptNotify();
     }
 
