@@ -29,6 +29,35 @@ import bt747.sys.interfaces.BT747Vector;
 /**
  * @author Mario De Weerd
  */
+
+// Implementation notes:
+// To add stuff, it is fairly simple:
+// a) Add a new key (say just after public final static int OSMPASS = 58;, add
+// key 59). Must be unique of course.
+// b) 'Reserve' the space for the data:
+// - Copy the definitions for
+// private static final int C_NEXT_SIZE = 4;
+// private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
+//	 
+// just above those lines.
+// On three lines (2 of which you just created), replace 'C_NEXT' with
+// 'C_NEWKEY'.
+// Adjust the size of the field to what you need.
+//
+// c) Add the key and the offset, size to the paramsList (at the end, must be
+// in the right order):
+// Copy entry for say 'OSMPASS' and replace 'OSMPASS' with 'NEWKEY'.
+// Set the right type for the entry (probably STRING for you).
+// d) in 'updateSettings', find the last case entry. Add a new one just above
+// setting the 'VERSION'. Indicate '/* fall through */. Increment number for
+// case and number for version. Initialise all the new settings you just
+// added.
+// e) Use/Test.
+// Set the setting in the program:
+// c.setStringOpt(... c.setIntOpt(...., etc.
+// To read the setting,
+// m.getStringOpt(param), ...
+// The model will notify changes.
 public class AppSettings implements BT747Thread {
 
     /**
@@ -278,11 +307,42 @@ public class AppSettings implements BT747Thread {
      * OSM password.
      */
     public final static int OSMPASS = 58;
+
     /**
      * New track when logger is switched on.
      */
     public final static int IS_NEW_TRACK_WHEN_LOG_ON = 59;
     public final static int SPLIT_DISTANCE = 60;
+    // Some definitions for location server functionality
+    /**
+     * Hostname of the server to receive location data.
+     */
+    public final static int POS_SRV_HOSTNAME = 61;
+    /**
+     * Port of the server receiving location data.
+     */
+    public final static int POS_SRV_PORT = 62;
+    /**
+     * File part of the URL of the server to receiver the location data.
+     */
+    public final static int POS_SRV_FILE = 63;
+    /**
+     * Property indicating whether or not the application should start sending
+     * out location updates when a GPS device is connected.
+     */
+    public final static int POS_SRV_AUTOSTART = 64;
+    /**
+     * Username of the server to receive location data.
+     */
+    public final static int POS_SRV_USER = 65;
+    /**
+     * Password for access of the server receiving location data.
+     */
+    public final static int POS_SRV_PASS = 66;
+    /**
+     * The period in seconds between location server updates
+     */
+    public final static int POS_SRV_PERIOD = 67;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -515,8 +575,16 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 44:
             setIntOpt(SPLIT_DISTANCE, 0);
-
-            setStringOpt(AppSettings.VERSION, "0.45");
+            /* fall through */
+        case 45:
+            setStringOpt(POS_SRV_HOSTNAME, "localhost");
+            setIntOpt(POS_SRV_PORT, 80);
+            setStringOpt(POS_SRV_FILE, "");
+            setBooleanOpt(POS_SRV_AUTOSTART, false);
+            setStringOpt(POS_SRV_USER, "");
+            setStringOpt(POS_SRV_PASS, "");
+            setIntOpt(POS_SRV_PERIOD, 300);
+            setStringOpt(AppSettings.VERSION, "0.46");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1678,8 +1746,35 @@ public class AppSettings implements BT747Thread {
     private static final int C_SPLIT_DISTANCE_IDX = AppSettings.C_ISNEWTRACKWHENLOGON_IDX
             + AppSettings.C_ISNEWTRACKWHENLOGON_SIZE;
     private static final int C_SPLIT_DISTANCE_SIZE = 8;
-    private static final int C_NEXT_IDX = AppSettings.C_SPLIT_DISTANCE_IDX
+    private static final int POS_SRV_HOSTNAME_IDX = AppSettings.C_SPLIT_DISTANCE_IDX
             + AppSettings.C_SPLIT_DISTANCE_SIZE;
+    private static final int POS_SRV_HOSTNAME_SIZE = 80;
+    private static final int POS_SRV_PORT_IDX = AppSettings.POS_SRV_HOSTNAME_IDX
+            + AppSettings.POS_SRV_HOSTNAME_SIZE;
+    private static final int POS_SRV_PORT_SIZE = 4;
+    //
+    private static final int POS_SRV_FILE_IDX = AppSettings.POS_SRV_PORT_IDX
+            + AppSettings.POS_SRV_PORT_SIZE;
+    private static final int POS_SRV_FILE_SIZE = 80;
+    //
+    private static final int POS_SRV_AUTOSTART_IDX = AppSettings.POS_SRV_FILE_IDX
+            + AppSettings.POS_SRV_FILE_SIZE;
+    private static final int POS_SRV_AUTOSTART_SIZE = 1;
+    //
+    private static final int POS_SRV_USER_IDX = AppSettings.POS_SRV_AUTOSTART_IDX
+            + AppSettings.POS_SRV_AUTOSTART_SIZE;
+    private static final int POS_SRV_USER_SIZE = 20;
+    //
+    private static final int POS_SRV_PASS_IDX = AppSettings.POS_SRV_USER_IDX
+            + AppSettings.POS_SRV_USER_SIZE;
+    private static final int POS_SRV_PASS_SIZE = 20;
+    //
+    private static final int POS_SRV_PERIOD_IDX = AppSettings.POS_SRV_PASS_IDX
+            + AppSettings.POS_SRV_PASS_SIZE;
+    private static final int POS_SRV_PERIOD_SIZE = 8;
+
+    private static final int C_NEXT_IDX = AppSettings.POS_SRV_PERIOD_IDX
+            + AppSettings.POS_SRV_PERIOD_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1856,6 +1951,27 @@ public class AppSettings implements BT747Thread {
             { AppSettings.INT, AppSettings.SPLIT_DISTANCE,
                     AppSettings.C_SPLIT_DISTANCE_IDX,
                     AppSettings.C_SPLIT_DISTANCE_SIZE },
+            { AppSettings.STRING, AppSettings.POS_SRV_HOSTNAME,
+                    AppSettings.POS_SRV_HOSTNAME_IDX,
+                    AppSettings.POS_SRV_HOSTNAME_SIZE },
+            { AppSettings.INT, AppSettings.POS_SRV_PORT,
+                    AppSettings.POS_SRV_PORT_IDX,
+                    AppSettings.POS_SRV_PORT_SIZE },
+            { AppSettings.STRING, AppSettings.POS_SRV_FILE,
+                    AppSettings.POS_SRV_FILE_IDX,
+                    AppSettings.POS_SRV_FILE_SIZE },
+            { AppSettings.BOOL, AppSettings.POS_SRV_AUTOSTART,
+                    AppSettings.POS_SRV_AUTOSTART_IDX,
+                    AppSettings.POS_SRV_AUTOSTART_SIZE },
+            { AppSettings.STRING, AppSettings.POS_SRV_USER,
+                    AppSettings.POS_SRV_USER_IDX,
+                    AppSettings.POS_SRV_USER_SIZE },
+            { AppSettings.STRING, AppSettings.POS_SRV_PASS,
+                    AppSettings.POS_SRV_PASS_IDX,
+                    AppSettings.POS_SRV_PASS_SIZE },
+            { AppSettings.INT, AppSettings.POS_SRV_PERIOD,
+                    AppSettings.POS_SRV_PERIOD_IDX,
+                    AppSettings.POS_SRV_PERIOD_SIZE },
 
     // End of list
     };
