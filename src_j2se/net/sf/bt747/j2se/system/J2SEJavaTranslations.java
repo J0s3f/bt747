@@ -16,10 +16,12 @@ package net.sf.bt747.j2se.system;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747HttpSender;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -210,5 +212,14 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
     public final BT747HashSet getHashSetInstance() {
         return new J2SEHashSet();
     }
+
+    private BT747HttpSender httpSenderInstance = null;
+
+	public BT747HttpSender getHttpSenderInstance() {
+		if (httpSenderInstance == null) {
+			httpSenderInstance = new J2SEHttpSenderImpl();
+		}
+		return httpSenderInstance;
+	}
 
 }

@@ -127,9 +127,13 @@ public class BT747Main extends javax.swing.JFrame implements
                         "COM9:", "COM10:", "COM11:", "COM12:", "COM13:",
                         "COM14:", // NOI18N
                         "COM15:", "COM16:" })); // NOI18N
-    }
+    } 
 
     private LogOperationsPanel pnLogOperationsPanel;
+    
+    // fun
+    private LocationServerPanel pnLocationServerPanel;
+    
     private AdvancedDeviceSettingsPanel pnAdvancedSettingsPanel;
     private DeviceSettingsPanel pnDeviceSettingsPanel;
     private FiltersPanel pnFiltersPanel;
@@ -170,6 +174,10 @@ public class BT747Main extends javax.swing.JFrame implements
         btToolInfo.setSelected(sel == InfoPanel);
         btToolWaypoints.setSelected(sel == waypointPanel);
         btToolTrack.setSelected(sel == trackPanel);
+        
+        // fun
+        btToolLocServe.setSelected(sel == pnLocationServerPanel);
+        
     }
 
     private final void completeGui() {
@@ -182,7 +190,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 getIcon("icon_home.gif"), inScrollPane(pnLogOperationsPanel),
                 null, 0);
         tabbedPanelAll.setSelectedIndex(0);
-
+        
         pnOutputSettingsPanel = new OutputSettingsPanel();
         tabbedPanelAll
                 .insertTab(
@@ -218,6 +226,16 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
                         getIcon("page_right.gif"),
                         inScrollPane(pnAdvancedFileSettingsPanel), null, 5);
+
+        // fun
+        pnLocationServerPanel = new LocationServerPanel();
+        pnLocationServerPanel.init(c);
+        tabbedPanelAll
+        		.insertTab(
+        				"Location Serving",
+        				getIcon("locsrv.png"),
+        				inScrollPane(pnLocationServerPanel), null, 6);
+        
 
         // pnFilesToTagPanel = new FileTablePanel();
         pnFilesToTagPanel = new FilesPanel();
@@ -626,6 +644,10 @@ public class BT747Main extends javax.swing.JFrame implements
         btToolFilesToTag = new javax.swing.JButton();
         btToolMap = new javax.swing.JButton();
         btToolTrack = new javax.swing.JButton();
+        
+        // fun
+        btToolLocServe = new javax.swing.JButton();
+        
         btToolWaypoints = new javax.swing.JButton();
         btToolOutputSettings = new javax.swing.JButton();
         btToolFilter = new javax.swing.JButton();
@@ -817,6 +839,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         jToolBar1.add(btToolLogOps);
 
+
         btToolFilesToTag.setIcon(new javax.swing.ImageIcon(getClass()
                 .getResource("/bt747/j2se_view/resources/images.png"))); // NOI18N
         btToolFilesToTag.setText(bundle
@@ -995,6 +1018,23 @@ public class BT747Main extends javax.swing.JFrame implements
                     }
                 });
         jToolBar1.add(btToolAdvFileSettings);
+
+        // fun
+        btToolLocServe.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/locsrv.png")));
+        btToolLocServe.setToolTipText("Location Server"); // NOI18N
+        btToolLocServe.setFocusable(false);
+        btToolLocServe
+                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolLocServe.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolLocServe
+                .setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolLocServe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	btToolLocServeActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolLocServe);
+
 
         btToolInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource(
                 "/bt747/j2se_view/resources/information.png"))); // NOI18N
@@ -1521,6 +1561,18 @@ public class BT747Main extends javax.swing.JFrame implements
         }
     }//GEN-LAST:event_btToolLogOpsActionPerformed
 
+    
+    // fun
+    private void btToolLocServeActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            tabbedPanelAll.setSelectedComponent(pnLocationServerPanel
+                    .getParent().getParent());
+        } catch (Exception e) {
+
+        }
+    }
+    
+    
     private void btToolFilesToTagActionPerformed(
             java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btToolFilesToTagActionPerformed
         try {
@@ -1670,6 +1722,10 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JButton btToolMap;
     private javax.swing.JButton btToolOutputSettings;
     private javax.swing.JButton btToolTrack;
+    
+    // fun
+    private javax.swing.JButton btToolLocServe;
+    
     private javax.swing.JButton btToolWaypoints;
     private javax.swing.JComboBox cbPortName;
     private javax.swing.JComboBox cbSerialSpeed;
