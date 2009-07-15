@@ -299,8 +299,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         jPanel1.setDoubleBuffered(false);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        pnVolatileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceSettingsPanel.pnVolatileSettings.border.title"))); // NOI18N
         pnVolatileSettings.setToolTipText(bundle.getString("DeviceSettingsPanel.pnVolatileSettings.toolTipText")); // NOI18N
+        pnVolatileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceSettingsPanel.pnVolatileSettings.border.title"))); // NOI18N
 
         btStoreSettings.setText(bundle.getString("DeviceSettingsPanel.btStoreSettings.text")); // NOI18N
         btStoreSettings.setToolTipText(bundle.getString("DeviceSettingsPanel.btStoreSettings.toolTipText")); // NOI18N
@@ -494,18 +494,18 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogBy.border.title"))); // NOI18N
         pnLogBy.setToolTipText(bundle.getString("BT747Main.pnLogBy.toolTipText")); // NOI18N
+        pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogBy.border.title"))); // NOI18N
 
         txtTimeSeconds.setText(bundle.getString("BT747Main.txtTimeSeconds.text")); // NOI18N
 
         ckLogSpeedActive.setText(bundle.getString("BT747Main.ckLogSpeedActive.text")); // NOI18N
 
         txtLogDistanceInterval.setText(bundle.getString("BT747Main.txtLogDistanceInterval.text")); // NOI18N
-        txtLogDistanceInterval.setInputVerifier(c.FloatVerifier);
+        txtLogDistanceInterval.setInputVerifier(J2SEAppController.FloatVerifier);
 
         txtLogTimeInterval.setText(bundle.getString("BT747Main.txtLogTimeInterval.text")); // NOI18N
-        txtLogTimeInterval.setInputVerifier(c.FloatVerifier);
+        txtLogTimeInterval.setInputVerifier(J2SEAppController.FloatVerifier);
 
         lbKMH.setText(bundle.getString("BT747Main.lbKMH.text")); // NOI18N
 
@@ -530,7 +530,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         });
 
         txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
-        txtLogSpeedInterval.setInputVerifier(c.IntVerifier);
+        txtLogSpeedInterval.setInputVerifier(J2SEAppController.IntVerifier);
 
         txtTimeEvery.setText(bundle.getString("BT747Main.txtTimeEvery.text")); // NOI18N
 
@@ -544,6 +544,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbFixEvery.setText(bundle.getString("BT747Main.lbFixEvery.text")); // NOI18N
 
         txtFixPeriod.setText(bundle.getString("BT747Main.txtFixPeriod.text")); // NOI18N
+        txtFixPeriod.setInputVerifier(J2SEAppController.IntVerifier);
 
         lbFixMs.setText(bundle.getString("BT747Main.lbFixMs.text")); // NOI18N
 
@@ -668,8 +669,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
 
         jPanel4.setDoubleBuffered(false);
 
-        pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogFormat.border.title"))); // NOI18N
         pnLogFormat.setToolTipText(bundle.getString("BT747Main.pnLogFormat.toolTipText")); // NOI18N
+        pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogFormat.border.title"))); // NOI18N
 
         btFormatAndErase.setText(bundle.getString("BT747Main.btFormatAndErase.text")); // NOI18N
         btFormatAndErase.setToolTipText(bundle.getString("BT747Main.btFormatAndErase.toolTipText")); // NOI18N
