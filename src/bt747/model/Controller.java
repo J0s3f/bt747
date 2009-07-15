@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import sun.net.www.http.PosterOutputStream;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
