@@ -14,6 +14,9 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+
+import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
+import net.sf.bt747.loc.LocationSender;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
@@ -124,6 +127,30 @@ public class Controller implements ModelListener {
      */
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
+		case ModelEvent.CONNECTED:
+			// Florian Unger
+			// If position service is configured in the setting start
+			// sending location data on conect to the GPS device
+			if (m.getBooleanOpt(AppSettings.POS_SRV_AUTOSTART)) {
+				this.startGPSPositionServing();
+			}
+			break;
+		case ModelEvent.DISCONNECTED:
+			// Florian Unger
+			// stop sending location data when no position updates
+			// can be retrieved from the GPS device.
+			if (this.isLocationServingActive()) {
+				this.stopGPSPositionServing();
+			}
+			break;
+		case ModelEvent.POS_SRV_FATAL_FAILURE:
+			// Florian Unger
+			// This event has been sent from a LocationSender instance
+			// On a fatal failure stop the sending process
+			if (this.isLocationServingActive()) {
+				this.stopGPSPositionServing();
+			}
+			break;
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
             // TODO: Possibly move this to the mtkController.
             if (m.mtkModel().isLoggingDisabled()) {
@@ -1606,4 +1633,78 @@ public class Controller implements ModelListener {
     public final void sendBT747Exception(final BT747Exception e) {
         m.postEvent(GpsEvent.EXCEPTION, e);
     }
+
+	/**
+	 * A LocationSender instance which is registered with this instance's Model.
+	 * Currently there may be only one LocationSender registered with a Model
+	 * from this Controller class.<br>
+	 * This instance is remembered here so that it can be used to be removed
+	 * again from the Model.
+	 * 
+	 * @author Florian Unger
+	 */
+	private LocationSender registeredLocSender = null;
+
+	/**
+	 * Check whether location updates currently are sent out to external
+	 * servers.
+	 * 
+	 * @return true if the location serving is currently active, false
+	 *         otherwise.
+	 */
+	public boolean isLocationServingActive() {
+		return registeredLocSender != null;
+	}
+
+	/**
+	 * If there is no LocationSender yet registered with the Model create such a
+	 * LocationSender and register it with the Model so that it starts sending
+	 * out position updates.<br>
+	 * As usually with Controllers this is an operation which implements the
+	 * reaction of the application to some user interaction (Although this is
+	 * called with other ways also). This is useful for example for a type of
+	 * interaction where a user activates position sending with pressing a
+	 * button.
+	 * 
+	 * @author Florian Unger
+	 */
+	public void startGPSPositionServing() {
+		if (registeredLocSender == null) {
+			LocationSender ls = m.createAndConfigureLocationSender();
+			this.getModel().addListener(ls);
+			// remember this not before it really is registered with the model.
+			this.registeredLocSender = ls;
+		}
+	}
+
+	/**
+	 * If there is a LocationSender currently registered as Listener with the
+	 * Model of this instance then remove it from the Listeners of the Model and
+	 * set registeredLocSender to null.<br>
+	 * This is the complementing operation to startGPSPositionServing and may be
+	 * used just the same way. For example the user might stop position serving
+	 * by pressing a push button.
+	 * 
+	 * @author Florian Unger
+	 */
+	public void stopGPSPositionServing() {
+		if (registeredLocSender != null) {
+			try {
+				this.getModel().removeListener(registeredLocSender);
+			} catch (Exception e) {
+				// Normally we would check whether the instance to be removed
+				// from the listeners is register at all (it may have been
+				// removed by someone else). If it would not be contained in
+				// the listeners we would not try to remove.
+				// Unfortunately there is no way in the implementation of Model
+				// to check for the existence of an Object in teh listeners. So
+				// we just try the removing and take any resulting Exception
+				// as sign that the Object to remove is not in teh listeners
+				// anymore.
+			}
+			registeredLocSender = null;
+		}
+
+	}
+
 }
