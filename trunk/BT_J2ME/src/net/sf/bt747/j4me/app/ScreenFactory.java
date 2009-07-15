@@ -24,6 +24,7 @@ public final class ScreenFactory {
     public static final int LOGCONDITIONSCONFIGSCREEN = 8;
     public static final int AGPSSCREEN = 9;
     public static final int CONNECTCONFIGSCREEN = 10;
+	public static final int POS_SRV_SCREEN = 11;
 
     public static final BT747Dialog getScreen(final int type) {
         switch (type) {
