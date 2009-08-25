@@ -18,9 +18,11 @@ COSMETIC IMPROVEMENTS
 
 IMPROVEMENTS
 (Things not very visible to the user).
-* Detect power up/rest of device (Initial PMTK010) and use it to rerequest all the values.
+* Detect power up/rest of device (Initial PMTK010) and use it to request all the values again.
 * More precise height conversion (at least on PC).
 * Need to indicate that the device needs formatting in all setups (J2ME, PDA).
+* Improve image thumbnail generation and caching.
+* Improve waypoint handling (when there are many): put drawing them in a separate thread.
 
 FEATURES
 
@@ -62,6 +64,8 @@ Device
 * Add SIRFIII support.
 * Detect that a device has bad blocks.  Skip the blocks/propose to repair.
   [Does not seem to happen that often]
+* Add support for 
+  http://code.google.com/p/skytraq-datalogger/source/browse/#svn/branches/0.3
 
 Tracks
 * Allow changing data in J2SE gui.
