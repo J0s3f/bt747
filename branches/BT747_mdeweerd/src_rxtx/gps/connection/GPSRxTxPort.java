@@ -213,44 +213,63 @@ public final class GPSRxTxPort extends GPSPort {
     private static final int MAX_USBPORT_SEARCH_IDX = 6;
 
     /**
+     * List of valid bluetooth port prefixes for the mac.
+     */
+    private static final String[] macPortPrefixes = {
+            "/dev/tty.HOLUX_M-241-SPPSlave-", // Port for Holux M-241
+            "/dev/tty.HoluxM-1000C-SPPslave-", // Port for Holux M1000C
+            "/dev/tty.iBT-GPS-SPPSlave-", // Port for
+            "/dev/tty.iBT-GPS-SPPslave-", // Port for
+            "/dev/cu.QstarzGPS-SPPslave-", // Port for some Qstartz devices
+            "/dev/tty.QstarzGPS-SPPslave-",// Port for some Qstartz devices
+            "/dev/tty.BlumaxBT-GPS-SPPSlave-" // Port for Blumax device
+    };
+
+    /**
      * Set a bluetooth connection.
      */
     public final synchronized void setBlueTooth() {
         super.setBlueTooth();
         spPortNbr = 0;
+
         boolean portFound = false;
         if (os_name.toLowerCase().startsWith("mac")) {
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                // /dev/tty.HOLUX_M-241-SPPSlave-1
-                setFreeTextPort("/dev/tty.HOLUX_M-241-SPPSlave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                // /dev/tty.HOLUX_M-241-SPPSlave-1
-                setFreeTextPort("/dev/tty.HoluxM-1000C-SPPslave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/tty.iBT-GPS-SPPSlave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/tty.iBT-GPS-SPPslave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/cu.QstarzGPS-SPPslave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_BTPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/tty.QstarzGPS-SPPslave-" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
+            portFound = setPortFromPrefixes(macPortPrefixes,
+                    MAX_BTPORT_SEARCH_IDX);
         }
+
         if (!portFound) {
             setFreeTextPort("");
         }
     }
+
+    /**
+     * Goes through a list of port prefixes for indexes from 0 up to maxIdx.
+     * 
+     * @param prefixes
+     *            list of prefixes for ports that will be appended with an
+     *            index.
+     * @param maxIdx
+     *            maximum index for ports.
+     * @return true if a valid port was found and set.
+     */
+    private final synchronized boolean setPortFromPrefixes(
+            final String[] prefixes, final int maxIdx) {
+        boolean portFound = false;
+        for (int prefixIdx = 0; !portFound && prefixIdx < prefixes.length; prefixIdx++) {
+            for (int i = 0; !portFound && (i < maxIdx); i++) {
+                // /dev/tty.HOLUX_M-241-SPPSlave-1
+                setFreeTextPort(prefixes[prefixIdx] + i);
+                portFound = isValidPort(getFreeTextPort());
+            }
+        }
+        return portFound;
+    }
+
+    private static final String[] linUsbPortPrefixes = { //
+    "/dev/ttyUSB", // Prefix on linux for USB ports
+            "/dev/ttyACM" // Prefix on linux for newer USB ports of GPS
+    };
 
     /**
      * Set an USB connection.
@@ -281,14 +300,8 @@ public final class GPSRxTxPort extends GPSPort {
             portFound = isValidPort(getFreeTextPort());
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
-            for (int i = 0; !portFound && (i < MAX_USBPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/ttyUSB" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
-            for (int i = 0; !portFound && (i < MAX_USBPORT_SEARCH_IDX); i++) {
-                setFreeTextPort("/dev/ttyACM" + i);
-                portFound = isValidPort(getFreeTextPort());
-            }
+            portFound = setPortFromPrefixes(linUsbPortPrefixes,
+                    MAX_USBPORT_SEARCH_IDX);
         }
         if (!portFound) {
             setFreeTextPort("");

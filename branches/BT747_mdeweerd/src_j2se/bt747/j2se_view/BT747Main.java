@@ -288,7 +288,7 @@ public class BT747Main extends javax.swing.JFrame implements
         new FileDrop(this, dl);
 
         pnMap.init(c);
-        mMap4.setVisible(false);
+        mMap4.setVisible(true);
         pnFilesToTagPanel.init(c);
         pnAdvancedSettingsPanel.init(c);
         pnDeviceSettingsPanel.init(c);
@@ -457,12 +457,12 @@ public class BT747Main extends javax.swing.JFrame implements
             int idx;
             idx = m.getIntOpt(Model.MAPTYPE);
             MapType mt = MapType.OpenStreetMap;
-            if (MapType.values()[idx] != MapType.Map4) {
-                // Map4 no longer supported.
+//            if (MapType.values()[idx] != MapType.Map4) {
+//                // Map4 no longer supported.
                 if (idx < MapType.values().length) {
                     mt = MapType.values()[idx];
                 }
-            }
+//            }
             miMapnik.setSelected(mt == MapType.OpenStreetMap);
             miOsmarender.setSelected(mt == MapType.OsmaRender);
             miCycle.setSelected(mt == MapType.Cycle);
