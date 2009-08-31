@@ -596,7 +596,7 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 46:
             setIntOpt(GPSTIMEOFFSETQUARTERS,
-                    getIntOpt(GPSTIMEOFFSETHOURS_OBSOLETE) * 4);
+                    48 + getIntOpt(GPSTIMEOFFSETHOURS_OBSOLETE) * 4);
             setStringOpt(AppSettings.VERSION, "0.47");
             /* fall through */
         default:
