@@ -111,14 +111,14 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             break;
         }
         cbOneFilePerDay.setSelectedIndex(index);
+        
+        
+        cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(
+                BT747Constants.getUtcStrings("UTC ")));
+
         try {
             int utcOffsetIdx;
-            utcOffsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
-            if (utcOffsetIdx > cbUTCOffset.getItemCount()) {
-                utcOffsetIdx = 12;
-            } else if (utcOffsetIdx < 0) {
-                utcOffsetIdx = 12;
-            }
+            utcOffsetIdx = BT747Constants.getUtcIdx(m.getIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS));
             cbUTCOffset.setSelectedIndex(utcOffsetIdx);
             updateUTCOffsetFromGUI();
         } catch (final Exception e) {
@@ -976,14 +976,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     }
 
     private void updateUTCOffsetFromGUI() {
-        final String tmp = (String) cbUTCOffset.getSelectedItem();
-        if (tmp.charAt(4) == '+') {
-            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer
-                    .parseInt((String) tmp.substring(5)));
-        } else {
-            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer.parseInt(tmp
-                    .substring(4)));
-        }
+        int idx = cbUTCOffset.getSelectedIndex();
+        c.setIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS, BT747Constants.timeZones[idx]);
     }
     
     private void cbUTCOffsetFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbUTCOffsetFocusLost

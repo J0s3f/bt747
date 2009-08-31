@@ -633,7 +633,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_UTC)) {
             final Integer offset = (Integer) options.valueOf(OPT_UTC);
-            c.setIntOpt(Model.GPSTIMEOFFSETHOURS, offset);
+            // TODO: add minutes.
+            c.setIntOpt(Model.GPSTIMEOFFSETQUARTERS, offset * 4 + 48);
             // Default value for filetime offset
             c.setIntOpt(Model.FILETIMEOFFSET, offset * 3600);
         }

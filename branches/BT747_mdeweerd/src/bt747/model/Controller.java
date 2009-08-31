@@ -349,9 +349,9 @@ public class Controller implements ModelListener {
                     .getBooleanOpt(AppSettings.GPXUTC0)) || ((gpsFile
                     .getClass() == GPSNMEAFile.class) && m
                     .getBooleanOpt(AppSettings.NMEAUTC0)))) {
-                gpsFile.setTimeOffset(m
-                        .getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
-                        * Controller.SECONDS_PER_HOUR);
+                gpsFile.setTimeOffset((m
+                        .getIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS) - 48)
+                        * (Controller.SECONDS_PER_HOUR / 4));
             }
             gpsFile.setWayPointTimeCorrection(-m
                     .getIntOpt(AppSettings.FILETIMEOFFSET));

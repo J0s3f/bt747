@@ -181,10 +181,13 @@ public class AppSettings implements BT747Thread {
      */
     public static final int OPENPORTATSTARTUP = 19;
     /**
-     * @return The GPS time offset (UTC vs. local time). (used in adjusting
-     *         the time in the output formats).
+     * The GPS time offset (UTC vs. local time). (used in adjusting the time
+     * in the output formats).
+     * 
+     * @deprecated
      */
-    public static final int GPSTIMEOFFSETHOURS = 20;
+    public static final int GPSTIMEOFFSETHOURS_OBSOLETE = 20;
+
     /**
      * When true, will override already set positions while tagging.
      */
@@ -343,6 +346,12 @@ public class AppSettings implements BT747Thread {
      * The period in seconds between location server updates
      */
     public final static int POS_SRV_PERIOD = 67;
+    /**
+     * The GPS time offset (UTC vs. local time) in quarters (15 minutes).
+     * Replaces {@link #GPSTIMEOFFSETHOURS} (used in adjusting the time in the
+     * output formats).
+     */
+    public static final int GPSTIMEOFFSETQUARTERS = 68;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -584,7 +593,11 @@ public class AppSettings implements BT747Thread {
             setStringOpt(POS_SRV_USER, "");
             setStringOpt(POS_SRV_PASS, "");
             setIntOpt(POS_SRV_PERIOD, 300);
-            setStringOpt(AppSettings.VERSION, "0.46");
+            /* fall through */
+        case 46:
+            setIntOpt(GPSTIMEOFFSETQUARTERS,
+                    getIntOpt(GPSTIMEOFFSETHOURS_OBSOLETE) * 4);
+            setStringOpt(AppSettings.VERSION, "0.47");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1773,8 +1786,11 @@ public class AppSettings implements BT747Thread {
             + AppSettings.POS_SRV_PASS_SIZE;
     private static final int POS_SRV_PERIOD_SIZE = 8;
 
-    private static final int C_NEXT_IDX = AppSettings.POS_SRV_PERIOD_IDX
+    private static final int GPSTIMEOFFSETQUARTERS_IDX = AppSettings.POS_SRV_PERIOD_IDX
             + AppSettings.POS_SRV_PERIOD_SIZE;
+    private static final int GPSTIMEOFFSETQUARTERS_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.GPSTIMEOFFSETQUARTERS_IDX
+            + AppSettings.GPSTIMEOFFSETQUARTERS_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1841,7 +1857,7 @@ public class AppSettings implements BT747Thread {
             { AppSettings.BOOL, AppSettings.OPENPORTATSTARTUP,
                     AppSettings.C_OPENSTARTUP_IDX,
                     AppSettings.C_OPENSTARTUP_SIZE },
-            { AppSettings.INT, AppSettings.GPSTIMEOFFSETHOURS,
+            { AppSettings.INT, AppSettings.GPSTIMEOFFSETHOURS_OBSOLETE,
                     AppSettings.C_GPSTIMEOFFSETHOURS_IDX,
                     AppSettings.C_GPSTIMEOFFSETHOURS_SIZE },
             { AppSettings.BOOL, AppSettings.TAG_OVERRIDEPOSITIONS,
@@ -1972,7 +1988,9 @@ public class AppSettings implements BT747Thread {
             { AppSettings.INT, AppSettings.POS_SRV_PERIOD,
                     AppSettings.POS_SRV_PERIOD_IDX,
                     AppSettings.POS_SRV_PERIOD_SIZE },
-
+            { AppSettings.INT, AppSettings.GPSTIMEOFFSETQUARTERS,
+                    AppSettings.GPSTIMEOFFSETQUARTERS_IDX,
+                    AppSettings.GPSTIMEOFFSETQUARTERS_SIZE },
     // End of list
     };
 
