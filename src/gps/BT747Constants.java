@@ -76,7 +76,8 @@ public final class BT747Constants { // dev as in device
 
     /**
      * Size for each item of the log format of the iBlue 747.<br>
-     * <b>The log record length is variable is satelite information is logged:</b><br>
+     * <b>The log record length is variable is satelite information is
+     * logged:</b><br>
      * SID, ELEVATION, AZIMUTH and SNR are repeated NSAT times.<br>
      * <br>
      * Entries are in order. The entry position corresponds to the bit
@@ -151,7 +152,7 @@ public final class BT747Constants { // dev as in device
             0, // 1E
             0, // 1F // Log points with valid fix only
     };
-    
+
     public static final int RCR_TIME_MASK = 0x01;
     public static final int RCR_SPEED_MASK = 0x02;
     public static final int RCR_DISTANCE_MASK = 0x04;
@@ -211,7 +212,8 @@ public final class BT747Constants { // dev as in device
     public static final int PMTK_LOG_SPEED_INTERVAL = 5;
     public static final int PMTK_LOG_REC_METHOD = 6;
     /**
-     * Logger Status. <table>
+     * Logger Status.
+     * <table>
      * <tr>
      * <th>bit 11</th>
      * <td>Logging is full.</td>
@@ -220,33 +222,26 @@ public final class BT747Constants { // dev as in device
      * @see {@link #PMTK_LOG_STATUS_LOGISFULL_MASK}</td>
      *      </tr>
      *      <tr>
-     *      <th>bit 10</th>
-     *      <td>Logging needs initialisation (format).</td>
+     *      <th>bit 10</th> <td>Logging needs initialisation (format).</td>
      *      <td>
      * @see {@link #PMTK_LOG_STATUS_LOGMUSTINIT_MASK} </td>
      *      </tr>
      *      <tr>
-     *      <th>bit 9 </th>
-     *      <td>Logging is enabled.</td>
-     *      <td>
+     *      <th>bit 9 </th> <td>Logging is enabled.</td> <td>
      * @see {@link #PMTK_LOG_STATUS_DISABLED_MASK}</td>
      *      </tr>
      *      <tr>
-     *      <th>bit 8</th>
-     *      <td>Logging is enabled.</td>
-     *      <td>
+     *      <th>bit 8</th> <td>Logging is enabled.</td> <td>
      * @see {@link #PMTK_LOG_STATUS_LOGENABLED_MASK}</td>
      *      </tr>
      *      <tr>
-     *      <th>bit 2</th>
-     *      <td>Logging is in stop or overwrite mode. </td>
+     *      <th>bit 2</th> <td>Logging is in stop or overwrite mode. </td> 
      *      <td>
      * @see {@link #PMTK_LOG_STATUS_LOGSTOP_OVER_MASK}</td>
-     *      </tr> *
+     *      </tr>
+     *      *
      *      <tr>
-     *      <th>bit 2</th>
-     *      <td>Logging is on/off</td>
-     *      <td>
+     *      <th>bit 2</th> <td>Logging is on/off</td> <td>
      * @see {@link #PMTK_LOG_STATUS_LOGONOF_MASK}</td>
      *      </tr>
      *      </table>
@@ -531,14 +526,13 @@ public final class BT747Constants { // dev as in device
     public static final int HOLUX_API_DT_HW_VERSION = 7;
     public static final int HOLUX_API_DT_TZ_OFFSET = 10;
 
-
     /**
      * Connection protocols.
      */
     public static final int PROTOCOL_MTK = 0;
     public static final int PROTOCOL_DPL700 = 1;
     public static final int PROTOCOL_PHLX = 2;
-    
+
     /**
      * Default gps type selection (MTK Logger).
      */
@@ -568,16 +562,14 @@ public final class BT747Constants { // dev as in device
      */
     public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
 
-    
     /**
      * Get the minimum size for a log record. This does not include the
      * checksum.
      * 
      * @param p_logFormat
-     *                The log format of the device.
+     *            The log format of the device.
      * @param holux
-     *                True when this must be calculated for a Holux M241
-     *                device.
+     *            True when this must be calculated for a Holux M241 device.
      * 
      * @return Size of the header
      */
@@ -611,11 +603,10 @@ public final class BT747Constants { // dev as in device
         return total;
     }
 
-    
     public static final int logRecordAndChecksumSize(final int logFormat,
             final int gpsType, final int sats) {
         int checksumSize;
-        switch(gpsType) {
+        switch (gpsType) {
         default:
         case BT747Constants.GPS_TYPE_DEFAULT:
             checksumSize = 2;
@@ -624,19 +615,19 @@ public final class BT747Constants { // dev as in device
         case BT747Constants.GPS_TYPE_HOLUX_M241:
             checksumSize = 1;
             break;
-            }
+        }
         return checksumSize + logRecordSize(logFormat, gpsType, sats);
     }
-    
+
     /**
      * Calculate the log record size
      * 
      * @param logFormat
      * @param holux
-     *                When true, then the log record size is calculated for a
-     *                Holux M241 device.
+     *            When true, then the log record size is calculated for a
+     *            Holux M241 device.
      * @param sats
-     *                Estimated number of satellites per record.
+     *            Estimated number of satellites per record.
      * @return The estimated record size.
      */
     public static final int logRecordSize(final int logFormat,
@@ -661,17 +652,17 @@ public final class BT747Constants { // dev as in device
         return BT747Constants.logRecordSize(p_logFormat, gpsType,
                 BT747Constants.FMT_MAX_SATS);
     }
-    
+
     private static final byte[] getByteSizes(final int gpsType) {
-        switch(gpsType) {
+        switch (gpsType) {
         default:
         case BT747Constants.GPS_TYPE_DEFAULT:
             return BT747Constants.logFmtByteSizes;
         case BT747Constants.GPS_TYPE_HOLUX_GR245:
         case BT747Constants.GPS_TYPE_HOLUX_M241:
             return BT747Constants.logFmtByteSizesHolux;
-            }
         }
+    }
 
     public static final int[] logRecordSatOffsetAndSize(final int logFormat,
             final int gpsType) {
@@ -1073,5 +1064,92 @@ public final class BT747Constants { // dev as in device
                 BT747Constants.heightReferenceList[BT747Constants.INIT_REFERENCE_LIST[i][0]] = BT747Constants.INIT_REFERENCE_LIST[i][1];
             }
         }
+    }
+
+    /**
+     * List of existing timezones. To find hour: /4 -12 To find quarter: %4
+     * *15
+     */
+    public final static int[] timeZones = {
+    // List of existing timezones.
+            48 - 12 * 4, //
+            48 - 11 * 4,//
+            48 - 10 * 4,//
+            48 - 9 * 4 - 2,//
+            48 - 9 * 4,//
+            48 - 8 * 4,//
+            48 - 7 * 4,//
+            48 - 6 * 4,//
+            48 - 5 * 4,//
+            48 - 4 * 4 - 2,//
+            48 - 4 * 4,//
+            48 - 3 * 4 - 2,//
+            48 - 3 * 4,//
+            48 - 2 * 4,//
+            48 - 1 * 4,//
+            48 + 0 * 4,//
+            48 + 1 * 4,//
+            48 + 2 * 4,//
+            48 + 3 * 4,//
+            48 + 3 * 4 + 2,//
+            48 + 4 * 4,//
+            48 + 4 * 4 + 2,//
+            48 + 5 * 4,//
+            48 + 5 * 4 + 2,//
+            48 + 5 * 4 + 3,//
+            48 + 6 * 4,//
+            48 + 6 * 4 + 2,//
+            48 + 7 * 4,//
+            48 + 8 * 4,//
+            48 + 8 * 4 + 3,//
+            48 + 9 * 4,//
+            48 + 9 * 4 + 2,//
+            48 + 10 * 4,//
+            48 + 10 * 4 + 2,//
+            48 + 11 * 4,//
+            48 + 11 * 4 + 2,//
+            48 + 12 * 4,//
+            48 + 12 * 4 + 3,//
+            48 + 13 * 4,//
+            48 + 14 * 4,//
+    };
+
+    /**
+     * @return list of UTC strings for GUI.
+     */
+    public final static String[] getUtcStrings(final String prefix) {
+        String[] utcStrArr = new String[BT747Constants.timeZones.length];
+        for (int i = 0; i < timeZones.length; i++) {
+            final int zone = BT747Constants.timeZones[i] - 48;
+            final int hour = zone / 4;
+            int minutes = (zone % 4) * 15;
+            if (minutes < 0) {
+                minutes = -minutes;
+            }
+            String utc;
+            utc = prefix;
+            if (hour >= 0) {
+                utc += "+";
+            }
+            utc += hour;
+            if (minutes != 0) {
+                utc += ":" + minutes;
+            }
+            utcStrArr[i] = utc;
+        }
+        return utcStrArr;
+    }
+
+    /**
+     * @param encodedTZ
+     * @return Index in UTC string list for the timezone.
+     */
+    public final static int getUtcIdx(final int encodedTZ) {
+        for (int i = 0; i < timeZones.length; i++) {
+            if (timeZones[i] >= encodedTZ) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

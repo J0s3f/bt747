@@ -30,6 +30,7 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.BT747Constants;
 import gps.mvc.MtkModel;
 
 import net.sf.bt747.waba.system.WabaDate;
@@ -70,10 +71,7 @@ public final class GPSLogGet extends Container implements ModelListener {
     private Calendar cal;
     private Button btCal;
 
-    private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
-            "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
-            "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
-            "+13", "+14" };
+    private static final String[] offsetStr = BT747Constants.getUtcStrings("");
     private ComboBox cbColors;
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
@@ -155,11 +153,9 @@ public final class GPSLogGet extends Container implements ModelListener {
         edTrkSep.setText("" + m.getIntOpt(AppSettings.TRKSEP));
         edTrkSep.alignment = RIGHT;
 
-        int offsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
-        if (offsetIdx > 26) {
-            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0);
-            offsetIdx = 12;
-        }
+        int offsetIdx;
+        offsetIdx = BT747Constants.getUtcIdx(m.getIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS));
+
         cbTimeOffsetHours = new ComboBox(offsetStr);
         add(cbTimeOffsetHours, RIGHT, SAME);
         cbTimeOffsetHours.select(offsetIdx);
@@ -290,14 +286,9 @@ public final class GPSLogGet extends Container implements ModelListener {
                 c.setStringOpt(AppSettings.COLOR_INVALIDTRACK,
                         ((String) cbColors.getSelectedItem()));
             } else if (event.target == cbTimeOffsetHours) {
-                int index = 0;
-                // Work around superwaba bug
-                String tmp = (String) cbTimeOffsetHours.getSelectedItem();
-                if (tmp.charAt(0) == '+') {
-                    index = 1;
-                }
-                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, JavaLibBridge
-                        .toInt((String) tmp.substring(index)));
+                int idx = cbTimeOffsetHours.getSelectedIndex();
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS,
+                        BT747Constants.timeZones[idx]);
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
             } else if (event.target == cbFileSplitType) {
