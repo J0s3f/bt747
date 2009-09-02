@@ -301,7 +301,7 @@ public class IBlue747Model {
     }
 
     public static class MtkDataModel {
-        protected int logStatus = 0x104;
+        protected int logStatus = 2; // 0x104;
         private String coreVersion = "";
         /**
          * The curent communication mode of the device.
@@ -534,9 +534,11 @@ public class IBlue747Model {
                 break;
             case BT747Constants.PMTK_LOG_DISABLE:
                 mtkData.logStatus &= ~BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK;
+                mtkData.logStatus |= ~BT747Constants.PMTK_LOG_STATUS_LOGENABLED_MASK;
                 break;
             case BT747Constants.PMTK_LOG_ENABLE:
                 mtkData.logStatus |= BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK;
+                mtkData.logStatus &= ~BT747Constants.PMTK_LOG_STATUS_LOGENABLED_MASK;
                 break;
 
             default:

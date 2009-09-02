@@ -132,7 +132,7 @@ public class MtkModel implements EventPoster {
         this.handler = handler;
         this.context = context;
     }
-    
+
     public final Model getContext() {
         return context;
     }
@@ -351,14 +351,16 @@ public class MtkModel implements EventPoster {
     protected final void setAvailable(final int dataType) {
         setAvailable(dataType, true);
     }
-    
+
     protected final void setUnAvailable(final int dataType) {
         setAvailable(dataType, false);
     }
-    
-    protected final void setAvailable(final int dataType, final boolean isAvailable) {
+
+    protected final void setAvailable(final int dataType,
+            final boolean isAvailable) {
         dataAvailable[dataType] = isAvailable;
-        if(!isAvailable) return;
+        if (!isAvailable)
+            return;
         switch (dataType) {
         case DATA_FLASH_TYPE:
 
@@ -476,7 +478,8 @@ public class MtkModel implements EventPoster {
                         setLoggingActive((((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0)));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
-                        loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
+                        loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0))
+                                || ((((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGENABLED_MASK) == 0)));
                         setAvailable(MtkModel.DATA_LOG_STATUS);
                         postEvent(GpsEvent.UPDATE_LOG_LOG_STATUS);
                         break;
@@ -807,14 +810,15 @@ public class MtkModel implements EventPoster {
     protected final void postEvent(final int eventNbr, final Object o) {
         context.postGpsEvent(eventNbr, o);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.model.EventPoster#postEvent(bt747.model.ModelEvent)
      */
     public void postEvent(ModelEvent e) {
-        context.postEvent(e);       
+        context.postEvent(e);
     }
-
 
     /*************************************************************************
      * Getters and setters.
@@ -1170,7 +1174,7 @@ public class MtkModel implements EventPoster {
     public final boolean hasAgps() {
         return hasAgps;
     }
-    
+
     public boolean isTimeDistanceLogConditionExclusive() {
         return false;
     }

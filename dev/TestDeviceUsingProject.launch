@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <stringAttribute key="bad_container_name" value="\BT747\de"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/BT747/src_j2se/net/sf/bt747/j2se/examples/TestDevice.java"/>
+<listEntry value="/BT747/src_j2se/net/sf/bt747/j2se/app/examples/TestDevice.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
