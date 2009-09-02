@@ -144,7 +144,7 @@ public class Model {
     private final boolean[] dataAvailable = new boolean[Model.DATA_LAST_INDEX + 1];
     private final int[] dataRequested = new int[Model.DATA_LAST_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
-            false, // DATA_FLASH_TYPE
+    false, // DATA_FLASH_TYPE
             true, // DATA_MEM_PTS_LOGGED
             true, // DATA_MEM_USED
             false, // DATA_LOG_FORMAT
@@ -175,7 +175,7 @@ public class Model {
             dataRequested[i] = ts;
         }
     }
-    
+
     public final boolean isLoggerNeedsFormat() {
         return loggerNeedsInit;
     }
@@ -296,7 +296,7 @@ public class Model {
      * Best followed by eraseLog.
      * 
      * @param newLogFormat
-     *                The format to set.
+     *            The format to set.
      */
     public final void setLogFormat(final int newLogFormat) {
         // Ensure option consistency.
@@ -396,11 +396,11 @@ public class Model {
 
     public final void setAutoLog(final boolean enable) {
         if (enable) {
-            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
-                    + "," + BT747Constants.PMTK_LOG_ENABLE);
+            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                    + BT747Constants.PMTK_LOG_ENABLE);
         } else {
-            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
-                    + "," + BT747Constants.PMTK_LOG_DISABLE);
+            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                    + BT747Constants.PMTK_LOG_DISABLE);
         }
     }
 
@@ -660,7 +660,7 @@ public class Model {
 
     /**
      * @param holuxName
-     *                The holuxName to set.
+     *            The holuxName to set.
      */
     public final void setHoluxName(final String holuxName) {
         sendNMEA(BT747Constants.HOLUX_MAIN_CMD
@@ -688,8 +688,8 @@ public class Model {
      * Sets the current mac address for bluetooth (Holux 241 devices).
      * 
      * @param btMacAddr
-     *                The Mac address to set in the following format:<br>
-     *                00:1F:14:15:12:13.
+     *            The Mac address to set in the following format:<br>
+     *            00:1F:14:15:12:13.
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
@@ -1008,7 +1008,7 @@ public class Model {
      * Get the amount of memory used.
      * 
      * @param logMemUsed
-     *                the logMemUsed to set
+     *            the logMemUsed to set
      */
     private void setLogMemUsed(final int logMemUsed) {
         this.logMemUsed = logMemUsed;
@@ -1039,9 +1039,8 @@ public class Model {
      ************************************************************************/
 
     /**
-     * <code>dataOK</code> indicates if all volatile data from the device
-     * has been fetched. This is usefull to know if the settings can be backed
-     * up.
+     * <code>dataOK</code> indicates if all volatile data from the device has
+     * been fetched. This is usefull to know if the settings can be backed up.
      */
     private int dataOK = 0;
 
@@ -1063,11 +1062,11 @@ public class Model {
 
     /**
      * @param sNmea
-     *                Elements of the NMEA packet to analyze. <br>
-     *                Example: PMTK182,3,4 <br>
-     *                nmea[0] PMTK182 <br>
-     *                nmea[1] 3 <br>
-     *                nmea[2] 4
+     *            Elements of the NMEA packet to analyze. <br>
+     *            Example: PMTK182,3,4 <br>
+     *            nmea[0] PMTK182 <br>
+     *            nmea[1] 3 <br>
+     *            nmea[2] 4
      * @return
      * @see #reqInitialLogMode()
      */
@@ -1130,7 +1129,8 @@ public class Model {
                         loggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
-                        loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
+                        loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0))
+                                || ((((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGENABLED_MASK) == 0)));
                         setAvailable(Model.DATA_LOG_STATUS);
                         postEvent(GpsEvent.UPDATE_LOG_LOG_STATUS);
                         break;
@@ -1220,8 +1220,8 @@ public class Model {
 
     /**
      * @param gpsDecode
-     *                Activate gps decoding if true, do not decode if false.
-     *                This may improve performance.
+     *            Activate gps decoding if true, do not decode if false. This
+     *            may improve performance.
      */
     public final void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
@@ -1262,7 +1262,7 @@ public class Model {
 
     /**
      * @param forceHolux
-     *                Indicates if this device needs special holux decoding.
+     *            Indicates if this device needs special holux decoding.
      */
     public final void setHolux(final boolean forceHolux) {
         holux = forceHolux;
@@ -1496,7 +1496,7 @@ public class Model {
      * checksum - this is added by the method.
      * 
      * @param s
-     *                NMEA string to send.
+     *            NMEA string to send.
      */
     public final void sendNMEA(final String s) {
         handler.sendNMEA(s);
@@ -1575,7 +1575,7 @@ public class Model {
      * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *                If true, the existing log can be overwritten
+     *            If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
