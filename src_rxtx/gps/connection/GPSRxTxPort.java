@@ -137,7 +137,33 @@ public final class GPSRxTxPort extends GPSPort {
                 if (commPort instanceof SerialPort) {
                     final SerialPort serialPort = (SerialPort) commPort;
                     sp = serialPort;
-                    serialPort.setSerialPortParams(getSpeed(), 8, 1, 0);
+                    final int baud = getSpeed();
+                    final int databits = SerialPort.DATABITS_8;
+                    int stopbits = SerialPort.STOPBITS_1;
+                    final int parity = SerialPort.PARITY_NONE;
+                    boolean parametersSet = false;
+                    try {
+                        serialPort.setSerialPortParams(baud, databits,
+                                stopbits, parity);
+                        parametersSet = true;
+                    } catch (UnsupportedCommOperationException e) {
+                        Generic.debug("Issue when setting parameters:" + baud
+                                + " " + databits + " " + stopbits + " "
+                                + parity, e);
+                    }
+                    if(!parametersSet) {
+                        stopbits = SerialPort.STOPBITS_2;
+                        Generic.debug("Trying stopbits = "+stopbits, null);
+                        try {
+                            serialPort.setSerialPortParams(baud, databits,
+                                    stopbits, parity);
+                            parametersSet = true;
+                        } catch (UnsupportedCommOperationException e) {
+                            Generic.debug("Issue when setting parameters:" + baud
+                                    + " " + databits + " " + stopbits + " "
+                                    + parity, e);
+                        }
+                    }
                     in = sp.getInputStream();
                     ds = sp.getOutputStream();
                     result = 0;
@@ -187,8 +213,8 @@ public final class GPSRxTxPort extends GPSPort {
             }
         } catch (final PortInUseException e) {
             Generic.debug("", e);
-        } catch (final UnsupportedCommOperationException e) {
-            Generic.debug("", e);
+//        } catch (final UnsupportedCommOperationException e) {
+//            Generic.debug("", e);
         } catch (final IOException e) {
             Generic.debug("", e);
         }
