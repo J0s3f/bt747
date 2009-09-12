@@ -89,7 +89,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
             String osmPass = "";
             String osmVisibility;
             String osmDescription = null;
-            String osmTags;
+            String osmTags="";
             if (getParamObject().hasParam(GPSConversionParameters.OSM_LOGIN)) {
                 osmLogin = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_LOGIN);
@@ -98,9 +98,9 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 osmPass = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_PASS);
             }
-            if (getParamObject().hasParam(GPSConversionParameters.OSM_VISIBITILY)) {
+            if (getParamObject().hasParam(GPSConversionParameters.OSM_VISIBILITY)) {
                 osmVisibility = getParamObject().getStringParam(
-                        GPSConversionParameters.OSM_VISIBITILY);
+                        GPSConversionParameters.OSM_VISIBILITY);
             } else {
                 osmVisibility = GPSConversionParameters.OSM_PRIVATE;
             }
@@ -108,7 +108,11 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 osmDescription = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_DESCRIPTION);
             }
-            osmTags = "bt747_direct";
+            if (getParamObject().hasParam(GPSConversionParameters.OSM_TAGS)) {
+                osmTags = getParamObject().getStringParam(
+                        GPSConversionParameters.OSM_TAGS)+",";
+            }
+            osmTags += "bt747_direct";
             // Start uploading data.
             BT747Hashtable iter = filenames.iterator();
             while (iter.hasNext()) {
@@ -118,6 +122,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 String description = osmDescription;
                 if(description==null) {
                     description = orgFileName;
+                    description.replace("_osm_tmp_", "_");
                 }
                 try {
                     OsmGpxUpload
