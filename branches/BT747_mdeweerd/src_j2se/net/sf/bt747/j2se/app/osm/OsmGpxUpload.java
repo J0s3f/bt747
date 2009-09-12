@@ -51,7 +51,7 @@ public class OsmGpxUpload {
      */
     public final static void upload(final String username,
             final String password, final String description,
-            final String tags, final File gpxFile, final boolean isPublic)
+            final String tags, final File gpxFile, final String visibility)
             throws IOException {
         Generic.debug("uploading " + gpxFile.getAbsolutePath()
                 + " to openstreetmap.org");
@@ -84,7 +84,8 @@ public class OsmGpxUpload {
             writeContentDispositionFile(out, "file", gpxFile);
             writeContentDisposition(out, "description", urlDesc);
             writeContentDisposition(out, "tags", urlTags);
-            writeContentDisposition(out, "public", isPublic ? "1" : "0");
+            //writeContentDisposition(out, "public", isPublic ? "1" : "0");
+            writeContentDisposition(out, "visibility", visibility);
 
             out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
             out.flush();

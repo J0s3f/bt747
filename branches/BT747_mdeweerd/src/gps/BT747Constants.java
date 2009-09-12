@@ -877,6 +877,9 @@ public final class BT747Constants { // dev as in device
     public static final int NMEA_SEN_ZDA_IDX = 17;
     /** PMTKCHN interval - GPS channel status. */
     public static final int NMEA_SEN_MCHN_IDX = 18;
+    
+    /** Application */
+    public static final int NMEA_SEN_WPL_IDX = 19;
 
     // private static final int SPI_Y2_MAN_ID_MASK = 0xff00;
     // private static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
