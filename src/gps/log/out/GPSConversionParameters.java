@@ -52,7 +52,7 @@ public final class GPSConversionParameters {
      * {@link #OSM_PRIVATE}, {@link #OSM_PUBLIC}, {@link #OSM_TRACKABLE},
      * {@link #OSM_IDENTIFIABLE}
      */
-    public final static String OSM_VISIBITILY = "osm-visibility";
+    public final static String OSM_VISIBILITY = "osm-visibility";
     public final static String OSM_PRIVATE = "private";
     public final static String OSM_PUBLIC = "public";
     public final static String OSM_TRACKABLE = "trackable";
@@ -62,7 +62,12 @@ public final class GPSConversionParameters {
      * OSM Description (string)
      */
     public final static String OSM_DESCRIPTION = "osm-description";
-    
+
+    /**
+     * OSM Tags (string)
+     */
+    public final static String OSM_TAGS = "osm-tags";
+
     /**
      * Indicates if a new track is needed when the logger is switched on.
      */
