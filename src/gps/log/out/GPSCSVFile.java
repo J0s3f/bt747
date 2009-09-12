@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package gps.log.out;
 
+import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -25,6 +26,10 @@ import bt747.sys.JavaLibBridge;
  * @author Mario De Weerd
  */
 public final class GPSCSVFile extends GPSFile {
+    /**
+     * 
+     */
+    private static final float METERS_TO_FEET = 3.28083989501312f;
     /**
      * Reused StringBuffer for output construction.
      */
@@ -95,6 +100,13 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep + "HEIGHT(m)");
             } else {
                 rec.append(fieldSep + "HEIGHT(ft)");
+            }
+        }
+        if ((selectedFileFields.hasGeoid())) {
+            if (!imperial) {
+                rec.append(fieldSep + "GEOSEP(m)");
+            } else {
+                rec.append(fieldSep + "GEOSEP(ft)");
             }
         }
         if ((selectedFileFields.hasSpeed())) {
@@ -250,8 +262,8 @@ public final class GPSCSVFile extends GPSFile {
                 if (!imperial) {
                     rec.append(JavaLibBridge.toString(r.getHeight(), 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(
-                            r.getHeight() * 3.28083989501312f, 3));
+                    rec.append(JavaLibBridge.toString(r.getHeight()
+                            * METERS_TO_FEET, 3));
                 }
 
                 // Add field concerning geoid separation.
@@ -263,6 +275,25 @@ public final class GPSCSVFile extends GPSFile {
             } else if ((selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
             }
+            if (selectedFileFields.hasGeoid()) {
+                if (r.hasPosition()) {
+                    float separation;
+                    if (r.hasGeoid()) {
+                        separation = r.getGeoid();
+                    } else {
+                        separation = ((long) (10 * Conv.wgs84Separation(r
+                                .getLatitude(), r.getLongitude()))) / 10.f;
+                    }
+                    if (imperial) {
+                        separation *= METERS_TO_FEET;
+                    }
+                    rec.append(JavaLibBridge.toString(separation, 1));
+                    rec.append(',');
+                } else {
+                    rec.append(',');
+                }
+            }
+            
             if ((r.hasSpeed()) && (selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
                 if (!imperial) {

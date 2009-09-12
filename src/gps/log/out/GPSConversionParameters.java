@@ -45,6 +45,23 @@ public final class GPSConversionParameters {
      * OSM Password (string).
      */
     public final static String OSM_PASS = "osm-pass";
+
+    /**
+     * OSM Visibility<br>
+     * Valid values: private, public, trackable, identifiable (use constants
+     * {@link #OSM_PRIVATE}, {@link #OSM_PUBLIC}, {@link #OSM_TRACKABLE},
+     * {@link #OSM_IDENTIFIABLE}
+     */
+    public final static String OSM_VISIBITILY = "osm-visibility";
+    public final static String OSM_PRIVATE = "private";
+    public final static String OSM_PUBLIC = "public";
+    public final static String OSM_TRACKABLE = "trackable";
+    public final static String OSM_IDENTIFIABLE = "identifiable";
+    
+    /**
+     * OSM Description (string)
+     */
+    public final static String OSM_DESCRIPTION = "osm-description";
     
     /**
      * Indicates if a new track is needed when the logger is switched on.

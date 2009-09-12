@@ -96,7 +96,9 @@ public final class GPSNMEAFile extends GPSFile {
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSV_IDX)) != 0) {
                 writeGSV(r, timeStr);
             }
-
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_WPL_IDX)) != 0) {
+                writeWPL(r);
+            }
         }
     }
 
@@ -136,6 +138,56 @@ public final class GPSNMEAFile extends GPSFile {
         t.setUTCTime(r.getUtc()); // Initialization needed later too!
         return toRMC(new StringBuffer(255), r, t, getTimeStr(t, r, selected),
                 selected);
+    }
+
+    /** Add lat and lon information to the NMEA sentence.
+     * @param rec
+     * @param r
+     * @param selectedFileFields
+     */
+    private final static void appendLatLon(final StringBuffer rec,
+            final GPSRecord r, final GPSRecord selectedFileFields) {
+        if (r.hasLatitude() && selectedFileFields.hasLatitude()) {
+            String sl;
+            double l;
+            if (r.getLatitude() >= 0) {
+                sl = ",N,";
+                l = r.getLatitude();
+            } else {
+                sl = ",S,";
+                l = -r.getLatitude();
+            }
+            final int a = (int) Math.floor(l);
+            rec.append(((a < 10) ? "0" : "") + a);
+            l -= a;
+            l *= 60;
+            // TODO: check if bug when a number like 9.9999999
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
+            rec.append(sl);
+        } else {
+            rec.append(",,");
+        }
+
+        if (r.hasLongitude() && selectedFileFields.hasLongitude()) {
+            String sl;
+            double l;
+            if (r.getLongitude() >= 0) {
+                sl = ",E,";
+                l = r.getLongitude();
+            } else {
+                sl = ",W,";
+                l = -r.getLongitude();
+            }
+            final int a = (int) Math.floor(l);
+            rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
+            l -= a;
+            l *= 60;
+            // TODO: check if bug when a number like 9.9999999
+            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
+            rec.append(sl);
+        } else {
+            rec.append(",,");
+        }
     }
 
     /**
@@ -190,49 +242,9 @@ public final class GPSNMEAFile extends GPSFile {
 
         // 3 = Latitude of fix
         // 4 = N or S
-        if (r.hasLatitude() && selectedFileFields.hasLatitude()) {
-            String sl;
-            double l;
-            if (r.getLatitude() >= 0) {
-                sl = ",N,";
-                l = r.getLatitude();
-            } else {
-                sl = ",S,";
-                l = -r.getLatitude();
-            }
-            final int a = (int) Math.floor(l);
-            rec.append(((a < 10) ? "0" : "") + a);
-            l -= a;
-            l *= 60;
-            // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
-            rec.append(sl);
-        } else {
-            rec.append(",,");
-        }
-
         // 5 = Longitude of fix
         // 6 = E or W
-        if (r.hasLongitude() && selectedFileFields.hasLongitude()) {
-            String sl;
-            double l;
-            if (r.getLongitude() >= 0) {
-                sl = ",E,";
-                l = r.getLongitude();
-            } else {
-                sl = ",W,";
-                l = -r.getLongitude();
-            }
-            final int a = (int) Math.floor(l);
-            rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
-            l -= a;
-            l *= 60;
-            // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 6));
-            rec.append(sl);
-        } else {
-            rec.append(",,");
-        }
+        appendLatLon(rec, r, selectedFileFields);
 
         // 7 = Speed over ground in knots
         // 8 = Track made good in degrees True
@@ -297,48 +309,8 @@ public final class GPSNMEAFile extends GPSFile {
             rec.append(timeStr);
         }
         rec.append(",");
+        appendLatLon(rec, r, selectedFileFields);
 
-        if (r.hasLatitude() && selectedFileFields.hasLatitude()) {
-            String sl;
-            double l;
-            if (r.getLatitude() >= 0) {
-                sl = ",N,";
-                l = r.getLatitude();
-            } else {
-                sl = ",S,";
-                l = -r.getLatitude();
-            }
-            final int a = (int) Math.floor(l);
-            rec.append(((a < 10) ? "0" : "") + a);
-            l -= a;
-            l *= 60;
-            // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 4));
-            rec.append(sl);
-        } else {
-            rec.append(",,");
-        }
-
-        if (r.hasLongitude() && selectedFileFields.hasLongitude()) {
-            String sl;
-            double l;
-            if (r.getLongitude() >= 0) {
-                sl = ",E,";
-                l = r.getLongitude();
-            } else {
-                sl = ",W,";
-                l = -r.getLongitude();
-            }
-            final int a = (int) Math.floor(l);
-            rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
-            l -= a;
-            l *= 60;
-            // TODO: check if bug when a number like 9.9999999
-            rec.append(((l < 10) ? "0" : "") + JavaLibBridge.toString(l, 4));
-            rec.append(sl);
-        } else {
-            rec.append(",,");
-        }
 
         // - 1 is the fix quality. The fix quality can have a value
         // between 0 and 3, defined as follows
@@ -611,5 +583,21 @@ public final class GPSNMEAFile extends GPSFile {
             rec.setLength(0);
         }
 
+    }
+
+    private void writeWPL(final GPSRecord r) {
+        //Waypoint location
+
+        // eg1. $GPWPL,4917.16,N,12310.64,W,003*65
+
+        if(r.hasPosition()) {
+            rec.setLength(0);
+            rec.append("GPWPL,");
+            appendLatLon(rec, r, selectedFileFields);
+            rec.append(
+            CommonOut.getRCRstr(r));
+            writeNMEA(rec.toString());
+            rec.setLength(0);
+        }
     }
 }

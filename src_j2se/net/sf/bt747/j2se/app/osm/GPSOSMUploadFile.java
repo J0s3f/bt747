@@ -87,6 +87,9 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
         if (!isNextPass) {
             String osmLogin = "";
             String osmPass = "";
+            String osmVisibility;
+            String osmDescription = null;
+            String osmTags;
             if (getParamObject().hasParam(GPSConversionParameters.OSM_LOGIN)) {
                 osmLogin = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_LOGIN);
@@ -95,17 +98,32 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 osmPass = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_PASS);
             }
+            if (getParamObject().hasParam(GPSConversionParameters.OSM_VISIBITILY)) {
+                osmVisibility = getParamObject().getStringParam(
+                        GPSConversionParameters.OSM_VISIBITILY);
+            } else {
+                osmVisibility = GPSConversionParameters.OSM_PRIVATE;
+            }
+            if (getParamObject().hasParam(GPSConversionParameters.OSM_DESCRIPTION)) {
+                osmDescription = getParamObject().getStringParam(
+                        GPSConversionParameters.OSM_DESCRIPTION);
+            }
+            osmTags = "bt747_direct";
             // Start uploading data.
             BT747Hashtable iter = filenames.iterator();
             while (iter.hasNext()) {
                 final String orgFileName = (String) iter.nextKey();
                 final String newFileName = (String) filenames
                         .get(orgFileName);
+                String description = osmDescription;
+                if(description==null) {
+                    description = orgFileName;
+                }
                 try {
                     OsmGpxUpload
                             .upload(osmLogin, osmPass, orgFileName,
                                     "bt747_direct", new File(newFileName),
-                                    false /* isPublic */);
+                                    osmVisibility);
                     (new File(newFileName)).delete();
                 } catch (Exception e) {
                     // TODO: improve upload error message handling.
