@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.out.AllWayPointStyles;
+import gps.log.out.GPSConversionParameters;
 import gps.mvc.MtkController;
 
 import java.awt.Component;
@@ -237,7 +238,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * @param model
-     *                The model to associate with this controller.
+     *            The model to associate with this controller.
      */
     public J2SEAppController(final J2SEAppModel model) {
         m = model;
@@ -281,8 +282,8 @@ public final class J2SEAppController extends J2SEController {
      * Convert the log given the provided parameters using other methods.
      * 
      * @param logType
-     *                Indicates the type of log that should be written. For
-     *                example Model.CSV_LOGTYPE .
+     *            Indicates the type of log that should be written. For
+     *            example Model.CSV_LOGTYPE .
      * @see Model#CSV_LOGTYPE
      * @see Model#TRK_LOGTYPE
      * @see Model#KML_LOGTYPE
@@ -302,16 +303,22 @@ public final class J2SEAppController extends J2SEController {
             }
             break;
         case Model.OSM_UPLOAD_LOGTYPE:
-
-            if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
-                    || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
-                reportError(-1,
-                        getString("OSM_LOGIN_AND_PASS_SET"));
-                return;
-            }
-            if (doConvertLog(Model.OSM_LOGTYPE, new GPSOSMUploadFile(),
-                    ".gpx") != 0) {
-                reportError(c.getLastError(), c.getLastErrorInfo());
+            OsmUploadDialog osmDialog = new OsmUploadDialog(this, rootFrame, true);
+            osmDialog.setVisible(true);
+            if (osmDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
+                if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
+                        || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
+                    reportError(-1, getString("OSM_LOGIN_AND_PASS_SET"));
+                    return;
+                }
+                GPSOSMUploadFile gpsFile = new GPSOSMUploadFile();
+                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_VISIBILITY, osmDialog.getVisibility());
+                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS, osmDialog.getTags());
+                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION, osmDialog.getDescription());
+                if (doConvertLog(Model.OSM_LOGTYPE, gpsFile,
+                        ".gpx") != 0) {
+                    reportError(c.getLastError(), c.getLastErrorInfo());
+                }
             }
             break;
         default:
@@ -348,7 +355,7 @@ public final class J2SEAppController extends J2SEController {
      * I18N. Internationalization - get the localized string.
      * 
      * @param s
-     *                String reference for localization.
+     *            String reference for localization.
      * @return Localized String.
      */
     public static final String getString(final String s) {
@@ -403,7 +410,7 @@ public final class J2SEAppController extends J2SEController {
      * erase the log too.
      * 
      * @param logFormat
-     *                The logFormat to set upon erase.
+     *            The logFormat to set upon erase.
      */
     public final void changeLogFormatAndErase(final int logFormat) {
         int choice;
@@ -432,7 +439,7 @@ public final class J2SEAppController extends J2SEController {
      * be incompatible with other applications.
      * 
      * @param logFormat
-     *                The new log format to set.
+     *            The new log format to set.
      */
     public final void changeLogFormat(final int logFormat) {
         int choice;
@@ -496,39 +503,39 @@ public final class J2SEAppController extends J2SEController {
      * {@link Controller#setFlashUserOption(boolean, int, int, int, int, int, int, int, int, int, int)}
      * 
      * @param lock
-     *                When true, subsequent changes in these settings will be
-     *                impossible.
+     *            When true, subsequent changes in these settings will be
+     *            impossible.
      * @param updateRate
-     *                The 'fix period' of the GPS in ms. When this is 200,
-     *                then the Fix is 5Hz.
+     *            The 'fix period' of the GPS in ms. When this is 200, then
+     *            the Fix is 5Hz.
      * @param baudRate
-     *                The speed of the serial communication of the MTK
-     *                chipset. Be carefull - this may be the internal speed -
-     *                not the external speed!
+     *            The speed of the serial communication of the MTK chipset. Be
+     *            carefull - this may be the internal speed - not the external
+     *            speed!
      * @param periodGLL
-     *                The period of emission of the GLL sentence (relative to
-     *                the fix).
+     *            The period of emission of the GLL sentence (relative to the
+     *            fix).
      * @param periodRMC
-     *                The period of emission of the RMC sentence (relative to
-     *                the fix).
+     *            The period of emission of the RMC sentence (relative to the
+     *            fix).
      * @param periodVTG
-     *                The period of emission of the VTG sentence (relative to
-     *                the fix).
+     *            The period of emission of the VTG sentence (relative to the
+     *            fix).
      * @param periodGSA
-     *                The period of emission of the GSA sentence (relative to
-     *                the fix).
+     *            The period of emission of the GSA sentence (relative to the
+     *            fix).
      * @param periodGSV
-     *                The period of emission of the GSV sentence (relative to
-     *                the fix).
+     *            The period of emission of the GSV sentence (relative to the
+     *            fix).
      * @param periodGGA
-     *                The period of emission of the GGA sentence (relative to
-     *                the fix).
+     *            The period of emission of the GGA sentence (relative to the
+     *            fix).
      * @param periodZDA
-     *                The period of emission of the ZDA sentence (relative to
-     *                the fix).
+     *            The period of emission of the ZDA sentence (relative to the
+     *            fix).
      * @param periodMCHN
-     *                The period of emission of the MCHN sentence (relative to
-     *                the fix).
+     *            The period of emission of the MCHN sentence (relative to the
+     *            fix).
      */
     public final void setFlashConfig(final boolean lock,
             final int updateRate, final int baudRate, final int periodGLL,
@@ -554,9 +561,9 @@ public final class J2SEAppController extends J2SEController {
      * Report an error.
      * 
      * @param error
-     *                The error number.
+     *            The error number.
      * @param errorInfo
-     *                A text string related to the error (filename, ...).
+     *            A text string related to the error (filename, ...).
      */
     private void reportError(final int error, final String errorInfo) {
         String errorMsg;
@@ -591,7 +598,7 @@ public final class J2SEAppController extends J2SEController {
      * Attach a view to the controller.
      * 
      * @param view
-     *                The view that must be attached.
+     *            The view that must be attached.
      */
     public final void addView(final BT747View view) {
         views.add(view);
@@ -662,7 +669,7 @@ public final class J2SEAppController extends J2SEController {
      * (non-Javadoc)
      * 
      * @see bt747.model.Controller#saveSettings() Application specific
-     *      implementation of saveSettings
+     * implementation of saveSettings
      */
     public final void saveSettings() {
         saveAppSettings();
@@ -807,7 +814,7 @@ public final class J2SEAppController extends J2SEController {
      * Show error message that file could not be opened.
      * 
      * @param fileName
-     *                The file that could not be opened.
+     *            The file that could not be opened.
      */
     public void couldNotOpenFileMessage(final String fileName) {
         JOptionPane.showMessageDialog(rootFrame,

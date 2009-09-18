@@ -1,5 +1,7 @@
-#
-# No longer this in the first line: !/bin/bash
+#!/bin/bash
+# The above line was removed once, but it was suggested to put it back in.
+# Failing to find why it was removed, I did so, please tell me if you know
+# why it should be there.
 ###################################################
 # SAMPLE SCRIPT FOR MacOS"  [BETA J2SE version]
 #  Based on info in https://sourceforge.net/forum/message.php?msg_id=4571837
