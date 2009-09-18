@@ -21,7 +21,6 @@ import gps.log.out.CommonOut;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.swing.ComboBoxModel;

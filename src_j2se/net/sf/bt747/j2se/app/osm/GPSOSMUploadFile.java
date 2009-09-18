@@ -126,8 +126,8 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 }
                 try {
                     OsmGpxUpload
-                            .upload(osmLogin, osmPass, orgFileName,
-                                    "bt747_direct", new File(newFileName),
+                            .upload(osmLogin, osmPass, description,
+                                    osmTags, new File(newFileName),
                                     osmVisibility);
                     (new File(newFileName)).delete();
                 } catch (Exception e) {
