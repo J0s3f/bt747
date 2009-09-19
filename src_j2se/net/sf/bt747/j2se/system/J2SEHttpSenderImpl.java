@@ -116,6 +116,10 @@ public class J2SEHttpSenderImpl implements BT747HttpSender {
 		} catch (IOException e) {
 			caller.notifyConnectionFailure("Connect to target server failed.");
 			return;
+		} catch (IllegalArgumentException e) {
+		    Generic.debug("Connection error", e);
+                    caller.notifyConnectionFailure("Connect to target server failed.");
+                    return;
 		}
 
 		try {
@@ -182,7 +186,7 @@ public class J2SEHttpSenderImpl implements BT747HttpSender {
 	 *             when the sending fails.
 	 */
 	private HttpURLConnection sendData(URL url, String user, String password)
-			throws IOException {
+			throws IOException, IllegalArgumentException {
 
 		String tmpAuthUserName = "";
 		if (user != null) {
@@ -207,6 +211,7 @@ public class J2SEHttpSenderImpl implements BT747HttpSender {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setReadTimeout(1000);
+
 		conn.connect();
 		return conn;
 	}
