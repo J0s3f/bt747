@@ -128,7 +128,7 @@ public class HttpLocationSender extends LocationSender {
 		data.put(PAR_NAME_DIR, JavaLibBridge.toString(this.heading));
 		data.put(PAR_NAME_LATITUDE, JavaLibBridge.toString(this.latitude));
 		data.put(PAR_NAME_LONGITUDE, JavaLibBridge.toString(this.longitude));
-                data.put(PAR_NAME_POSITION, JavaLibBridge.toString(this.latitude)+","+JavaLibBridge.toString(this.longitude));
+                data.put(PAR_NAME_POSITION, JavaLibBridge.toString(this.longitude)+","+JavaLibBridge.toString(this.latitude));
 		data.put(PAR_NAME_SPEED, JavaLibBridge.toString(this.speed));
 		data.put(PAR_NAME_HDOP, JavaLibBridge.toString(this.hdop));
 		data.put(PAR_NAME_ALTITUDE, JavaLibBridge.toString(this.altitude));
