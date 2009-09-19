@@ -112,21 +112,23 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         txtLogin = new javax.swing.JTextField();
         lbPassword = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
-        jPanel1 = new javax.swing.JPanel();
+        pnOsmTrackProps = new javax.swing.JPanel();
         lbDescription = new javax.swing.JLabel();
         tfDescription = new javax.swing.JTextField();
         cbVisibility = new javax.swing.JComboBox();
         lbVisibility = new javax.swing.JLabel();
         tfTags = new javax.swing.JTextField();
         lbTags = new javax.swing.JLabel();
+        lbCommaSeparated = new javax.swing.JLabel();
 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        setTitle(bundle.getString("OsmUploadDialog.title")); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }
         });
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         okButton.setText(bundle.getString("OsmUploadDialog.okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,7 +193,7 @@ public class OsmUploadDialog extends javax.swing.JDialog {
                     .add(txtPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OsmUploadDialog.jPanel1.border.title"))); // NOI18N
+        pnOsmTrackProps.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OsmUploadDialog.pnOsmTrackProps.border.title"))); // NOI18N
 
         lbDescription.setLabelFor(tfDescription);
         lbDescription.setText(bundle.getString("OsmUploadDialog.lbDescription.text")); // NOI18N
@@ -210,38 +212,44 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         lbTags.setLabelFor(lbTags);
         lbTags.setText(bundle.getString("OsmUploadDialog.lbTags.text")); // NOI18N
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
+        lbCommaSeparated.setText(bundle.getString("OsmUploadDialog.lbCommaSeparated.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnOsmTrackPropsLayout = new org.jdesktop.layout.GroupLayout(pnOsmTrackProps);
+        pnOsmTrackProps.setLayout(pnOsmTrackPropsLayout);
+        pnOsmTrackPropsLayout.setHorizontalGroup(
+            pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnOsmTrackPropsLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(lbDescription)
                     .add(lbVisibility)
                     .add(lbTags))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbVisibility, 0, 308, Short.MAX_VALUE)
-                    .add(tfDescription, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
-                    .add(tfTags, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
+                .add(pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(cbVisibility, 0, 354, Short.MAX_VALUE)
+                    .add(tfDescription, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnOsmTrackPropsLayout.createSequentialGroup()
+                        .add(tfTags, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbCommaSeparated)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
+        pnOsmTrackPropsLayout.setVerticalGroup(
+            pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnOsmTrackPropsLayout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(lbDescription)
                     .add(tfDescription, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(cbVisibility, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lbVisibility))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(pnOsmTrackPropsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(tfTags, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbTags)))
+                    .add(lbTags)
+                    .add(lbCommaSeparated)))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -249,17 +257,15 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(261, Short.MAX_VALUE)
+                .addContainerGap(297, Short.MAX_VALUE)
                 .add(okButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 67, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cancelButton)
                 .addContainerGap())
             .add(layout.createSequentialGroup()
                 .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(229, Short.MAX_VALUE))
-            .add(layout.createSequentialGroup()
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(265, Short.MAX_VALUE))
+            .add(pnOsmTrackProps, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         layout.linkSize(new java.awt.Component[] {cancelButton, okButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -269,7 +275,7 @@ public class OsmUploadDialog extends javax.swing.JDialog {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnOsmTrackProps, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(cancelButton)
@@ -330,7 +336,7 @@ public class OsmUploadDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox cbVisibility;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lbCommaSeparated;
     private javax.swing.JLabel lbDescription;
     private javax.swing.JLabel lbLogin;
     private javax.swing.JLabel lbPassword;
@@ -338,6 +344,7 @@ public class OsmUploadDialog extends javax.swing.JDialog {
     private javax.swing.JLabel lbVisibility;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel osmAccountPanel;
+    private javax.swing.JPanel pnOsmTrackProps;
     private javax.swing.JTextField tfDescription;
     private javax.swing.JTextField tfTags;
     private javax.swing.JTextField txtLogin;
