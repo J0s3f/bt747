@@ -28,6 +28,12 @@ public class HttpLocationSender extends LocationSender {
 	 */
 	private static final String PAR_NAME_LONGITUDE = "longitude";
 
+        /**
+         * Parameter used for position : lat and lon seperated by comma.
+         */
+        private static final String PAR_NAME_POSITION = "position";
+	
+	
 	/**
 	 * Parameter name used for the speed value in the request to an http server.
 	 */
@@ -122,6 +128,7 @@ public class HttpLocationSender extends LocationSender {
 		data.put(PAR_NAME_DIR, JavaLibBridge.toString(this.heading));
 		data.put(PAR_NAME_LATITUDE, JavaLibBridge.toString(this.latitude));
 		data.put(PAR_NAME_LONGITUDE, JavaLibBridge.toString(this.longitude));
+                data.put(PAR_NAME_POSITION, JavaLibBridge.toString(this.latitude)+","+JavaLibBridge.toString(this.longitude));
 		data.put(PAR_NAME_SPEED, JavaLibBridge.toString(this.speed));
 		data.put(PAR_NAME_HDOP, JavaLibBridge.toString(this.hdop));
 		data.put(PAR_NAME_ALTITUDE, JavaLibBridge.toString(this.altitude));
