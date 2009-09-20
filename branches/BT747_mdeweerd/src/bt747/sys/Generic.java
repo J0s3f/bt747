@@ -24,7 +24,7 @@ public final class Generic {
     /**
      * The currently set debugLevel
      */
-    private static int debugLevel = 10;
+    private static int debugLevel = 0;
 
 
     public static final void debug(final String s, final Throwable e) {

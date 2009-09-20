@@ -346,6 +346,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // m_GPSstate=m.gpsModel();
         menuBar = new MenuBar(menu);
         setMenuBar(menuBar);
+        miDebug.isChecked = Model.isDebug();
+        miDebugConn.isChecked = m.isDebugConn();
         // Next line is for modeling a device for debug.
         // Doing this on the windows platform
         // if (Settings.platform.equals("Java")) m_model= new BT747model();
