@@ -14,8 +14,21 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 # (or that ROOT_DIR is ok) -> commented)
 #cd /Applications/gps ; ROOT_DIR=$PWD*
 
-RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
-RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
+
+# Determine the OS VERSION and convert it to an integer
+# so that we can test it in shell (major_minor = major*100 + minor)
+os_version=$(sw_vers  -productVersion)
+minor=$(echo $os_version | sed -e 's/^[^.]*\.//' -e 's/\..*//')
+major_minor=$(( ${os_version/.*/} * 100 + ${minor} ))
+if (( $major_minor >= 1006 )) ; then
+ # USE THE NEWER RXTX CODE (BETA)
+ RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.2pre2-bins
+ RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X/mac-10.5
+else
+ # USE THE OLDER RXTX CODE
+ RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
+ RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
+fi
 
 CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:${ROOT_DIR}/lib/jcalendar-1.3.2.jar:.:$CLASSPATH
 export CLASSPATH

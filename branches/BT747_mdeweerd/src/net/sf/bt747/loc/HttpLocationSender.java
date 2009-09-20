@@ -67,6 +67,11 @@ public class HttpLocationSender extends LocationSender {
 	private static final String PAR_NAME_BT_ADDR = "btaddr";
 
 	/**
+         * Parameter name of the http request parameter for the username.
+         */
+        private static final String PAR_NAME_USER = "user";
+
+	/**
 	 * The hostname of the target server for the http connections. Default value
 	 * is a failsafe "localhost".
 	 */
@@ -135,6 +140,7 @@ public class HttpLocationSender extends LocationSender {
 		// TODO correct extraction of data from this nsat field
 		data.put(PAR_NAME_NSAT, JavaLibBridge.toString(this.nsat));
 		data.put(PAR_NAME_BT_ADDR, this.bluetoothAdress);
+                data.put(PAR_NAME_USER, this.user);
 		return data;
 	}
 
