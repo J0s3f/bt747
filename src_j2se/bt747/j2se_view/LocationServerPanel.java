@@ -14,6 +14,7 @@ package bt747.j2se_view;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Generic;
 
 /**
  *
@@ -46,6 +47,9 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         initAppData();
     }
 
+    private int locationsServed;
+    private int locationsFailed;
+    
     /**
      * Initialize the data this concrete Panel is working with and which is
      * not yet setup by BT747Main.
@@ -59,26 +63,40 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         tfPassword.setText(m.getStringOpt(AppSettings.POS_SRV_PASS));
         cbServeOnConnect.setSelected(m
                 .getBooleanOpt(AppSettings.POS_SRV_AUTOSTART));
+        locationsServed = 0;
+        locationsFailed = 0;
     }
 
+    private final String getString(final String org) {
+        return J2SEAppController.getString(org);
+    }
+    
     /*
      * (non-Javadoc)
      * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
-    public void modelEvent(ModelEvent e) {
-            final int type = e.getType();
-            switch (type) {
-            case ModelEvent.CONNECTED:
-            case ModelEvent.DISCONNECTED:
-                    break;
-            case ModelEvent.POS_SRV_FAILURE:
-                    lbVisualizeServing.setText(lbVisualizeServing.getText() + "!");
-                    break;
-            case ModelEvent.POS_SRV_SUCCESS:
-                    lbVisualizeServing.setText(lbVisualizeServing.getText() + ".");
-                    break;
+    public void modelEvent(final ModelEvent e) {
+        final int type = e.getType();
+        switch (type) {
+        case ModelEvent.CONNECTED:
+        case ModelEvent.DISCONNECTED:
+            break;
+        case ModelEvent.POS_SRV_FAILURE:
+            locationsFailed++;
+            locationsServed++;
+            break;
+        case ModelEvent.POS_SRV_SUCCESS:
+            locationsServed++;
+            try {
+            lbVisualizeServing.setText(String.format(
+                        getString("INFOLOCATIONS"), locationsServed,
+                        locationsFailed));
+            } catch (Exception b) {
+                Generic.debug("Problem in 'INFOLOCATIONS' text", b);
             }
+            break;
+        }
     }
 
     private void locationServingParametersChanged() {

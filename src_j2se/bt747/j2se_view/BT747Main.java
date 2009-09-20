@@ -1356,8 +1356,8 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_mMap4ActionPerformed
 
     private void mnSiteLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSiteLinkActionPerformed
-        BareBonesBrowserLaunch.openURL("http://bt747.free.fr");
-        // BrowserControl.displayURL("http://bt747.free.fr");
+        BareBonesBrowserLaunch.openURL("http://www.bt747.org");
+        // BrowserControl.displayURL("http://www.bt747.org");
     }//GEN-LAST:event_mnSiteLinkActionPerformed
 
     private void btToolLogOpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btToolLogOpsActionPerformed
