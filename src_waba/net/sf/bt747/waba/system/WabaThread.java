@@ -19,6 +19,8 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
+import bt747.sys.Generic;
+
 public final class WabaThread implements waba.sys.Thread {
 
     protected bt747.sys.interfaces.BT747Thread btThread = null;
@@ -27,10 +29,23 @@ public final class WabaThread implements waba.sys.Thread {
     public WabaThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
     }
-
+    private boolean runOngoing = false;
+    /* (non-Javadoc)
+     * @see waba.sys.Thread#run()
+     * 
+     * Handling of runOngoing is probably not perfect...
+     */
     public final void run() {
         if(btThread!=null) {
-            btThread.run();
+            if(!runOngoing) {
+                runOngoing = true;
+                try {
+                    btThread.run();
+                } catch (Exception e) {
+                    Generic.debug("Problem in thread", e);
+                }
+                runOngoing = false;
+            }
         }
     }
 
