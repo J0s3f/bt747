@@ -772,7 +772,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                                     .getMainVersion())
                                     : ""));
             System.out.println(String.format(Locale.US,
-                    "Log Conditions: Time:%.1f Distance:%d Speed:%.1f", m
+                    "Log Conditions: Time:%.1f Distance:%.1f Speed:%d", m
                             .getLogTimeInterval() / 10., m
                             .getLogDistanceInterval() / 10., m
                             .getLogSpeedInterval()));
