@@ -774,8 +774,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println(String.format(Locale.US,
                     "Log Conditions: Time:%.1f Distance:%d Speed:%.1f", m
                             .getLogTimeInterval() / 10., m
-                            .getLogDistanceInterval(), m
-                            .getLogSpeedInterval() / 10.));
+                            .getLogDistanceInterval() / 10., m
+                            .getLogSpeedInterval()));
 
             // printf("Log format: (%s) %s\n", $1,
             // describe_log_format($log_format));
