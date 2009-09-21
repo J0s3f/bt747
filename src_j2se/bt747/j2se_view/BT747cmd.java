@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import joptsimple.OptionParser;
@@ -750,6 +751,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
             c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
 
             // c.req
             // c.reqMtkLogVersion();
@@ -763,6 +767,12 @@ public class BT747cmd implements bt747.model.ModelListener {
                             + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
                                     .getMainVersion())
                                     : ""));
+            System.out.println(String.format(Locale.US,
+                    "Log Conditions: Time:%.1f Distance:%d Speed:%.1f", m
+                            .getLogTimeInterval() / 10., m
+                            .getLogDistanceInterval(), m
+                            .getLogSpeedInterval() / 10.));
+
             // printf("Log format: (%s) %s\n", $1,
             // describe_log_format($log_format));
             // printf("Size in bytes of each log record: %u + (%u *
