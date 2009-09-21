@@ -559,6 +559,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             switch (debugLevel) {
             case 1:
                 c.setDebug(true);
+                c.setDebugConn(false);
                 break;
             case 2:
                 c.setDebug(true);
@@ -567,6 +568,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             default:
                 break;
             }
+        } else {
+            c.setDebug(false);
+            c.setDebugConn(false);
         }
 
         // Default value
