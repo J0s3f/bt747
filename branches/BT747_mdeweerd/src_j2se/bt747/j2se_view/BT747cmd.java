@@ -762,7 +762,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (m.isConnected()) {
             // Connection is made.
             if(options.has(OPT_START)) {
-                final String arg = options.argumentOf(OPT_DEVICETYPE)
+                final String arg = options.argumentOf(OPT_START)
                 .toLowerCase();
                 if (arg.equals(OPT_COLD)) {
                     c.gpsCmd(MtkController.CMD_COLDSTART);
