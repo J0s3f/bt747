@@ -145,7 +145,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
                 mb.popupBlockingModal();
                 if (mb.getPressedButtonIndex() == 0) {
                     // Exit application
-                    c.gpsCmd(MtkController.CMD_FULLCOLDSTART);
+                    c.gpsCmd(MtkController.CMD_FACTORYRESET);
                 }
             } else if (event.target == btForceErase) {
                 c.recoveryErase();

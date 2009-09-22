@@ -176,6 +176,16 @@ public class BT747cmd implements bt747.model.ModelListener {
     private static final String OPT_AGPS_CLEAR = "agps-clear";
     /** Request AGPS upload from the default URL. */
     private static final String OPT_AGPS = "agps";
+    /** Perform a cold, warm, hot start or factory reset */
+    private static final String OPT_START = "start";
+    /** Cold parameter for start. */
+    private static final String OPT_COLD = "cold";
+    /** Cold parameter for start. */
+    private static final String OPT_WARM = "warm";
+    /** Cold parameter for start. */
+    private static final String OPT_HOT = "hot";
+    /** Cold parameter for start. */
+    private static final String OPT_FACTORY = "factory";
 
     /**
      * Set up system specific classes.
@@ -718,7 +728,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has(OPT_DEVICETYPE)) {
-            final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+            final String arg = options.argumentOf(OPT_DEVICETYPE)
                     .toLowerCase();
             // AppController.GPS_TYPE_DEFAULT:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
@@ -751,6 +761,35 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (m.isConnected()) {
             // Connection is made.
+            if(options.has(OPT_START)) {
+                final String arg = options.argumentOf(OPT_DEVICETYPE)
+                .toLowerCase();
+                if (arg.equals(OPT_COLD)) {
+                    c.gpsCmd(MtkController.CMD_COLDSTART);
+                } else if (arg.equals(OPT_WARM)) {
+                    c.gpsCmd(MtkController.CMD_WARMSTART);
+                } else if (arg.equals(OPT_HOT)) {
+                    c.gpsCmd(MtkController.CMD_HOTSTART);
+                } else if (arg.equals(OPT_FACTORY)) {
+                    c.gpsCmd(MtkController.CMD_FACTORYRESET);
+                }
+            }
+
+            if (options.has(OPT_LOGGING_ON_OFF)) {
+                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                        .toLowerCase();
+                if (arg.equals("on")) {
+                    System.out.println(">> Switch recording to ON\n");
+                    c.setLoggingActive(true);
+                } else if (arg.equals("off")) {
+                    System.out.println(">> Switch recording to OFF\n");
+                    c.setLoggingActive(false);
+                } else {
+                    System.err
+                            .println("Argument of '-l' must be 'ON' or 'OFF'");
+                }
+            }
+
             c.reqDeviceInfo();
             c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
             c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
@@ -939,23 +978,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
                 c.setLogFormat(newLogFormat);
             }
-            if (options.has(OPT_LOGGING_ON_OFF)) {
-                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
-                        .toLowerCase();
-                if (arg.equals("on")) {
-                    System.out.println(">> Switch recording to ON\n");
-                    c.setLoggingActive(true);
-                } else if (arg.equals("off")) {
-                    System.out.println(">> Switch recording to OFF\n");
-                    c.setLoggingActive(false);
-                } else {
-                    System.err
-                            .println("Argument of '-l' must be 'ON' or 'OFF'");
-                }
-            }
 
             if (options.has(OPT_OVERLAP_STOP_SETTING)) {
-                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                final String arg = options.argumentOf(OPT_OVERLAP_STOP_SETTING)
                         .toLowerCase();
                 if (arg.equals("overlap")) {
                     System.out
@@ -1320,6 +1345,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts(
                         OPT_AGPS,
                         "Upload APGS data using the default URL (or the provided url when available).");
+                accepts(OPT_START,
+                        "Perform HOT, WARM or COLD start.  FACTORY will set GPS to factory values.");
+                
 
             }
         };
