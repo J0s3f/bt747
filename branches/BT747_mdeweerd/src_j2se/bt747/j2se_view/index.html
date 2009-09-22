@@ -1,0 +1,199 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>&Ouml;PNV-Karte</title>
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 100%;
+            border: 1px solid black;
+        }
+    </style>
+    <script type="text/javascript" src="js/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var lat=51.935;
+        var lon=9.01;
+        var zoom=7;
+        var proj4326  = new OpenLayers.Projection('EPSG:4326');
+		var projmerc  = new OpenLayers.Projection('EPSG:900913');
+		var layerTiles, layerStops;
+        var map, parser, stopPopup, stopName;
+		
+		OpenLayers.Feature.Vector.style['default'].cursor = 'pointer';
+		OpenLayers.Feature.Vector.style['default'].strokeWidth=9.0;
+		OpenLayers.Feature.Vector.style['default'].pointRadius=3.0;
+		OpenLayers.Feature.Vector.style['default'].strokeOpacity = 0.0;
+		OpenLayers.Feature.Vector.style['default'].fillOpacity = 0.0;
+		OpenLayers.Feature.Vector.style['select'].cursor = 'pointer';
+		OpenLayers.Feature.Vector.style['select'].strokeWidth=9.0;
+		OpenLayers.Feature.Vector.style['select'].pointRadius=3.0;
+		OpenLayers.Feature.Vector.style['select'].strokeOpacity = 0.0;
+		OpenLayers.Feature.Vector.style['select'].fillOpacity = 0.0;
+
+		function init() {
+			map = new OpenLayers.Map ("map", {
+                controls:[
+					new OpenLayers.Control.Navigation(),
+					new OpenLayers.Control.MousePosition(),
+					new OpenLayers.Control.PanZoomBar(),
+					new OpenLayers.Control.Permalink(),
+					new OpenLayers.Control.ScaleLine()
+//					new OpenLayers.Control.Attribution()
+				],
+                restrictedExtent: new OpenLayers.Bounds(-30,30,45,75.0000).transform(new OpenLayers.Projection("EPSG:4326"),  new OpenLayers.Projection("EPSG:900913")),
+                numZoomLevels: 19,
+				maxExtent: new OpenLayers.Bounds(-20037508,-20037508,20037508,20037508),
+				maxResolution: 156543,
+
+                projection: projmerc,
+                displayProjection: proj4326,
+				eventListeners: {moveend: requestStops}
+            } );
+//            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            parser = new OpenLayers.Format.WKT();
+
+			layerTiles = new OpenLayers.Layer.OSM("&Ouml;pnv Deutschland", "http://tile.xn--pnvkarte-m4a.de/tilegen/${z}/${x}/${y}.png", {numZoomLevels: 19,displayInLayerSwitcher:false,buffer:0});
+			layerStops = new OpenLayers.Layer.Vector("Haltestellen");
+
+			map.addLayers([layerTiles,layerStops]);
+
+			var selector = new OpenLayers.Control.SelectFeature(layerStops,{onSelect:getStopDetails});
+			map.addControl(selector);
+			selector.activate();
+
+            // set default position
+            var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+			if (!map.getCenter())map.setCenter (lonLat, zoom);
+        }
+
+		function requestStops(e){
+			layerStops.removeFeatures(layerStops.features);
+			var ext = map.getExtent();
+			var zoom = map.getZoom();
+			if(zoom<15)
+				return;
+			var url = "get_stops.php?BBOX="+ext.left+","+ext.bottom+","+ext.right+","+ext.top+"&z="+zoom;
+			OpenLayers.loadURL(url, '', this, renderStops);
+		}
+
+		function renderStops(response){
+			var obj = eval("("+response.responseText+")");
+			var zoom = map.getZoom();
+			if(obj){
+				var features = [];
+				for(var i=0;i<obj.length;i++){
+					var feature = parser.read(obj[i].geom);
+					feature.fid = parseInt(obj[i].fid);
+					feature.data.name = obj[i].name;
+					if(zoom>=17){
+						feature.data.station = obj[i].station;
+						feature.data.platform = obj[i].platform;
+					}
+					features.push(feature);
+				}
+				layerStops.addFeatures(features);
+			}			
+		}
+
+		function getStopDetails(f){
+			var zoom = map.getZoom();
+			var url;
+			stopName = f.data.name;
+			if(zoom>=17){
+				if(f.data.platform){
+					url = "get_stop_routes.php?w="+f.fid+"&s="+f.data.station;
+					lonlat = new OpenLayers.LonLat(f.geometry.bounds.left-(f.geometry.bounds.left-f.geometry.bounds.right)/2,f.geometry.bounds.bottom-(f.geometry.bounds.bottom-f.geometry.bounds.top)/2);
+				}else{
+					url = "get_stop_routes.php?n="+f.fid+"&s="+f.data.station;
+					lonlat = new OpenLayers.LonLat(f.geometry.x,f.geometry.y);
+				}
+			}else{
+				url = "get_stop_routes.php?s="+f.fid;
+				lonlat = new OpenLayers.LonLat(f.geometry.x,f.geometry.y);
+			}
+			OpenLayers.loadURL(url, '', this, showStopPopup);			
+		}
+		
+		function showStopPopup(response){
+			var obj = eval("("+response.responseText+")");
+			if(obj){
+				if(obj.stationName!=""&&obj.stationName!=stopName)
+					var popupText = "<h3>"+stopName+" ("+obj.stationName+")</h3>";
+				else
+					var popupText = "<h3>"+stopName+"</h3>";
+				if(obj.stopLines.length!=0){
+					var lines = [];
+					for(var i=0;i<obj.stopLines.length;i++)
+						lines.push("<a target='_blank' href='route.php?name="+obj.stopLines[i].ref+"&id="+obj.stopLines[i].id+"'>"+obj.stopLines[i].ref+"</a>");
+					popupText+="Verbindungen ab hier: "+lines.join(", ")+"<br>";
+				}
+				if(obj.stationLines.length!=0&&obj.stationLines.length!=obj.stopLines.length){
+					var lines = [];
+					for(var i=0;i<obj.stationLines.length;i++)
+						lines.push("<a target='_blank' href='route.php?name="+obj.stationLines[i].ref+"&id="+obj.stationLines[i].id+"'>"+obj.stationLines[i].ref+"</a>");
+					if(obj.stationName!="")
+						popupText+="Verbindungen ab "+obj.stationName+": "+lines.join(", ")+"<br>";
+					else
+						popupText+="Verbindungen der Station: "+lines.join(", ")+"<br>";
+				}
+				var anchor = {};
+				anchor.size = new OpenLayers.Size(0,0);
+				if(typeof(stopPopup)!='undefined')
+					map.removePopup(stopPopup);
+				stopPopup = new OpenLayers.Popup.FramedCloud("test", lonlat, new OpenLayers.Size(0,0), popupText ,anchor,true);
+				stopPopup.minSize = new OpenLayers.Size(200,200);  	
+				map.addPopup(stopPopup);
+			}			
+		}
+    </script>
+
+  </head>
+  <body onload="init()">
+    <div id="map"></div><br />
+Diese Karte stellt insbesondere auf den &ouml;ffentlichen Personennah- und Fernverkehr bezogene Daten aus <a href="http://www.openstreetmap.org/">Openstreetmap</a> dar. <br /><br />
+<b>Legende</b><br />
+Die Linienfarben haben folgende Bedeutungen:
+<table border="1" cellpadding="4" cellspacing="0" style="margin: 1em 1em 1em 0; background: #f9f9f9; border: 1px #aaa solid; border-collapse: collapse;">
+<tr>
+<td><b>Farbe</b></td>
+<td bgcolor="#FFCF00"></td>
+<td bgcolor="#00FF00"></td>
+<td bgcolor="#0000FF"></td>
+<td bgcolor="#000088"></td>
+<td bgcolor="#FF0000"></td>
+<td bgcolor="#880088"></td>
+<td bgcolor="#606000"></td>
+</tr>
+<tr>
+<td><b>Verkehrsmittel</b></td>
+<td>Zug</td>
+<td>S-Bahn/Stadtbahn</td>
+<td>Stra&szlig;enbahn</td>
+<td>U-Bahn</td>
+<td>Bus</td>
+<td>F&auml;hre</td>
+<td>Zugstrecken</td>
+</tr>
+<tr>
+<td><b>OSM-Route-Tag</b></td>
+<td>train</td>
+<td>light_rail</td>
+<td>tram</td>
+<td>subway</td>
+<td>bus</td>
+<td>ferry</td>
+<td>railway_track (rail, railway)</td>
+</tr>
+</table>
+Wie die Daten einzutragen sind, damit sie hier erscheinen finden Sie im <a href="http://wiki.openstreetmap.org/index.php/%C3%96pnvkarte">Openstreetmap-Wiki</a>.<br />
+<br />
+<br />
+<div align="center">
+Copyright (C) 2009 by Melchior Moos<br />
+Datenstand der Openstreetmap-Daten: 09.09.2009<br />
+<a href='http://creativecommons.org/licenses/by-sa/2.0/deed.de' target="_blank">This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License</a><br />
+<a href="impressum.html">Impressum</a>
+</div>
+</body>
+</html>
+
+

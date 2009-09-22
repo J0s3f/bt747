@@ -288,7 +288,7 @@ public class BT747Main extends javax.swing.JFrame implements
         new FileDrop(this, dl);
 
         pnMap.init(c);
-        mMap4.setVisible(true);
+        mOpvnMap.setVisible(true);
         pnFilesToTagPanel.init(c);
         pnAdvancedSettingsPanel.init(c);
         pnDeviceSettingsPanel.init(c);
@@ -470,7 +470,8 @@ public class BT747Main extends javax.swing.JFrame implements
             miMapnik.setSelected(mt == MapType.OpenStreetMap);
             miOsmarender.setSelected(mt == MapType.OsmaRender);
             miCycle.setSelected(mt == MapType.Cycle);
-            mMap4.setSelected(mt == MapType.Map4);
+            mOpvnMap.setSelected(mt == MapType.Opvn);
+            mOpenPisteMap.setSelected(mt == MapType.OpenPisteMap);
         } catch (final Exception ex) {
             // TODO: handle exception
         }
@@ -672,7 +673,8 @@ public class BT747Main extends javax.swing.JFrame implements
         miMapnik = new javax.swing.JRadioButtonMenuItem();
         miOsmarender = new javax.swing.JRadioButtonMenuItem();
         miCycle = new javax.swing.JRadioButtonMenuItem();
-        mMap4 = new javax.swing.JRadioButtonMenuItem();
+        mOpvnMap = new javax.swing.JRadioButtonMenuItem();
+        mOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
         miDownloadDevice = new javax.swing.JMenu();
         miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
         miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
@@ -1087,13 +1089,21 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miMap.add(miCycle);
 
-        mMap4.setText(bundle.getString("BT747Main.mMap4.text")); // NOI18N
-        mMap4.addActionListener(new java.awt.event.ActionListener() {
+        mOpvnMap.setText(bundle.getString("BT747Main.mOpvnMap.text")); // NOI18N
+        mOpvnMap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mMap4ActionPerformed(evt);
+                mOpvnMapActionPerformed(evt);
             }
         });
-        miMap.add(mMap4);
+        miMap.add(mOpvnMap);
+
+        mOpenPisteMap.setText(bundle.getString("BT747Main.mOpenPisteMap.text")); // NOI18N
+        mOpenPisteMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mOpenPisteMapActionPerformed(evt);
+            }
+        });
+        miMap.add(mOpenPisteMap);
 
         SettingsMenu.add(miMap);
 
@@ -1355,9 +1365,9 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Cycle.ordinal());
     }//GEN-LAST:event_miCycleActionPerformed
 
-    private void mMap4ActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mMap4ActionPerformed
-        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Map4.ordinal());
-    }//GEN-LAST:event_mMap4ActionPerformed
+    private void mOpvnMapActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpvnMapActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Opvn.ordinal());
+}//GEN-LAST:event_mOpvnMapActionPerformed
 
     private void mnSiteLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSiteLinkActionPerformed
         BareBonesBrowserLaunch.openURL("http://www.bt747.org");
@@ -1506,6 +1516,10 @@ public class BT747Main extends javax.swing.JFrame implements
         }
 }//GEN-LAST:event_btToolLocServeActionPerformed
 
+    private void mOpenPisteMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpenPisteMapActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMap.ordinal());
+}//GEN-LAST:event_mOpenPisteMapActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -1543,7 +1557,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lbSerialSpeed;
-    private javax.swing.JRadioButtonMenuItem mMap4;
+    private javax.swing.JRadioButtonMenuItem mOpenPisteMap;
+    private javax.swing.JRadioButtonMenuItem mOpvnMap;
     private javax.swing.JRadioButtonMenuItem miCycle;
     private javax.swing.JMenu miDownloadDevice;
     private javax.swing.JMenuItem miExit;

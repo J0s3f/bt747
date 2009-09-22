@@ -59,6 +59,26 @@ public class MapFactoryInfos {
             return url;
         }
     };
+    public final static MyTileFactoryInfo tfiOpnvStreetMap = new MyTileFactoryInfo(
+            "opnv", 1, 18, 19, 256, true, true,
+            "http://tile.xn--pnvkarte-m4a.de/tilegen", "x", "y", "z",
+            "öpnv karte - public transport", "http://tile.\\u00D6pnvkarte.de") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+    };
+    public final static MyTileFactoryInfo tfiOpenPisteMap = new MyTileFactoryInfo(
+            "openpiste", 2, 18, 19, 256, true, true,
+            "http://openpistemap.org/tiles/contours", "x", "y", "z",
+            "Open Piste Map", "http://openpistemap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+    };
     /* Can not use due to licensing limitations ? => not used */
     public final static MyTileFactoryInfo tfiGOOGLEMAPS = new MyTileFactoryInfo(
             "gmaps", 1, 16, 17, 256, false, true,
