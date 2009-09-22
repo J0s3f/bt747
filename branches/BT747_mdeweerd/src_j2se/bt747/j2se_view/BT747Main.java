@@ -302,6 +302,8 @@ public class BT747Main extends javax.swing.JFrame implements
                 + (int) tabbedPanelAll.getPreferredSize().getHeight()
                 - tabbedPanelAll.getHeight() + 10;
         final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        String dimensionMsg = String.format("Initial: %dx%d  Screen: %dx%d",
+                x, y, (int) dim.getWidth(), (int) dim.getHeight());
         if (x > dim.getWidth()) {
             x = (int) dim.getWidth();
         } else if ((dim.getWidth() - 100 > PREFERRED_INITIAL_X_SIZE)
@@ -316,6 +318,7 @@ public class BT747Main extends javax.swing.JFrame implements
         }
 
         setSize(x, y);
+        dimensionMsg += String.format(" Final: %dx%d", x, y);
         validate();
         updateGuiData(); // For internationalisation - not so easy in
         // netbeans
@@ -325,6 +328,7 @@ public class BT747Main extends javax.swing.JFrame implements
         J2SEGeneric.addListener(this);
         Generic.debug("BT747 " + Version.VERSION_NUMBER + " Build:"
                 + Version.BUILD_STR);
+        Generic.debug(dimensionMsg);
         Generic.debug(java.lang.System.getProperty("os.name")); // NOI18N
         // infoTextArea.append("\n"); // NOI18N
         Generic.debug(java.lang.System.getProperty("os.arch")); // NOI18N
