@@ -112,7 +112,7 @@ public class MtkController implements ProtectedDevControllerIF {
     /** To perform a cold start on the device. */
     public final static int CMD_COLDSTART = 2;
     /** To perform a full cold start on the device. */
-    public final static int CMD_FULLCOLDSTART = 3;
+    public final static int CMD_FACTORYRESET = 3;
     /** Start logging on the device. */
     public final static int CMD_STARTLOG = 4;
     /** Stop logging on the device. */
@@ -205,7 +205,7 @@ public class MtkController implements ProtectedDevControllerIF {
             nmeaCmd = MtkController.PMTK
                     + BT747Constants.PMTK_CMD_COLD_START_STR;
             break;
-        case CMD_FULLCOLDSTART:
+        case CMD_FACTORYRESET:
             nmeaCmd = MtkController.PMTK
                     + BT747Constants.PMTK_CMD_FULL_COLD_START_STR;
             break;
@@ -425,7 +425,7 @@ public class MtkController implements ProtectedDevControllerIF {
         case CMD_HOTSTART:
         case CMD_WARMSTART:
         case CMD_COLDSTART:
-        case CMD_FULLCOLDSTART:
+        case CMD_FACTORYRESET:
         case CMD_STARTLOG:
         case CMD_STOPLOG:
         case CMD_AUTOLOG_OFF:
