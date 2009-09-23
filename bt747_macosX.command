@@ -4,7 +4,7 @@
 #  Based on info in https://sourceforge.net/forum/message.php?msg_id=4571837
 ###################################################
 
-ROOT_DIR=`dirname $0`
+ROOT_DIR=`dirname "$0"`
 if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 
 #Change to appropriate directory (suppose that we are already in it 
