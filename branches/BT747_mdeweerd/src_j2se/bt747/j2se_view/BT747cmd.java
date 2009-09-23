@@ -792,11 +792,12 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             c.reqDeviceInfo();
             c.setMtkDataNeeded(MtkModel.DATA_MEM_USED);
-            c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
+            c.setMtkDataNeeded(MtkModel.DATA_LOG_OVERWRITE_STATUS);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_VERSION);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_TIME_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
+            c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
 
             // c.req
             // c.reqMtkLogVersion();
@@ -1000,9 +1001,11 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println("Device reports " + m.logMemUsed()
                     + " bytes used (" + m.logMemUsedPercent() + "% of "
                     + m.logMemSize() + ").");
-            System.out.println("Device was in "
+            System.out.println(
+                    "Device is in " + (m.isLogFullOverwrite()? "OVERLAP" : "STOP")
+                    + " ("
                     + (m.isInitialLogOverwrite() ? "OVERLAP" : "STOP")
-                    + " on initialisation");
+                    + " on erase or memory wrap)");
 
             if (options.has(OPT_DOWNLOAD)) {
                 c.setDownloadMethod(Model.DOWNLOAD_SMART);
@@ -1346,7 +1349,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                         OPT_AGPS,
                         "Upload APGS data using the default URL (or the provided url when available).");
                 accepts(OPT_START,
-                        "Perform HOT, WARM or COLD start.  FACTORY will set GPS to factory values.");
+                        "Perform HOT, WARM or COLD start.  FACTORY will set GPS to factory values.")
+                        .withRequiredArg().describedAs("METHOD");
                 
 
             }
