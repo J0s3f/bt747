@@ -18,25 +18,28 @@ minor=$(echo $os_version | sed -e 's/^[^.]*\.//' -e 's/\..*//')
 major_minor=$(( ${os_version/.*/} * 100 + ${minor} ))
 if (( $major_minor >= 1006 )) ; then
  # USE THE NEWER RXTX CODE (BETA)
- RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.2pre2-bins
- RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X/mac-10.5
+ RXTX_PATH="${ROOT_DIR}/lib/rxtx-2.2pre2-bins"
+ RXTX_BIN_PATH="${RXTX_PATH}/Mac_OS_X/mac-10.5"
 else
  # USE THE OLDER RXTX CODE
- RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
- RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
+ RXTX_PATH="${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2"
+ RXTX_BIN_PATH="${RXTX_PATH}/Mac_OS_X"
 fi
 
-WABA_JAR=${ROOT_DIR}/lib/Waba_only.jar
-BT747_JAR=${ROOT_DIR}/dist/BT747_rxtx.jar
+WABA_JAR="${ROOT_DIR}/lib/Waba_only.jar"
+BT747_JAR="${ROOT_DIR}/dist/BT747_rxtx.jar"
 
 CLASSPATH="${RXTX_PATH}:${RXTX_BIN_PATH}:${WABA_JAR}:${BT747_JAR}:.:$CLASSPATH"
 export CLASSPATH
 
-for p in ${CLASSPATH//[;:]/ }  ; do
-  if [ ! -r $p ] ; then
+(
+IFS=:
+for p in "${CLASSPATH}"  ; do
+  if [ ! -r "$p" ] ; then
      echo "ISSUE: Can not read '$p'"
   fi
 done
+)
 
 # More advanced way of looking for ports
 POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.SLAB_USBtoUART"
@@ -62,5 +65,5 @@ which javaw >/dev/null 2>&1 && JAVA=javaw
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"
-$JAVA -Djava.library.path=${RXTX_BIN_PATH} $PORT_OPTION waba.applet.Applet /w 400 /h 400 /scale 1 /bpp 8 BT747
+$JAVA -Djava.library.path="${RXTX_BIN_PATH}" $PORT_OPTION waba.applet.Applet /w 400 /h 400 /scale 1 /bpp 8 BT747
 
