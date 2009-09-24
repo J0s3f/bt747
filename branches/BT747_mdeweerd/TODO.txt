@@ -18,6 +18,7 @@ COSMETIC IMPROVEMENTS
 
 IMPROVEMENTS
 (Things not very visible to the user).
+* Report error of GPX upload.
 * Detect power up/rest of device (Initial PMTK010) and use it to request all the values again.
 * More precise height conversion (at least on PC).
 * Need to indicate that the device needs formatting in all setups (J2ME, PDA).
@@ -50,7 +51,7 @@ Application
      Easy configurations
         (On foot,
          By car,
-         Personal ocnstraints
+         Personal constraints
            [est. travel distance, travel time, precision
             and determine log conditions from that]
 * Incremental download of 'overwrite' data by appending to existing file.

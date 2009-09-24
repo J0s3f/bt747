@@ -94,6 +94,7 @@ public final class J2SEAppController extends J2SEController {
 
     private J2SEAppModel m;
 
+    
     /*
      * (non-Javadoc)
      * 
@@ -254,6 +255,7 @@ public final class J2SEAppController extends J2SEController {
         // Initialised here to be sure that the app language can be changed
         // after
         // static evaluation.
+        Generic.setPoster(model);
         initStaticsFirstTime();
         myLookAndFeel();
         c.setWayPointStyles(new AllWayPointStyles());
