@@ -14,8 +14,10 @@
 // *** *********************************************************** ***
 package bt747.sys;
 
+import bt747.model.EventPoster;
+import bt747.model.ModelEvent;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Thread;
-
 
 /**
  * @author Mario De Weerd
@@ -26,13 +28,25 @@ public final class Generic {
      */
     private static int debugLevel = 0;
 
-
     public static final void debug(final String s, final Throwable e) {
         JavaLibBridge.debug(s, e);
     }
 
     public static final void debug(final String s) {
         JavaLibBridge.debug(JavaLibBridge.getTimeStamp() + " - " + s);
+    }
+
+    private static EventPoster poster = null;
+    
+    public static final void setPoster(final EventPoster poster) {
+        Generic.poster = poster;
+    }
+
+    public static final void exception(final String s, final Throwable e) {
+        debug(s, e);
+        if (poster != null) {
+            poster.postEvent(new ModelEvent(ModelEvent.EXCEPTION,new BT747Exception(s, e)));
+        }
     }
 
     /**
@@ -57,7 +71,7 @@ public final class Generic {
      * Set the debug level.
      * 
      * @param level
-     *                Level.
+     *            Level.
      */
     public static final void setDebugLevel(final int level) {
         Generic.debugLevel = level;
@@ -71,9 +85,9 @@ public final class Generic {
      * Add a thread to the thread list.
      * 
      * @param o
-     *                The thread.
+     *            The thread.
      * @param highPrio
-     *                True if high priority.
+     *            True if high priority.
      */
     public static final void addThread(final BT747Thread o,
             final boolean highPrio) {
@@ -84,7 +98,7 @@ public final class Generic {
      * Remove a thread from the thread list.
      * 
      * @param o
-     *                Thread to remove.
+     *            Thread to remove.
      */
     public static final void removeThread(final BT747Thread o) {
         JavaLibBridge.removeThread(o);
@@ -94,7 +108,7 @@ public final class Generic {
      * Calculate inverse cosinus
      * 
      * @param x
-     *                x.
+     *            x.
      * 
      * @return acos(x)
      */
@@ -106,9 +120,9 @@ public final class Generic {
      * Calculate x^^y. (x to the power of y)
      * 
      * @param x
-     *                x.
+     *            x.
      * @param y
-     *                y.
+     *            y.
      * @return x^^y.
      */
     public static final double pow(final double x, final double y) {

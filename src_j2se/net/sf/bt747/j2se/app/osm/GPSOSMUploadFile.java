@@ -19,6 +19,7 @@ import gps.log.out.GPSGPXFile;
 
 import java.io.File;
 
+import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
@@ -89,7 +90,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
             String osmPass = "";
             String osmVisibility;
             String osmDescription = null;
-            String osmTags="";
+            String osmTags = "";
             if (getParamObject().hasParam(GPSConversionParameters.OSM_LOGIN)) {
                 osmLogin = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_LOGIN);
@@ -98,21 +99,30 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 osmPass = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_PASS);
             }
-            if (getParamObject().hasParam(GPSConversionParameters.OSM_VISIBILITY)) {
+            if (getParamObject().hasParam(
+                    GPSConversionParameters.OSM_VISIBILITY)) {
                 osmVisibility = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_VISIBILITY);
             } else {
                 osmVisibility = GPSConversionParameters.OSM_PRIVATE;
             }
-            if (getParamObject().hasParam(GPSConversionParameters.OSM_DESCRIPTION)) {
+            if (getParamObject().hasParam(
+                    GPSConversionParameters.OSM_DESCRIPTION)) {
                 osmDescription = getParamObject().getStringParam(
                         GPSConversionParameters.OSM_DESCRIPTION);
             }
             if (getParamObject().hasParam(GPSConversionParameters.OSM_TAGS)) {
                 osmTags = getParamObject().getStringParam(
-                        GPSConversionParameters.OSM_TAGS)+",";
+                        GPSConversionParameters.OSM_TAGS);
+                if (osmTags.length() != 0) {
+                    osmTags += ",";
+                }
             }
             osmTags += "bt747_direct";
+            osmTags = osmTags.replace(",,", ",");
+            if (osmTags.charAt(0) == ',') {
+                osmTags = osmTags.substring(1);
+            }
             // Start uploading data.
             BT747Hashtable iter = filenames.iterator();
             while (iter.hasNext()) {
@@ -120,19 +130,17 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
                 final String newFileName = (String) filenames
                         .get(orgFileName);
                 String description = osmDescription;
-                if(description==null) {
+                if (description == null) {
                     description = orgFileName;
                     description.replace("_osm_tmp_", "_");
                 }
                 try {
-                    OsmGpxUpload
-                            .upload(osmLogin, osmPass, description,
-                                    osmTags, new File(newFileName),
-                                    osmVisibility);
+                    OsmGpxUpload.upload(osmLogin, osmPass, description,
+                            osmTags, new File(newFileName), osmVisibility);
                     (new File(newFileName)).delete();
                 } catch (Exception e) {
                     // TODO: improve upload error message handling.
-                    Generic.debug("Upload for " + orgFileName + " failed", e);
+                    Generic.exception("Upload for " + orgFileName + " failed", e);
                 }
             }
         }

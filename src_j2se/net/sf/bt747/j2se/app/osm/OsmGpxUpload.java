@@ -58,7 +58,7 @@ public class OsmGpxUpload {
         try {
             // String urlGpxName =
             // URLEncoder.encode(gpxName.replaceAll("\\.;&?,/","_"), "UTF-8");
-            final String urlDesc = description.replaceAll("\\.;&?,/", "_");
+            final String urlDesc = description.length()==0?"No description":description.replaceAll("\\.;&?,/", "_");
             final String urlTags = tags.replaceAll("\\\\.;&?,/", "_");
             final URL url = new URL("http://www.openstreetmap.org/api/"
                     + API_VERSION + "/gpx/create");
@@ -84,7 +84,7 @@ public class OsmGpxUpload {
             writeContentDispositionFile(out, "file", gpxFile);
             writeContentDisposition(out, "description", urlDesc);
             writeContentDisposition(out, "tags", urlTags);
-            //writeContentDisposition(out, "public", isPublic ? "1" : "0");
+            // writeContentDisposition(out, "public", isPublic ? "1" : "0");
             writeContentDisposition(out, "visibility", visibility);
 
             out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
@@ -112,13 +112,13 @@ public class OsmGpxUpload {
 
     /**
      * @param out
-     *                Where to write the content disposition.
+     *            Where to write the content disposition.
      * @param name
-     *                The name for the content.
+     *            The name for the content.
      * @param gpxFile
-     *                The filename for the content.
+     *            The filename for the content.
      * @throws IOException
-     *                 Throws io exceptions when trouble with streams.
+     *             Throws io exceptions when trouble with streams.
      */
     private final static void writeContentDispositionFile(
             final DataOutputStream out, final String name, final File gpxFile)
@@ -148,29 +148,32 @@ public class OsmGpxUpload {
 
     /**
      * @param out
-     *                Where to write the content disposition.
+     *            Where to write the content disposition.
      * @param name
-     *                The name for the content.
+     *            The name for the content.
      * @param value
-     *                The value to write.
+     *            The value to write.
      * @throws IOException
-     *                 Exceptions related to output stream.
+     *             Exceptions related to output stream.
      */
     public final static void writeContentDisposition(
             final DataOutputStream out, final String name, final String value)
             throws IOException {
-        out.writeBytes("--" + BOUNDARY + LINE_END);
-        out.writeBytes("Content-Disposition: form-data; name=\"" + name
-                + "\"" + LINE_END);
-        out.writeBytes(LINE_END);
-        out.writeBytes(value + LINE_END);
+        if (value.length() != 0) {
+            out.writeBytes("--" + BOUNDARY + LINE_END);
+            out.writeBytes("Content-Disposition: form-data; name=\"" + name
+                    + "\"" + LINE_END);
+            out.writeBytes(LINE_END);
+            Generic.debug("name:" + name + "=" + value);
+                out.writeBytes(value + LINE_END);
+            }
     }
 
     /**
      * Encode a string to base64.
      * 
      * @param s
-     *                The string to encode.
+     *            The string to encode.
      * @return The encoded string.
      */
     public static final String encodeBase64(final String s) {
