@@ -38,6 +38,8 @@
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
 
+	<property name="build.windowsmobile" value="${build.dir}/WindowsMobile" />
+
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba.jar}" />
@@ -111,9 +113,11 @@
 	</target>
 
 	<target name="javanativecompile.j2se" depends="dist.j2se,proguard.jnc_task">
-		<delete file="${dist}/${ant.project.name}_jnc-win.jar"/>
-        <exec dir="${javanativecompiler}" executable="${javanativecompiler}/AutoCompiler.exe">
-            <arg value="${project.dir}/dev/bt747_j2se_opt.jnc" />
+		<delete file="${dist}/${ant.project.name}_jnc-win.jar" />
+		<exec dir="${javanativecompiler}"
+		      executable="${javanativecompiler}/AutoCompiler.exe"
+		>
+			<arg value="${project.dir}/dev/bt747_j2se_opt.jnc" />
 		</exec>
 	</target>
 
@@ -454,7 +458,7 @@
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${rxtxcomm.jar}" />
-            <libraryjar file="${jopt-simple.jar}" />
+			<libraryjar file="${jopt-simple.jar}" />
 			<outjar path="${dist}/${ant.project.name}_jnc.jar" />
 	        	-injar ${dist}/${ant.project.name}_j2se.jar
 	            -injar ${dist}/lib${ant.project.name}.jar
@@ -601,6 +605,7 @@
 			              !bt747/*_view/**,
 			              !bt747/gps/connection/GPSWabaPort.class)
                         -optimizationpasses 2
+            -keep public class bt747.sys.Generic { public *** exception(...); public *** setPoster(...); }
                         -keep public class bt747.sys.JavaLibBridge { *; }
 			            -keep public class bt747.sys.I18N { public *** *(...); }
 			            -keep public class bt747.sys.Settings { *; }
@@ -1424,8 +1429,8 @@
 			<arg value="${ant.project.name}" />
 		</java>
 
-		<mkdir dir="${build.dir}/WindowsMobile" />
-		<move todir="${build.dir}/WindowsMobile">
+		<mkdir dir="${build.windowsmobile}" />
+		<move todir="${build.windowsmobile}">
 			<fileset dir="${build.dir}">
 				<include name="*.CAB" />
 				<include name="${ant.project.name}_Install.*" />
@@ -1436,7 +1441,10 @@
 	<!-- Execute WARP and populate distribution directory -->
 	<target name="all-warp" depends="warp">
 
-		<move failonerror="false" file="${build.dir}/${ant.project.name}.pdb" todir="${dist}" />
+		<move failonerror="false"
+		      file="${build.dir}/${ant.project.name}.pdb"
+		      todir="${dist}"
+		/>
 
 	</target>
 
@@ -1451,6 +1459,17 @@
 	<!-- Execute EXEGEN with WinCE EXE and populate distribution directory -->
 	<target name="all-exegen-exe" depends="exegen-exe, all-warp">
 
+		<!-- First move the windows mobile files to a subdirectory -->
+		<mkdir dir="${dist}/WindowsMobile" />
+		<move todir="${dist}/WindowsMobile">
+			<fileset dir="${build.windowsmobile}">
+				<include name="${ant.project.name}.prc" />
+				<include name="**/*.exe" />
+				<include name="*.exe" />
+			</fileset>
+		</move>
+
+		<!-- Then move the "standard" files to the dist directory -->
 		<move todir="${dist}">
 
 			<fileset dir="${build.dir}">
