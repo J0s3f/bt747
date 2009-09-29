@@ -325,6 +325,8 @@ public class IBlue747Model {
         public int logDistanceInterval = 100;
         public int logSpeedInterval = 50;
         public int recMethod = 2;   // (2) Stop or (1) overwrite
+        
+        public int fixPeriod = 200;
     }
 
     public final MtkDataModel mtkData = new MtkDataModel();
@@ -369,6 +371,15 @@ public class IBlue747Model {
                 final int z_setType = JavaLibBridge.toInt(p_nmea[2]);
                 if (p_nmea.length >= 3) {
                     switch (z_setType) {
+                    case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
+                        mtkData.logTimeInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        break;
+                    case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
+                        mtkData.logDistanceInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        break;
+                    case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
+                        mtkData.logSpeedInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        break;
                     default:
                         break;
                     }
@@ -586,6 +597,7 @@ public class IBlue747Model {
 
         Generic.debug(nmea.toString());
 
+        try {
         if (p_nmea[0].startsWith("PMTK")) {
             z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
 
@@ -613,6 +625,8 @@ public class IBlue747Model {
                 setDeviceMode(DeviceMode.DEVICE_MODE_MTKBIN);
                 break;
             case BT747Constants.PMTK_API_SET_FIX_CTL: // CMD 300
+                mtkData.fixPeriod = JavaLibBridge.toInt(p_nmea[3]);
+                break;
             case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
             case BT747Constants.PMTK_API_SET_SBAS: // CMD 313
             case BT747Constants.PMTK_API_SET_NMEA_OUTPUT: // CMD 314
@@ -620,9 +634,10 @@ public class IBlue747Model {
             case BT747Constants.PMTK_API_SET_DATUM: // CMD 330
             case BT747Constants.PMTK_API_SET_DATUM_ADVANCE: // CMD 331
             case BT747Constants.PMTK_API_SET_USER_OPTION: // CMD 390
-            case BT747Constants.PMTK_API_Q_FIX_CTL: // CMD 400
-                response = "PMTK500,1000";
                 break;
+            case BT747Constants.PMTK_API_Q_FIX_CTL: // CMD 400
+                    response = "PMTK500," + mtkData.fixPeriod;
+                    break;
             case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
                 break;
             case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
@@ -723,6 +738,10 @@ public class IBlue747Model {
             // Delegate to holux controller. The MtkModel will respond too so
             // we do not care about the result.
             hlxController.analyseNMEA(p_nmea); // End if
+        }
+        } catch (Exception e) {
+            // TODO: handle exception
+            Generic.debug("Problem in reception",e);
         }
         if (response != null) {
             if (response instanceof String) {
