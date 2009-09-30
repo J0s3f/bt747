@@ -163,6 +163,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private void updateRMCData(final GPSRecord gps) {
         if (gps.hasUtc()) {
             txtTime.setText(CommonOut.getTimeStr(gps.utc)); // NO18N
+            txtTime.setToolTipText(CommonOut.getDateStr(gps.utc)); // NO18N
         }
         updateGPSData(gps);
     }
