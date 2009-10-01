@@ -381,7 +381,7 @@ public final class MainScreen extends Dialog implements ModelListener {
 
     private Label[] labels = null;
 
-    private void setupScreen() {
+    private synchronized void setupScreen() {
         Log.debug("MainScreen setupScreen");
         initialSetupScreen();
         if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
@@ -403,7 +403,6 @@ public final class MainScreen extends Dialog implements ModelListener {
                 append(tmpLabels[10] = new Label("*. Magnificent View"));
                 append(tmpLabels[11] = new Label("#. Other 3"));
                 repaint();
-
                 labels = tmpLabels;
                 if (ttLabels == null) {
                     ttLabels = new TimerTask() {

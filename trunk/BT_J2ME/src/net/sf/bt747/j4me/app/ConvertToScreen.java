@@ -40,14 +40,6 @@ public final class ConvertToScreen extends
      */
     private TextBox tbTrackSeparation;
 
-    /**
-     * List of UTC offsets.
-     */
-    private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
-            "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
-            "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
-            "+13", "+14" };
-
     private RadioButton rbTimeOffsetHours;
 
     private TextBox tbBinFile;
@@ -178,17 +170,12 @@ public final class ConvertToScreen extends
             append(tbTrackSeparation);
 
             rbTimeOffsetHours = new RadioButton();
-            for (int i = 0; i < ConvertToScreen.offsetStr.length; i++) {
-                rbTimeOffsetHours.append(ConvertToScreen.offsetStr[i]);
+            String[] offsetStr = BT747Constants.getUtcStrings("");
+            for (int i = 0; i < offsetStr.length; i++) {
+                rbTimeOffsetHours.append(offsetStr[i]);
             }
-            int offsetIdx = m().getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
-            if (offsetIdx > 26) {
-                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO:
-                                                                // Change in
-                                                                // call to
-                                                                // control
-                offsetIdx = 12;
-            }
+            
+            int offsetIdx = BT747Constants.getUtcIdx(m().getIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS));
             rbTimeOffsetHours.setSelectedIndex(offsetIdx);
             append(rbTimeOffsetHours);
         }
@@ -235,14 +222,10 @@ public final class ConvertToScreen extends
         }
         c.setBooleanOpt(AppSettings.FORCE_HOLUXM241, rbDevice
                 .getSelectedIndex() == 1);
-        int index = 0;
-        // Work around superwaba bug
-        final String tmp = rbTimeOffsetHours.getSelectedValue();
-        if (tmp.charAt(0) == '+') {
-            index = 1;
-        }
-        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, JavaLibBridge.toInt(tmp
-                .substring(index)));
+
+        c.setIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS,
+                BT747Constants.timeZones[rbTimeOffsetHours.getSelectedIndex()]
+                );
 
         progressScreen = new ConvertToProgressScreen(c, previous,
                 getSelectedLogType());

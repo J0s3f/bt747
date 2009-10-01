@@ -275,7 +275,7 @@ public abstract class Dialog extends DeviceScreen {
      * @return The index of the component on the form that is currently
      *         selected.
      */
-    public int getSelected() {
+    public synchronized int getSelected() {
         if (highlightedComponent < 0) {
             return 0;
         } else {
@@ -299,7 +299,7 @@ public abstract class Dialog extends DeviceScreen {
      *         <code>y</code>) or <code>-1</code> if no component
      *         contains it.
      */
-    private int getAt(final int x, final int y) {
+    private synchronized int getAt(final int x, final int y) {
         int matched = -1;
 
         // Get the absolute position of y on the form.
@@ -338,7 +338,7 @@ public abstract class Dialog extends DeviceScreen {
      * @param index
      *                is the new selected component.
      */
-    public void setSelected(final int index) {
+    public synchronized void setSelected(final int index) {
         if ((index < 0) || (index >= components.size())) {
             throw new IndexOutOfBoundsException(String.valueOf(index));
         }
@@ -549,7 +549,7 @@ public abstract class Dialog extends DeviceScreen {
      *                is the number of pixels that vertically separates
      *                components. Values less than 0 are be ignored.
      */
-    public void setSpacing(final int spacing) {
+    public synchronized void setSpacing(final int spacing) {
         if ((spacing >= 0) && (this.spacing != spacing)) {
             this.spacing = spacing;
 
@@ -618,7 +618,7 @@ public abstract class Dialog extends DeviceScreen {
      * Forces the layout of all components to be recalculated. This should be
      * called whenever this screen is altered.
      */
-    public void invalidate() {
+    public synchronized void invalidate() {
         // We must calculate the layout before the next paint.
         invalidated = true;
     }
@@ -1066,7 +1066,7 @@ public abstract class Dialog extends DeviceScreen {
      * @param y
      *                is the vertical location where the pointer was pressed.
      */
-    protected void pointerPressed(final int x, final int y) {
+    protected synchronized void pointerPressed(final int x, final int y) {
         // Is this event moving the scrollbar?
         boolean movedScrollbar = false;
 
@@ -1144,7 +1144,7 @@ public abstract class Dialog extends DeviceScreen {
      * @param y
      *                is the vertical location where the pointer was dragged.
      */
-    protected void pointerDragged(final int x, final int y) {
+    protected synchronized void pointerDragged(final int x, final int y) {
         // Forward the event to the current component.
         final Component c = get(highlightedComponent);
 

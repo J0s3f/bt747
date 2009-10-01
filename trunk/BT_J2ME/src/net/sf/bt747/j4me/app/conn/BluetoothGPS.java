@@ -256,7 +256,7 @@ public class BluetoothGPS  {
     /**
      * 
      */
-    public int read(byte[] b, int offset, int len) throws IOException {
+    public synchronized int read(byte[] b, int offset, int len) throws IOException {
         int result;
         result = available();
         if (result > 0) {
@@ -280,7 +280,7 @@ public class BluetoothGPS  {
                     btrtt.restart();
                 }
 
-                result = inputStream.read(b, offset, len);
+                    result = inputStream.read(b, offset, len);
 
                 if (result > 0) {
                     // Notify the bluetooth read timeout thread that we have
@@ -331,11 +331,11 @@ public class BluetoothGPS  {
     }
 
 
-    public final OutputStream getOutputStream() {
+    public final synchronized OutputStream getOutputStream() {
         return outputStream;
     }
 
-    public final InputStream getInputStream() {
+    public final synchronized InputStream getInputStream() {
         return inputStream;
     }
     
