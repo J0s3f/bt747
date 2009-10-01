@@ -377,7 +377,7 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
     private java.util.Timer tm = new Timer();
     private TimerTask tt;
 
-    private void checkPort() {
+    private synchronized void checkPort() {
         Log.debug("checkPort");
         boolean ok = true;
         try {

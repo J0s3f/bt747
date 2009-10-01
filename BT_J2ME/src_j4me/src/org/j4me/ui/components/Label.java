@@ -91,7 +91,7 @@ public class Label extends Component {
     /**
      * @return The text this label will display.
      */
-    public String getLabel() {
+    public synchronized String getLabel() {
         return text;
     }
 
@@ -111,7 +111,7 @@ public class Label extends Component {
      * 
      * @see Theme#getFont()
      */
-    public Font getFont() {
+    public synchronized Font getFont() {
         return font;
     }
 
@@ -269,7 +269,7 @@ public class Label extends Component {
      * @see org.j4me.ui.components.Component#getPreferredComponentSize(Theme,
      *      int, int)
      */
-    protected int[] getPreferredComponentSize(final Theme theme,
+    protected synchronized int[] getPreferredComponentSize(final Theme theme,
             final int viewportWidth, final int viewportHeight) {
         int width = 0;
         height = 0;
@@ -310,7 +310,7 @@ public class Label extends Component {
     /**
      * @return The height, in pixels, for this component.
      */
-    public int getHeight() {
+    public synchronized int getHeight() {
         if (lines == null) {
             return super.getHeight();
         } else {

@@ -478,7 +478,7 @@ class BluetoothGPS implements Runnable {
      * consistently 10 meters off the road, calling this method will cause the
      * receiver to re-initialize and acquire the correct location.
      */
-    public void reacquireFix() {
+    public synchronized void reacquireFix() {
         if (outputStream != null) {
             // Send the SiRF sentence.
             try {
@@ -538,7 +538,7 @@ class BluetoothGPS implements Runnable {
      * been received pauses for specified amount of time. Continues on I/O
      * errors.
      */
-    public void run() {
+    public synchronized void run() {
         boolean process = true;
 
         // Set to true when a GPRMC sentence is processed
