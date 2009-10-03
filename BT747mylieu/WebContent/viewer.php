@@ -1,10 +1,5 @@
 <?php
 include "defaults.php";
-try {
-if(file_exists("config.php")) {
- include "config.php"; }
-} catch  (Exception $e) {
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -16,10 +11,11 @@ if(file_exists("config.php")) {
 	
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <?php
-print "<title>".$MYLIEU_SITE_TITLE_WHERE_WAS_X.$MYLIEU_WHO."</title>";
+print "<title>".$MYLIEU_SITE_TITLE_WAS_IS_X.$MYLIEU_WHO."</title>";
 ?>
 	<script src="prototype.js" type="text/javascript"></script>
 	<script src="main.js" type="text/javascript"></script>
+	<?php GmapMgmt::gmapScript(); ?>
 	<script src="http://maps.google.com/jsapi?key=ABQIAAAADFJoSTzQCLixbHnZMg9AvxQ4IMxX_BgFv85tBKXNitpaLQ9wNBQddvamzC31--esGSYRR2SZLPIc6w" type="text/javascript"></script>
 	<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
