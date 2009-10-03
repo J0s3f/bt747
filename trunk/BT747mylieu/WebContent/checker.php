@@ -1,4 +1,5 @@
-<?php 
+<?php
+include "defaults.php"; 
 
 /*
  * checker.php
@@ -72,6 +73,9 @@ switch ($myAction)
 			echo "0";
 		}
 		break;
+		case "gmap":
+		GmapMgmt::gmapScript();
+		break;
 		
 	default:
 		echo "call this script with<br><br>";
@@ -81,6 +85,7 @@ switch ($myAction)
 		echo "filecreatepermission<br>";
 		echo "isDomDocument<br>";
 		echo "isDomXmlOpenFile<br>";
+        echo "gmap:<br>";
 		break;
 }
 
