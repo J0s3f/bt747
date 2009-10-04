@@ -1,5 +1,28 @@
 var myGeoEngine = Class.create();
 
+function latlonTxt(latlon) {
+	 if(latlon) {
+	     var s='<b>Last click: '+ latlon.toUrlValue()+' </b>';
+	  showaddr(latlon);  document.getElementById("latlon").innerHTML = s;
+	 }
+	}
+function latlonFunc() {
+	 return function(overlay,latlon) {latlonTxt(latlon);}
+	}
+
+function gotoPt(map, pt) {
+	 if(!pt){
+	  document.getElementById("latlon").innerHTML="Location not found";
+	 } else {
+	  map.setCenter(pt);latlonTxt(pt);
+	 }
+	}
+
+function gotoAddr(){
+	 var ad=document.getElementById("adr").value;
+	 new GClientGeocoder().getLatLng(ad,gotoPt);
+	}
+
 myGeoEngine.prototype = {
 	initialize : function() {
 		this.myMap = null;
@@ -29,14 +52,17 @@ myGeoEngine.prototype = {
 			if (typeof google != 'undefined') {
 				// create a good google map for the div "map"
 				this.myMap = new google.maps.Map2($("map"));
+				this.myMap.setCenter(new GLatLng(lat, lon));
+				this.myMap.setZoom(zoom);
+				this.myMap.enableScrollWheelZoom();
 				this.myMap.addControl(new GLargeMapControl());
 				this.myMap.addControl(new GMapTypeControl());
 				this.myMap.addControl(new GLargeMapControl());
 				this.myMap.addControl(new GMapTypeControl());
 				this.myMap.addControl(new GScaleControl());
 				this.myMap.addControl(new GOverviewMapControl());
-				// this.myMap.map.enableContinuousZoom();
-				// this.myMap.map.enableDoubleClickZoom();
+				this.myMap.enableContinuousZoom();
+				this.myMap.enableDoubleClickZoom();
 				var OSM = new GMapType(
 						[ new GTileLayer(
 								null,
@@ -76,8 +102,6 @@ myGeoEngine.prototype = {
 				this.myMap.addMapType(OSM);
 				this.myMap.addMapType(OSMcycle);
 				this.myMap.addMapType(Osmarender);
-
-				this.myMap.setCenter(new GLatLng(lat, lon), zoom, G_NORMAL_MAP);
 			}
 			break;
 

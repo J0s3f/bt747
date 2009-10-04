@@ -5,6 +5,7 @@ try {
 	    google.load("maps", "2.x");
     }
 } catch (err) {
+	addMessage(err.message);
 }
 
 /** myLieuUser
@@ -51,7 +52,7 @@ myLieuUser.prototype=
 	},
 	changePosition:function(aPosition)
 	{
-		return aMapEngine.changeMarker(this.myUserMarker, aPosition);
+       return aMapEngine.changeMarker(this.myUserMarker, aPosition);
 	},
 	/* trys to fetch the latest known position of this user
 	 */
@@ -367,11 +368,11 @@ function onCheck(stage)
  */
 function onLoad(anUser)
 {	
-	aMapEngine = new myGeoEngine();
-	aMapEngine.init();
-	
 	// resize the map-div to screen of browser
 	onResize();
+
+	aMapEngine = new myGeoEngine();
+	aMapEngine.init();
 
 	// start the periodical updater
 	onUpdate();
@@ -415,6 +416,9 @@ function resizeDiv(myDiv)
 		myContentArea.style.height = myNewHeight;
 		var myNewWidth = getWindowWidth() + "px";
 		myContentArea.style.width = myNewWidth;
+		addMessage("Size "+myNewHeight+" "+myNewWidth);
+	} else {
+		addMessage("Map not found in resizeDiv");
 	}
 }
 
