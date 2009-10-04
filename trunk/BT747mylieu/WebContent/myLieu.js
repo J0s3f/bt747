@@ -1,11 +1,24 @@
 // only if the google-api is proper called in the header of the html-page, this works!
-if (typeof google != 'undefined')
-{
-	google.load("maps", "2.x");
+try {
+    if (typeof google != 'undefined')
+    {
+	    google.load("maps", "2.x");
+    }
+} catch (err) {
 }
 
-/**
- * An object describing any important things about a user.
+/** myLieuUser
+ * 
+ * An Class describing any important things about a user.
+ * 
+ * Methods:
+ *   initialize
+ *   createUserIcon
+ *   createMarker
+ *   changePosition
+ *   getLastPosition
+ *   setStatus
+ * 
  */
 var myLieuUser = Class.create();
 
@@ -23,6 +36,7 @@ myLieuUser.prototype=
 		this.myLastTime = null;
 		this.myTimeStampCounter = 0;
 		this.myStatus = false;
+		this.myUserName = null;
 	},
 	// creates an icon for this user. Depends on the username, where the icon lies
 	createUserIcon:function()
@@ -173,8 +187,7 @@ myLieuUser.prototype=
 		}
 	}
 };
-
-
+/** End myLieuUser Class definition */
 
 
 // the google-panel
@@ -363,6 +376,11 @@ function onLoad(anUser)
 	// start the periodical updater
 	onUpdate();
 }
+ 
+/* Function to be called when page is unloaded. */
+function onUnLoad() {
+	aMapEngine.unload();
+}
 
 /**
  * This one is a special loader for the viewing page
@@ -453,7 +471,7 @@ function routeChosing(aRouteFileName)
 		return;
 	}
 	
-	// the user shurely wants to download the gpx-file, which has
+	// the user surely wants to download the gpx-file, which has
 	// the same name except the suffix.
 	var aRouteFileNameGPX = aRouteFileName.replace(".xml", ".gpx");
 	showDownloadLink(aRouteFileNameGPX);

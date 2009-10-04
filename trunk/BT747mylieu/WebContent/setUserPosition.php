@@ -27,7 +27,7 @@
 // show every warning, error, info
 error_reporting(E_ALL);
 
-// check, if we got a client, which can not convert into dezimal format.
+// check, if we got a client, which can not convert into decimal format.
 if (isset($_GET['longitude_raw']))
 {
 	$myLongitude_raw = $_GET['longitude_raw'];
@@ -58,7 +58,7 @@ if (isset($_GET['latitude_raw']))
 {
 	$myLatitude_raw = $_GET['latitude_raw'];
 	
-	// check, if we got a client, which can not convert into dezimal format.
+	// check, if we got a client, which can not convert into decimal format.
 	if ($myLatitude_raw != "")
 	{
 		$myLatitude = raw2lat_dez($myLatitude_raw);
@@ -385,8 +385,9 @@ function raw2lat_dez($degree)
 		$degreePart=substr($degreeParts[0],0,2);
 		$minute=substr($degreeParts[0],2,2);
 		$second=$degreeParts[1];
-		// calculation
-		$myLat_dezimal = ($second/10000 + $minute)/60 + $degreePart;
+        $iNumDigits=count($degreeParts[1]);
+        // calculation
+        $myLat_dezimal = ($second/pow(10,$iNumDigits) + $minute)/60 + $degreePart;
 	}
 	return $myLat_dezimal;
 }
@@ -402,9 +403,10 @@ function raw2long_dez($degree)
 	// take the first 2 digits from the part before the point as degree
 	$degreePart=substr($degreeParts[0],0,3);
 	$minute=substr($degreeParts[0],3,2);
-	$second=$degreeParts[1];
-	// calculation
-	$myLat_dezimal = ($second/10000 + $minute)/60 + $degreePart;
+	$second=$degreeParts[1];  
+    $iNumDigits=count($degreeParts[1]);
+    // calculation
+    $myLat_dezimal = ($second/pow(10,$iNumDigits) + $minute)/60 + $degreePart;
 	return $myLat_dezimal;
 }
 
