@@ -11,7 +11,7 @@ include "defaults.php";
 	
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <?php
-print "<title>".$MYLIEU_SITE_TITLE_WAS_IS_X.$MYLIEU_WHO."</title>";
+print "<title>".$MYLIEU_SITE_TITLE_WHERE_WAS_X.$MYLIEU_WHO."</title>";
 ?>
 	<script src="prototype.js" type="text/javascript"></script>
 	<script src="main.js" type="text/javascript"></script>
