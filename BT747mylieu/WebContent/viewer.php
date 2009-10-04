@@ -23,7 +23,7 @@ print "<title>".$MYLIEU_SITE_TITLE_WHERE_WAS_X.$MYLIEU_WHO."</title>";
 	<script src="myGeoEngine.js" type="text/javascript"></script>
 	<script src="myLieu.js" type="text/javascript"></script>
 </head>
-<body onload="onViewLoad()">
+<body onload="onViewLoad()" onunload="onUnLoad()">
 <div id="map"></div>
 <div id="downloadLink"></div>
 <div id="routeChoser">Your tracks:<br/>
