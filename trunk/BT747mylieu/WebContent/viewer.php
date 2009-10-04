@@ -1,8 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
 include "defaults.php";
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"  xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
 
@@ -17,13 +17,13 @@ print "<title>".$MYLIEU_SITE_TITLE_WAS_IS_X.$MYLIEU_WHO."</title>";
 	<script src="main.js" type="text/javascript"></script>
 	<?php GmapMgmt::gmapScript(); ?>
 	<script src="http://maps.google.com/jsapi?key=ABQIAAAADFJoSTzQCLixbHnZMg9AvxQ4IMxX_BgFv85tBKXNitpaLQ9wNBQddvamzC31--esGSYRR2SZLPIc6w" type="text/javascript"></script>
-	<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+	<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
+	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
 	<link href="myLieu.css" rel="stylesheet" type="text/css" />
 	<script src="myGeoEngine.js" type="text/javascript"></script>
 	<script src="myLieu.js" type="text/javascript"></script>
 </head>
-<body onLoad="onViewLoad()">
+<body onload="onViewLoad()">
 <div id="map"></div>
 <div id="downloadLink"></div>
 <div id="routeChoser">Your tracks:<br/>
@@ -41,7 +41,7 @@ while (false !== ($filename = readdir($dh)))
 
 rsort($files);
 
-echo "<select  name=\"routeChoserCombo\" onChange=\"routeChosing(this.options[this.selectedIndex].value)\">\n";
+echo "<select  name=\"routeChoserCombo\" onchange=\"routeChosing(this.options[this.selectedIndex].value)\">\n";
 echo "<option value=\"0\">choose track</option>\n";
 foreach($files as $f)
 {
@@ -50,6 +50,7 @@ foreach($files as $f)
 		echo "<option value=\"".substr($f,0,strlen($f))."\">".substr($f,0,strlen($f)-12)."</option>\n";
 	}
 }
+echo "</select>";
 ?>
 </div>
 </body>
