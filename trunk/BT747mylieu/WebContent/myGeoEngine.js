@@ -1,9 +1,35 @@
 var myGeoEngine = Class.create();
 
+try {
+if (GBrowserIsCompatible()) {
+	 geocoder = new GClientGeocoder();
+	 preva = "none";
+	 function showaddr(latlng) {
+	  if (latlng) {
+	   geocoder.getLocations(latlng, function(adrs) {
+	    if(adrs.Status.code == 200) {
+	     adr=adrs.Placemark[0];
+	     var txt=adr.address;
+	     if(txt==preva) {
+	      map.openInfoWindow(latlng, txt);
+	     } else {
+	      preva = txt;
+	     }
+	    }
+	   });
+	  }
+	 }
+
 function latlonTxt(latlon) {
-	 if(latlon) {
+	//addMessage("latlon");
+	if(latlon) {
 	     var s='<b>Last click: '+ latlon.toUrlValue()+' </b>';
-	  showaddr(latlon);  document.getElementById("latlon").innerHTML = s;
+	  showaddr(latlon);
+	  try {
+	     document.getElementById("latlon").innerHTML = s;
+	  } catch (err) {
+		  // latlon does not exist probably
+	  }
 	 }
 	}
 function latlonFunc() {
@@ -22,6 +48,8 @@ function gotoAddr(){
 	 var ad=document.getElementById("adr").value;
 	 new GClientGeocoder().getLatLng(ad,gotoPt);
 	}
+}
+} catch(err) { }
 
 myGeoEngine.prototype = {
 	initialize : function() {
@@ -63,6 +91,11 @@ myGeoEngine.prototype = {
 				this.myMap.addControl(new GOverviewMapControl());
 				this.myMap.enableContinuousZoom();
 				this.myMap.enableDoubleClickZoom();
+				try {
+					// Does not seem to work yet here.
+				    GEvent.addListener(this.myMap,'click',latlonFunc());
+				} catch(err) {}
+		       	
 				var OSM = new GMapType(
 						[ new GTileLayer(
 								null,
