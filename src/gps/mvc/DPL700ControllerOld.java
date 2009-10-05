@@ -13,7 +13,7 @@ import bt747.sys.Generic;
  * @author Mario
  *
  */
-public class DPL700Controller {
+public class DPL700ControllerOld {
     // DPL700 Functionality
     private String DPL700LogFileName;
     private int DPL700Card;
@@ -28,7 +28,7 @@ public class DPL700Controller {
     /**
      * 
      */
-    public DPL700Controller(GPSLinkHandler handler) {
+    public DPL700ControllerOld(GPSLinkHandler handler) {
         this.handler = handler;
     }
     

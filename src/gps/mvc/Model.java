@@ -165,11 +165,11 @@ public class Model implements ProtocolConstants {
      * 
      * Intermediate step in refactoring.
      */
-    private DPL700Controller dpl700C;
+    private DPL700ControllerOld dpl700C;
 
-    public final DPL700Controller getDPL700Controller() {
+    public final DPL700ControllerOld getDPL700Controller() {
         if (dpl700C == null) {
-            dpl700C = new DPL700Controller(handler);
+            dpl700C = new DPL700ControllerOld(handler);
         }
         return dpl700C;
     }

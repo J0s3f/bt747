@@ -79,6 +79,9 @@ public class Controller implements BT747Thread, ProtocolConstants,
         case PROTOCOL_HOLUX_PHLX:
             mtkC = new HoluxController(this, mtkM);
             break;
+        case PROTOCOL_WONDEPROUD:
+            mtkC = new DPL700Controller(this, mtkM);
+            break;
         }
 
     }
