@@ -58,6 +58,7 @@ public class IBlue747Model {
     public GPSrxtx gpsRxTx = null;
 
     private HlxController hlxController = new HlxController(this);
+    private BTCD110mController cd110Controller = new BTCD110mController(this);
 
     private byte[] logData = null;
     private static String logFile = "c:/bt747/Test.bin";
@@ -81,7 +82,7 @@ public class IBlue747Model {
      * 
      */
     public IBlue747Model() {
-        //setupModel(DeviceModelType.HOLUXM1000C);
+        // setupModel(DeviceModelType.HOLUXM1000C);
         setupModel(DeviceModelType.IBLUE747PLUS);
     }
 
@@ -101,8 +102,10 @@ public class IBlue747Model {
         } else {
             gpsRxTx = new GPSrxtx();
         }
+
         gpsRxTx.setDefaults(20, 115200);
         gpsRxTx.openPort();
+        gpsRxTx.newState(new TextOrNMEADecoderState());
         gpsTimerTask.setGpsRxTx(gpsRxTx);
         // addTimer(10); // Palm minimum timer resolution= 10 ms
 
@@ -148,9 +151,9 @@ public class IBlue747Model {
         gpsTm.scheduleAtFixedRate(gpsTimerTask, 1000, 1000);
     }
 
-    private static GpsTimerTask gpsTimerTask = new GpsTimerTask();
+    private GpsTimerTask gpsTimerTask = new GpsTimerTask();
 
-    private static class GpsTimerTask extends TimerTask {
+    private class GpsTimerTask extends TimerTask {
         GPSRecord r = GPSRecord.getLogFormatRecord(0);
         GPSrxtx gpsRxTx = null;
         boolean sendPosition = true;
@@ -158,7 +161,7 @@ public class IBlue747Model {
         public void setGpsRxTx(final GPSrxtx gpsRxTx) {
             this.gpsRxTx = gpsRxTx;
         }
-        
+
         public void setSendGpsPosition(final boolean sendPosition) {
             this.sendPosition = sendPosition;
         }
@@ -168,7 +171,7 @@ public class IBlue747Model {
          */
         public GpsTimerTask() {
             r.setLatitude(51.0);
-            r.setLongitude(51.0);
+            r.setLongitude(4.0);
             r.setHdop(98);
             r.setVdop(99);
             r.setPdop(120);
@@ -192,6 +195,7 @@ public class IBlue747Model {
         }
 
         volatile int pauseTime = 0;
+
         public void pause(int timems) {
             pauseTime = timems;
         }
@@ -204,19 +208,22 @@ public class IBlue747Model {
         @Override
         public void run() {
             synchronized (r) {
-                
+
                 int timepassed = 1000;
-                r.milisecond += timepassed %1000;
-                r.utc += r.milisecond/1000;
+                r.milisecond += timepassed % 1000;
+                r.utc += r.milisecond / 1000;
+                r.latitude += 0.00001;
+                r.longitude += 0.00001;
                 pauseTime -= timepassed;
-                if(pauseTime<0) {
+                if (pauseTime < 0) {
                     pauseTime = 0;
-                    if (sendPosition) {
+                    if (sendPosition
+                            && (mtkData.deviceMode == DeviceMode.DEVICE_MODE_NMEA)) {
                         sendPacketWithChecksum(GPSNMEAFile.toGGA(r));
                         sendPacketWithChecksum(GPSNMEAFile.toRMC(r));
                     }
                 }
-                
+
             }
         }
     };
@@ -227,8 +234,8 @@ public class IBlue747Model {
      * @author Mario
      * 
      */
-    enum DeviceMode {
-        DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN
+    public static enum DeviceMode {
+        DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN, DEVICE_MODE_DPL700, DEVICE_MODE_SIRFIII
     };
 
     /**
@@ -237,15 +244,21 @@ public class IBlue747Model {
      * 
      * @param mode
      */
-    private final void setDeviceMode(final DeviceMode mode) {
+    public final void setDeviceMode(final DeviceMode mode) {
         if (mtkData.deviceMode != mode) {
             mtkData.deviceMode = mode;
             switch (mode) {
             case DEVICE_MODE_NMEA:
-                gpsRxTx.newState(DecoderStateFactory.NMEA_STATE);
+                gpsRxTx.newState(new TextOrNMEADecoderState());
                 break;
             case DEVICE_MODE_MTKBIN:
                 gpsRxTx.newState(DecoderStateFactory.MTKBIN_STATE);
+                break;
+            case DEVICE_MODE_DPL700:
+                gpsRxTx.newState(DecoderStateFactory.DPL700_STATE);
+                break;
+            case DEVICE_MODE_SIRFIII:
+                gpsRxTx.newState(DecoderStateFactory.SIRFIII_STATE);
                 break;
             default:
                 break;
@@ -262,7 +275,9 @@ public class IBlue747Model {
     private final void analyseResponse(final Object response) {
         if (response instanceof MtkBinTransportMessageModel) {
             analyseMtkBinData((MtkBinTransportMessageModel) response);
-        } else {
+        } else if (response instanceof String) {
+            cd110Controller.analyseResponse(response);
+        } else if (response instanceof String[]) {
             analyseNMEA((String[]) response);
         }
     }
@@ -324,8 +339,8 @@ public class IBlue747Model {
         public int logTimeInterval = 0;
         public int logDistanceInterval = 100;
         public int logSpeedInterval = 50;
-        public int recMethod = 2;   // (2) Stop or (1) overwrite
-        
+        public int recMethod = 2; // (2) Stop or (1) overwrite
+
         public int fixPeriod = 200;
     }
 
@@ -343,6 +358,7 @@ public class IBlue747Model {
             }
         case DEVICE_MODE_MTKBIN:
 
+        case DEVICE_MODE_DPL700:
         }
     }
 
@@ -372,13 +388,16 @@ public class IBlue747Model {
                 if (p_nmea.length >= 3) {
                     switch (z_setType) {
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
-                        mtkData.logTimeInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        mtkData.logTimeInterval = JavaLibBridge
+                                .toInt(p_nmea[3]);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
-                        mtkData.logDistanceInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        mtkData.logDistanceInterval = JavaLibBridge
+                                .toInt(p_nmea[3]);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
-                        mtkData.logSpeedInterval = JavaLibBridge.toInt(p_nmea[3]);
+                        mtkData.logSpeedInterval = JavaLibBridge
+                                .toInt(p_nmea[3]);
                         break;
                     default:
                         break;
@@ -421,8 +440,8 @@ public class IBlue747Model {
                         // public int logSpeedInterval = 50;
                         sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
-                                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL + ","
-                                + mtkData.logDistanceInterval);
+                                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL
+                                + "," + mtkData.logDistanceInterval);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
                         sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
@@ -433,8 +452,8 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
                         sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                                 + BT747Constants.PMTK_LOG_DT + ","
-                                + BT747Constants.PMTK_LOG_REC_METHOD
-                                + "," + mtkData.recMethod);
+                                + BT747Constants.PMTK_LOG_REC_METHOD + ","
+                                + mtkData.recMethod);
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2
                         // =
@@ -481,17 +500,13 @@ public class IBlue747Model {
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
-                        
+
                     case BT747Constants.PMTK_LOG_VERSION:
-                        sendPacket("PMTK"
-                                + BT747Constants.PMTK_CMD_LOG
-                                + ","
-                                + BT747Constants.PMTK_LOG_DT
-                                + ","
-                                + BT747Constants.PMTK_LOG_VERSION
-                                + ","
+                        sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
+                                + BT747Constants.PMTK_LOG_VERSION + ","
                                 + mtkData.logVersion);
-                        
+
                     default:
                     }
                 }
@@ -598,150 +613,152 @@ public class IBlue747Model {
         Generic.debug(nmea.toString());
 
         try {
-        if (p_nmea[0].startsWith("PMTK")) {
-            z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
+            if (p_nmea[0].startsWith("PMTK")) {
+                z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
 
-            if (z_Cmd != BT747Constants.PMTK_CMD_LOG) {
-                acknowledge = new Acknowledge(p_nmea);
-            }
+                if (z_Cmd != BT747Constants.PMTK_CMD_LOG) {
+                    acknowledge = new Acknowledge(p_nmea);
+                }
 
-            z_Result = -1; // Suppose cmd not treated
-            switch (z_Cmd) {
-            case BT747Constants.PMTK_CMD_LOG: // CMD 182;
-                z_Result = replyLogNmea(p_nmea);
-                break;
-            case BT747Constants.PMTK_TEST: // CMD 000
-            case BT747Constants.PMTK_ACK: // CMD 001
-                // Device does not reply with this
-                break;
-            case BT747Constants.PMTK_SYS_MSG: // CMD 010
-            case BT747Constants.PMTK_CMD_HOT_START: // CMD 101
-            case BT747Constants.PMTK_CMD_WARM_START: // CMD 102
-            case BT747Constants.PMTK_CMD_COLD_START: // CMD 103
-            case BT747Constants.PMTK_CMD_FULL_COLD_START: // CMD 104
-            case BT747Constants.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
-                break;
-            case BT747Constants.PMTK_SET_BIN_MODE: // CMD 253
-                setDeviceMode(DeviceMode.DEVICE_MODE_MTKBIN);
-                break;
-            case BT747Constants.PMTK_API_SET_FIX_CTL: // CMD 300
-                mtkData.fixPeriod = JavaLibBridge.toInt(p_nmea[3]);
-                break;
-            case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
-            case BT747Constants.PMTK_API_SET_SBAS: // CMD 313
-            case BT747Constants.PMTK_API_SET_NMEA_OUTPUT: // CMD 314
-            case BT747Constants.PMTK_API_SET_PWR_SAV_MODE: // CMD 320
-            case BT747Constants.PMTK_API_SET_DATUM: // CMD 330
-            case BT747Constants.PMTK_API_SET_DATUM_ADVANCE: // CMD 331
-            case BT747Constants.PMTK_API_SET_USER_OPTION: // CMD 390
-                break;
-            case BT747Constants.PMTK_API_Q_FIX_CTL: // CMD 400
+                z_Result = -1; // Suppose cmd not treated
+                switch (z_Cmd) {
+                case BT747Constants.PMTK_CMD_LOG: // CMD 182;
+                    z_Result = replyLogNmea(p_nmea);
+                    break;
+                case BT747Constants.PMTK_TEST: // CMD 000
+                case BT747Constants.PMTK_ACK: // CMD 001
+                    // Device does not reply with this
+                    break;
+                case BT747Constants.PMTK_SYS_MSG: // CMD 010
+                case BT747Constants.PMTK_CMD_HOT_START: // CMD 101
+                case BT747Constants.PMTK_CMD_WARM_START: // CMD 102
+                case BT747Constants.PMTK_CMD_COLD_START: // CMD 103
+                case BT747Constants.PMTK_CMD_FULL_COLD_START: // CMD 104
+                case BT747Constants.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
+                    break;
+                case BT747Constants.PMTK_SET_BIN_MODE: // CMD 253
+                    setDeviceMode(DeviceMode.DEVICE_MODE_MTKBIN);
+                    break;
+                case BT747Constants.PMTK_API_SET_FIX_CTL: // CMD 300
+                    mtkData.fixPeriod = JavaLibBridge.toInt(p_nmea[3]);
+                    break;
+                case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
+                case BT747Constants.PMTK_API_SET_SBAS: // CMD 313
+                case BT747Constants.PMTK_API_SET_NMEA_OUTPUT: // CMD 314
+                case BT747Constants.PMTK_API_SET_PWR_SAV_MODE: // CMD 320
+                case BT747Constants.PMTK_API_SET_DATUM: // CMD 330
+                case BT747Constants.PMTK_API_SET_DATUM_ADVANCE: // CMD 331
+                case BT747Constants.PMTK_API_SET_USER_OPTION: // CMD 390
+                    break;
+                case BT747Constants.PMTK_API_Q_FIX_CTL: // CMD 400
                     response = "PMTK500," + mtkData.fixPeriod;
                     break;
-            case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
-                break;
-            case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
-                break;
-            case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
-                response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
-                break;
-            case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
-            case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
-            case BT747Constants.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
-                break;
-            case BT747Constants.PMTK_API_Q_GET_USER_OPTION: // CMD 490
-                response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,9600";
-                break;
-            // case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
-            // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
-            // case BT747_dev.PMTK_DT_SBAS: // CMD 513
-            case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
-                response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
-                break;
-            // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
-            // case BT747_dev.PMTK_DT_DATUM: // CMD 530
-            case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
-                response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,115200";
-                break;
-            // break;
-            case BT747Constants.PMTK_Q_RELEASE: // CMD 605
-                // m_sendPacket("PMTK" +
-                // BT747Constants.PMTK_DT_RELEASE
-                // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
-                // + "TSI_747A+" + "," + "1.0");
-                if (mtkData.modelRef != null) {
-                    response = "PMTK" + BT747Constants.PMTK_DT_RELEASE + ","
-                            + mtkData.coreVersion + "," + mtkData.modelNumber
-                            + "," + mtkData.modelRef + ","
-                            + mtkData.swVersion;
-                }
-                break;
-            case BT747Constants.PMTK_Q_VERSION: // 604
-                if (mtkData.mainVersion != null) {
-                    response = "PMTK" + BT747Constants.PMTK_DT_VERSION + ","
-                            + mtkData.mainVersion + ","
-                            + mtkData.releaseNumber + "," + mtkData.modelRef;
-                } else {
+                case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
+                    break;
+                case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
+                    break;
+                case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
+                    response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+                    break;
+                case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
+                case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
+                case BT747Constants.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
+                    break;
+                case BT747Constants.PMTK_API_Q_GET_USER_OPTION: // CMD 490
+                    response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,9600";
+                    break;
+                // case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
+                // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
+                // case BT747_dev.PMTK_DT_SBAS: // CMD 513
+                case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
+                    response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+                    break;
+                // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
+                // case BT747_dev.PMTK_DT_DATUM: // CMD 530
+                case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+                    response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,115200";
+                    break;
+                // break;
+                case BT747Constants.PMTK_Q_RELEASE: // CMD 605
+                    // m_sendPacket("PMTK" +
+                    // BT747Constants.PMTK_DT_RELEASE
+                    // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
+                    // + "TSI_747A+" + "," + "1.0");
+                    if (mtkData.modelRef != null) {
+                        response = "PMTK" + BT747Constants.PMTK_DT_RELEASE
+                                + "," + mtkData.coreVersion + ","
+                                + mtkData.modelNumber + ","
+                                + mtkData.modelRef + "," + mtkData.swVersion;
+                    }
+                    break;
+                case BT747Constants.PMTK_Q_VERSION: // 604
+                    if (mtkData.mainVersion != null) {
+                        response = "PMTK" + BT747Constants.PMTK_DT_VERSION
+                                + "," + mtkData.mainVersion + ","
+                                + mtkData.releaseNumber + ","
+                                + mtkData.modelRef;
+                    } else {
+                        acknowledge = new Acknowledge(p_nmea,
+                                BT747Constants.PMTK_ACK_UNSUPPORTED);
+                    }
+                    // PMTK704,FWVrsn1, FWVrsn2, FWVrsn3
+                    // Vrsn: MainVersion_ReleaseNumber
+                    // Example:
+                    // $PMTK704,1.881_06,0606_m0138,0000*52<CR><LF>
+                    break;
+                case BT747Constants.PMTK_Q_EPO_INFO:
+                    response = "PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000";
+                    break;
+                case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
+                    break;
+                default:
                     acknowledge = new Acknowledge(p_nmea,
                             BT747Constants.PMTK_ACK_UNSUPPORTED);
+                    System.err.println("Not supported in model:" + z_Cmd);
+                } // End switch
+            } else if (p_nmea[0].startsWith("PTSI")) {
+                z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
+
+                replyMTK_Ack(p_nmea);
+
+                switch (z_Cmd) {
+                case 000:
+                    if (p_nmea[1].equals("TSI")) {
+                        response = "PTSI001," + mtkData.modelRef;
+                    }
+                    break;
+                case 2: {
+                    int opt = JavaLibBridge.toInt(p_nmea[1]);
+                    switch (opt) {
+                    case 2:
+
+                        break;
+
+                    default:
+                        break;
+                    }
                 }
-                // PMTK704,FWVrsn1, FWVrsn2, FWVrsn3
-                // Vrsn: MainVersion_ReleaseNumber
-                // Example:
-                // $PMTK704,1.881_06,0606_m0138,0000*52<CR><LF>
-                break;
-            case BT747Constants.PMTK_Q_EPO_INFO:
-                response = "PMTK707,28,1511,518400,1512,496800,1511,540000,1511,540000";
-                break;
-            case BT747Constants.PMTK_SET_EPO_DATA: // CMD 722
-                break;
-            default:
-                acknowledge = new Acknowledge(p_nmea,
-                        BT747Constants.PMTK_ACK_UNSUPPORTED);
-                System.err.println("Not supported in model:" + z_Cmd);
-            } // End switch
-        } else if (p_nmea[0].startsWith("PTSI")) {
-            z_Cmd = JavaLibBridge.toInt(p_nmea[0].substring(4));
-
-            replyMTK_Ack(p_nmea);
-
-            switch (z_Cmd) {
-            case 000:
-                if (p_nmea[1].equals("TSI")) {
-                    response = "PTSI001," + mtkData.modelRef;
-                }
-                break;
-            case 2: {
-                int opt = JavaLibBridge.toInt(p_nmea[1]);
-                switch (opt) {
-                case 2:
-
+                    break;
+                case 11:
+                    break;
+                case 999:
+                    if (p_nmea[1].equals("IAMAP")) {
+                        response = "PTSI999,IAMAP";
+                    }
                     break;
 
                 default:
                     break;
                 }
+            } else if (hlxController.handles(p_nmea[0])) {
+                // Delegate to holux controller. The MtkModel will respond too
+                // so
+                // we do not care about the result.
+                hlxController.analyseNMEA(p_nmea); // End if
             }
-                break;
-            case 11:
-                break;
-            case 999:
-                if (p_nmea[1].equals("IAMAP")) {
-                    response = "PTSI999,IAMAP";
-                }
-                break;
-
-            default:
-                break;
-            }
-        } else if (hlxController.handles(p_nmea[0])) {
-            // Delegate to holux controller. The MtkModel will respond too so
-            // we do not care about the result.
-            hlxController.analyseNMEA(p_nmea); // End if
-        }
         } catch (Exception e) {
             // TODO: handle exception
-            Generic.debug("Problem in reception",e);
+            Generic.debug("Problem in reception", e);
         }
         if (response != null) {
             if (response instanceof String) {

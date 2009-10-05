@@ -42,4 +42,6 @@ public interface DeviceControllerIF {
      * @return
      */
     //public void setDataNeeded(final int dataType);
+    
+    public void getLog(final String fileName, final int card);
 }

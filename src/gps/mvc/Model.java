@@ -16,7 +16,6 @@ package gps.mvc;
 
 import gps.GPSListener;
 import gps.GpsEvent;
-import gps.connection.DPL700ResponseModel;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
@@ -68,6 +67,7 @@ public class Model implements ProtocolConstants {
             switch (protocol) {
             case PROTOCOL_MTK:
             case PROTOCOL_SIRFIII:
+            case PROTOCOL_WONDEPROUD:
                 mtkModel = new MtkModel(this, handler);
                 break;
             case PROTOCOL_HOLUX_PHLX:
@@ -160,30 +160,11 @@ public class Model implements ProtocolConstants {
 
     private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
-    /**
-     * Local singleton of DPL700Controller.
-     * 
-     * Intermediate step in refactoring.
-     */
-    private DPL700ControllerOld dpl700C;
-
-    public final DPL700ControllerOld getDPL700Controller() {
-        if (dpl700C == null) {
-            dpl700C = new DPL700ControllerOld(handler);
-        }
-        return dpl700C;
-    }
-
     public final void analyseResponse(final Object response) {
-        if (response instanceof DPL700ResponseModel) {
-            if (dpl700C != null) {
-                dpl700C.analyseDPL700Data((DPL700ResponseModel) response);
-            }
-        }
         if (response instanceof MtkBinTransportMessageModel) {
             mtkModel
                     .analyseMtkBinData((MtkBinTransportMessageModel) response);
-        } else {
+        } else if (response instanceof String[]) {
             analyseNMEA((String[]) response);
         }
     }
@@ -372,5 +353,4 @@ public class Model implements ProtocolConstants {
     public final int getNextReadAddr() {
         return mtkModel.getNextReadAddr();
     }
-
 }
