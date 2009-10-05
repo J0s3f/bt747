@@ -16,7 +16,11 @@ public class DPL700StrCommand implements GpsRxtxExecCommand {
 
     private final String cmd;
     private final int bufSize;
-    
+
+    public DPL700StrCommand(final String cmd) {
+        this(cmd, cmd.length()+1);
+    }
+
     /**
      * 
      */

@@ -14,8 +14,8 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import gps.ProtocolConstants;
 
-import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import net.sf.bt747.loc.LocationSender;
 import gps.BT747Constants;
 import gps.GpsEvent;
@@ -42,12 +42,12 @@ import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 import gps.mvc.CmdParam;
-import gps.mvc.DeviceOperationHandlerIF;
+import gps.mvc.DPL700Controller;
+import gps.mvc.HoluxController;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsRxtxExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
-import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -718,15 +718,17 @@ public class Controller implements ModelListener {
      * Start the log download process.
      */
     public final void startDownload() {
-        switch (m.getIntOpt(AppSettings.GPSTYPE)) {
+        switch (m.getIntOpt(Model.DEVICE_PROTOCOL)) {
         default:
-        case BT747Constants.GPS_TYPE_DEFAULT:
+        case ProtocolConstants.PROTOCOL_MTK:
+        case ProtocolConstants.PROTOCOL_HOLUX_PHLX:
             startDefaultDownload();
             break;
-        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
-        case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
-        case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
-            startDPL700Download();
+        case ProtocolConstants.PROTOCOL_SIRFIII:
+//            mtkC = new MtkController(this, mtkM);
+            break;
+        case ProtocolConstants.PROTOCOL_WONDEPROUD:
+          startDPL700Download();
             break;
         }
     }
@@ -786,7 +788,7 @@ public class Controller implements ModelListener {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
         // DPL700 when appropriate.
         // Initialisation method and download start should change.
-        m.gpsM().getDPL700Controller().getDPL700Log(
+        getGpsC().getLog(
                 m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 

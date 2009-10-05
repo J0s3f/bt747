@@ -3,7 +3,6 @@
  */
 package gps.mvc;
 
-import gps.connection.GPSrxtx;
 import gps.GpsEvent;
 import gps.ProtocolConstants;
 
@@ -340,6 +339,13 @@ public class Controller implements BT747Thread, ProtocolConstants,
     
     public final void setAgpsData(final byte[] agpsData) {
         mtkC.setAgpsData(agpsData);
+    }
+
+    /* (non-Javadoc)
+     * @see gps.mvc.DeviceControllerIF#getLog(java.lang.String, int)
+     */
+    public void getLog(String fileName, int card) {
+        mtkC.getLog(fileName, card);
     }
 
 

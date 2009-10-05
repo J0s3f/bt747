@@ -734,4 +734,7 @@ public class MtkController implements ProtectedDevControllerIF {
 
     }
 
+    public void getLog(String fileName, int card) {
+        Generic.debug("getLog - call unexpected in MtkController");
+    }
 }

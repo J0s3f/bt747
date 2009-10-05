@@ -57,8 +57,15 @@ public final class GPSrxtx {
 
     /** Called by state or other means to change state. */
     public final void newState(final int newState) {
+        newState(DecoderStateFactory.getInstance(newState));
+    }
+    
+    /** Enters a state that can be provided for externally.
+     * @param newState
+     */
+    public final void newState(final DecoderStateInterface newState) {
         state.exitState(this);
-        state = DecoderStateFactory.getInstance(newState);
+        state = newState;
         state.enterState(this);
     }
 
@@ -85,7 +92,7 @@ public final class GPSrxtx {
         return GPSrxtx.defaultGpsPort != null;
     }
 
-    protected final GPSPort getGpsPort() {
+    public final GPSPort getGpsPort() {
         return gpsPort;
     }
 
@@ -168,10 +175,10 @@ public final class GPSrxtx {
         gpsPort.setSpeed(speed);
     }
 
-    static final int ERR_NOERROR = 0;
-    static final int ERR_CHECKSUM = 1;
-    static final int ERR_INCOMPLETE = 2;
-    static final int ERR_TOO_LONG = 3;
+    public static final int ERR_NOERROR = 0;
+    public static final int ERR_CHECKSUM = 1;
+    public static final int ERR_INCOMPLETE = 2;
+    public static final int ERR_TOO_LONG = 3;
 
     public final boolean isConnected() {
         return (gpsPort != null) && gpsPort.isConnected();
@@ -249,11 +256,11 @@ public final class GPSrxtx {
 
     private final Buffer buffer = new Buffer();
 
-    protected final boolean isReadBufferEmpty() {
+    public final boolean isReadBufferEmpty() {
         return buffer.isReadBufferEmpty();
     }
 
-    protected final char getReadBufferChar() {
+    public final char getReadBufferChar() {
         return buffer.getReadBufferChar();
     }
 
