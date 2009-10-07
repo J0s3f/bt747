@@ -186,7 +186,7 @@ public class ImageData extends FileWaypoint {
                 String DateTime = null;
                 DateTime = atr.getStringValue();
                 // Format is: "2007:08:05 13:13:43"
-                if ((DateTime.length() == 20) && (DateTime.charAt(4) == ':')
+                if ((DateTime.length() == 20)
                         && (DateTime.charAt(4) == ':')
                         && (DateTime.charAt(7) == ':')
                         && (DateTime.charAt(10) == ' ')

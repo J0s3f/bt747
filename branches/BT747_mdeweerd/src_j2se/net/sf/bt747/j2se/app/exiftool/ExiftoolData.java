@@ -140,8 +140,36 @@ public class ExiftoolData extends FileWaypoint {
             dateTime = match;
         }
         if(dateTime!=null) {
-            // Set date to use.
-            // Format =  2009:02:20 14:24:41
+            if ((dateTime.length() == 19)
+                    && (dateTime.charAt(4) == ':')
+                    && (dateTime.charAt(7) == ':')
+                    && (dateTime.charAt(10) == ' ')
+                    && (dateTime.charAt(13) == ':')
+                    && (dateTime.charAt(16) == ':')) {
+                int year;
+                int month;
+                int day;
+
+                int seconds;
+                year = JavaLibBridge.toInt(dateTime.substring(0, 4));
+                month = JavaLibBridge.toInt(dateTime.substring(5, 7));
+                day = JavaLibBridge.toInt(dateTime.substring(8, 10));
+                seconds = JavaLibBridge.toInt(dateTime.substring(11, 13))
+                        * 3600
+                        + JavaLibBridge.toInt(dateTime.substring(14, 16))
+                        * 60
+                        + JavaLibBridge.toInt(dateTime.substring(17, 19));
+                final BT747Date d = JavaLibBridge.getDateInstance(day,
+                        month, year);
+                setUtc(d.dateToUTCepoch1970() + seconds);
+            }
+        } else {
+            // Get file date & time.
+            final File f = new File(getPath());
+            final int u = f.getModificationTime();
+            if (u != 0) {
+                setUtc(u);
+            }
         }
         return true;
     }
