@@ -163,7 +163,7 @@ public class ExiftoolData extends FileWaypoint {
             Generic.debug(exifResult);
             return exifResult;
         } catch (Exception e) {
-            Generic.debug("ExifTool read of " + path);
+            Generic.debug("ExifTool read of " + path, e);
         }
         return null;
     }

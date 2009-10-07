@@ -3,6 +3,7 @@
  */
 package net.sf.bt747.test;
 
+import gps.connection.DPL700ResponseModel;
 import gps.mvc.commands.GpsRxtxExecCommand;
 import gps.mvc.commands.dpl700.DPL700StrCommand;
 
@@ -52,10 +53,17 @@ public class BTCD110mController {
         if(response instanceof String) {
             String r = (String)response;
             analyseText(r);
+        } else if (response instanceof DPL700ResponseModel) {
+            analyzeDPL700Response((DPL700ResponseModel) response);
         }
         
     }
 
+    public final int analyzeDPL700Response(DPL700ResponseModel response) {
+        return 0;
+    }
+    
+    
     public int analyseText(String text) {
         GpsRxtxExecCommand reply;
         if(text.equals("W'P Camera Detect")) {
