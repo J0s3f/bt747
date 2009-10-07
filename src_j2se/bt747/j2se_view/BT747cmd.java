@@ -462,10 +462,25 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     private void waitForErase() {
+        final byte[] progressStr = { '-', '\\', '|', '/' };
+        final int sleepPeriod = 50;
+        final int progressLimit = 512;
+        int progress = 0;
+        int progressIdx = 0;
         flushOutstandingCmds();
+        System.out.print(progressStr[progressIdx]);
         while (!eraseStarted || getEraseOngoing()) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(sleepPeriod);
+                progress += sleepPeriod;
+                if (progress > progressLimit) {
+                    progress -= progressLimit;
+                    progressIdx++;
+                    progressIdx &= 0x3; // Limit to 3.
+                    System.out.print("\r"); // Cariage return
+                    System.out.print((char)progressStr[progressIdx]);
+                    System.out.flush();
+                }
             } catch (final Exception e) {
                 e.printStackTrace();
                 // Do nothing
@@ -576,6 +591,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 c.setDebugConn(true);
                 break;
             default:
+                c.setDebug(false);
+                c.setDebugConn(false);
                 break;
             }
         } else {

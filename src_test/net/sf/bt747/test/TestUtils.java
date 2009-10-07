@@ -71,7 +71,8 @@ public class TestUtils {
      * List of observed path.
      * You can add your own path to the list for testing.
      */
-    private static String[] exifPaths = { "c:/Download/exiftool.exe" };
+    private static String[] exifPaths = { "c:/Download/exiftool.exe",
+        "c:/Program Files/hugin/bin/exiftool.exe"};
 
     /**
      * Finds the best exifpath.

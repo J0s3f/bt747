@@ -79,18 +79,62 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
         DPL700_State = C_DPL700_OFF;
     }
 
+    /**
+     * Request data from the log.
+     * Command 0x60b80000.
+     * Response: 16 bytes of representing date and time.
+     * 
+     */
+    public final void reqDPL700DateTime() {
+        handler.sendCmd(new DPL700IntCommand(0x60B80000, 255));
+    }
+
+
+    /**
+     * Do some selftest.
+     * Command 0x60b80000.
+     * Response: 16 bytes of representing date and time.
+     * 
+     */
+    public final void reqDPL700Test() {
+        handler.sendCmd(new DPL700IntCommand(0x63B70000, 255));
+    }
+
     public final void reqDPL700LogSize() {
         handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
     }
 
+    /**
+     * Erases log data.
+     * Command 0x61b60000.
+     * Response: WP Update Over
+     * 
+     */
     public final void reqDPL700Erase() {
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
+        handler.sendCmd(new DPL700IntCommand(0x61B60000, 255));
     }
 
+    /**
+     * Get device information
+     * Command 0x5bb00000.
+     * Response: 
+     * Byte 8-5: Serial number
+     * Byte 41-48: Device type [BT-CD100 = Nemerix]  [BT-CD160=SIRFIII]
+     * 
+     */
     public final void reqDPL700DeviceInfo() {
         handler.sendCmd(new DPL700IntCommand(0x5BB00000, 255));
     }
 
+    /**
+     * Get device information
+     * Command 0x62B60000.
+     * Response: 
+     * Byte 4-1: Time step
+     * Byte 8-5: Distance step
+     * Byte 9: Sensitivity: 2-high, 1-middle, 3-low, 0-disable
+     * Byte 25:  Tag  : 0-off, 1-on
+     */
     public final void getDPL700GetSettings() {
         handler.sendCmd(new DPL700IntCommand(0x62B60000, 255));
     }
