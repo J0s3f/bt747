@@ -14,6 +14,20 @@ public final class DPL700Writer {
 
     public final static void sendCmd(final GPSrxtx context, final int cmd,
             final int rcvBufferSize) {
+        sendCmd(context, cmd, 0, rcvBufferSize);
+    }
+
+    /**
+     * Send command and argument. Argument has not been seen different from
+     * '0' but added for future provision.
+     * 
+     * @param context
+     * @param cmd
+     * @param arg
+     * @param rcvBufferSize
+     */
+    public final static void sendCmd(final GPSrxtx context, final int cmd,
+            final int arg, final int rcvBufferSize) {
         if (context.isConnected()) {
             final byte[] sendbuffer = new byte[7];
             try {
@@ -27,8 +41,8 @@ public final class DPL700Writer {
                 sendbuffer[1] = (byte) ((cmd >> 16) & 0xFF);
                 sendbuffer[2] = (byte) ((cmd >> 8) & 0xFF);
                 sendbuffer[3] = (byte) ((cmd >> 0) & 0xFF);
-                sendbuffer[4] = 0;
-                sendbuffer[5] = 0;
+                sendbuffer[4] = (byte) ((arg >> 8) & 0xFF);
+                sendbuffer[5] = (byte) ((arg >> 0) & 0xFF);
                 sendbuffer[6] = 0;
                 context.write(sendbuffer);
             } catch (final Exception e) {

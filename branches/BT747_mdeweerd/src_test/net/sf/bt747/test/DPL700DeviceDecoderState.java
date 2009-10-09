@@ -1,56 +1,65 @@
 /**
  * 
  */
-package gps.connection;
+package net.sf.bt747.test;
+
+import org.jdesktop.swingx.decorator.ResetDTCRColorHighlighter;
+
+import gps.connection.DecoderStateFactory;
+import gps.connection.DecoderStateInterface;
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
+import gps.mvc.commands.dpl700.DPL700IntCommand;
 
 import bt747.sys.Generic;
 
 /**
- * Refactoring is ongoing.
+ * This captures the commands coming from BT747. Should be optimised to be
+ * limited to just that.
  * 
  * @author Mario
  * 
  */
-public class DPL700DecoderState implements DecoderStateInterface {
+public class DPL700DeviceDecoderState implements DecoderStateInterface {
     private byte[] DPL700_buffer;
     private int DPL700_buffer_idx;
     private final byte[] DPL700_EndString = new byte[200];
     private int endStringIdx;
 
     /** Size of read buffer to create */
-    private static int bufferSize;
+    private static int bufferSize = 10;
 
     public final static void setNewBufferSize(final int size) {
-        DPL700DecoderState.bufferSize = size;
+        DPL700DeviceDecoderState.bufferSize = size;
     }
 
     private final static int getNewBufferSize() {
-        return DPL700DecoderState.bufferSize;
+        return DPL700DeviceDecoderState.bufferSize;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
+     * @see
+     * gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
      */
     public final void enterState(final GPSrxtx context) {
         endStringIdx = 0;
         initBuffer();
-        current_state = DPL700DecoderState.C_DPL700_STATE;
-    }
-    
-    private final void initBuffer() {
-        DPL700_buffer_idx = 0;
-        DPL700_buffer = new byte[DPL700DecoderState.getNewBufferSize()];
+        current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
     }
 
+    private final void initBuffer() {
+        DPL700_buffer_idx = 0;
+        DPL700_buffer = new byte[DPL700DeviceDecoderState.getNewBufferSize()];
+    }
     /*
      * (non-Javadoc)
      * 
-     * @see gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
+     * @see
+     * gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
      */
     public final void exitState(final GPSrxtx context) {
-        DPL700_buffer = null;
     }
 
     private static final int C_DPL700_STATE = 9;
@@ -59,6 +68,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
     private static final int C_DPL700_TEXT_STATE = 12;
     private static final int C_DPL700_END_STATE = 13;
     private static final int C_DPL700_TICK_STATE = 14;
+    private static final int C_DPL700_COMMAND = 15;
 
     private int current_state;
 
@@ -93,59 +103,64 @@ public class DPL700DecoderState implements DecoderStateInterface {
             }
 
             switch (current_state) {
-            case C_DPL700_END_STATE:
             case C_DPL700_STATE:
                 // Vm.debug("INIT_STATE");
                 // System.err.print(c);
                 if (c == 'W') {
                     endStringIdx = 0;
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_W_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
                 } else {
-                    current_state = DPL700DecoderState.C_DPL700_STATE;
+                    if (DPL700_buffer_idx == 6
+                            && DPL700_buffer[DPL700_buffer_idx] == 0) {
+                        current_state = DPL700DeviceDecoderState.C_DPL700_COMMAND;
+                        continueReading = false;
+                    } else {
+                        current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                    }
                 }
                 break;
             case C_DPL700_W_STATE:
                 // Vm.debug("W_STATE");
                 if (c == 'P') {
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_P_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_P_STATE;
                     break;
                 } else if (c == 'W') {
                     endStringIdx = 0;
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_W_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
                 } else if (c == '\'') {
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_TICK_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_TICK_STATE;
                 } else {
-                    current_state = DPL700DecoderState.C_DPL700_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
                 }
                 break;
             case C_DPL700_TICK_STATE:
                 // Vm.debug("TICK_STATE");
                 if (c == 'P') {
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_P_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_P_STATE;
                     break;
                 } else if (c == 'W') {
                     endStringIdx = 0;
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_W_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
                 } else {
-                    current_state = DPL700DecoderState.C_DPL700_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
                 }
                 break;
             case C_DPL700_P_STATE:
                 // Vm.debug("P_STATE");
                 if (c == ' ') {
                     DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DecoderState.C_DPL700_TEXT_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_TEXT_STATE;
                     break;
                 } else if (c == 'W') {
-                    current_state = DPL700DecoderState.C_DPL700_W_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
                 } else {
-                    current_state = DPL700DecoderState.C_DPL700_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
                 }
                 break;
             case C_DPL700_TEXT_STATE:
@@ -154,33 +169,37 @@ public class DPL700DecoderState implements DecoderStateInterface {
                 if (c == 0) {
                     DPL700_EndString[endStringIdx++] = (byte) c;
                     DPL700_buffer_idx -= endStringIdx;
-                    current_state = DPL700DecoderState.C_DPL700_END_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_END_STATE;
                     Generic.debug("End DPL700");
-                    context.newState(DecoderStateFactory.NMEA_STATE);
+                    //context.newState(DecoderStateFactory.NMEA_STATE);
                     continueReading = false;
                 } else if (((c >= 'A') && (c <= 'Z'))
                         || ((c >= 'a') && (c <= 'z')) || (c == ' ')
                         || (c == '+') || (c == '\'')) {
                     DPL700_EndString[endStringIdx++] = (byte) c;
                 } else {
-                    current_state = DPL700DecoderState.C_DPL700_STATE;
+                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
                 }
                 break;
             default:
-                current_state = DPL700DecoderState.C_DPL700_STATE;
+                current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
                 break;
             }
         }
 
-        if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
-            //context.newState(DecoderStateFactory.NMEA_STATE);
-            final DPL700ResponseModel resp = new DPL700ResponseModel();
+        if (current_state == DPL700DeviceDecoderState.C_DPL700_COMMAND) {
+            final DPL700IntCommand resp = new DPL700IntCommand(
+                    ((DPL700_buffer[0] & 0xFF) << 24) + ((DPL700_buffer[1] & 0xFF) << 16) + ((DPL700_buffer[2] & 0xFF) << 8) + ((DPL700_buffer[3] & 0xFF) << 0),
+                    ((DPL700_buffer[4] & 0xFF) << 8) + ((DPL700_buffer[5] & 0xFF) << 0),
+                    DPL700_buffer_idx);
+            return resp;
+        } else if (current_state == DPL700DeviceDecoderState.C_DPL700_END_STATE) {
+            final DPL700DeviceResponseModel resp = new DPL700DeviceResponseModel();
             resp.setResponseType(new String(DPL700_EndString, 0,
                     endStringIdx - 1));
             resp.setResponseBuffer(DPL700_buffer);
             resp.setResponseSize(DPL700_buffer_idx);
             initBuffer();
-            current_state = C_DPL700_STATE;
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
                 gpsPort.writeDebug("\r\nDPL700:" + resp);
