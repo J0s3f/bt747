@@ -188,6 +188,8 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             int speed;
                             int tag;
                             int altitude;
+                            
+                            int rawTime;
 
                             switch (getLoggerType()) {
                             case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
@@ -203,7 +205,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                r.utc = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                rawTime = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
                                         | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
@@ -216,6 +218,16 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                                                 logFormat);
                                 speed = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
                                 tag = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                seconds = rawTime & 0x3F;
+                                minutes = (rawTime >> 6) & 0x3F;
+                                hour = (rawTime >> 12) & 0x1F;
+                                day = (rawTime >> 17) & 0x1F;
+                                month = (rawTime >> 22) & 0x0F;
+                                year = (rawTime >> 26) & 0x3F;
+                                r.utc = (JavaLibBridge.getDateInstance(day,
+                                        month, year + 2000))
+                                        .dateToUTCepoch1970();
+                                r.utc += 3600 * hour + 60 * minutes + seconds;
                                 break;
                             default:
                                 // NEMERIX
