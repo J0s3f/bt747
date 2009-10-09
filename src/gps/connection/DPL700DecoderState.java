@@ -31,23 +31,25 @@ public class DPL700DecoderState implements DecoderStateInterface {
     /*
      * (non-Javadoc)
      * 
-     * @see gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
+     * @see
+     * gps.connection.DecoderStateInterface#enterState(gps.connection.GPSrxtx)
      */
     public final void enterState(final GPSrxtx context) {
         endStringIdx = 0;
-        initBuffer();
         current_state = DPL700DecoderState.C_DPL700_STATE;
     }
-    
+
     private final void initBuffer() {
         DPL700_buffer_idx = 0;
         DPL700_buffer = new byte[DPL700DecoderState.getNewBufferSize()];
+        Generic.debug("DPL700Buffer init=" + DPL700_buffer.length);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
+     * @see
+     * gps.connection.DecoderStateInterface#exitState(gps.connection.GPSrxtx)
      */
     public final void exitState(final GPSrxtx context) {
         DPL700_buffer = null;
@@ -79,17 +81,33 @@ public class DPL700DecoderState implements DecoderStateInterface {
 
         while (continueReading && !context.isReadBufferEmpty()) {
             // Still bytes in read buffer to interpret
-            final char c = context.getReadBufferChar();
+            byte c = context.getReadBufferByte();
             // buffer
             // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
             // {
             // bt747.sys.Vm.debug(JavaLibBridge.toString(c));
             // System.err.print("["+c+"]");
             // }
-            if (DPL700_buffer_idx < DPL700_buffer.length) {
-                DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
-                // } else {
-                // rxtxMode = NORMAL_MODE;
+            if(DPL700_buffer==null) {
+                initBuffer();
+            }
+            if (current_state == C_DPL700_STATE) {
+                while (DPL700_buffer_idx < DPL700_buffer.length) {
+                    DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
+                    if (c != 'W' && !context.isReadBufferEmpty()) {
+                        // get next character.
+                        c = context.getReadBufferByte();
+                    } else {
+                        // Need to change state.
+                        break;
+                    }
+                }
+            } else {
+                if (DPL700_buffer_idx < DPL700_buffer.length) {
+                    DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
+                    // } else {
+                    // rxtxMode = NORMAL_MODE;
+                }
             }
 
             switch (current_state) {
@@ -155,8 +173,6 @@ public class DPL700DecoderState implements DecoderStateInterface {
                     DPL700_EndString[endStringIdx++] = (byte) c;
                     DPL700_buffer_idx -= endStringIdx;
                     current_state = DPL700DecoderState.C_DPL700_END_STATE;
-                    Generic.debug("End DPL700");
-                    context.newState(DecoderStateFactory.NMEA_STATE);
                     continueReading = false;
                 } else if (((c >= 'A') && (c <= 'Z'))
                         || ((c >= 'a') && (c <= 'z')) || (c == ' ')
@@ -173,14 +189,17 @@ public class DPL700DecoderState implements DecoderStateInterface {
         }
 
         if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
-            //context.newState(DecoderStateFactory.NMEA_STATE);
+            // context.newState(DecoderStateFactory.NMEA_STATE);
             final DPL700ResponseModel resp = new DPL700ResponseModel();
             resp.setResponseType(new String(DPL700_EndString, 0,
                     endStringIdx - 1));
             resp.setResponseBuffer(DPL700_buffer);
             resp.setResponseSize(DPL700_buffer_idx);
-            initBuffer();
+            Generic.debug("\r\nDPL700:" + resp+" "+DPL700_buffer_idx+" "+DPL700_buffer.length);
+            DPL700_buffer = null;
             current_state = C_DPL700_STATE;
+            // context.newState(DecoderStateFactory.NMEA_STATE); // Not sure
+            // this is appropriate.
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
                 gpsPort.writeDebug("\r\nDPL700:" + resp);

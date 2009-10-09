@@ -5,6 +5,7 @@ package gps.mvc;
 
 import gps.WondeproudConstants;
 import gps.connection.DPL700ResponseModel;
+import gps.connection.DecoderStateFactory;
 import gps.mvc.commands.dpl700.DPL700IntCommand;
 import gps.mvc.commands.dpl700.DPL700StrCommand;
 
@@ -13,9 +14,11 @@ import bt747.sys.interfaces.BT747Exception;
 
 /**
  * @author Mario
- *
+ * 
  */
-public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, WondeproudConstants {
+public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
+        WondeproudConstants {
+    private final DPL700Controller dpl700C;
     // DPL700 Functionality
     private String DPL700LogFileName;
     private int DPL700Card;
@@ -26,22 +29,25 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
 
     private final LogFile logFile = new LogFile();
     private final GPSLinkHandler handler;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.mvc.DeviceOperationHandlerIF#analyseResponse(java.lang.Object)
      */
     public boolean analyseResponse(Object o) {
         if (o instanceof DPL700ResponseModel) {
             analyseDPL700Data((DPL700ResponseModel) o);
             return true;
-        } else if(o instanceof String) {
-            
+        } else if (o instanceof String) {
+
         }
         return false;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.mvc.DeviceOperationHandlerIF#notifyRun(gps.mvc.GPSLinkHandler)
      */
     public boolean notifyRun(GPSLinkHandler handler) throws BT747Exception {
@@ -59,17 +65,20 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
         }
         return cont;
     }
-    
-    //private final MTKLogDownloadHandler mtkLogHandler; // Temporary (TODO: refactor).
+
+    // private final MTKLogDownloadHandler mtkLogHandler; // Temporary (TODO:
+    // refactor).
     /**
      * 
      */
-    public DPL700LogDownloadHandler(GPSLinkHandler handler) {
+    public DPL700LogDownloadHandler(final DPL700Controller dpl,
+            final GPSLinkHandler handler) {
+        dpl700C = dpl;
         this.handler = handler;
     }
-    
-    
+
     public final void getDPL700Log(final String p_FileName, final int card) {
+        dpl700C.setLogDownloadOngoing(true);
         DPL700LogFileName = p_FileName;
         DPL700Card = card;
         enterDPL700Mode();
@@ -78,50 +87,46 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
 
     public final void reqDPL700Log() {
         DPL700_State = C_DPL700_GETLOG;
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 10 * 1024 * 1024));
+        handler.sendCmd(new DPL700IntCommand(REQ_LOG, 10 * 1024 * 1024));
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
     public final void enterDPL700Mode() {
         exitDPL700Mode(); // Exit previous session if still open
-        handler.sendCmd(new DPL700StrCommand("W'P Camera Detect", 255));
+        handler.sendCmd(new DPL700StrCommand(WP_CAMERA_DETECT, 255));
         // m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
     public final void exitDPL700Mode() {
-        handler.sendCmd(new DPL700StrCommand("WP AP-Exit",0)); // No reply expected
+        handler.sendCmd(new DPL700StrCommand(WP_AP_EXIT, 0)); // No reply
+                                                              // expected
         DPL700_State = C_DPL700_OFF;
     }
 
     /**
-     * Request data from the log.
-     * Command 0x60b80000.
-     * Response: 16 bytes of representing date and time.
+     * Request data from the log. Command 0x60b80000. Response: 16 bytes of
+     * representing date and time.
      * 
      */
     public final void reqDPL700DateTime() {
         handler.sendCmd(new DPL700IntCommand(REQ_DATE_TIME, 255));
     }
 
-
     /**
-     * Do some selftest.
-     * Command 0x60b80000.
-     * Response: 16 bytes of representing date and time.
+     * Do some selftest. Command 0x60b80000. Response: 16 bytes of
+     * representing date and time.
      * 
      */
     public final void reqDPL700Test() {
         handler.sendCmd(new DPL700IntCommand(REQ_SELFTEST, 255));
     }
 
-    public final void reqDPL700LogSize() {
-        handler.sendCmd(new DPL700IntCommand(REQ_LOG_SIZE, 255));
-    }
+    // public final void reqDPL700LogSize() {
+    // handler.sendCmd(new DPL700IntCommand(REQ_LOG_SIZE, 255));
+    // }
 
     /**
-     * Erases log data.
-     * Command 0x61b60000.
-     * Response: WP Update Over
+     * Erases log data. Command 0x61b60000. Response: WP Update Over
      * 
      */
     public final void reqDPL700Erase() {
@@ -129,11 +134,8 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
     }
 
     /**
-     * Get device information
-     * Command 0x5bb00000.
-     * Response: 
-     * Byte 8-5: Serial number
-     * Byte 41-48: Device type [BT-CD100 = Nemerix]  [BT-CD160=SIRFIII]
+     * Get device information Command 0x5bb00000. Response: Byte 8-5: Serial
+     * number Byte 41-48: Device type [BT-CD100 = Nemerix] [BT-CD160=SIRFIII]
      * 
      */
     public final void reqDPL700DeviceInfo() {
@@ -141,22 +143,18 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
     }
 
     /**
-     * Get device information
-     * Command 0x62B60000.
-     * Response: 
-     * Byte 4-1: Time step
-     * Byte 8-5: Distance step
-     * Byte 9: Sensitivity: 2-high, 1-middle, 3-low, 0-disable
-     * Byte 25:  Tag  : 0-off, 1-on
+     * Get device information Command 0x62B60000. Response: Byte 4-1: Time
+     * step Byte 8-5: Distance step Byte 9: Sensitivity: 2-high, 1-middle,
+     * 3-low, 0-disable Byte 25: Tag : 0-off, 1-on
      */
 
     public final void getDPL700GetSettings() {
         handler.sendCmd(new DPL700IntCommand(REQ_DEV_PARAM, 255));
     }
 
-   protected final void analyseDPL700Data(final DPL700ResponseModel resp) {
-        final String s = resp.getResponseType(); 
-        //Generic.debug("<DPL700 " + s);
+    protected final void analyseDPL700Data(final DPL700ResponseModel resp) {
+        final String s = resp.getResponseType();
+        // Generic.debug("<DPL700 " + s);
         if (Generic.isDebug()) {
             Generic.debug("<DPL700 " + s);
         }
@@ -166,7 +164,7 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
             if (DPL700_State == C_DPL700_NEEDGETLOG) {
                 reqDPL700Log();
             }
-        } else if (s.startsWith("WP Update Over")) {
+        } else if (s.equals(WP_UPDATE_OVER)) {
             if (DPL700_State == C_DPL700_GETLOG) {
                 if (DPL700LogFileName != null) {
                     if (!DPL700LogFileName.endsWith(".sr")) {
@@ -184,6 +182,9 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, Wonde
                     }
                     DPL700LogFileName = null;
                     exitDPL700Mode();
+                    Generic.debug("End DPL700");
+                    handler.getGPSRxtx().newState(DecoderStateFactory.NMEA_STATE);  // Not sure this is appropriate.
+                    dpl700C.setLogDownloadOngoing(false);
                 }
             }
         }

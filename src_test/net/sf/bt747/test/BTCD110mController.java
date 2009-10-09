@@ -3,12 +3,14 @@
  */
 package net.sf.bt747.test;
 
-import bt747.sys.Generic;
-
 import gps.WondeproudConstants;
 import gps.mvc.commands.GpsRxtxExecCommand;
 import gps.mvc.commands.dpl700.DPL700IntCommand;
-import gps.mvc.commands.dpl700.DPL700StrCommand;
+
+import java.io.FileInputStream;
+
+import bt747.sys.File;
+import bt747.sys.Generic;
 
 /**
  * @author Mario De Weerd
@@ -55,6 +57,8 @@ public class BTCD110mController implements WondeproudConstants {
             return analyseText(r);
         } else if (response instanceof DPL700IntCommand) {
             return analyzeDPL700Response((DPL700IntCommand) response);
+        } else if (response instanceof DPL700DeviceResponseModel) {
+            return analyseText(((DPL700DeviceResponseModel) response).getResponseType());
         }
         return -1;
     }
@@ -65,12 +69,33 @@ public class BTCD110mController implements WondeproudConstants {
         return getClass().getResource(rsc).getPath(); // getClass().getResource("test1.csv")
     }
 
+    private void replyLog() {
+        GpsRxtxExecCommand reply = null;
+        String fn = getResourcePath(TEST_BTCD110m_FILE);
+        File fh = new File(fn);
+        int size = fh.getSize();
+        try {
+            FileInputStream fi = new FileInputStream(fn);
+            byte[] log = new byte[(int) size];
+            fi.read(log);
+            fi.close();
+            reply = new DPL700DeviceReplyCommand(log);
+        } catch (Exception e) {
+            Generic.debug("Issue loading log in model", e);
+        }
+
+        if (reply != null) {
+            reply.execute(mtkDeviceModel.gpsRxTx);
+        }
+    }
+
     private final String LOG_FILE_NAME = getResourcePath(TEST_BTCD110m_FILE);
 
     public final int analyzeDPL700Response(DPL700IntCommand response) {
         switch (response.getCmd()) {
-        case REQ_LOG_SIZE:
-            Generic.debug("Log size requested");
+        case REQ_LOG:
+            Generic.debug("Log requested");
+            replyLog();
             break;
         case REQ_DATE_TIME:
             Generic.debug("Date time requested");
@@ -93,8 +118,8 @@ public class BTCD110mController implements WondeproudConstants {
 
     public int analyseText(String text) {
         GpsRxtxExecCommand reply;
-        if (text.equals("W'P Camera Detect")) {
-            reply = new DPL700DeviceStrCommand("WP GPS+BT");
+        if (text.equals(WP_CAMERA_DETECT)) {
+            reply = new DPL700DeviceStrCommand(WP_GPS_PLUS_RESPONSE);
             mtkDeviceModel
                     .setDeviceMode(IBlue747Model.DeviceMode.DEVICE_MODE_DPL700);
             if (reply != null) {
@@ -102,7 +127,7 @@ public class BTCD110mController implements WondeproudConstants {
             }
             return 0;
         }
-        if (text.equals("WP AP-Exit")) {
+        if (text.equals(WP_AP_EXIT)) {
             mtkDeviceModel
                     .setDeviceMode(IBlue747Model.DeviceMode.DEVICE_MODE_NMEA);
             return 0;

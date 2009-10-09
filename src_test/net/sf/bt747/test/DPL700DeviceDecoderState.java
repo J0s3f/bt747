@@ -5,6 +5,7 @@ package net.sf.bt747.test;
 
 import org.jdesktop.swingx.decorator.ResetDTCRColorHighlighter;
 
+import gps.WondeproudConstants;
 import gps.connection.DecoderStateFactory;
 import gps.connection.DecoderStateInterface;
 import gps.connection.GPSPort;
@@ -197,9 +198,14 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
             final DPL700DeviceResponseModel resp = new DPL700DeviceResponseModel();
             resp.setResponseType(new String(DPL700_EndString, 0,
                     endStringIdx - 1));
+            endStringIdx = 0;
+            current_state = C_DPL700_STATE;
             resp.setResponseBuffer(DPL700_buffer);
             resp.setResponseSize(DPL700_buffer_idx);
             initBuffer();
+            if(resp.getResponseType().equals(WondeproudConstants.WP_AP_EXIT)) {
+                context.newState(new TextOrNMEADecoderState());  // Should call special factory.
+            }
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
                 gpsPort.writeDebug("\r\nDPL700:" + resp);
