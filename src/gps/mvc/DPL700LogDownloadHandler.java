@@ -3,6 +3,7 @@
  */
 package gps.mvc;
 
+import gps.WondeproudConstants;
 import gps.connection.DPL700ResponseModel;
 import gps.mvc.commands.dpl700.DPL700IntCommand;
 import gps.mvc.commands.dpl700.DPL700StrCommand;
@@ -14,7 +15,7 @@ import bt747.sys.interfaces.BT747Exception;
  * @author Mario
  *
  */
-public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
+public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF, WondeproudConstants {
     // DPL700 Functionality
     private String DPL700LogFileName;
     private int DPL700Card;
@@ -33,6 +34,8 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
         if (o instanceof DPL700ResponseModel) {
             analyseDPL700Data((DPL700ResponseModel) o);
             return true;
+        } else if(o instanceof String) {
+            
         }
         return false;
     }
@@ -42,8 +45,19 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * @see gps.mvc.DeviceOperationHandlerIF#notifyRun(gps.mvc.GPSLinkHandler)
      */
     public boolean notifyRun(GPSLinkHandler handler) throws BT747Exception {
-        // TODO Auto-generated method stub
-        return false;
+        boolean cont = true;
+        switch (DPL700_State) {
+        case C_DPL700_OFF:
+            break;
+        case C_DPL700_NEEDGETLOG:
+            break;
+        case C_DPL700_GETLOG:
+            break;
+
+        default:
+            break;
+        }
+        return cont;
     }
     
     //private final MTKLogDownloadHandler mtkLogHandler; // Temporary (TODO: refactor).
@@ -86,7 +100,7 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * 
      */
     public final void reqDPL700DateTime() {
-        handler.sendCmd(new DPL700IntCommand(0x60B80000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_DATE_TIME, 255));
     }
 
 
@@ -97,11 +111,11 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * 
      */
     public final void reqDPL700Test() {
-        handler.sendCmd(new DPL700IntCommand(0x63B70000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_SELFTEST, 255));
     }
 
     public final void reqDPL700LogSize() {
-        handler.sendCmd(new DPL700IntCommand(0x60B50000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_LOG_SIZE, 255));
     }
 
     /**
@@ -111,7 +125,7 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * 
      */
     public final void reqDPL700Erase() {
-        handler.sendCmd(new DPL700IntCommand(0x61B60000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_ERASE, 255));
     }
 
     /**
@@ -123,7 +137,7 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * 
      */
     public final void reqDPL700DeviceInfo() {
-        handler.sendCmd(new DPL700IntCommand(0x5BB00000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_DEV_INFO1, 255));
     }
 
     /**
@@ -135,12 +149,14 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF {
      * Byte 9: Sensitivity: 2-high, 1-middle, 3-low, 0-disable
      * Byte 25:  Tag  : 0-off, 1-on
      */
+
     public final void getDPL700GetSettings() {
-        handler.sendCmd(new DPL700IntCommand(0x62B60000, 255));
+        handler.sendCmd(new DPL700IntCommand(REQ_DEV_PARAM, 255));
     }
 
    protected final void analyseDPL700Data(final DPL700ResponseModel resp) {
         final String s = resp.getResponseType(); 
+        //Generic.debug("<DPL700 " + s);
         if (Generic.isDebug()) {
             Generic.debug("<DPL700 " + s);
         }

@@ -123,6 +123,9 @@ public class ExiftoolData extends FileWaypoint {
         // GPSLongitude: 6.57369355555556
         // GPSAltitude: 1080.29
 
+        // TODO: May need to change the next line to conform with doc type.
+        getGpsRecord().rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;
+        
         String match;
         if ((match = getMatch("^GPSLatitude: *([-0-9.]+)$", exifResult)) != null) {
             getGpsRecord().setLatitude(Double.parseDouble(match));

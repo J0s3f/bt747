@@ -46,7 +46,7 @@ public final class GPSrxtx {
         }
         gpsPort = port;
         updatePortDebug();
-        //Generic.setDebugLevel(1);
+        // Generic.setDebugLevel(1);
     }
 
     /** The decoding of the serial link is determined by state. */
@@ -59,14 +59,18 @@ public final class GPSrxtx {
     public final void newState(final int newState) {
         newState(DecoderStateFactory.getInstance(newState));
     }
-    
-    /** Enters a state that can be provided for externally.
+
+    /**
+     * Enters a state that can be provided for externally.
+     * 
      * @param newState
      */
     public final void newState(final DecoderStateInterface newState) {
-        state.exitState(this);
-        state = newState;
-        state.enterState(this);
+        if (!newState.equals(state)) {
+            state.exitState(this);
+            state = newState;
+            state.enterState(this);
+        }
     }
 
     /** Returns the current state which is part of the context. */
@@ -84,7 +88,7 @@ public final class GPSrxtx {
 
     public static final void setDefaultGpsPortInstance(
             final GPSPort portInstance) {
-        //Generic.debug("Setting GPS port");
+        // Generic.debug("Setting GPS port");
         GPSrxtx.defaultGpsPort = portInstance;
     }
 
@@ -106,9 +110,9 @@ public final class GPSrxtx {
         gpsPort.setPort(port);
         gpsPort.setSpeed(speed);
     }
-    
+
     private final int myOpenPort() {
-        if(gpsPort == null) {
+        if (gpsPort == null) {
             gpsPort = defaultGpsPort;
         }
         return gpsPort.openPort();
@@ -137,7 +141,7 @@ public final class GPSrxtx {
      * Set and open a normal port (giving the port number)
      * 
      * @param port
-     *                Port number of the port to open
+     *            Port number of the port to open
      * @return result of opening the port, 0 if success.
      */
     public final int setPortAndOpen(final int port) {
@@ -148,7 +152,7 @@ public final class GPSrxtx {
     public final int setFreeTextPortAndOpen(final String s) {
         int result;
         if (gpsPort != null) {
-            Generic.debug("Class"+gpsPort.getClass().getName());
+            Generic.debug("Class" + gpsPort.getClass().getName());
             gpsPort.setFreeTextPort(s);
             result = myOpenPort();
             Generic.debug("Port opened");

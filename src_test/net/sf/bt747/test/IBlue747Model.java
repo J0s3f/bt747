@@ -255,7 +255,7 @@ public class IBlue747Model {
                 gpsRxTx.newState(DecoderStateFactory.MTKBIN_STATE);
                 break;
             case DEVICE_MODE_DPL700:
-                gpsRxTx.newState(DecoderStateFactory.DPL700_STATE);
+                gpsRxTx.newState(new DPL700DeviceDecoderState());
                 break;
             case DEVICE_MODE_SIRFIII:
                 gpsRxTx.newState(DecoderStateFactory.SIRFIII_STATE);
@@ -275,8 +275,8 @@ public class IBlue747Model {
     private final void analyseResponse(final Object response) {
         if (response instanceof MtkBinTransportMessageModel) {
             analyseMtkBinData((MtkBinTransportMessageModel) response);
-        } else if (response instanceof String) {
-            cd110Controller.analyseResponse(response);
+        }
+        if (cd110Controller.analyseResponse(response) == 0) {
         } else if (response instanceof String[]) {
             analyseNMEA((String[]) response);
         }

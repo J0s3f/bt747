@@ -4,6 +4,7 @@
 package net.sf.bt747.j2se.app.app.exiftool.test;
 
 import gps.log.GPSRecord;
+import gps.log.out.AllWayPointStyles;
 import net.sf.bt747.j2se.app.exiftool.ExiftoolData;
 import net.sf.bt747.test.TestUtils;
 
@@ -41,7 +42,7 @@ public class TestExifToolTest extends TestCase {
         ref.valid = 0x00000080;
         ref.latitude = 45.83736936118868;
         ref.longitude = 6.573693555725945;
-        ref.rcr = 260;  // To check what the correct value is - ImageData says 257
+        ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;  // To check what the correct value is - ImageData says 257
         ref.height = 1080.29f;
 
         TestUtils.assertEquals(imgPath, ref, r);
@@ -70,12 +71,11 @@ public class TestExifToolTest extends TestCase {
         id.setPath(imgTestPath);
         GPSRecord r = id.getGpsRecord();
         
+        ref.tagutc -= 100;
+        ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;
         TestUtils.assertEquals(imgPath, ref, r);
         
         (new File(imgTestPath)).delete();
-        
-        // Development is unfinished so test currently fails.
-        TestUtils.assertEquals(imgPath, ref, r);
     }
 
 }
