@@ -41,7 +41,6 @@ public final class DPL700ResponseModel {
      * 
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         if (responseType != null) {
             return responseType;
