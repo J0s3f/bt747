@@ -268,6 +268,10 @@ public final class GPSrxtx {
         return buffer.getReadBufferChar();
     }
 
+    public final byte getReadBufferByte() {
+        return buffer.getReadBufferByte();
+    }
+
     /** Maintains the buffer logic. */
     private final class Buffer {
         private static final int C_BUF_SIZE = 0x1100;
@@ -305,6 +309,10 @@ public final class GPSrxtx {
 
         protected final char getReadBufferChar() {
             return (char) read_buf[read_buf_p++];
+        }
+
+        protected final byte getReadBufferByte() {
+            return (byte) read_buf[read_buf_p++];
         }
 
         /**

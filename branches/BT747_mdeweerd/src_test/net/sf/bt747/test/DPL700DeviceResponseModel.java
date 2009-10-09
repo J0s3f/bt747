@@ -31,5 +31,15 @@ public final class DPL700DeviceResponseModel {
         this.responseBuffer = responseBuffer;
     }
     
-    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        String result = super.toString();
+        if(responseType!=null) {
+            result = responseType;
+        }
+        return result;
+    }
 }

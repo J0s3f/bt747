@@ -10,7 +10,7 @@ import gps.WondeproudConstants;
  * 
  * @author Mario De Weerd
  */
-public class DPL700Controller extends MtkController {
+public class DPL700Controller extends MtkController implements WondeproudConstants {
 
     private MtkModel m;
     private Controller c;
@@ -31,7 +31,7 @@ public class DPL700Controller extends MtkController {
      * @param card
      */
     public void getLog(final String fileName, final int card) {
-        DPL700LogDownloadHandler h = new DPL700LogDownloadHandler(m
+        DPL700LogDownloadHandler h = new DPL700LogDownloadHandler(this, m
                 .getHandler());
         h.getDPL700Log(fileName, card);
         c.setDeviceOperationHandler(h);
@@ -73,6 +73,12 @@ public class DPL700Controller extends MtkController {
         }
         // return true;
     }
+    
+    private boolean logDownloadOngoing = false;
+    
+    protected void setLogDownloadOngoing(final boolean ongoing) {
+        logDownloadOngoing = ongoing;
+    }
 
     /*
      * (non-Javadoc)
@@ -84,13 +90,18 @@ public class DPL700Controller extends MtkController {
     }
 
     /**
-     * PHLX-specific implementation of requesting GPS data.
+     * Device-specific implementation of requesting GPS data.
      * 
      * For most cases delegates to a existing PMTK command while new
-     * functionality will be gradually implemented via PHLX commands.
+     * functionality will be gradually implemented for this device type.
      */
     public boolean reqData(final int dataType) {
+        if(logDownloadOngoing) {
+            return false;
+        }
         switch (dataType) {
+        case MtkModel.DATA_INITIAL_LOG:
+            return false;
         // case MtkModel.DATA_DEVICE_NAME:
         // sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
         // sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);

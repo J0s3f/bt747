@@ -10,11 +10,24 @@ package gps;
  * 
  */
 public interface WondeproudConstants {
-    public static final int REQ_LOG_SIZE  = 0x60B50000;
-    public static final int REQ_LOG       = 0x60B50000;
-    public static final int REQ_ERASE     = 0x61B60000;
-    public static final int REQ_DEV_PARAM = 0x62B60000;
-    public static final int REQ_SELFTEST  = 0x63B70000;
-    public static final int REQ_DATE_TIME = 0x64B80000;
+    /**
+     * {@link #REQ_DEV_INFO1} response example: 0x000A091E00000000
+     * "WondeProud Tech. Co." 0x00EA927C64F71200 0x30000000
+     * "BT-CD160MTK.ech. Co" 0x00EA927C64F71200 0x30000000 0xAE652680C8542A03
+     * 0x0B236926120000FF "WP Update Over."
+     */
     public static final int REQ_DEV_INFO1 = 0x5BB00000;
+    public static final int REQ_LOG = 0x60B50000;
+    public static final int REQ_ERASE = 0x61B60000;
+    public static final int REQ_DEV_PARAM = 0x62B60000;
+    /**
+     * {@link #REQ_SELFTEST} response example: 0x00004000
+     */
+    public static final int REQ_SELFTEST = 0x63B70000;
+    public static final int REQ_DATE_TIME = 0x64B80000;
+
+    public static final String WP_GPS_PLUS_RESPONSE = "WP GPS+BT";
+    public static final String WP_CAMERA_DETECT = "W'P Camera Detect";
+    public static final String WP_AP_EXIT = "WP AP-Exit";
+    public static final String WP_UPDATE_OVER = "WP Update Over";
 }
