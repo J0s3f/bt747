@@ -202,8 +202,9 @@ public final class GPSGPXFile extends GPSFile {
         super.writeRecord(r);
 
         if (activeFields != null) {
+            final boolean isNeededRecord = ptFilters[currentFilter].doFilter(r); 
 
-            if (!ptFilters[currentFilter].doFilter(r)) {
+            if (!isNeededRecord) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
                 if (!isWayType && !isNewTrack && !firstRecord

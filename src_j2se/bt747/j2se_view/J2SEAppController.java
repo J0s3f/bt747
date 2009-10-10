@@ -443,7 +443,7 @@ public final class J2SEAppController extends J2SEController {
     /**
      * Perform a factory reset, but first request confirmation from the user.
      */
-    public final void doFactoryReset() {
+    public final void confirmFactoryReset() {
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
                 getString("FACT_RESET_TEXT"), getString("ATTENTION"),
@@ -451,7 +451,7 @@ public final class J2SEAppController extends J2SEController {
                 null, null, 0);
 
         if (choice == JOptionPane.OK_OPTION) {
-            c.doFullColdStart();
+            c.doFactoryReset();
         }
 
     }
@@ -838,7 +838,8 @@ public final class J2SEAppController extends J2SEController {
     public static void myLookAndFeel() {
         boolean lookAndFeelIsSet = false;
         if (java.lang.System.getProperty("bt747.laf") != null) {
-            tryLookAndFeel(java.lang.System.getProperty("bt747.laf"));
+            lookAndFeelIsSet = tryLookAndFeel(java.lang.System
+                    .getProperty("bt747.laf"));
         }
 
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(

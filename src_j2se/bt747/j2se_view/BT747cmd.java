@@ -674,7 +674,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has(OPT_DEVICETYPE)) {
-            final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+            final String arg = options.argumentOf(OPT_DEVICETYPE)
                     .toLowerCase();
             // AppController.GPS_TYPE_DEFAULT:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
@@ -865,7 +865,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             if (options.has(OPT_OVERLAP_STOP_SETTING)) {
-                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                final String arg = options.argumentOf(OPT_OVERLAP_STOP_SETTING)
                         .toLowerCase();
                 if (arg.equals("overlap")) {
                     System.out
