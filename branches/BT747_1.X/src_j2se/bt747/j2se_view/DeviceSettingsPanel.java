@@ -1147,7 +1147,7 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
 
     private void btFactoryResetDeviceActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doFactoryReset();
+        c.confirmFactoryReset();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed

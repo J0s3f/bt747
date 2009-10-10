@@ -144,7 +144,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
                 mb.popupBlockingModal();
                 if (mb.getPressedButtonIndex() == 0) {
                     // Exit application
-                    c.doFullColdStart();
+                    c.doFactoryReset();
                 }
             } else if (event.target == btForceErase) {
                 c.recoveryErase();

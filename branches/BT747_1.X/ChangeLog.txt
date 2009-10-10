@@ -1,3 +1,8 @@
+Version 1.68.30
+* fixed some issues in the command line interface.
+* Look and feel overriding in BT747 did not work properly (bt747.laf property).
+  Fixed.
+
 Version 1.68.29
 * Fixed the GUI update after path selection using '+'.
 

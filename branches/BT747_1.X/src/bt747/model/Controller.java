@@ -1435,7 +1435,7 @@ public class Controller implements ModelListener {
         m.gpsModel().doWarmStart();
     }
 
-    public final void doFullColdStart() {
+    public final void doFactoryReset() {
         m.gpsModel().doFullColdStart();
     }
 
