@@ -111,6 +111,8 @@ public class WPController extends MtkController implements
             return false;
         }
         switch (dataType) {
+        case MtkModel.DATA_LAST_LOG_BLOCK:
+        case MtkModel.DATA_INITIAL_LOG:
         case MtkModel.DATA_LOG_STATUS:
         case MtkModel.DATA_MEM_PTS_LOGGED:
         case MtkModel.DATA_LOG_VERSION:
@@ -126,8 +128,6 @@ public class WPController extends MtkController implements
         case MtkModel.DATA_MEM_USED:
             reqMemInUse();
             return true;
-        case MtkModel.DATA_INITIAL_LOG:
-            return false;
         // case MtkModel.DATA_DEVICE_NAME:
         // sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
         // sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);

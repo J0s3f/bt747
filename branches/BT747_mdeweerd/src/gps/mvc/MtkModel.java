@@ -781,7 +781,7 @@ public class MtkModel implements EventPoster {
          */
         public boolean isAcknowledgeOf(GpsLinkExecCommand cmd) {
             if(cmd instanceof GpsLinkNmeaCommand) {
-                ((GpsLinkNmeaCommand) cmd).getNmeaValue().startsWith(this.cmd);
+                return ((GpsLinkNmeaCommand) cmd).getNmeaValue().startsWith(this.cmd);
             }
             // TODO Auto-generated method stub
             return false;

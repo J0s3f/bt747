@@ -3,12 +3,9 @@
  */
 package gps.mvc;
 
-import gps.GpsEvent;
-import gps.HoluxConstants;
 import gps.connection.WPResponseModel;
 
 import bt747.sys.Generic;
-import bt747.sys.JavaLibBridge;
 
 /**
  * Model for Holux devices (PHLX command set) like the M-1000C.
