@@ -23,6 +23,13 @@ public class GpsLinkNmeaCommand implements GpsLinkExecCommand {
     public String getNmeaValue() {
         return nmeaCmd;
     }
+    
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return false;
+    }
 
     /* (non-Javadoc)
      * @see gps.mvc.commands.GpsRxtxExecCommand#execute(gps.connection.GPSrxtx)

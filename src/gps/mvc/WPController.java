@@ -16,12 +16,12 @@ public class WPController extends MtkController implements
         WondeproudConstants {
 
     private WPModel m;
-    private Controller c;
+    private GpsController c;
 
     /**
      * @param m
      */
-    public WPController(final Controller c, final MtkModel m) {
+    public WPController(final GpsController c, final MtkModel m) {
         super(c, m);
         this.c = c;
         this.m = (WPModel)m;

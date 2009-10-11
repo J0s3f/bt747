@@ -28,7 +28,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
     private int wpState = WP_OFF;
 
     private final LogFile logFile = new LogFile();
-    private final GPSLinkHandler handler;
+    private final GpsLinkHandler handler;
 
     /*
      * (non-Javadoc)
@@ -50,7 +50,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
      * 
      * @see gps.mvc.DeviceOperationHandlerIF#notifyRun(gps.mvc.GPSLinkHandler)
      */
-    public boolean notifyRun(GPSLinkHandler handler) throws BT747Exception {
+    public boolean notifyRun(GpsLinkHandler handler) throws BT747Exception {
         boolean cont = true;
         switch (wpState) {
         case WP_OFF:
@@ -72,7 +72,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
      * 
      */
     public WPLogDownloadHandler(final WPController dpl,
-            final GPSLinkHandler handler) {
+            final GpsLinkHandler handler) {
         wpC = dpl;
         this.handler = handler;
     }

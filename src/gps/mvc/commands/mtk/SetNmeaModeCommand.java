@@ -19,4 +19,10 @@ public class SetNmeaModeCommand implements GpsLinkExecCommand {
     public void execute(GPSrxtx context) {
         MtkBinWriter.doSetNmeaMode(context, context.getSpeed());
     }
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return true;
+    }
 }

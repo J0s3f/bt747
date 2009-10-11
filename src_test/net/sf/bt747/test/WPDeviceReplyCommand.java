@@ -30,5 +30,11 @@ public class WPDeviceReplyCommand implements GpsLinkExecCommand {
     public final void execute(final GPSrxtx context) {
         WPDeviceWriter.sendCmd(context, b);
     }
-
+    
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return true;
+    }
 }

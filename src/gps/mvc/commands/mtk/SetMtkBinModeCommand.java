@@ -20,4 +20,11 @@ public class SetMtkBinModeCommand implements GpsLinkExecCommand {
         MtkBinWriter.setMtkBinMode(context, context.getSpeed());
     }
 
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return true;
+    }
+
 }

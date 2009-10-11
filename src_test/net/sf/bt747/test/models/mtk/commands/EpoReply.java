@@ -47,4 +47,10 @@ public class EpoReply implements GpsLinkExecCommand {
                 payload));
     }
 
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return false;
+    }
 }

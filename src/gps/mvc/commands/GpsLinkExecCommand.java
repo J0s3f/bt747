@@ -7,8 +7,8 @@ import gps.connection.GPSrxtx;
 
 /**
  * A {@link GPSLinkCommand} can be put on the command queue where the
- * {@link #execute(GPSLinkHandler)} method will be called with the
- * {@link GPSLinkHandler} context. This allows for improved flexibility in
+ * {@link #execute(GpsLinkHandler)} method will be called with the
+ * {@link GpsLinkHandler} context. This allows for improved flexibility in
  * extending the link interface protocol and managing link state changes.
  * 
  * Some concrete Commands can probably be implemented as Singletons in some
@@ -27,4 +27,5 @@ public interface GpsLinkExecCommand {
      */
     public void execute(final GPSrxtx context);
     
+    public boolean mustBeFirstInQueue();
 }

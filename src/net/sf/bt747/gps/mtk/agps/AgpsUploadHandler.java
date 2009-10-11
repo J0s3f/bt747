@@ -6,7 +6,7 @@ package net.sf.bt747.gps.mtk.agps;
 import gps.BT747Constants;
 import gps.connection.MtkBinWriter;
 import gps.mvc.DeviceOperationHandlerIF;
-import gps.mvc.GPSLinkHandler;
+import gps.mvc.GpsLinkHandler;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 import bt747.model.EventPoster;
@@ -127,7 +127,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      * 
      * @see gps.mvc.DeviceOperationHandlerIF#notifyRun(gps.mvc.GPSLinkHandler)
      */
-    public boolean notifyRun(final GPSLinkHandler handler)
+    public boolean notifyRun(final GpsLinkHandler handler)
             throws BT747Exception {
         if (nxtPacketIdx < 0) {
             stopUploadMode(handler);
@@ -237,7 +237,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      * 
      * @param handler
      */
-    private final void stopUploadMode(final GPSLinkHandler handler) {
+    private final void stopUploadMode(final GpsLinkHandler handler) {
         MtkBinWriter.doSetNmeaMode(handler.getGPSRxtx());
         Generic.debug("AGPS upload stopped/finished");
         notifyDone();

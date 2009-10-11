@@ -36,4 +36,11 @@ public class WPDeviceStrCommand implements GpsLinkExecCommand {
         context.write(cmd + "\0");
     }
 
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return true;
+    }
+
 }

@@ -34,7 +34,7 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario De Weerd
  * 
  */
-public final class GPSLinkHandler {
+public final class GpsLinkHandler {
     private GPSrxtx gpsRxTx = null;
     private static final int INITIAL_WAIT = 500;
 
@@ -67,7 +67,7 @@ public final class GPSLinkHandler {
     /**
      * 
      */
-    public GPSLinkHandler() {
+    public GpsLinkHandler() {
 
     }
 
@@ -95,7 +95,7 @@ public final class GPSLinkHandler {
                 && (Generic.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
             doSendCmdUnprotected(cmd);
-        } else if (cmdsWaiting < GPSLinkHandler.C_MAX_TOSEND_COMMANDS) {
+        } else if (cmdsWaiting < GpsLinkHandler.C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
             toSendCmds.addElement(cmd);
             if (Generic.isDebug()) {
@@ -177,8 +177,8 @@ public final class GPSLinkHandler {
             Generic.debug("doSendCmd", e);
         }
         nextCmdSendTime = Generic.getTimeStamp()
-                + GPSLinkHandler.C_MIN_TIME_BETWEEN_CMDS;
-        if (sentCmds.size() > GPSLinkHandler.C_MAX_SENT_COMMANDS) {
+                + GpsLinkHandler.C_MIN_TIME_BETWEEN_CMDS;
+        if (sentCmds.size() > GpsLinkHandler.C_MAX_SENT_COMMANDS) {
             sentCmds.removeElementAt(0);
         }
     }
@@ -188,7 +188,7 @@ public final class GPSLinkHandler {
 
     protected final void initConnected() {
         nextCmdSendTime = Generic.getTimeStamp()
-                + GPSLinkHandler.INITIAL_WAIT;
+                + GpsLinkHandler.INITIAL_WAIT;
     }
 
     protected final void checkSendCmdFromQueue() {
@@ -214,7 +214,7 @@ public final class GPSLinkHandler {
                     logTimer = cTime;
                 }
                 if ((toSendCmds.size() != 0)
-                        && (sentCmds.size() < GPSLinkHandler.C_MAX_CMDS_SENT)
+                        && (sentCmds.size() < GpsLinkHandler.C_MAX_CMDS_SENT)
                         && (Generic.getTimeStamp() > nextCmdSendTime)) {
                     // No more commands waiting for acknowledge
                     doSendCmdUnprotected(toSendCmds.elementAt(0));

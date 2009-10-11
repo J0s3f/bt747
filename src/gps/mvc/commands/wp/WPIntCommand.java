@@ -58,4 +58,11 @@ public class WPIntCommand implements GpsLinkExecCommand {
         return "WPIntCommand " + JavaLibBridge.unsigned2hex(cmd, bufSize*2) + " " + arg;
     }
 
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return true;
+    }
+
 }

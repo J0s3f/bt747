@@ -3,7 +3,7 @@
  */
 package gps.connection;
 
-import gps.mvc.GPSLinkHandler;
+import gps.mvc.GpsLinkHandler;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -53,7 +53,7 @@ public final class NMEAWriter {
         }
     }
     
-    public final static void sendPacket(final GPSLinkHandler context,
+    public final static void sendPacket(final GpsLinkHandler context,
             final String packetNoCheckSum) {
         sendPacket(context.getGPSRxtx(), packetNoCheckSum);
     }

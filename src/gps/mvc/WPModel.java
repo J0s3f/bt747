@@ -25,7 +25,7 @@ public class WPModel extends MtkModel {
      * @param context
      * @param handler
      */
-    public WPModel(Model context, GPSLinkHandler handler) {
+    public WPModel(GpsModel context, GpsLinkHandler handler) {
         super(context, handler);
         // TODO Auto-generated constructor stub
     }

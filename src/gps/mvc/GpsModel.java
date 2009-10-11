@@ -42,8 +42,8 @@ import bt747.sys.interfaces.BT747HashSet;
  * 
  */
 /* Final for the moment */
-public class Model implements ProtocolConstants {
-    private final GPSLinkHandler handler;
+public class GpsModel implements ProtocolConstants {
+    private final GpsLinkHandler handler;
     // For the moment pointing to 'this' for the MtkModel.
     // After refactoring this should be effectively fully delegated.
     private MtkModel mtkModel;
@@ -55,8 +55,8 @@ public class Model implements ProtocolConstants {
      * 
      * Will also create the model(s) in the lower layers.
      */
-    public Model(final GPSrxtx gpsRxTx, final int protocol) {
-        handler = new GPSLinkHandler();
+    public GpsModel(final GPSrxtx gpsRxTx, final int protocol) {
+        handler = new GpsLinkHandler();
 
         setProtocol(protocol);
         setGPSRxtx(gpsRxTx);
@@ -93,7 +93,7 @@ public class Model implements ProtocolConstants {
      * refactoring.
      */
 
-    public final GPSLinkHandler getHandler() {
+    public final GpsLinkHandler getHandler() {
         return handler;
     }
 

@@ -28,7 +28,7 @@ import bt747.sys.interfaces.BT747Time;
  * 
  */
 public class MtkModel implements EventPoster {
-    private final GPSLinkHandler handler;
+    private final GpsLinkHandler handler;
     protected MTKLogDownloadHandler mtkLogHandler;
 
     protected final void setLogHandler(final MTKLogDownloadHandler handler) {
@@ -122,7 +122,7 @@ public class MtkModel implements EventPoster {
 
     protected boolean powerSaveEnabled = false;
 
-    private Model context;
+    private GpsModel context;
 
     protected boolean hasAgps = false;
     protected int agpsDataCount = 0;
@@ -131,12 +131,12 @@ public class MtkModel implements EventPoster {
     protected BT747Time agpsStart2Time;
     protected BT747Time agpsEnd2Time;
 
-    public MtkModel(final Model context, final GPSLinkHandler handler) {
+    public MtkModel(final GpsModel context, final GpsLinkHandler handler) {
         this.handler = handler;
         this.context = context;
     }
 
-    public final Model getContext() {
+    public final GpsModel getContext() {
         return context;
     }
 
@@ -395,7 +395,7 @@ public class MtkModel implements EventPoster {
         dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
     }
 
-    public GPSLinkHandler getHandler() {
+    public GpsLinkHandler getHandler() {
         return handler;
     }
 
