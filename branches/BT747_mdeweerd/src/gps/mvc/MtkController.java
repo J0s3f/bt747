@@ -27,13 +27,13 @@ import bt747.sys.interfaces.BT747StringTokenizer;
  */
 public class MtkController implements ProtectedDevControllerIF {
     private MtkModel m;
-    private Controller c;
+    private GpsController c;
     private final MTKLogDownloadHandler mtkLogHandler;
 
     /** Default prefix to MTK command. */
     protected static final String PMTK = "PMTK";
 
-    MtkController(final Controller c, final MtkModel m) {
+    MtkController(final GpsController c, final MtkModel m) {
         this.c = c;
         this.m = m;
         mtkLogHandler = new MTKLogDownloadHandler(this, m);

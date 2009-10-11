@@ -74,5 +74,10 @@ public class Acknowledge implements GpsLinkExecCommand {
             NMEAWriter.sendPacket(context, nmeaReply);
         }
     }
-
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return false;
+    }
 }

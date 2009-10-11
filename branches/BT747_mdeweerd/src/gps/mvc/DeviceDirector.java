@@ -19,9 +19,9 @@ import gps.connection.GPSrxtx;
  * 
  */
 public final class DeviceDirector implements ProtocolConstants {
-    public Model model;
+    public GpsModel model;
     public MtkModel mtkModel;
-    public gps.mvc.Controller devController;
+    public gps.mvc.GpsController devController;
     public GPSrxtx gpsRxTx;
     public MtkController mtkControl;
 
@@ -32,13 +32,13 @@ public final class DeviceDirector implements ProtocolConstants {
 
     public void setProtocol(int protocol) {
         if (model == null) {
-            model = new gps.mvc.Model(gpsRxTx, protocol);
+            model = new gps.mvc.GpsModel(gpsRxTx, protocol);
         } else {
             model.setProtocol(protocol);
         }
         mtkModel = model.getMtkModel();
         if (devController == null) {
-            devController = gps.mvc.Controller.getInstance(model, protocol);
+            devController = gps.mvc.GpsController.getInstance(model, protocol);
         } else {
             devController.setProtocol(protocol);
         }

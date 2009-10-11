@@ -16,25 +16,25 @@ import bt747.sys.interfaces.BT747Thread;
  * @author Mario
  * 
  */
-public class Controller implements BT747Thread, ProtocolConstants,
+public class GpsController implements BT747Thread, ProtocolConstants,
         DeviceControllerIF {
 
-    private final Model gpsM;
+    private final GpsModel gpsM;
     private MtkModel mtkM;
     // private MtkController mtkC;
     private ProtectedDevControllerIF mtkC;
 
-    private final GPSLinkHandler handler;
+    private final GpsLinkHandler handler;
 
-    public final static Controller getInstance(final Model model,
+    public final static GpsController getInstance(final GpsModel model,
             final int protocol) {
-        return new Controller(model, protocol);
+        return new GpsController(model, protocol);
     }
 
     /** The current protocol in use. */
     private int protocol = PROTOCOL_INVALID;
 
-    private Controller(final Model model, final int protocol) {
+    private GpsController(final GpsModel model, final int protocol) {
         gpsM = model;
         mtkM = gpsM.getMtkModel();
         // this probably needs to be refactored to create the correct
@@ -85,7 +85,7 @@ public class Controller implements BT747Thread, ProtocolConstants,
 
     }
 
-    public final Model getModel() {
+    public final GpsModel getModel() {
         return gpsM;
     }
 

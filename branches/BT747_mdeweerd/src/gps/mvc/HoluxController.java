@@ -15,7 +15,7 @@ public class HoluxController extends MtkController {
     /**
      * @param m
      */
-    public HoluxController(final Controller c, final MtkModel m) {
+    public HoluxController(final GpsController c, final MtkModel m) {
         super(c, m);
         // TODO Auto-generated constructor stub
     }

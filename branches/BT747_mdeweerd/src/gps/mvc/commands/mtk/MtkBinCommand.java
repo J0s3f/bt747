@@ -23,6 +23,13 @@ public class MtkBinCommand implements GpsLinkExecCommand {
     }
 
     /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#mustBeFirstInQueue()
+     */
+    public boolean mustBeFirstInQueue() {
+        return false;
+    }
+    
+    /* (non-Javadoc)
      * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.mvc.GPSrxtx)
      */
     public final void execute(final GPSrxtx context) {

@@ -6,7 +6,7 @@ package gps.connection;
 import bt747.sys.Generic;
 
 import gps.BT747Constants;
-import gps.mvc.GPSLinkHandler;
+import gps.mvc.GpsLinkHandler;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 /**
@@ -35,7 +35,7 @@ public final class MtkBinWriter {
         }
     }
 
-    public final static void sendCmd(final GPSLinkHandler context,
+    public final static void sendCmd(final GpsLinkHandler context,
             final MtkBinTransportMessageModel msg) {
         sendCmd(context.getGPSRxtx(), msg);
     }

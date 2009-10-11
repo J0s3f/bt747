@@ -23,7 +23,7 @@ public interface DeviceOperationHandlerIF {
      *         longer be called and dereferenced in the link controller.
      * @throws BT747Exception 
      */
-    public boolean notifyRun(GPSLinkHandler handler) throws BT747Exception;
+    public boolean notifyRun(GpsLinkHandler handler) throws BT747Exception;
 
     /**
      * This method is called when a packet of some kind was received from the

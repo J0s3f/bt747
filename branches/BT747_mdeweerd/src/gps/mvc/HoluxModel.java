@@ -24,7 +24,7 @@ public class HoluxModel extends MtkModel {
      * @param context
      * @param handler
      */
-    public HoluxModel(Model context, GPSLinkHandler handler) {
+    public HoluxModel(GpsModel context, GpsLinkHandler handler) {
         super(context, handler);
         // TODO Auto-generated constructor stub
     }

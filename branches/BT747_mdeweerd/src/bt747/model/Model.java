@@ -204,14 +204,14 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     /**
      * @return The gpsModel instantiation.
      */
-    protected final gps.mvc.Model gpsM() {
+    protected final gps.mvc.GpsModel gpsM() {
         return data.gpsM();
     }
 
     /**
      * @return The gpsController instantiation.
      */
-    protected final gps.mvc.Controller gpsC() {
+    protected final gps.mvc.GpsController gpsC() {
         return data.gpsC();
     }
 
@@ -817,7 +817,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * Indicates if the given data is available.
      * 
      * @param dataType
-     *                {@link GpsController#DATA_MEM_USED}
+     *                {@link MtkController#DATA_MEM_USED}
      * @return
      */
     public final boolean isAvailable(final int dataType) {
@@ -848,12 +848,12 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     private final static class PrivateData {
         private DeviceDirector device;
 
-        protected final gps.mvc.Model gpsM() {
+        protected final gps.mvc.GpsModel gpsM() {
             return device.model;
         }
         
 
-        protected final gps.mvc.Controller gpsC() {
+        protected final gps.mvc.GpsController gpsC() {
             return device.devController;
         }
         

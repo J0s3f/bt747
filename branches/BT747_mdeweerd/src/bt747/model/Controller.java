@@ -112,11 +112,11 @@ public class Controller implements ModelListener {
         return m;
     }
 
-    private final gps.mvc.Controller getGpsC() {
+    private final gps.mvc.GpsController getGpsC() {
         return m.gpsC();
     }
 
-    private final gps.mvc.Model getGpsOldC() {
+    private final gps.mvc.GpsModel getGpsOldC() {
         return m.gpsM();
     }
 
