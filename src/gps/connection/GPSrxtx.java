@@ -14,6 +14,8 @@
 // *** *********************************************************** ***
 package gps.connection;
 
+import waba.sys.Convert;
+
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;
@@ -191,10 +193,11 @@ public final class GPSrxtx {
     public final void write(final String text) {
         writeOngoing.down(); // Semaphore - reserve link
         if (Generic.isDebug()) {
-            final String debugText = ">" + text;
-            if (Generic.getDebugLevel() > 1) {
-                Generic.debug(debugText);
-            }
+            final String debugText = ">" + text + "<";
+//                    + (int) text.charAt(text.length() - 1) + "|";
+//            if (Generic.getDebugLevel() > 1) {
+//                Generic.debug(debugText);
+//            }
             gpsPort.writeDebug(debugText);
         }
         gpsPort.write(text);
@@ -204,6 +207,18 @@ public final class GPSrxtx {
     public final void write(final byte[] bytes) {
         writeOngoing.down(); // Semaphore - reserve link
         gpsPort.write(bytes);
+        if (Generic.isDebug()) {
+            final String debugText = ">" + bytes.length + " bytes sent";
+            if (Generic.getDebugLevel() > 1) {
+                Generic.debug(debugText);
+//                StringBuffer hexStr = new StringBuffer(10);
+//                for (int i = 0; i < bytes.length; i++) {
+//                    hexStr.append(Convert.unsigned2hex(bytes[i], 2));
+//                }
+//                Generic.debug(hexStr.toString());
+            }
+            gpsPort.writeDebug(debugText);
+        }
         writeOngoing.up(); // Semaphore - release link
     }
 

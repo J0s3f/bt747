@@ -890,7 +890,8 @@ public final class J2SEAppController extends J2SEController {
     public static void myLookAndFeel() {
         boolean lookAndFeelIsSet = false;
         if (java.lang.System.getProperty("bt747.laf") != null) {
-            tryLookAndFeel(java.lang.System.getProperty("bt747.laf"));
+            lookAndFeelIsSet = tryLookAndFeel(java.lang.System
+                    .getProperty("bt747.laf"));
         }
 
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(

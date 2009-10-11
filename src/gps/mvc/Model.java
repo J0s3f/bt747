@@ -19,6 +19,7 @@ import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
+import gps.mvc.commands.GpsLinkExecCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.ProtocolConstants;
 
@@ -65,10 +66,12 @@ public class Model implements ProtocolConstants {
         if (this.protocol != protocol) {
             this.protocol = protocol;
             switch (protocol) {
-            case PROTOCOL_MTK:
             case PROTOCOL_SIRFIII:
-            case PROTOCOL_WONDEPROUD:
+            case PROTOCOL_MTK:
                 mtkModel = new MtkModel(this, handler);
+                break;
+            case PROTOCOL_WONDEPROUD:
+                mtkModel = new DPL700Model(this, handler);
                 break;
             case PROTOCOL_HOLUX_PHLX:
                 mtkModel = new HoluxModel(this, handler);
@@ -160,19 +163,14 @@ public class Model implements ProtocolConstants {
 
     private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
-    public final void analyseResponse(final Object response) {
-        if (response instanceof MtkBinTransportMessageModel) {
-            mtkModel
-                    .analyseMtkBinData((MtkBinTransportMessageModel) response);
-        } else if (response instanceof String[]) {
-            analyseNMEA((String[]) response);
-        }
+    final boolean analyseResponse(final Object response) {
+        return mtkModel.analyseResponse(response);
     }
 
-    public final int analyseNMEA(final String[] sNmea) {
+    public final boolean analyseNMEA(final String[] sNmea) {
         // final int cmd;
-        int result;
-        result = 0;
+        boolean result;
+        result = false;
         try {
             // if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {
             // waba.sys.debugMsg("ANA:"+p_nmea[0]+","+p_nmea[1]);}
@@ -207,8 +205,7 @@ public class Model implements ProtocolConstants {
                 // //
                 // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
                 // }
-            } else {
-                return mtkModel.analyseMtkNmea(sNmea);
+                result = true; // Success in decoding
             }
         } catch (final Exception e) {
             Generic.debug("AnalyzeNMEA", e);
@@ -279,7 +276,7 @@ public class Model implements ProtocolConstants {
      * @param s
      *            NMEA string to send.
      */
-    public final void sendCmd(final Object s) {
+    public final void sendCmd(final GpsLinkExecCommand s) {
         handler.sendCmd(s);
     }
 

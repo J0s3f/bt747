@@ -36,6 +36,10 @@ public final class GPSConversionParameters {
      * Defines the CSV date format (to be implemented).
      */
     public final static String CSV_DATE_FORMAT_INT = "csv-datefmt";
+    /**
+     * Defines the table name for Postgresql.
+     */
+    public final static String SQL_TABLE_NAME = "sql-table";
     
     /**
      * OSM login (string).

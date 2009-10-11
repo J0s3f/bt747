@@ -13,7 +13,7 @@ import gps.connection.NMEAWriter;
  * the command.
  * 
  */
-public class GpsLinkNmeaCommand implements GpsRxtxExecCommand {
+public class GpsLinkNmeaCommand implements GpsLinkExecCommand {
     private final String nmeaCmd;
     
     public GpsLinkNmeaCommand(final String nmeaString) {
@@ -29,5 +29,13 @@ public class GpsLinkNmeaCommand implements GpsRxtxExecCommand {
      */
     public void execute(final GPSrxtx context) {
         NMEAWriter.sendPacket(context, nmeaCmd);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return nmeaCmd;
     }
 }

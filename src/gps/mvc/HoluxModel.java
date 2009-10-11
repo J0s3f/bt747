@@ -32,8 +32,8 @@ public class HoluxModel extends MtkModel {
     /**
      * Analyzes responses from GPS (PHLX and others (via superclass))
      */
-    public int analyseMtkNmea(final String[] sNmea) {
-        int result = -1;
+    public boolean analyseMtkNmea(final String[] sNmea) {
+        boolean result = false;
 
         if (sNmea[0].startsWith("PHLX")) {
             result = analysePHLXCommand(sNmea);
@@ -51,8 +51,8 @@ public class HoluxModel extends MtkModel {
      *            array of strings (command string split on commas)
      * @return good question
      */
-    protected int analysePHLXCommand(final String[] sNmea) {
-        int result = -1;
+    protected boolean analysePHLXCommand(final String[] sNmea) {
+        boolean result = false;
 
         // receiving a PHLX command means we have a device that supports PHLX
         // command set :)

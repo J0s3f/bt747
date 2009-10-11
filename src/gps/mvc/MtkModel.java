@@ -6,6 +6,9 @@ package gps.mvc;
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.convert.Conv;
+import gps.mvc.commands.CmdVisitor;
+import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsLinkNmeaCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import net.sf.bt747.util.GpsConvert;
 
@@ -396,11 +399,36 @@ public class MtkModel implements EventPoster {
         return handler;
     }
 
-    public final void analyseMtkBinData(
+    /**
+     * Method can be overridden to handle more response types. This method is
+     * best called in last place in subclass if subclass can not handle the
+     * response.
+     * 
+     * @param response
+     * @return true if response treated.
+     */
+    protected boolean analyseResponse(final Object response) {
+        if (response instanceof MtkBinTransportMessageModel) {
+            return analyseMtkBinData((MtkBinTransportMessageModel) response);
+        } else if (response instanceof String[]) {
+            // The context handles default NMEA phrases.
+            if (!context.analyseNMEA((String[]) response)) {
+                // Context could not handle phrase, try it ourselves.
+                return analyseMtkNmea((String[]) response);
+            } else {
+                // Context handled phrase.
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean analyseMtkBinData(
             final MtkBinTransportMessageModel response) {
         if (Generic.isDebug()) {
             Generic.debug("<" + response.toString());
         }
+        return true; // Suppose success.
 
         // TODO: Handle response
         // For starters: analyse AGPS response...
@@ -416,7 +444,7 @@ public class MtkModel implements EventPoster {
      * @return
      * @see #reqInitialLogMode()
      */
-    protected int analyseLogNmea(final String[] sNmea) {
+    protected boolean analyseLogNmea(final String[] sNmea) {
         // if(GPS_DEBUG) {
         // waba.sys.debugMsg("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
         // Suppose that the command is ok (PMTK182)
@@ -485,8 +513,6 @@ public class MtkModel implements EventPoster {
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
-                        logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
-                                / logMemUsefullSize();
                         setAvailable(MtkModel.DATA_MEM_USED);
                         postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
                         break;
@@ -561,14 +587,15 @@ public class MtkModel implements EventPoster {
                 // Nothing - unexpected
             }
         }
-        return 0; // Done.
+        return true; // Done.
     }
 
-    public int analyseMtkNmea(final String[] sNmea) {
+    public boolean analyseMtkNmea(final String[] sNmea) {
         int cmd;
-        int result;
-        result = 0;
+        boolean result;
+        result = false;
         if (sNmea[0].startsWith("PMTK")) {
+            result = true;
             if (Generic.isDebug()) {
                 String s;
                 int length = sNmea.length;
@@ -584,7 +611,7 @@ public class MtkModel implements EventPoster {
             }
             cmd = JavaLibBridge.toInt(sNmea[0].substring(4));
 
-            result = -1; // Suppose cmd not treated
+            result = false; // Suppose cmd not treated
             switch (cmd) {
             case BT747Constants.PMTK_CMD_LOG: // CMD 182;
                 result = analyseLogNmea(sNmea);
@@ -712,7 +739,7 @@ public class MtkModel implements EventPoster {
             } // End switch
         } else if (sNmea[0].equals("HOLUX001")) {
             holux = true;
-            result = -1; // Suppose cmd not treated
+            result = false; // Suppose cmd not treated
             if (Generic.isDebug()) {
                 String s;
                 final int length = sNmea.length;
@@ -726,7 +753,7 @@ public class MtkModel implements EventPoster {
             }
             cmd = JavaLibBridge.toInt(sNmea[1]);
 
-            result = -1; // Suppose cmd not treated
+            result = false; // Suppose cmd not treated
             switch (cmd) {
             case BT747Constants.HOLUX_API_DT_NAME:
                 if (sNmea.length == 3) {
@@ -742,12 +769,33 @@ public class MtkModel implements EventPoster {
         return result;
     } // End method
 
+    
+    private final static class MtkVisitor implements CmdVisitor {
+        private final String cmd;
+        /**
+         * 
+         */
+        public MtkVisitor(final String cmd) {
+            this.cmd = cmd;
+        }
+        /* (non-Javadoc)
+         * @see gps.mvc.commands.CmdVisitor#isAcknowledgeOf(gps.mvc.commands.GpsLinkExecCommand)
+         */
+        public boolean isAcknowledgeOf(GpsLinkExecCommand cmd) {
+            if(cmd instanceof GpsLinkNmeaCommand) {
+                ((GpsLinkNmeaCommand) cmd).getNmeaValue().startsWith(this.cmd);
+            }
+            // TODO Auto-generated method stub
+            return false;
+        }
+    }
+    
     // TODO: When acknowledge is missing for some commands, take appropriate
     // action.
-    protected int analyseMTK_Ack(final String[] sNmea) {
+    protected boolean analyseMTK_Ack(final String[] sNmea) {
         // PMTK001,Cmd,Flag
         int flag;
-        int result = -1;
+        boolean result = false;
         // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
 
         if (sNmea.length >= 3) {
@@ -765,7 +813,7 @@ public class MtkModel implements EventPoster {
             // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
             // }
 
-            handler.removeFromSentCmds(sMatch);
+            handler.removeFromSentCmds(new MtkVisitor(sMatch));
             // if(GPS_DEBUG) {
             // debugMsg("After:"+sentCmds.size());
             // }
@@ -777,7 +825,7 @@ public class MtkModel implements EventPoster {
             switch (flag) {
             case BT747Constants.PMTK_ACK_INVALID:
                 // 0: Invalid cmd or packet
-                result = 0;
+                result = true;
                 break;
             case BT747Constants.PMTK_ACK_UNSUPPORTED:
                 switch (cmdIdx) {
@@ -785,18 +833,18 @@ public class MtkModel implements EventPoster {
                     dataSupported[MtkModel.DATA_MTK_VERSION] = false;
                     break;
                 }
-                result = 0;
+                result = true;
                 break;
             case BT747Constants.PMTK_ACK_FAILED:
                 // 2: Valid cmd or packet but action failed
-                result = 0;
+                result = true;
                 break;
             case BT747Constants.PMTK_ACK_SUCCEEDED:
                 // 3: Valid cmd or packat but action succeeded
-                result = 0;
+                result = true;
                 break;
             default:
-                result = -1;
+                result = false;
                 break;
             }
         }
@@ -1064,8 +1112,10 @@ public class MtkModel implements EventPoster {
      * @param logMemUsed
      *            the logMemUsed to set
      */
-    private void setLogMemUsed(final int logMemUsed) {
+    protected void setLogMemUsed(final int logMemUsed) {
         this.logMemUsed = logMemUsed;
+        logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
+                / logMemUsefullSize();
     }
 
     /**

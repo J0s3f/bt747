@@ -18,7 +18,9 @@ import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEADecoderState;
 import gps.connection.NMEAWriter;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.CmdVisitor;
+import gps.mvc.commands.GpsLinkNmeaCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -85,24 +87,22 @@ public final class GPSLinkHandler {
         return gpsRxTx.isConnected();
     }
 
-    public final void sendCmd(final Object cmd) {
+    public final void sendCmd(final GpsLinkExecCommand cmd) {
         int cmdsWaiting;
-        cmdBuffersAccess.down();
+        cmdBuffersAccess.down();  // Protecting entire function to avoid multiple cmds.
         cmdsWaiting = sentCmds.size();
-        cmdBuffersAccess.up();
         if (!isEraseOngoing() && (cmdsWaiting == 0)
                 && (Generic.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
-            doSendCmd(cmd);
+            doSendCmdUnprotected(cmd);
         } else if (cmdsWaiting < GPSLinkHandler.C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
-            cmdBuffersAccess.down();
             toSendCmds.addElement(cmd);
             if (Generic.isDebug()) {
                 Generic.debug("#" + cmd);
             }
-            cmdBuffersAccess.up();
         }
+        cmdBuffersAccess.up();
     }
 
     private boolean gpsDecode = true;
@@ -154,8 +154,14 @@ public final class GPSLinkHandler {
      * @param cmd
      */
     public void doSendCmd(final Object cmd) {
-        resetLogTimeOut();
         cmdBuffersAccess.down();
+        doSendCmdUnprotected(cmd);
+        cmdBuffersAccess.up();
+    }
+    
+
+    private final void doSendCmdUnprotected(final Object cmd) {
+        resetLogTimeOut();
         try {
             if (cmd instanceof String) {
                 final String nmeaCmd = (String) cmd;
@@ -163,8 +169,8 @@ public final class GPSLinkHandler {
                     sentCmds.addElement(cmd);
                 }
                 NMEAWriter.sendPacket(gpsRxTx, nmeaCmd);
-            } else if (cmd instanceof GpsRxtxExecCommand) {
-                GpsRxtxExecCommand linkCmd = (GpsRxtxExecCommand) cmd;
+            } else if (cmd instanceof GpsLinkExecCommand) {
+                GpsLinkExecCommand linkCmd = (GpsLinkExecCommand) cmd;
                 linkCmd.execute(this.getGPSRxtx());
             }
         } catch (final Exception e) {
@@ -175,7 +181,6 @@ public final class GPSLinkHandler {
         if (sentCmds.size() > GPSLinkHandler.C_MAX_SENT_COMMANDS) {
             sentCmds.removeElementAt(0);
         }
-        cmdBuffersAccess.up();
     }
 
     private int logTimer = 0;
@@ -212,9 +217,7 @@ public final class GPSLinkHandler {
                         && (sentCmds.size() < GPSLinkHandler.C_MAX_CMDS_SENT)
                         && (Generic.getTimeStamp() > nextCmdSendTime)) {
                     // No more commands waiting for acknowledge
-                    cmdBuffersAccess.up();
-                    doSendCmd(toSendCmds.elementAt(0));
-                    cmdBuffersAccess.down();
+                    doSendCmdUnprotected(toSendCmds.elementAt(0));
                     toSendCmds.removeElementAt(0);
                 }
             } catch (final Exception e) {
@@ -224,12 +227,13 @@ public final class GPSLinkHandler {
         }
     }
 
-    protected final boolean removeFromSentCmds(final String match) {
+    
+    public final boolean removeFromSentCmds(CmdVisitor visitor) {
         int cmdIdx = -1;
         cmdBuffersAccess.down();
         try {
             for (int i = 0; i < sentCmds.size(); i++) {
-                if (((String) sentCmds.elementAt(i)).startsWith(match)) {
+                if (visitor.isAcknowledgeOf((GpsLinkExecCommand)(sentCmds.elementAt(i)))) {
                     cmdIdx = i;
                     break;
                 }
@@ -247,6 +251,31 @@ public final class GPSLinkHandler {
         cmdBuffersAccess.up();
         return cmdIdx != -1;
     }
+    
+    
+//    protected final boolean removeFromSentCmds(final String match) {
+//        int cmdIdx = -1;
+//        cmdBuffersAccess.down();
+//        try {
+//            for (int i = 0; i < sentCmds.size(); i++) {
+//                if (((String) sentCmds.elementAt(i)).startsWith(match)) {
+//                    cmdIdx = i;
+//                    break;
+//                }
+//            }
+//            // Remove all cmds up to
+//            for (int i = cmdIdx; i >= 0; i--) {
+//                // if(GPS_DEBUG) {
+//                // debugMsg("Remove:"+(String)sentCmds.items[0]);
+//                // }
+//                sentCmds.removeElementAt(0);
+//            }
+//        } catch (final Exception e) {
+//            Generic.debug("removeFromSentCmds", e);
+//        }
+//        cmdBuffersAccess.up();
+//        return cmdIdx != -1;
+//    }
 
     public final int getOutStandingCmdsCount() {
         int total;

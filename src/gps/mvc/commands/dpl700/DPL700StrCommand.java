@@ -5,14 +5,13 @@ package gps.mvc.commands.dpl700;
 
 import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
-import gps.mvc.GPSLinkHandler;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 /**
  * @author Mario
  *
  */
-public class DPL700StrCommand implements GpsRxtxExecCommand {
+public class DPL700StrCommand implements GpsLinkExecCommand {
 
     private final String cmd;
     private final int bufSize;
@@ -36,4 +35,11 @@ public class DPL700StrCommand implements GpsRxtxExecCommand {
         DPL700Writer.sendCmd(context, cmd, bufSize);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DPL700Str:"+cmd;
+    }
 }

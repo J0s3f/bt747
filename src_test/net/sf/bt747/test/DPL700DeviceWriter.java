@@ -29,7 +29,6 @@ public final class DPL700DeviceWriter implements WondeproudConstants {
             }
             context.write(out);
         }
-        context.write(WP_UPDATE_OVER);
-        context.write(EOS);
+        context.write(WP_UPDATE_OVER+'\0');
     }
 }

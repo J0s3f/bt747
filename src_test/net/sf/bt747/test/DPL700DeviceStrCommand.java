@@ -6,13 +6,13 @@ package net.sf.bt747.test;
 import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
 import gps.mvc.GPSLinkHandler;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 /**
  * @author Mario
  * 
  */
-public class DPL700DeviceStrCommand implements GpsRxtxExecCommand {
+public class DPL700DeviceStrCommand implements GpsLinkExecCommand {
 
     private final String cmd;
     private final int bufSize;

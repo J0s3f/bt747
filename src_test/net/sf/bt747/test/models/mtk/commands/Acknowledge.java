@@ -8,7 +8,7 @@ import gps.connection.GPSrxtx;
 import gps.connection.MtkBinDecoderState;
 import gps.connection.MtkBinWriter;
 import gps.connection.NMEAWriter;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 /**
@@ -17,7 +17,7 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
  * @author Mario
  * 
  */
-public class Acknowledge implements GpsRxtxExecCommand {
+public class Acknowledge implements GpsLinkExecCommand {
 
     private int confirmMain;
     private int confirmSecond;
