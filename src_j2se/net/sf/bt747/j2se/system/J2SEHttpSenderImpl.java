@@ -268,19 +268,20 @@ public class J2SEHttpSenderImpl implements BT747HttpSender {
 		if (encodingOrNull != null) {
 			encoding = encodingOrNull;
 		}
-		String encodedData = "";
+		StringBuffer encodedData = new StringBuffer();
 		BT747Hashtable it = data.iterator();
 		while (it.hasNext()) {
 			String key = (String) it.nextKey();
 			String value = (String) data.get(key);
 			if (encodedData.length() > 0) {
 				// append a parameter
-				encodedData += "&";
+				encodedData.append('&');
 			}
-			encodedData += URLEncoder.encode(key, encoding) + "="
-					+ URLEncoder.encode(value, encoding);
+			encodedData.append(URLEncoder.encode(key, encoding));
+			encodedData.append('=');
+			encodedData.append(URLEncoder.encode(value, encoding));
 		}
-		return encodedData;
+		return encodedData.toString();
 	}
 
 }

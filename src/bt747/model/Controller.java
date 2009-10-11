@@ -1446,11 +1446,11 @@ public class Controller implements ModelListener {
         setIntOpt(AppSettings.SETTING1_DGPS, m.getDgpsMode());
         setBooleanOpt(AppSettings.SETTING1_TEST, m.isSBASTestEnabled());
         setBooleanOpt(AppSettings.SETTING1_LOG_OVR, m.isLogFullOverwrite());
-        String sNMEA = "";
+        StringBuffer sNMEA = new StringBuffer();
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-            sNMEA += (m.getNMEAPeriod(i));
+            sNMEA.append(m.getNMEAPeriod(i));
         }
-        setStringOpt(AppSettings.SETTING1_NMEA, sNMEA);
+        setStringOpt(AppSettings.SETTING1_NMEA, sNMEA.toString());
     }
 
     public final void restoreSetting1() {

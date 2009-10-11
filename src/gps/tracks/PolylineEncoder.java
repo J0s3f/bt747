@@ -147,16 +147,17 @@ public final class PolylineEncoder {
         if (s.equals("")) {
             return "";
         }
-        String res = "";
+        StringBuffer res = new StringBuffer();
         int i = s.indexOf(one, 0);
         int lastpos = 0;
         while (i != -1) {
-            res += s.substring(lastpos, i) + another;
+            res.append(s.substring(lastpos, i));
+            res.append(another);
             lastpos = i + one.length();
             i = s.indexOf(one, lastpos);
         }
-        res += s.substring(lastpos); // the rest
-        return res;
+        res.append(s.substring(lastpos)); // the rest
+        return res.toString();
     }
 
     /**

@@ -61,15 +61,15 @@ public class HoluxModel extends MtkModel {
         holux = true;
 
         if (Generic.isDebug()) {
-            String s;
+            StringBuffer s = new StringBuffer();
             final int length = sNmea.length;
 
-            s = "<";
+            s.append("<");
             for (int i = 0; i < length; i++) {
-                s += sNmea[i];
-                s += ",";
+                s.append(sNmea[i]);
+                s.append(",");
             }
-            Generic.debug(s);
+            Generic.debug(s.toString());
         }
 
         String cmd = sNmea[0];

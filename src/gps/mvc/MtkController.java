@@ -502,6 +502,7 @@ public class MtkController implements ProtectedDevControllerIF {
                 break;
             case CMD_SET_SBAS_ENABLED:
                 setSBASEnabled(param.getBoolean());
+                break;
             case CMD_SET_POWERSAVE_ENABLED:
                 setPowerSaveEnabled(param.getBoolean());
                 break;

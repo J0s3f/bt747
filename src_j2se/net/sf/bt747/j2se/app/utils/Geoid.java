@@ -39,11 +39,11 @@ public final class Geoid implements GeoidIF {
      * @return true if success
      */
     private final static boolean init() {
+        InputStream is = null;
         try {
             if (geoid_delta == null) {
                 // Get the resource.
-                final InputStream is = Geoid.class
-                        .getResourceAsStream(GEOID_RESOURCE);
+                is = Geoid.class.getResourceAsStream(GEOID_RESOURCE);
                 // System.err.println(Geoid.class.getResource(GEOID_RESOURCE)
                 // .getPath());
                 if (is.available() != SIZE) {
@@ -83,8 +83,13 @@ public final class Geoid implements GeoidIF {
                     // os.close();
                     // Generic.debug(GEOID_RESOURCE + "loaded");
                 }
+                is.close();
             }
         } catch (Exception e) {
+            try {
+                is.close();
+            } catch (Exception b) {
+            }
             geoid_delta = null;
             Generic.debug("Geoid resource loading", e);
         }

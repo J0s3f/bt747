@@ -595,17 +595,17 @@ public class MtkModel implements EventPoster {
         if (sNmea[0].startsWith("PMTK")) {
             result = true;
             if (Generic.isDebug()) {
-                String s;
+                StringBuffer s;
                 int length = sNmea.length;
                 if (sNmea[1].charAt(0) == '8') {
                     length = 3;
                 }
-                s = "<";
+                s = new StringBuffer('<');
                 for (int i = 0; i < length; i++) {
-                    s += sNmea[i];
-                    s += ",";
+                    s.append(sNmea[i]);
+                    s.append(',');
                 }
-                Generic.debug(s);
+                Generic.debug(s.toString());
             }
             cmd = JavaLibBridge.toInt(sNmea[0].substring(4));
 
@@ -739,15 +739,15 @@ public class MtkModel implements EventPoster {
             holux = true;
             result = false; // Suppose cmd not treated
             if (Generic.isDebug()) {
-                String s;
+                StringBuffer s;
                 final int length = sNmea.length;
 
-                s = "<";
+                s = new StringBuffer('<');
                 for (int i = 0; i < length; i++) {
-                    s += sNmea[i];
-                    s += ",";
+                    s.append(sNmea[i]);
+                    s.append(',');
                 }
-                Generic.debug(s);
+                Generic.debug(s.toString());
             }
             cmd = JavaLibBridge.toInt(sNmea[1]);
 
@@ -797,21 +797,23 @@ public class MtkModel implements EventPoster {
         // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
 
         if (sNmea.length >= 3) {
-            String sMatch;
+            StringBuffer sMatch;
             int cmdIdx;
             flag = JavaLibBridge.toInt(sNmea[sNmea.length - 1]); // Last
             cmdIdx = JavaLibBridge.toInt(sNmea[1]);
             // parameter
-            sMatch = "PMTK" + sNmea[1];
+            sMatch = new StringBuffer("PMTK");
+            sMatch.append(sNmea[1]);
             for (int i = 2; i < sNmea.length - 1; i++) {
                 // ACK is variable length, can have parameters of cmd.
-                sMatch += "," + sNmea[i];
+                sMatch.append(',');
+                sMatch.append(sNmea[i]);
             }
             // if(GPS_DEBUG) {
             // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
             // }
 
-            handler.removeFromSentCmds(new MtkVisitor(sMatch));
+            handler.removeFromSentCmds(new MtkVisitor(sMatch.toString()));
             // if(GPS_DEBUG) {
             // debugMsg("After:"+sentCmds.size());
             // }
@@ -1014,7 +1016,7 @@ public class MtkModel implements EventPoster {
 
     public final boolean isInitialLogOverwrite() {
         return ((initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0)
-                && ((lastLogBlock & 0xFFFFFFFF) != 0xFFFFFFFF);
+                && (lastLogBlock != 0xFFFFFFFF);
     }
 
     public final int getDgpsMode() {

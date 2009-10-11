@@ -156,13 +156,13 @@ public class ExifIfdBlock {
      */
     @Override
     public String toString() {
-        String r = "";
+        StringBuffer r = new StringBuffer();
         final BT747Hashtable iter = atrs.iterator();
         while (iter.hasNext()) {
-            r += atrs.get(iter.nextKey()).toString();
-            r += "\n";
+            r.append(atrs.get(iter.nextKey()).toString());
+            r.append('\n');
         }
         // TODO Auto-generated method stub
-        return r;
+        return r.toString();
     }
 }

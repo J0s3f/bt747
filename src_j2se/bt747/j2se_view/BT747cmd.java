@@ -1439,10 +1439,10 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
-    private final void setEraseOngoing(final boolean eraseOngoing) {
-        synchronized (this.eraseOngoing) {
-            this.eraseStarted = true;
-            this.eraseOngoing = Boolean.valueOf(eraseOngoing);
+    private final void setEraseOngoing(final boolean isEraseOngoing) {
+        synchronized (eraseOngoing) {
+            eraseStarted = true;
+            eraseOngoing = Boolean.valueOf(isEraseOngoing);
         }
     }
 
