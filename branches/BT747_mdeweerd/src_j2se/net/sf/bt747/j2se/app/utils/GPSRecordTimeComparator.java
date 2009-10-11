@@ -35,14 +35,18 @@ public class GPSRecordTimeComparator implements Comparator<GPSRecord> {
         if (o1 == null) {
             return 1;
         }
+        int t1, t2;
         if (!o1.hasTagUtc()) {
-            o1.tagutc = o1.tagutc;
+            t1 = o1.utc;
+        } else {
+            t1 = o1.tagutc;
         }
         if (!o2.hasTagUtc()) {
-            o2.tagutc = o2.tagutc;
+            t2 = o2.utc;
+        } else {
+            t2 = o2.tagutc;
         }
 
-        return o1.tagutc - o2.tagutc;
+        return t1 - t2;
     }
-
 }

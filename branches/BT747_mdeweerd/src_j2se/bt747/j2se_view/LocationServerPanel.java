@@ -358,7 +358,7 @@ public class LocationServerPanel extends javax.swing.JPanel implements
 
     private void tfPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPasswordFocusLost
         if (!m.getStringOpt(AppSettings.POS_SRV_PASS).equals(
-                tfPassword.getPassword())) {
+                String.valueOf(tfPassword.getPassword()))) {
             c.setStringOpt(AppSettings.POS_SRV_PASS, String.copyValueOf(tfPassword.getPassword()));
             this.locationServingParametersChanged();
         }

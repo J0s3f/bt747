@@ -92,7 +92,7 @@ public final class Conv {
             }
             switch (hexStr.charAt(i + 1)) {
             case '0':
-                byteVal |= (byte) 0;
+                //byteVal |= (byte) 0;
                 break;
             case '1':
                 byteVal |= (byte) 1;

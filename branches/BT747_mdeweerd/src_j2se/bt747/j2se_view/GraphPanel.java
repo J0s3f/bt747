@@ -21,6 +21,12 @@ import org.jdesktop.swingx.JXGraph;
  */
 public class GraphPanel extends javax.swing.JPanel {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6567913681851624637L;
+
+
     /** Creates new form GraphPanel */
     public GraphPanel() {
         initComponents();
