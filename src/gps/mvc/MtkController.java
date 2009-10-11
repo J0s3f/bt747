@@ -76,6 +76,15 @@ public class MtkController implements ProtectedDevControllerIF {
     /**
      * Delegates NMEA sending to handler.
      * 
+     * @param nmeaCmdNoCheckSum
+     */
+    protected final void sendCmd(final String nmeaCmdNoCheckSum, final boolean hasAck) {
+        m.getHandler().sendCmd(new GpsLinkNmeaCommand(nmeaCmdNoCheckSum, hasAck));
+    }
+
+    /**
+     * Delegates NMEA sending to handler.
+     * 
      * @param cmd
      */
     protected final void sendCmd(final GpsLinkExecCommand cmd) {
@@ -87,7 +96,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * 
      * @param cmd
      */
-    protected final void doSendCmd(final Object cmd) {
+    protected final void doSendCmd(final GpsLinkExecCommand cmd) {
         m.getHandler().doSendCmd(cmd);
     }
 
@@ -343,7 +352,7 @@ public class MtkController implements ProtectedDevControllerIF {
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","
                     + BT747Constants.PMTK_LOG_Q + ","
                     + BT747Constants.PMTK_LOG_FLASH_STAT_STR;
-            doSendCmd(nmeaCmd);
+            doSendCmd(new GpsLinkNmeaCommand(nmeaCmd));
             return true;
         case MtkModel.DATA_LOG_FLASH_SECTOR_STATUS:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_LOG + ","

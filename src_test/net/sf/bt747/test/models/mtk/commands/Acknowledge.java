@@ -80,4 +80,11 @@ public class Acknowledge implements GpsLinkExecCommand {
     public boolean mustBeFirstInQueue() {
         return false;
     }
+
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#hasAck()
+     */
+    public boolean hasAck() {
+        return false;
+    }
 }

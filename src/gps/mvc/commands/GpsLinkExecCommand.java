@@ -27,5 +27,13 @@ public interface GpsLinkExecCommand {
      */
     public void execute(final GPSrxtx context);
     
+    /** If true, no other commands can be waiting.
+     * @return
+     */
     public boolean mustBeFirstInQueue();
+    
+    /** If true, requires acknowledge.
+     * @return
+     */
+    public boolean hasAck();
 }

@@ -928,7 +928,7 @@ public class Controller implements ModelListener {
      * 
      * @param cmd
      *                Otherwise the class must be an implementation of
-     *                {@link GpsLinkExecCommand} or {@link GpsLinkNmeaCommand}.
+     *                {@link GpsLinkExecCommand}.
      * 
      */
     public final void sendCmd(final GpsLinkExecCommand cmd) {
