@@ -4,27 +4,27 @@
 package gps.mvc;
 
 import gps.WondeproudConstants;
-import gps.mvc.commands.wp.DPL700IntCommand;
-import gps.mvc.commands.wp.DPL700StrCommand;
+import gps.mvc.commands.wp.WPIntCommand;
+import gps.mvc.commands.wp.WPStrCommand;
 
 /**
- * Controller for Wondeproud devices like the BT-BT110m
+ * Controller for Wonde Proud devices like the BT-BT110m
  * 
  * @author Mario De Weerd
  */
-public class DPL700Controller extends MtkController implements
+public class WPController extends MtkController implements
         WondeproudConstants {
 
-    private DPL700Model m;
+    private WPModel m;
     private Controller c;
 
     /**
      * @param m
      */
-    public DPL700Controller(final Controller c, final MtkModel m) {
+    public WPController(final Controller c, final MtkModel m) {
         super(c, m);
         this.c = c;
-        this.m = (DPL700Model)m;
+        this.m = (WPModel)m;
     }
 
     /**
@@ -34,9 +34,9 @@ public class DPL700Controller extends MtkController implements
      * @param card
      */
     public void getLog(final String fileName, final int card) {
-        DPL700LogDownloadHandler h = new DPL700LogDownloadHandler(this, m
+        WPLogDownloadHandler h = new WPLogDownloadHandler(this, m
                 .getHandler());
-        h.getDPL700Log(fileName, card);
+        h.getWPLog(fileName, card);
         c.setDeviceOperationHandler(h);
     }
 
@@ -144,8 +144,8 @@ public class DPL700Controller extends MtkController implements
     }
 
     public final void reqMemInUse() {
-        m.getHandler().sendCmd(new DPL700IntCommand(REQ_MEM_IN_USE, 4));
-        m.getHandler().sendCmd(new DPL700StrCommand(WP_AP_EXIT));
+        m.getHandler().sendCmd(new WPIntCommand(REQ_MEM_IN_USE, 4));
+        m.getHandler().sendCmd(new WPStrCommand(WP_AP_EXIT));
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 

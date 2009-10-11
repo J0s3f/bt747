@@ -42,7 +42,7 @@ import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 import gps.mvc.CmdParam;
-import gps.mvc.DPL700Controller;
+import gps.mvc.WPController;
 import gps.mvc.HoluxController;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
@@ -728,7 +728,7 @@ public class Controller implements ModelListener {
 //            mtkC = new MtkController(this, mtkM);
             break;
         case ProtocolConstants.PROTOCOL_WONDEPROUD:
-          startDPL700Download();
+          startWPDownload();
             break;
         }
     }
@@ -782,11 +782,11 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * Initiate the download of a 'DPL700' log.
+     * Initiate the download of a 'Wonde Proud' log.
      */
-    public final void startDPL700Download() {
+    public final void startWPDownload() {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
-        // DPL700 when appropriate.
+        // Wonde Proud when appropriate.
         // Initialisation method and download start should change.
         getGpsC().getLog(
                 m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());

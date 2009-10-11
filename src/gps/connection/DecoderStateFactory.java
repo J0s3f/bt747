@@ -16,7 +16,7 @@ public final class DecoderStateFactory {
             .getHashtableInstance(2);
 
     public final static int NMEA_STATE = 0;
-    public final static int DPL700_STATE = 1;
+    public final static int WP_STATE = 1;
     public final static int SIRFIII_STATE = 2;
     public final static int MTKBIN_STATE = 3;
 
@@ -40,8 +40,8 @@ public final class DecoderStateFactory {
             case NMEA_STATE:
                 newState = new NMEADecoderState();
                 break;
-            case DPL700_STATE:
-                newState = new DPL700DecoderState();
+            case WP_STATE:
+                newState = new WPDecoderState();
                 break;
             case SIRFIII_STATE:
                 newState = new SirfDecoderState();

@@ -235,7 +235,7 @@ public class IBlue747Model {
      * 
      */
     public static enum DeviceMode {
-        DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN, DEVICE_MODE_DPL700, DEVICE_MODE_SIRFIII
+        DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN, DEVICE_MODE_WP, DEVICE_MODE_SIRFIII
     };
 
     /**
@@ -254,8 +254,8 @@ public class IBlue747Model {
             case DEVICE_MODE_MTKBIN:
                 gpsRxTx.newState(DecoderStateFactory.MTKBIN_STATE);
                 break;
-            case DEVICE_MODE_DPL700:
-                gpsRxTx.newState(new DPL700DeviceDecoderState());
+            case DEVICE_MODE_WP:
+                gpsRxTx.newState(new WPDeviceDecoderState());
                 break;
             case DEVICE_MODE_SIRFIII:
                 gpsRxTx.newState(DecoderStateFactory.SIRFIII_STATE);
@@ -358,7 +358,7 @@ public class IBlue747Model {
             }
         case DEVICE_MODE_MTKBIN:
 
-        case DEVICE_MODE_DPL700:
+        case DEVICE_MODE_WP:
         }
     }
 

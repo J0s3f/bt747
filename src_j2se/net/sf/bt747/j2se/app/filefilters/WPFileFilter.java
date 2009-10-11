@@ -15,11 +15,11 @@
 package net.sf.bt747.j2se.app.filefilters;
 
 
-/**
+/** Wonde Proud
  * @author Mario
  * 
  */
-public final class DPL700FileFilter extends ListFileFilter {
+public final class WPFileFilter extends ListFileFilter {
 
     /**
      * Lower case list of accepted extensions.
@@ -31,7 +31,7 @@ public final class DPL700FileFilter extends ListFileFilter {
     /**
      * 
      */
-    public DPL700FileFilter() {
+    public WPFileFilter() {
         super(extensions,description);
     }
 }

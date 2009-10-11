@@ -5,7 +5,7 @@ package net.sf.bt747.test;
 
 import gps.WondeproudConstants;
 import gps.mvc.commands.GpsLinkExecCommand;
-import gps.mvc.commands.wp.DPL700IntCommand;
+import gps.mvc.commands.wp.WPIntCommand;
 
 import java.io.FileInputStream;
 
@@ -55,10 +55,10 @@ public class BTCD110mController implements WondeproudConstants {
         if (response instanceof String) {
             String r = (String) response;
             return analyseText(r);
-        } else if (response instanceof DPL700IntCommand) {
-            return analyzeDPL700Response((DPL700IntCommand) response);
-        } else if (response instanceof DPL700DeviceResponseModel) {
-            return analyseText(((DPL700DeviceResponseModel) response)
+        } else if (response instanceof WPIntCommand) {
+            return analyzeWPResponse((WPIntCommand) response);
+        } else if (response instanceof WPDeviceResponseModel) {
+            return analyseText(((WPDeviceResponseModel) response)
                     .getResponseType());
         }
         return -1;
@@ -80,7 +80,7 @@ public class BTCD110mController implements WondeproudConstants {
             byte[] log = new byte[(int) size];
             fi.read(log);
             fi.close();
-            reply = new DPL700DeviceReplyCommand(log);
+            reply = new WPDeviceReplyCommand(log);
         } catch (Exception e) {
             Generic.debug("Issue loading log in model", e);
         }
@@ -130,10 +130,10 @@ public class BTCD110mController implements WondeproudConstants {
             0x0B, 0x23, 0x69, 0x26, 0x12, 0x00, 0x00, (byte) 0xFF, // .#i&amp;....
     };
 
-    private static final DPL700DeviceReplyCommand infoRep = new DPL700DeviceReplyCommand(
+    private static final WPDeviceReplyCommand infoRep = new WPDeviceReplyCommand(
             DevInfo);
 
-    public final int analyzeDPL700Response(DPL700IntCommand response) {
+    public final int analyzeWPResponse(WPIntCommand response) {
         switch (response.getCmd()) {
         case REQ_LOG:
             Generic.debug("Log requested");
@@ -153,7 +153,7 @@ public class BTCD110mController implements WondeproudConstants {
             byte[] xx = { 0, 0, 0x40, 0 };
             mtkDeviceModel.gpsRxTx.write(xx);
             // (new
-            // DPL700IntCommand(0x00004000,4)).execute(mtkDeviceModel.gpsRxTx);
+            // WPIntCommand(0x00004000,4)).execute(mtkDeviceModel.gpsRxTx);
             break;
         case REQ_MEM_IN_USE:
             byte[] memuse = { 0, (byte)0xD0, 7, 0 };  // 512000 = 1/8 of the memory.
@@ -187,9 +187,9 @@ public class BTCD110mController implements WondeproudConstants {
                 mtkDeviceModel.gpsRxTx.write(Initial);
                 sendInitial = false;
             }
-            reply = new DPL700DeviceStrCommand(WP_GPS_PLUS_RESPONSE);
+            reply = new WPDeviceStrCommand(WP_GPS_PLUS_RESPONSE);
             mtkDeviceModel
-                    .setDeviceMode(IBlue747Model.DeviceMode.DEVICE_MODE_DPL700);
+                    .setDeviceMode(IBlue747Model.DeviceMode.DEVICE_MODE_WP);
             if (reply != null) {
                 reply.execute(mtkDeviceModel.gpsRxTx);
             }

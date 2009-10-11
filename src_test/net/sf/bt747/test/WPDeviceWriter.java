@@ -10,7 +10,7 @@ import gps.connection.GPSrxtx;
  * @author Mario
  * 
  */
-public final class DPL700DeviceWriter implements WondeproudConstants {
+public final class WPDeviceWriter implements WondeproudConstants {
 
     static final byte[] EOS = { '\0' };
 

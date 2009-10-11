@@ -10,11 +10,11 @@ import gps.mvc.commands.GpsLinkExecCommand;
  * @author Mario
  * 
  */
-public class DPL700DeviceReplyCommand implements GpsLinkExecCommand {
+public class WPDeviceReplyCommand implements GpsLinkExecCommand {
 
     private final byte[] b;
 
-    public DPL700DeviceReplyCommand(final byte[] b) {
+    public WPDeviceReplyCommand(final byte[] b) {
         this.b = new byte[b.length];
         int i = 0;
         for (byte x : b) {
@@ -28,7 +28,7 @@ public class DPL700DeviceReplyCommand implements GpsLinkExecCommand {
      * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.mvc.GPSrxtx)
      */
     public final void execute(final GPSrxtx context) {
-        DPL700DeviceWriter.sendCmd(context, b);
+        WPDeviceWriter.sendCmd(context, b);
     }
 
 }

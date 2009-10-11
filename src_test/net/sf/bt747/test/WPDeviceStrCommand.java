@@ -3,28 +3,26 @@
  */
 package net.sf.bt747.test;
 
-import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
-import gps.mvc.GPSLinkHandler;
 import gps.mvc.commands.GpsLinkExecCommand;
 
 /**
  * @author Mario
  * 
  */
-public class DPL700DeviceStrCommand implements GpsLinkExecCommand {
+public class WPDeviceStrCommand implements GpsLinkExecCommand {
 
     private final String cmd;
     private final int bufSize;
 
-    public DPL700DeviceStrCommand(final String cmd) {
+    public WPDeviceStrCommand(final String cmd) {
         this(cmd, cmd.length() + 1);
     }
 
     /**
      * 
      */
-    public DPL700DeviceStrCommand(final String cmd, final int bufSize) {
+    public WPDeviceStrCommand(final String cmd, final int bufSize) {
         this.cmd = cmd;
         this.bufSize = bufSize;
     }

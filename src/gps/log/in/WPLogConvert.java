@@ -23,7 +23,7 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
-/**
+/** Conversion of Wonde Proud logs (Phototrackr, ...)
  * This class is used to convert the binary log to a new format. Basically
  * this class interprets the log and creates a {@link GPSRecord}. The
  * {@link GPSRecord} is then sent to the {@link GPSFileConverterInterface}
@@ -31,7 +31,7 @@ import bt747.sys.JavaLibBridge;
  * 
  * @author Mario De Weerd
  */
-public final class DPL700LogConvert extends GPSLogConvertInterface {
+public final class WPLogConvert extends GPSLogConvertInterface {
     private static final int X_FF = 0xFF;
     private int recordSize = 16;
     private int logFormat;
@@ -45,9 +45,9 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
     // static final int PHOTOTRACKR = 1;
     // static final int ITRACKU_SIRFIII = 2;
 
-    // private int logType = DPL700LogConvert.ITRACKU_NUMERIX;
+    // private int logType = WPLogConvert.ITRACKU_NUMERIX;
 
-    public DPL700LogConvert() {
+    public WPLogConvert() {
         super();
     }
 
@@ -197,27 +197,27 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                                 // case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                latitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                rawTime = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                altitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8;
+                                longitude = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 24;
+                                latitude = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 24;
+                                rawTime = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 24;
+                                altitude = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8;
                                 r.height = altitude;
                                 CommonIn
                                         .convertHeight(r,
                                                 factorConversionWGS84ToMSL,
                                                 logFormat);
-                                speed = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                tag = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                speed = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                tag = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
                                 seconds = rawTime & 0x3F;
                                 minutes = (rawTime >> 6) & 0x3F;
                                 hour = (rawTime >> 12) & 0x1F;
@@ -232,22 +232,22 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             default:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                latitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
-                                year = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                month = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                day = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                hour = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                minutes = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                seconds = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                speed = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
-                                tag = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                longitude = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 24;
+                                latitude = (WPLogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (WPLogConvert.X_FF & bytes[recIdx++]) << 24;
+                                year = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                month = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                day = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                hour = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                minutes = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                seconds = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                speed = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
+                                tag = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
                                 r.utc = (JavaLibBridge.getDateInstance(day,
                                         month, year + 2000))
                                         .dateToUTCepoch1970();

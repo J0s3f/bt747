@@ -71,7 +71,7 @@ public class Model implements ProtocolConstants {
                 mtkModel = new MtkModel(this, handler);
                 break;
             case PROTOCOL_WONDEPROUD:
-                mtkModel = new DPL700Model(this, handler);
+                mtkModel = new WPModel(this, handler);
                 break;
             case PROTOCOL_HOLUX_PHLX:
                 mtkModel = new HoluxModel(this, handler);

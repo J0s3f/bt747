@@ -4,10 +4,10 @@
 package gps.mvc;
 
 import gps.WondeproudConstants;
-import gps.connection.DPL700ResponseModel;
+import gps.connection.WPResponseModel;
 import gps.connection.DecoderStateFactory;
-import gps.mvc.commands.wp.DPL700IntCommand;
-import gps.mvc.commands.wp.DPL700StrCommand;
+import gps.mvc.commands.wp.WPIntCommand;
+import gps.mvc.commands.wp.WPStrCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
@@ -16,16 +16,16 @@ import bt747.sys.interfaces.BT747Exception;
  * @author Mario
  * 
  */
-public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
+public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
         WondeproudConstants {
-    private final DPL700Controller dpl700C;
+    private final WPController wpC;
     // DPL700 Functionality
-    private String DPL700LogFileName;
-    private int DPL700Card;
-    private static final int C_DPL700_OFF = 0;
-    private static final int C_DPL700_NEEDGETLOG = 1;
-    private static final int C_DPL700_GETLOG = 2;
-    private int DPL700_State = C_DPL700_OFF;
+    private String wpLogFileName;
+    private int wpCard;
+    private static final int WP_OFF = 0;
+    private static final int WP_NEEDGETLOG = 1;
+    private static final int WP_GETLOG = 2;
+    private int wpState = WP_OFF;
 
     private final LogFile logFile = new LogFile();
     private final GPSLinkHandler handler;
@@ -36,8 +36,8 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      * @see gps.mvc.DeviceOperationHandlerIF#analyseResponse(java.lang.Object)
      */
     public boolean analyseResponse(Object o) {
-        if (o instanceof DPL700ResponseModel) {
-            analyseDPL700Data((DPL700ResponseModel) o);
+        if (o instanceof WPResponseModel) {
+            analyseWPData((WPResponseModel) o);
             return true;
         } else if (o instanceof String) {
 
@@ -52,12 +52,12 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      */
     public boolean notifyRun(GPSLinkHandler handler) throws BT747Exception {
         boolean cont = true;
-        switch (DPL700_State) {
-        case C_DPL700_OFF:
+        switch (wpState) {
+        case WP_OFF:
             break;
-        case C_DPL700_NEEDGETLOG:
+        case WP_NEEDGETLOG:
             break;
-        case C_DPL700_GETLOG:
+        case WP_GETLOG:
             break;
 
         default:
@@ -71,36 +71,36 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
     /**
      * 
      */
-    public DPL700LogDownloadHandler(final DPL700Controller dpl,
+    public WPLogDownloadHandler(final WPController dpl,
             final GPSLinkHandler handler) {
-        dpl700C = dpl;
+        wpC = dpl;
         this.handler = handler;
     }
 
-    public final void getDPL700Log(final String p_FileName, final int card) {
-        dpl700C.setLogDownloadOngoing(true);
-        DPL700LogFileName = p_FileName;
-        DPL700Card = card;
-        enterDPL700Mode();
-        DPL700_State = C_DPL700_NEEDGETLOG;
+    public final void getWPLog(final String p_FileName, final int card) {
+        wpC.setLogDownloadOngoing(true);
+        wpLogFileName = p_FileName;
+        wpCard = card;
+        enterWPMode();
+        wpState = WP_NEEDGETLOG;
     }
 
-    public final void reqDPL700Log() {
-        DPL700_State = C_DPL700_GETLOG;
-        handler.sendCmd(new DPL700IntCommand(REQ_LOG, 10 * 1024 * 1024));
+    public final void reqWPLog() {
+        wpState = WP_GETLOG;
+        handler.sendCmd(new WPIntCommand(REQ_LOG, 10 * 1024 * 1024));
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
-    public final void enterDPL700Mode() {
-        exitDPL700Mode(); // Exit previous session if still open
-        handler.sendCmd(new DPL700StrCommand(WP_CAMERA_DETECT, 255));
+    public final void enterWPMode() {
+        exitWPMode(); // Exit previous session if still open
+        handler.sendCmd(new WPStrCommand(WP_CAMERA_DETECT, 255));
         // m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
-    public final void exitDPL700Mode() {
-        handler.sendCmd(new DPL700StrCommand(WP_AP_EXIT, 0)); // No reply
+    public final void exitWPMode() {
+        handler.sendCmd(new WPStrCommand(WP_AP_EXIT, 0)); // No reply
                                                               // expected
-        DPL700_State = C_DPL700_OFF;
+        wpState = WP_OFF;
     }
 
     /**
@@ -108,8 +108,8 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      * representing date and time.
      * 
      */
-    public final void reqDPL700DateTime() {
-        handler.sendCmd(new DPL700IntCommand(REQ_DATE_TIME, 255));
+    public final void reqWPDateTime() {
+        handler.sendCmd(new WPIntCommand(REQ_DATE_TIME, 255));
     }
 
     /**
@@ -117,20 +117,20 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      * representing date and time.
      * 
      */
-    public final void reqDPL700Test() {
-        handler.sendCmd(new DPL700IntCommand(REQ_SELFTEST, 255));
+    public final void reqWPTest() {
+        handler.sendCmd(new WPIntCommand(REQ_SELFTEST, 255));
     }
 
-    // public final void reqDPL700LogSize() {
-    // handler.sendCmd(new DPL700IntCommand(REQ_LOG_SIZE, 255));
+    // public final void reqWPLogSize() {
+    // handler.sendCmd(new WPIntCommand(REQ_LOG_SIZE, 255));
     // }
 
     /**
      * Erases log data. Command 0x61b60000. Response: WP Update Over
      * 
      */
-    public final void reqDPL700Erase() {
-        handler.sendCmd(new DPL700IntCommand(REQ_ERASE, 255));
+    public final void reqWPErase() {
+        handler.sendCmd(new WPIntCommand(REQ_ERASE, 255));
     }
 
     /**
@@ -138,8 +138,8 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      * number Byte 41-48: Device type [BT-CD100 = Nemerix] [BT-CD160=SIRFIII]
      * 
      */
-    public final void reqDPL700DeviceInfo() {
-        handler.sendCmd(new DPL700IntCommand(REQ_DEV_INFO1, 255));
+    public final void reqWPDeviceInfo() {
+        handler.sendCmd(new WPIntCommand(REQ_DEV_INFO1, 255));
     }
 
     /**
@@ -148,29 +148,29 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
      * 3-low, 0-disable Byte 25: Tag : 0-off, 1-on
      */
 
-    public final void getDPL700GetSettings() {
-        handler.sendCmd(new DPL700IntCommand(REQ_DEV_PARAM, 255));
+    public final void getWPGetSettings() {
+        handler.sendCmd(new WPIntCommand(REQ_DEV_PARAM, 255));
     }
 
-    protected final void analyseDPL700Data(final DPL700ResponseModel resp) {
+    protected final void analyseWPData(final WPResponseModel resp) {
         final String s = resp.getResponseType();
-        // Generic.debug("<DPL700 " + s);
+        // Generic.debug("<WP:" + s);
         if (Generic.isDebug()) {
-            Generic.debug("<DPL700 " + s);
+            Generic.debug("<WP:" + s);
         }
         if (s.startsWith("WP GPS")) {
             // WP GPS+BT
             // Response to W'P detect
-            if (DPL700_State == C_DPL700_NEEDGETLOG) {
-                reqDPL700Log();
+            if (wpState == WP_NEEDGETLOG) {
+                reqWPLog();
             }
         } else if (s.equals(WP_UPDATE_OVER)) {
-            if (DPL700_State == C_DPL700_GETLOG) {
-                if (DPL700LogFileName != null) {
-                    if (!DPL700LogFileName.endsWith(".sr")) {
-                        DPL700LogFileName += ".sr";
+            if (wpState == WP_GETLOG) {
+                if (wpLogFileName != null) {
+                    if (!wpLogFileName.endsWith(".sr")) {
+                        wpLogFileName += ".sr";
                     }
-                    logFile.openNewLog(DPL700LogFileName, DPL700Card);
+                    logFile.openNewLog(wpLogFileName, wpCard);
                     try {
                         logFile.getLogFile().writeBytes(
                                 resp.getResponseBuffer(), 0,
@@ -180,11 +180,11 @@ public class DPL700LogDownloadHandler implements DeviceOperationHandlerIF,
                         Generic.debug("", e);
                         // TODO: handle exception
                     }
-                    DPL700LogFileName = null;
-                    exitDPL700Mode();
-                    Generic.debug("End DPL700");
+                    wpLogFileName = null;
+                    exitWPMode();
+                    Generic.debug("End WP");
                     handler.getGPSRxtx().newState(DecoderStateFactory.NMEA_STATE);  // Not sure this is appropriate.
-                    dpl700C.setLogDownloadOngoing(false);
+                    wpC.setLogDownloadOngoing(false);
                 }
             }
         }
