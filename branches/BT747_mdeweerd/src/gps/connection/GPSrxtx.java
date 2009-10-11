@@ -14,8 +14,6 @@
 // *** *********************************************************** ***
 package gps.connection;
 
-import waba.sys.Convert;
-
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Semaphore;

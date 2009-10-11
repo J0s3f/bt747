@@ -42,7 +42,6 @@ public class WPStrCommand implements GpsLinkExecCommand {
      * 
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         return "WPStr:" + cmd;
     }
