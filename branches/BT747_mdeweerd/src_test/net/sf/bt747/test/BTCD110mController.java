@@ -5,7 +5,7 @@ package net.sf.bt747.test;
 
 import gps.WondeproudConstants;
 import gps.mvc.commands.GpsLinkExecCommand;
-import gps.mvc.commands.dpl700.DPL700IntCommand;
+import gps.mvc.commands.wp.DPL700IntCommand;
 
 import java.io.FileInputStream;
 
