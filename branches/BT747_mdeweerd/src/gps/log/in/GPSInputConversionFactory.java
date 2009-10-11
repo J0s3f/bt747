@@ -71,7 +71,7 @@ public class GPSInputConversionFactory {
                     || logFileLC.endsWith(".log")) {
                 return new NMEALogConvert();
             } else if (logFileLC.endsWith(".sr")) {
-                return new DPL700LogConvert();
+                return new WPLogConvert();
             } else {
                 return new BT747LogConvert();
             }

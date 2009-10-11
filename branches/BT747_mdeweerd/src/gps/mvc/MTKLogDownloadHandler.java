@@ -918,7 +918,7 @@ final class MTKLogDownloadHandler {
     }
 
     /**
-     * Temporary for DPL700
+     * Temporary for Wonde Proud
      */
     protected final File getLogFile() {
         return context.logFile;

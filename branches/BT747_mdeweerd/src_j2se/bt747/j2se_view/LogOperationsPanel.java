@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 
 import net.sf.bt747.j2se.app.filefilters.BinFileFilter;
 import net.sf.bt747.j2se.app.filefilters.CSVFileFilter;
-import net.sf.bt747.j2se.app.filefilters.DPL700FileFilter;
+import net.sf.bt747.j2se.app.filefilters.WPFileFilter;
 import net.sf.bt747.j2se.app.filefilters.GPXFileFilter;
 import net.sf.bt747.j2se.app.filefilters.HoluxTRLFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
@@ -1115,7 +1115,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());
-        RawLogFileChooser.addChoosableFileFilter(new DPL700FileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new WPFileFilter());
         final KnownFileFilter ff = new KnownFileFilter();
         RawLogFileChooser.addChoosableFileFilter(ff);
         RawLogFileChooser.setFileFilter(ff);
@@ -1331,8 +1331,8 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             setDownloadMethod();
             c.startDefaultDownload();
             break;
-        case BT747Constants.PROTOCOL_DPL700:
-            c.startDPL700Download();
+        case BT747Constants.PROTOCOL_WONDE_PROUD:
+            c.startWPDownload();
         	break;
         }
     }//GEN-LAST:event_btDownloadActionPerformed

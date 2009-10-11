@@ -530,7 +530,7 @@ public final class BT747Constants { // dev as in device
      * Connection protocols.
      */
     public static final int PROTOCOL_MTK = 0;
-    public static final int PROTOCOL_DPL700 = 1;
+    public static final int PROTOCOL_WONDE_PROUD = 1;
     public static final int PROTOCOL_PHLX = 2;
 
     /**

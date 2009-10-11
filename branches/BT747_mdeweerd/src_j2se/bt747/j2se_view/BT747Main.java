@@ -481,7 +481,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private final void updateDownloadType() {
         final int type = m.getIntOpt(Model.DEVICE_PROTOCOL);
         miMTKProtocol.setSelected(type == BT747Constants.PROTOCOL_MTK);
-        miSirfIIIProtocol.setSelected(type == BT747Constants.PROTOCOL_DPL700);
+        miSirfIIIProtocol.setSelected(type == BT747Constants.PROTOCOL_WONDE_PROUD);
         miPHLXProtocol.setSelected(type == BT747Constants.PROTOCOL_PHLX);
     }
 
@@ -1487,7 +1487,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void miSirfIIIProtocolActionPerformed(
             java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSirfIIIProtocolActionPerformed
-        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_DPL700);
+        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_WONDE_PROUD);
     }//GEN-LAST:event_miSirfIIIProtocolActionPerformed
 
     private void tabbedPanelAllStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelAllStateChanged

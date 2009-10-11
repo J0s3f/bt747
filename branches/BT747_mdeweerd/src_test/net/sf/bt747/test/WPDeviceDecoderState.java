@@ -10,7 +10,7 @@ import gps.connection.DecoderStateFactory;
 import gps.connection.DecoderStateInterface;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
-import gps.mvc.commands.wp.DPL700IntCommand;
+import gps.mvc.commands.wp.WPIntCommand;
 
 import bt747.sys.Generic;
 
@@ -21,21 +21,21 @@ import bt747.sys.Generic;
  * @author Mario
  * 
  */
-public class DPL700DeviceDecoderState implements DecoderStateInterface {
-    private byte[] DPL700_buffer;
-    private int DPL700_buffer_idx;
-    private final byte[] DPL700_EndString = new byte[200];
+public class WPDeviceDecoderState implements DecoderStateInterface {
+    private byte[] wpBuffer;
+    private int wpBuffer_idx;
+    private final byte[] wpEndString = new byte[200];
     private int endStringIdx;
 
     /** Size of read buffer to create */
     private static int bufferSize = 10;
 
     public final static void setNewBufferSize(final int size) {
-        DPL700DeviceDecoderState.bufferSize = size;
+        WPDeviceDecoderState.bufferSize = size;
     }
 
     private final static int getNewBufferSize() {
-        return DPL700DeviceDecoderState.bufferSize;
+        return WPDeviceDecoderState.bufferSize;
     }
 
     /*
@@ -47,12 +47,12 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
     public final void enterState(final GPSrxtx context) {
         endStringIdx = 0;
         initBuffer();
-        current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+        current_state = WPDeviceDecoderState.WP_STATE;
     }
 
     private final void initBuffer() {
-        DPL700_buffer_idx = 0;
-        DPL700_buffer = new byte[DPL700DeviceDecoderState.getNewBufferSize()];
+        wpBuffer_idx = 0;
+        wpBuffer = new byte[WPDeviceDecoderState.getNewBufferSize()];
     }
     /*
      * (non-Javadoc)
@@ -63,13 +63,13 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
     public final void exitState(final GPSrxtx context) {
     }
 
-    private static final int C_DPL700_STATE = 9;
-    private static final int C_DPL700_W_STATE = 10;
-    private static final int C_DPL700_P_STATE = 11;
-    private static final int C_DPL700_TEXT_STATE = 12;
-    private static final int C_DPL700_END_STATE = 13;
-    private static final int C_DPL700_TICK_STATE = 14;
-    private static final int C_DPL700_COMMAND = 15;
+    private static final int WP_STATE = 9;
+    private static final int WP_W_STATE = 10;
+    private static final int WP_P_STATE = 11;
+    private static final int WP_TEXT_STATE = 12;
+    private static final int WP_END_STATE = 13;
+    private static final int WP_TICK_STATE = 14;
+    private static final int WP_COMMAND = 15;
 
     private int current_state;
 
@@ -97,120 +97,120 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
             // bt747.sys.Vm.debug(JavaLibBridge.toString(c));
             // System.err.print("["+c+"]");
             // }
-            if (DPL700_buffer_idx < DPL700_buffer.length) {
-                DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
+            if (wpBuffer_idx < wpBuffer.length) {
+                wpBuffer[wpBuffer_idx++] = (byte) c;
                 // } else {
                 // rxtxMode = NORMAL_MODE;
             }
 
             switch (current_state) {
-            case C_DPL700_STATE:
+            case WP_STATE:
                 // Vm.debug("INIT_STATE");
                 // System.err.print(c);
                 if (c == 'W') {
                     endStringIdx = 0;
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_W_STATE;
                 } else {
-                    if (DPL700_buffer_idx == 7 // Pointing to next position
+                    if (wpBuffer_idx == 7 // Pointing to next position
                             && c == 0) {
-                        current_state = DPL700DeviceDecoderState.C_DPL700_COMMAND;
+                        current_state = WPDeviceDecoderState.WP_COMMAND;
                         continueReading = false;
                     } else {
-                        current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                        current_state = WPDeviceDecoderState.WP_STATE;
                     }
                 }
                 break;
-            case C_DPL700_W_STATE:
+            case WP_W_STATE:
                 // Vm.debug("W_STATE");
                 if (c == 'P') {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_P_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_P_STATE;
                     break;
                 } else if (c == 'W') {
                     endStringIdx = 0;
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_W_STATE;
                 } else if (c == '\'') {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_TICK_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_TICK_STATE;
                 } else {
-                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                    current_state = WPDeviceDecoderState.WP_STATE;
                 }
                 break;
-            case C_DPL700_TICK_STATE:
+            case WP_TICK_STATE:
                 // Vm.debug("TICK_STATE");
                 if (c == 'P') {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_P_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_P_STATE;
                     break;
                 } else if (c == 'W') {
                     endStringIdx = 0;
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_W_STATE;
                 } else {
-                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                    current_state = WPDeviceDecoderState.WP_STATE;
                 }
                 break;
-            case C_DPL700_P_STATE:
+            case WP_P_STATE:
                 // Vm.debug("P_STATE");
                 if (c == ' ') {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_TEXT_STATE;
+                    wpEndString[endStringIdx++] = (byte) c;
+                    current_state = WPDeviceDecoderState.WP_TEXT_STATE;
                     break;
                 } else if (c == 'W') {
-                    current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
+                    current_state = WPDeviceDecoderState.WP_W_STATE;
                 } else {
-                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                    current_state = WPDeviceDecoderState.WP_STATE;
                 }
                 break;
-            case C_DPL700_TEXT_STATE:
+            case WP_TEXT_STATE:
                 // Vm.debug("TXT_STATE");
                 // Trying to read end string
                 if (c == 0) {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
-                    DPL700_buffer_idx -= endStringIdx;
-                    current_state = DPL700DeviceDecoderState.C_DPL700_END_STATE;
-                    Generic.debug("End DPL700");
+                    wpEndString[endStringIdx++] = (byte) c;
+                    wpBuffer_idx -= endStringIdx;
+                    current_state = WPDeviceDecoderState.WP_END_STATE;
+                    Generic.debug("End Wonde Proud");
                     //context.newState(DecoderStateFactory.NMEA_STATE);
                     continueReading = false;
                 } else if (((c >= 'A') && (c <= 'Z'))
                         || ((c >= 'a') && (c <= 'z')) || (c == ' ')
                         || (c == '+') || (c == '\'')) {
-                    DPL700_EndString[endStringIdx++] = (byte) c;
+                    wpEndString[endStringIdx++] = (byte) c;
                 } else {
-                    current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                    current_state = WPDeviceDecoderState.WP_STATE;
                 }
                 break;
             default:
-                current_state = DPL700DeviceDecoderState.C_DPL700_STATE;
+                current_state = WPDeviceDecoderState.WP_STATE;
                 break;
             }
         }
 
-        if (current_state == DPL700DeviceDecoderState.C_DPL700_COMMAND) {
-            final DPL700IntCommand resp = new DPL700IntCommand(
-                    ((DPL700_buffer[0] & 0xFF) << 24) + ((DPL700_buffer[1] & 0xFF) << 16) + ((DPL700_buffer[2] & 0xFF) << 8) + ((DPL700_buffer[3] & 0xFF) << 0),
-                    ((DPL700_buffer[4] & 0xFF) << 8) + ((DPL700_buffer[5] & 0xFF) << 0),
-                    DPL700_buffer_idx);
-            DPL700_buffer_idx = 0;
-            current_state = C_DPL700_STATE;
+        if (current_state == WPDeviceDecoderState.WP_COMMAND) {
+            final WPIntCommand resp = new WPIntCommand(
+                    ((wpBuffer[0] & 0xFF) << 24) + ((wpBuffer[1] & 0xFF) << 16) + ((wpBuffer[2] & 0xFF) << 8) + ((wpBuffer[3] & 0xFF) << 0),
+                    ((wpBuffer[4] & 0xFF) << 8) + ((wpBuffer[5] & 0xFF) << 0),
+                    wpBuffer_idx);
+            wpBuffer_idx = 0;
+            current_state = WP_STATE;
             return resp;
-        } else if (current_state == DPL700DeviceDecoderState.C_DPL700_END_STATE) {
-            final DPL700DeviceResponseModel resp = new DPL700DeviceResponseModel();
-            resp.setResponseType(new String(DPL700_EndString, 0,
+        } else if (current_state == WPDeviceDecoderState.WP_END_STATE) {
+            final WPDeviceResponseModel resp = new WPDeviceResponseModel();
+            resp.setResponseType(new String(wpEndString, 0,
                     endStringIdx - 1));
             endStringIdx = 0;
-            current_state = C_DPL700_STATE;
-            resp.setResponseBuffer(DPL700_buffer);
-            resp.setResponseSize(DPL700_buffer_idx);
+            current_state = WP_STATE;
+            resp.setResponseBuffer(wpBuffer);
+            resp.setResponseSize(wpBuffer_idx);
             initBuffer();
             if(resp.getResponseType().equals(WondeproudConstants.WP_AP_EXIT)) {
                 context.newState(new TextOrNMEADecoderState());  // Should call special factory.
             }
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
-                gpsPort.writeDebug("\r\nDPL700:" + resp);
+                gpsPort.writeDebug("\r\nWP:" + resp);
             }
             return resp;
         } else {

@@ -10,7 +10,7 @@ import bt747.sys.JavaLibBridge;
  * @author Mario
  * 
  */
-public final class DPL700Writer {
+public final class WPWriter {
 
     public final static void sendCmd(final GPSrxtx context, final int cmd,
             final int rcvBufferSize) {
@@ -31,8 +31,8 @@ public final class DPL700Writer {
         if (context.isConnected()) {
             final byte[] sendbuffer = new byte[7];
             try {
-                DPL700DecoderState.setNewBufferSize(rcvBufferSize);
-                context.newState(DecoderStateFactory.DPL700_STATE);
+                WPDecoderState.setNewBufferSize(rcvBufferSize);
+                context.newState(DecoderStateFactory.WP_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">0x" + JavaLibBridge.unsigned2hex(cmd, 8)
                             + "000000");
@@ -46,7 +46,7 @@ public final class DPL700Writer {
                 sendbuffer[6] = 0;
                 context.write(sendbuffer);
             } catch (final Exception e) {
-                Generic.debug("sendAndGetDPL700", e);
+                Generic.debug("sendAndGetWP", e);
             }
         }
     }
@@ -56,8 +56,8 @@ public final class DPL700Writer {
         if (context.isConnected()) {
             final StringBuffer rec = new StringBuffer(256);
             try {
-                DPL700DecoderState.setNewBufferSize(rcvBufferSize);
-                context.newState(DecoderStateFactory.DPL700_STATE);
+                WPDecoderState.setNewBufferSize(rcvBufferSize);
+                context.newState(DecoderStateFactory.WP_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
@@ -75,8 +75,8 @@ public final class DPL700Writer {
         if (context.isConnected()) {
             final StringBuffer rec = new StringBuffer(256);
             try {
-                DPL700DecoderState.setNewBufferSize(0);
-                context.newState(DecoderStateFactory.DPL700_STATE);
+                WPDecoderState.setNewBufferSize(0);
+                context.newState(DecoderStateFactory.WP_STATE);
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
@@ -85,7 +85,7 @@ public final class DPL700Writer {
                 rec.append("\0");
                 context.write(rec.toString());
             } catch (final Exception e) {
-                Generic.debug("sendDPL700Cmd", e);
+                Generic.debug("sendWPCmd", e);
             }
         }
     }

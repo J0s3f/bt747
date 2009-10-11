@@ -5,7 +5,7 @@ package gps.mvc;
 
 import gps.GpsEvent;
 import gps.HoluxConstants;
-import gps.connection.DPL700ResponseModel;
+import gps.connection.WPResponseModel;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -15,7 +15,7 @@ import bt747.sys.JavaLibBridge;
  * 
  * @author Robert Tomanek <bt747.free.fr@mail.robert.tomanek.org>
  */
-public class DPL700Model extends MtkModel {
+public class WPModel extends MtkModel {
     /**
      * True is the device is a Holux with PHLX command set
      */
@@ -25,7 +25,7 @@ public class DPL700Model extends MtkModel {
      * @param context
      * @param handler
      */
-    public DPL700Model(Model context, GPSLinkHandler handler) {
+    public WPModel(Model context, GPSLinkHandler handler) {
         super(context, handler);
         // TODO Auto-generated constructor stub
     }
@@ -43,9 +43,9 @@ public class DPL700Model extends MtkModel {
      */
     protected boolean analyseResponse(Object response) {
         boolean result = false;
-        if (response instanceof DPL700ResponseModel) {
+        if (response instanceof WPResponseModel) {
             try {
-            DPL700ResponseModel r = (DPL700ResponseModel) response;
+            WPResponseModel r = (WPResponseModel) response;
             byte[] rb = r.getResponseBuffer();
             switch (expectedDataType) {
             case MtkModel.DATA_MEM_USED:
