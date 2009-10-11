@@ -4,8 +4,8 @@
 package gps.mvc;
 
 import gps.WondeproudConstants;
-import gps.mvc.commands.dpl700.DPL700IntCommand;
-import gps.mvc.commands.dpl700.DPL700StrCommand;
+import gps.mvc.commands.wp.DPL700IntCommand;
+import gps.mvc.commands.wp.DPL700StrCommand;
 
 /**
  * Controller for Wondeproud devices like the BT-BT110m

@@ -10,7 +10,7 @@ import gps.connection.DecoderStateFactory;
 import gps.connection.DecoderStateInterface;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
-import gps.mvc.commands.dpl700.DPL700IntCommand;
+import gps.mvc.commands.wp.DPL700IntCommand;
 
 import bt747.sys.Generic;
 

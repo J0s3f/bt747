@@ -6,8 +6,8 @@ package gps.mvc;
 import gps.WondeproudConstants;
 import gps.connection.DPL700ResponseModel;
 import gps.connection.DecoderStateFactory;
-import gps.mvc.commands.dpl700.DPL700IntCommand;
-import gps.mvc.commands.dpl700.DPL700StrCommand;
+import gps.mvc.commands.wp.DPL700IntCommand;
+import gps.mvc.commands.wp.DPL700StrCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
