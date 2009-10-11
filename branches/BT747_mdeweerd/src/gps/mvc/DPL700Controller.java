@@ -4,15 +4,18 @@
 package gps.mvc;
 
 import gps.WondeproudConstants;
+import gps.mvc.commands.dpl700.DPL700IntCommand;
+import gps.mvc.commands.dpl700.DPL700StrCommand;
 
 /**
  * Controller for Wondeproud devices like the BT-BT110m
  * 
  * @author Mario De Weerd
  */
-public class DPL700Controller extends MtkController implements WondeproudConstants {
+public class DPL700Controller extends MtkController implements
+        WondeproudConstants {
 
-    private MtkModel m;
+    private DPL700Model m;
     private Controller c;
 
     /**
@@ -21,7 +24,7 @@ public class DPL700Controller extends MtkController implements WondeproudConstan
     public DPL700Controller(final Controller c, final MtkModel m) {
         super(c, m);
         this.c = c;
-        this.m = m;
+        this.m = (DPL700Model)m;
     }
 
     /**
@@ -59,6 +62,12 @@ public class DPL700Controller extends MtkController implements WondeproudConstan
      */
     public boolean cmd(final int cmd, final CmdParam param) {
         switch (cmd) {
+        case MtkController.CMD_SET_DEVICE_NAME:
+        case MtkController.CMD_SET_LOG_DISTANCE_INTERVAL:
+        case MtkController.CMD_SET_LOG_SPEED_INTERVAL:
+        case MtkController.CMD_SET_LOG_TIME_INTERVAL:
+        case MtkController.CMD_SET_LOG_OVERWRITE:
+            return false;
         // case MtkController.CMD_SET_DEVICE_NAME:
         // setHoluxName(param.getString());
         // break;
@@ -73,9 +82,9 @@ public class DPL700Controller extends MtkController implements WondeproudConstan
         }
         // return true;
     }
-    
+
     private boolean logDownloadOngoing = false;
-    
+
     protected void setLogDownloadOngoing(final boolean ongoing) {
         logDownloadOngoing = ongoing;
     }
@@ -100,6 +109,22 @@ public class DPL700Controller extends MtkController implements WondeproudConstan
             return false;
         }
         switch (dataType) {
+        case MtkModel.DATA_LOG_STATUS:
+        case MtkModel.DATA_MEM_PTS_LOGGED:
+        case MtkModel.DATA_LOG_VERSION:
+        case MtkModel.DATA_FLASH_TYPE:
+        case MtkModel.DATA_LOG_FORMAT:
+        case MtkModel.DATA_LOG_TIME_INTERVAL:
+        case MtkModel.DATA_LOG_SPEED_INTERVAL:
+        case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
+        case MtkModel.DATA_LOG_FLASH_STATUS:
+        case MtkModel.DATA_LOG_FLASH_SECTOR_STATUS:
+        case MtkModel.DATA_LOG_OVERWRITE_STATUS:
+            return false;
+        case MtkModel.DATA_MEM_USED:
+            m.setExpectedDataType(MtkModel.DATA_MEM_USED);
+            reqMemInUse();
+            return true;
         case MtkModel.DATA_INITIAL_LOG:
             return false;
         // case MtkModel.DATA_DEVICE_NAME:
@@ -114,6 +139,14 @@ public class DPL700Controller extends MtkController implements WondeproudConstan
             return super.reqData(dataType);
         }
 
+        
         // return true;
     }
+
+    public final void reqMemInUse() {
+        m.getHandler().sendCmd(new DPL700IntCommand(REQ_MEM_IN_USE, 4));
+        m.getHandler().sendCmd(new DPL700StrCommand(WP_AP_EXIT));
+        // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
+    }
+
 }

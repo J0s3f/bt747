@@ -18,7 +18,7 @@ import gps.connection.GPSrxtx;
  * @author Mario De Weerd
  * 
  */
-public interface GpsRxtxExecCommand {
+public interface GpsLinkExecCommand {
     /**
      * Do what needs to be done for the specific command.
      * 

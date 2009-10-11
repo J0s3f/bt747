@@ -61,6 +61,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
     private static final int C_DPL700_TEXT_STATE = 12;
     private static final int C_DPL700_END_STATE = 13;
     private static final int C_DPL700_TICK_STATE = 14;
+    private static final int C_DPL700_BUFFER_FULL_STATE = 15;
 
     private int current_state;
 
@@ -88,7 +89,7 @@ public class DPL700DecoderState implements DecoderStateInterface {
             // bt747.sys.Vm.debug(JavaLibBridge.toString(c));
             // System.err.print("["+c+"]");
             // }
-            if(DPL700_buffer==null) {
+            if (DPL700_buffer == null) {
                 initBuffer();
             }
             if (current_state == C_DPL700_STATE) {
@@ -110,6 +111,9 @@ public class DPL700DecoderState implements DecoderStateInterface {
                 }
             }
 
+            if (DPL700_buffer_idx == DPL700_buffer.length) {
+                current_state = C_DPL700_BUFFER_FULL_STATE;
+            }
             switch (current_state) {
             case C_DPL700_END_STATE:
             case C_DPL700_STATE:
@@ -188,14 +192,25 @@ public class DPL700DecoderState implements DecoderStateInterface {
             }
         }
 
-        if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
+        if (current_state == DPL700DecoderState.C_DPL700_BUFFER_FULL_STATE) {
+            final DPL700ResponseModel resp = new DPL700ResponseModel();
+            resp.setResponseType("buffer");
+            resp.setResponseBuffer(DPL700_buffer);
+            resp.setResponseSize(DPL700_buffer_idx);
+            Generic.debug("\r\nDPL700:" + resp + " " + DPL700_buffer_idx
+                    + " " + DPL700_buffer.length);
+            DPL700_buffer = null;
+            current_state = C_DPL700_STATE;
+            return resp;
+        } else if (current_state == DPL700DecoderState.C_DPL700_END_STATE) {
             // context.newState(DecoderStateFactory.NMEA_STATE);
             final DPL700ResponseModel resp = new DPL700ResponseModel();
             resp.setResponseType(new String(DPL700_EndString, 0,
                     endStringIdx - 1));
             resp.setResponseBuffer(DPL700_buffer);
             resp.setResponseSize(DPL700_buffer_idx);
-            Generic.debug("\r\nDPL700:" + resp+" "+DPL700_buffer_idx+" "+DPL700_buffer.length);
+            Generic.debug("\r\nDPL700:" + resp + " " + DPL700_buffer_idx
+                    + " " + DPL700_buffer.length);
             DPL700_buffer = null;
             current_state = C_DPL700_STATE;
             // context.newState(DecoderStateFactory.NMEA_STATE); // Not sure

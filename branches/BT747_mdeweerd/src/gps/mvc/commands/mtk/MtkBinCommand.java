@@ -5,14 +5,14 @@ package gps.mvc.commands.mtk;
 
 import gps.connection.GPSrxtx;
 import gps.connection.MtkBinWriter;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 /**
  * @author Mario
  * 
  */
-public class MtkBinCommand implements GpsRxtxExecCommand {
+public class MtkBinCommand implements GpsLinkExecCommand {
     private final MtkBinTransportMessageModel msg;
 
     /**

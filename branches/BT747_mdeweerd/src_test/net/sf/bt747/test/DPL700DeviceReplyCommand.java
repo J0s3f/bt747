@@ -4,13 +4,13 @@
 package net.sf.bt747.test;
 
 import gps.connection.GPSrxtx;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 /**
  * @author Mario
  * 
  */
-public class DPL700DeviceReplyCommand implements GpsRxtxExecCommand {
+public class DPL700DeviceReplyCommand implements GpsLinkExecCommand {
 
     private final byte[] b;
 

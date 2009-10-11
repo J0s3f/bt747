@@ -46,7 +46,7 @@ import gps.mvc.DPL700Controller;
 import gps.mvc.HoluxController;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
 
 import bt747.sys.Generic;
@@ -927,12 +927,11 @@ public class Controller implements ModelListener {
      * Send an arbitrary GPS command.
      * 
      * @param cmd
-     *                A string will be interpreted as a NMEA packet to send.<br>
      *                Otherwise the class must be an implementation of
-     *                {@link GpsRxtxExecCommand} or {@link GpsLinkNmeaCommand}.
+     *                {@link GpsLinkExecCommand} or {@link GpsLinkNmeaCommand}.
      * 
      */
-    public final void sendCmd(final Object cmd) {
+    public final void sendCmd(final GpsLinkExecCommand cmd) {
         getGpsOldC().sendCmd(cmd);
     }
 

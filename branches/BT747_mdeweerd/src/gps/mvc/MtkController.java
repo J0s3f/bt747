@@ -4,6 +4,8 @@
 package gps.mvc;
 
 import gps.BT747Constants;
+import gps.mvc.commands.GpsLinkNmeaCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
@@ -65,9 +67,18 @@ public class MtkController implements ProtectedDevControllerIF {
     /**
      * Delegates NMEA sending to handler.
      * 
+     * @param nmeaCmdNoCheckSum
+     */
+    protected final void sendCmd(final String nmeaCmdNoCheckSum) {
+        m.getHandler().sendCmd(new GpsLinkNmeaCommand(nmeaCmdNoCheckSum));
+    }
+
+    /**
+     * Delegates NMEA sending to handler.
+     * 
      * @param cmd
      */
-    protected final void sendCmd(final Object cmd) {
+    protected final void sendCmd(final GpsLinkExecCommand cmd) {
         m.getHandler().sendCmd(cmd);
     }
 

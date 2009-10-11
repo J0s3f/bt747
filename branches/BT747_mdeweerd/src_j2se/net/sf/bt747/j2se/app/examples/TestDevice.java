@@ -29,6 +29,7 @@ package net.sf.bt747.j2se.app.examples;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
+import gps.mvc.commands.GpsLinkNmeaCommand;
 import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
@@ -124,8 +125,8 @@ public class TestDevice implements bt747.model.ModelListener {
         }
     }
 
-    private void testSingleNMEA(final Object cmd) {
-        c.sendCmd(cmd);
+    private void testSingleNMEA(final String cmd) {
+        c.sendCmd(new GpsLinkNmeaCommand(cmd));
         getOutstandingCmds();
     }
 

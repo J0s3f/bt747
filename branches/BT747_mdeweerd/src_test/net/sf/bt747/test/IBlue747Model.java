@@ -22,7 +22,7 @@ import gps.connection.NMEAWriter;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSNMEAFile;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -282,7 +282,7 @@ public class IBlue747Model {
         }
     }
 
-    private GpsRxtxExecCommand previousEPOReply = null;
+    private GpsLinkExecCommand previousEPOReply = null;
 
     /**
      * Analyze and respond to binary MTK data.
@@ -290,7 +290,7 @@ public class IBlue747Model {
      * @param msg
      */
     private final void analyseMtkBinData(final MtkBinTransportMessageModel msg) {
-        GpsRxtxExecCommand reply = null;
+        GpsLinkExecCommand reply = null;
         switch (msg.getType()) {
         case BT747Constants.PMTK_SET_EPO_DATA:
             Generic.debug("Model received AGPS DATA" + msg.toString());

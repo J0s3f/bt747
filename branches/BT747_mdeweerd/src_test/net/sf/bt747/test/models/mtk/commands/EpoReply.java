@@ -5,7 +5,7 @@ package net.sf.bt747.test.models.mtk.commands;
 
 import gps.connection.GPSrxtx;
 import gps.connection.MtkBinWriter;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 
 /**
@@ -14,7 +14,7 @@ import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
  * @author Mario
  * 
  */
-public class EpoReply implements GpsRxtxExecCommand {
+public class EpoReply implements GpsLinkExecCommand {
 
     private byte[] payload = new byte[4];
 

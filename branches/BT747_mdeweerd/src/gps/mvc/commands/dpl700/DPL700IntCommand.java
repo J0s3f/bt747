@@ -7,13 +7,13 @@ import bt747.sys.JavaLibBridge;
 
 import gps.connection.DPL700Writer;
 import gps.connection.GPSrxtx;
-import gps.mvc.commands.GpsRxtxExecCommand;
+import gps.mvc.commands.GpsLinkExecCommand;
 
 /**
  * @author Mario De Weerd
  * 
  */
-public class DPL700IntCommand implements GpsRxtxExecCommand {
+public class DPL700IntCommand implements GpsLinkExecCommand {
 
     private final int cmd;
     private final int arg;
@@ -55,7 +55,7 @@ public class DPL700IntCommand implements GpsRxtxExecCommand {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "DPL700IntCommand " + JavaLibBridge.unsigned2hex(cmd, 8) + " " + arg;
+        return "DPL700IntCommand " + JavaLibBridge.unsigned2hex(cmd, bufSize*2) + " " + arg;
     }
 
 }

@@ -112,8 +112,8 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
                     DPL700_EndString[endStringIdx++] = (byte) c;
                     current_state = DPL700DeviceDecoderState.C_DPL700_W_STATE;
                 } else {
-                    if (DPL700_buffer_idx == 6
-                            && DPL700_buffer[DPL700_buffer_idx] == 0) {
+                    if (DPL700_buffer_idx == 7 // Pointing to next position
+                            && c == 0) {
                         current_state = DPL700DeviceDecoderState.C_DPL700_COMMAND;
                         continueReading = false;
                     } else {
@@ -193,6 +193,8 @@ public class DPL700DeviceDecoderState implements DecoderStateInterface {
                     ((DPL700_buffer[0] & 0xFF) << 24) + ((DPL700_buffer[1] & 0xFF) << 16) + ((DPL700_buffer[2] & 0xFF) << 8) + ((DPL700_buffer[3] & 0xFF) << 0),
                     ((DPL700_buffer[4] & 0xFF) << 8) + ((DPL700_buffer[5] & 0xFF) << 0),
                     DPL700_buffer_idx);
+            DPL700_buffer_idx = 0;
+            current_state = C_DPL700_STATE;
             return resp;
         } else if (current_state == DPL700DeviceDecoderState.C_DPL700_END_STATE) {
             final DPL700DeviceResponseModel resp = new DPL700DeviceResponseModel();
