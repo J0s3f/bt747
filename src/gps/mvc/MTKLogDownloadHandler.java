@@ -811,8 +811,10 @@ final class MTKLogDownloadHandler {
         // from
         // device
         // TODO: Handle flash sector information.
-        context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                + BT747Constants.PMTK_LOG_ENABLE);
+        // Ignore acknowledges in controller - handled here.
+        context.mtkC.sendCmd(new GpsLinkNmeaCommand("PMTK"
+                + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_ENABLE, false));
 
         context.mtkC.reqData(MtkModel.DATA_LOG_STATUS); // Check status
 

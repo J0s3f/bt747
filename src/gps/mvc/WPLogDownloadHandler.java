@@ -3,6 +3,7 @@
  */
 package gps.mvc;
 
+import gps.GpsEvent;
 import gps.WondeproudConstants;
 import gps.connection.WPResponseModel;
 import gps.connection.DecoderStateFactory;
@@ -38,6 +39,8 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
     public boolean analyseResponse(Object o) {
         if (o instanceof WPResponseModel) {
             analyseWPData((WPResponseModel) o);
+            wpC.getMtkModel().postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
+            wpC.getMtkModel().postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             return true;
         } else if (o instanceof String) {
 
@@ -88,6 +91,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
     public final void reqWPLog() {
         wpState = WP_GETLOG;
         handler.sendCmd(new WPIntCommand(null, REQ_LOG, -1, 10 * 1024 * 1024));
+        wpC.getMtkModel().postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
