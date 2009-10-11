@@ -22,7 +22,6 @@ public class WPExitModeCommand extends WPStrCommand implements
     /* (non-Javadoc)
      * @see gps.mvc.commands.wp.WPStrCommand#execute(gps.connection.GPSrxtx)
      */
-    @Override
     public void execute(GPSrxtx context) {
         super.execute(context);
     }
