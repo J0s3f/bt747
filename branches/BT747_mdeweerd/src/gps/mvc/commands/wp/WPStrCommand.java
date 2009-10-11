@@ -51,4 +51,10 @@ public class WPStrCommand implements GpsLinkExecCommand {
     public String toString() {
         return "WPStr:" + cmd;
     }
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#hasAck()
+     */
+    public boolean hasAck() {
+        return false;
+    }
 }

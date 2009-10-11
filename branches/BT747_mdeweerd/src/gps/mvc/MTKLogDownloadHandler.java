@@ -18,6 +18,8 @@ import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.in.WindowedFile;
+import gps.mvc.commands.GpsLinkExecCommand;
+import gps.mvc.commands.GpsLinkNmeaCommand;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -41,7 +43,8 @@ final class MTKLogDownloadHandler {
         private int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
 
         /**
-         * @param logState the logState to set
+         * @param logState
+         *            the logState to set
          */
         protected void setLogState(final int logState) {
             this.logState = logState;
@@ -54,6 +57,7 @@ final class MTKLogDownloadHandler {
                 mtkM.setLogDownloadOngoing(true);
             }
         }
+
         /**
          * @return the logState
          */
@@ -61,16 +65,17 @@ final class MTKLogDownloadHandler {
             return logState;
         }
 
-
         private int logDownloadEndAddr;
+
         /**
-         * @param logDownloadEndAddr the logDownloadEndAddr to set
+         * @param logDownloadEndAddr
+         *            the logDownloadEndAddr to set
          */
         protected void setLogDownloadEndAddr(int logDownloadEndAddr) {
             this.logDownloadEndAddr = logDownloadEndAddr;
             mtkM.setEndAddr(logDownloadEndAddr);
         }
-        
+
         /**
          * @return the logDownloadEndAddr
          */
@@ -78,22 +83,23 @@ final class MTKLogDownloadHandler {
             return logDownloadEndAddr;
         }
 
-
         private int logNextReadAddr;
+
         /**
-         * @param logNextReadAddr the logNextReadAddr to set
+         * @param logNextReadAddr
+         *            the logNextReadAddr to set
          */
         protected void setLogNextReadAddr(int logNextReadAddr) {
             this.logNextReadAddr = logNextReadAddr;
             mtkM.setNextReadAddr(logNextReadAddr);
         }
+
         /**
          * @return the logNextReadAddr
          */
         protected int getLogNextReadAddr() {
             return logNextReadAddr;
         }
-
 
         // private final LogFile lf = new LogFile();
         protected File logFile = null;
@@ -120,7 +126,6 @@ final class MTKLogDownloadHandler {
 
         // Fields to keep track of logging status
         protected int logDownloadStartAddr;
-
 
         protected int logRequestAhead = 0;
 
@@ -173,17 +178,17 @@ final class MTKLogDownloadHandler {
      * Initialise the log download.
      * 
      * @param startAddr
-     *                Start address for the log download.
+     *            Start address for the log download.
      * @param endAddr
-     *                End address for the log download.
+     *            End address for the log download.
      * @param requestStep
-     *                Size of data to download with each request (chunk size).
+     *            Size of data to download with each request (chunk size).
      * @param fileName
-     *                The filename to save to.
+     *            The filename to save to.
      * @param isSmart
-     *                When true, perform incremental read.
+     *            When true, perform incremental read.
      * @param disableLogging
-     *                Disable logging during download when true.
+     *            Disable logging during download when true.
      */
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
@@ -226,7 +231,8 @@ final class MTKLogDownloadHandler {
         // Start address
         context.logDownloadStartAddr = context.startAddr;
         // Round end address to end of block
-        context.setLogDownloadEndAddr(((context.endAddr + 0xFFFF) & 0xFFFF0000) - 1);
+        context
+                .setLogDownloadEndAddr(((context.endAddr + 0xFFFF) & 0xFFFF0000) - 1);
         // Next address to request from device is start address.
         context.logNextReqAddr = context.logDownloadStartAddr;
         // Next address expected from device is start address.
@@ -247,8 +253,7 @@ final class MTKLogDownloadHandler {
 
     private final void realDownloadStart() {
         try {
-            if (context.isSmart
-                    && (new File(context.logFileName)).exists()) {
+            if (context.isSmart && (new File(context.logFileName)).exists()) {
                 /**
                  * File already exists and incremental download requested.
                  * Checking if the content is the same.
@@ -298,7 +303,8 @@ final class MTKLogDownloadHandler {
                             // file for the download.
                             context.setLogNextReadAddr(windowedLogFile
                                     .getSize());
-                            context.logNextReqAddr = context.getLogNextReadAddr();
+                            context.logNextReqAddr = context
+                                    .getLogNextReadAddr();
                         } else {
                             // This block is still in the file.
                             // Look for the first location with FFFFFF
@@ -308,7 +314,8 @@ final class MTKLogDownloadHandler {
                             // Find a block
                             do {
                                 final byte[] rBuffer = windowedLogFile
-                                        .fillBuffer(context.getLogNextReadAddr());
+                                        .fillBuffer(context
+                                                .getLogNextReadAddr());
                                 continueLoop = (windowedLogFile
                                         .getBufferFill() >= 0x200);
 
@@ -323,8 +330,9 @@ final class MTKLogDownloadHandler {
                                     // not
                                     // all FF.
                                     if (continueLoop) {
-                                        context.setLogNextReadAddr(context
-                                                .getLogNextReadAddr() + 0x200);
+                                        context
+                                                .setLogNextReadAddr(context
+                                                        .getLogNextReadAddr() + 0x200);
                                     }
                                 }
                             } while (continueLoop);
@@ -332,7 +340,8 @@ final class MTKLogDownloadHandler {
                             // Make sure it points to valid data.
                             context.setLogNextReadAddr(context
                                     .getLogNextReadAddr() - 0x200);
-                            context.logNextReqAddr = context.getLogNextReadAddr();
+                            context.logNextReqAddr = context
+                                    .getLogNextReadAddr();
 
                             // TODO: should read 2 bytes in header once rest
                             // of
@@ -346,21 +355,20 @@ final class MTKLogDownloadHandler {
                         }
 
                         // Adjust the end address.
-                        final int potentialEndAddress = ((context.getLogNextReadAddr() + 0xFFFF) & 0xFFFF0000) - 1;
-                        if (potentialEndAddress > context.getLogDownloadEndAddr()) {
+                        final int potentialEndAddress = ((context
+                                .getLogNextReadAddr() + 0xFFFF) & 0xFFFF0000) - 1;
+                        if (potentialEndAddress > context
+                                .getLogDownloadEndAddr()) {
                             if (Generic.isDebug()) {
-                                Generic
-                                        .debug("Adjusted end address from "
-                                                + JavaLibBridge
-                                                        .unsigned2hex(
-                                                                context.getLogDownloadEndAddr(),
-                                                                8)
-                                                + " to "
-                                                + JavaLibBridge.unsigned2hex(
-                                                        potentialEndAddress,
-                                                        8));
+                                Generic.debug("Adjusted end address from "
+                                        + JavaLibBridge.unsigned2hex(context
+                                                .getLogDownloadEndAddr(), 8)
+                                        + " to "
+                                        + JavaLibBridge.unsigned2hex(
+                                                potentialEndAddress, 8));
                             }
-                            context.setLogDownloadEndAddr(potentialEndAddress);
+                            context
+                                    .setLogDownloadEndAddr(potentialEndAddress);
                         }
 
                         context.expectedResult = new byte[MTKLogDownloadHandler.C_BLOCKVERIF_SIZE];
@@ -370,7 +378,8 @@ final class MTKLogDownloadHandler {
                         for (int i = context.expectedResult.length - 1; i >= 0; i--) {
                             context.expectedResult[i] = b[i];
                         }
-                        context.setLogState(MTKLogDownloadHandler.C_LOG_CHECK);
+                        context
+                                .setLogState(MTKLogDownloadHandler.C_LOG_CHECK);
                         context.mtkM.getHandler().resetLogTimeOut();
                         requestCheckBlock();
                     }
@@ -383,11 +392,11 @@ final class MTKLogDownloadHandler {
                 openNewLog(context.logFileName, context.logFileCard);
                 if (Generic.isDebug()) {
                     Generic.debug("Starting download from "
-                            + JavaLibBridge.unsigned2hex(
-                                    context.getLogNextReadAddr(), 8)
+                            + JavaLibBridge.unsigned2hex(context
+                                    .getLogNextReadAddr(), 8)
                             + " to "
-                            + JavaLibBridge.unsigned2hex(
-                                    context.getLogDownloadEndAddr(), 8));
+                            + JavaLibBridge.unsigned2hex(context
+                                    .getLogDownloadEndAddr(), 8));
                 }
                 context.setLogState(MTKLogDownloadHandler.C_LOG_ACTIVE);
             }
@@ -448,11 +457,13 @@ final class MTKLogDownloadHandler {
         if (context.getLogState() != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             int z_Step;
 
-            z_Step = context.getLogDownloadEndAddr() - context.logNextReqAddr + 1;
+            z_Step = context.getLogDownloadEndAddr() - context.logNextReqAddr
+                    + 1;
 
             switch (context.getLogState()) {
             case C_LOG_ACTIVE:
-                if (context.getLogDownloadEndAddr() <= context.getLogNextReadAddr()) {
+                if (context.getLogDownloadEndAddr() <= context
+                        .getLogNextReadAddr()) {
                     // Log is completely downloaded
                     endGetLog();
                 }
@@ -463,7 +474,8 @@ final class MTKLogDownloadHandler {
                 }
                 break;
             case C_LOG_RECOVER:
-                if (context.getLogDownloadEndAddr() <= context.getLogNextReadAddr()) {
+                if (context.getLogDownloadEndAddr() <= context
+                        .getLogNextReadAddr()) {
                     // Log is completely downloaded
                     endGetLog();
                 }
@@ -603,7 +615,8 @@ final class MTKLogDownloadHandler {
                         }
                     }
                 }
-                if (context.getLogNextReadAddr() > context.getLogDownloadEndAddr()) {
+                if (context.getLogNextReadAddr() > context
+                        .getLogDownloadEndAddr()) {
                     context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
                     endGetLog();
                 } else {
@@ -611,8 +624,8 @@ final class MTKLogDownloadHandler {
                 }
             } else {
                 Generic.debug("Expected:"
-                        + JavaLibBridge.unsigned2hex(context.getLogNextReadAddr(),
-                                8) + " Got:"
+                        + JavaLibBridge.unsigned2hex(context
+                                .getLogNextReadAddr(), 8) + " Got:"
                         + JavaLibBridge.unsigned2hex(startAddr, 8) + " ("
                         + JavaLibBridge.unsigned2hex(dataLength, 8) + ")",
                         null);
@@ -646,16 +659,17 @@ final class MTKLogDownloadHandler {
                     }
                     if (Generic.isDebug()) {
                         Generic.debug("Starting incremental download from "
-                                + JavaLibBridge.unsigned2hex(
-                                        context.getLogNextReadAddr(), 8)
+                                + JavaLibBridge.unsigned2hex(context
+                                        .getLogNextReadAddr(), 8)
                                 + " to "
-                                + JavaLibBridge.unsigned2hex(
-                                        context.getLogDownloadEndAddr(), 8));
+                                + JavaLibBridge.unsigned2hex(context
+                                        .getLogDownloadEndAddr(), 8));
                     }
                     context.setLogState(MTKLogDownloadHandler.C_LOG_ACTIVE);
                     getNextLogPart();
                 } else {
-                    context.setLogState(MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY);
+                    context
+                            .setLogState(MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY);
                     if (Generic.isDebug()) {
                         Generic
                                 .debug("Different data - requesting overwrite confirmation");
@@ -777,9 +791,10 @@ final class MTKLogDownloadHandler {
     protected final void eraseLog() {
         if (context.mtkM.getHandler().isConnected()) {
             context.mtkM.getHandler().setEraseOngoing(true);
-            context.mtkC.doSendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR
-                    + "," + BT747Constants.PMTK_LOG_ERASE + ","
-                    + BT747Constants.PMTK_LOG_ERASE_YES_STR);
+            context.mtkC.doSendCmd(new GpsLinkNmeaCommand("PMTK"
+                    + BT747Constants.PMTK_CMD_LOG_STR + ","
+                    + BT747Constants.PMTK_LOG_ERASE + ","
+                    + BT747Constants.PMTK_LOG_ERASE_YES_STR));
             waitEraseDone();
         }
     }
@@ -787,11 +802,11 @@ final class MTKLogDownloadHandler {
     protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
         context.mtkC.cmd(MtkController.CMD_STOPLOG); // Stop logging for
-                                                        // this operation
+        // this operation
         context.mtkC.reqData(MtkModel.DATA_LOG_STATUS); // Check status
         context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get
-                                                                        // flash
-                                                                        // sector
+        // flash
+        // sector
         // information
         // from
         // device
@@ -809,8 +824,8 @@ final class MTKLogDownloadHandler {
     private void postRecoveryEraseLog() {
         context.mtkC.reqData(MtkModel.DATA_LOG_STATUS);
         context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get
-                                                                        // flash
-                                                                        // sector
+        // flash
+        // sector
         // information
         // from
         // device
@@ -819,8 +834,8 @@ final class MTKLogDownloadHandler {
                 + BT747Constants.PMTK_LOG_INIT);
 
         context.mtkC.reqData(MtkModel.DATA_LOG_FLASH_SECTOR_STATUS); // Get
-                                                                        // flash
-                                                                        // sector
+        // flash
+        // sector
         // information
         // from
         // device
@@ -902,9 +917,9 @@ final class MTKLogDownloadHandler {
      * A single request to get information from the device's log.
      * 
      * @param startAddr
-     *                start address of the data range requested
+     *            start address of the data range requested
      * @param size
-     *                size of the data range requested
+     *            size of the data range requested
      */
     protected final void readLog(final int startAddr, final int size) {
         context.mtkC.sendCmd("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","

@@ -35,4 +35,11 @@ public class MtkBinCommand implements GpsLinkExecCommand {
     public final void execute(final GPSrxtx context) {
         MtkBinWriter.sendCmd(context, msg);
     }
+
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#hasAck()
+     */
+    public boolean hasAck() {
+        return false;
+    }
 }

@@ -27,4 +27,10 @@ public class SetMtkBinModeCommand implements GpsLinkExecCommand {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see gps.mvc.commands.GpsLinkExecCommand#hasAck()
+     */
+    public boolean hasAck() {
+        return false;
+    }
 }

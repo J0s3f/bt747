@@ -27,7 +27,7 @@ public class HoluxController extends MtkController {
     public boolean cmd(final int cmd) {
         switch (cmd) {
         case MtkController.CMD_ERASE_LOG:
-            sendCmd(HoluxConstants.PHLX_LOG_ERASE_REQUEST);
+            sendCmd(HoluxConstants.PHLX_LOG_ERASE_REQUEST, false);
             break;
         default:
             return super.cmd(cmd);
@@ -72,8 +72,8 @@ public class HoluxController extends MtkController {
      *            new device name
      */
     private void setHoluxName(final String holuxName) {
-        sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
-        sendCmd(HoluxConstants.PHLX_NAME_SET_REQUEST + "," + holuxName);
+        sendCmd(HoluxConstants.PHLX_CMD_PREFIX, false);
+        sendCmd(HoluxConstants.PHLX_NAME_SET_REQUEST + "," + holuxName, false);
         reqData(MtkModel.DATA_DEVICE_NAME);
     }
 
@@ -86,12 +86,12 @@ public class HoluxController extends MtkController {
     public boolean reqData(final int dataType) {
         switch (dataType) {
         case MtkModel.DATA_DEVICE_NAME:
-            sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
-            sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);
+            sendCmd(HoluxConstants.PHLX_CMD_PREFIX, false);
+            sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST, false);
             break;
         case MtkModel.DATA_LOG_TIME_INTERVAL:
         case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
-            sendCmd(HoluxConstants.PHLX_LOG_GET_CRITERIA_REQUEST);
+            sendCmd(HoluxConstants.PHLX_LOG_GET_CRITERIA_REQUEST, false);
             break;
         default:
             return super.reqData(dataType);
@@ -117,7 +117,7 @@ public class HoluxController extends MtkController {
 
         sendCmd(HoluxConstants.PHLX_LOG_SET_CRITERIA + ","
                 + HoluxConstants.PHLX_LOG_CRITERIUM_TIME_PARAM + ","
-                + z_value + "," + "1");
+                + z_value + "," + "1", false);
     }
 
     /**
@@ -138,7 +138,7 @@ public class HoluxController extends MtkController {
 
         sendCmd(HoluxConstants.PHLX_LOG_SET_CRITERIA + ","
                 + HoluxConstants.PHLX_LOG_CRITERIUM_DISTANCE_PARAM + ","
-                + "1" + "," + z_value);
+                + "1" + "," + z_value, false);
     }
 
 }

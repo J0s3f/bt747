@@ -285,7 +285,7 @@ public class GpsModel implements ProtocolConstants {
      * 
      * @param s
      */
-    protected final void doSendCmd(final Object s) {
+    protected final void doSendCmd(final GpsLinkExecCommand s) {
         handler.doSendCmd(s);
     }
 
