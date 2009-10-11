@@ -42,7 +42,7 @@ public class WPDecoderState implements DecoderStateInterface {
     private final void initBuffer() {
         wpBuffer_idx = 0;
         wpBuffer = new byte[WPDecoderState.getNewBufferSize()];
-        Generic.debug("wpBuffer init=" + wpBuffer.length);
+        //Generic.debug("wpBuffer init=" + wpBuffer.length);
     }
 
     /*
@@ -113,6 +113,7 @@ public class WPDecoderState implements DecoderStateInterface {
 
             if (wpBuffer_idx == wpBuffer.length) {
                 current_state = WP_BUFFER_FULL_STATE;
+                break;
             }
             switch (current_state) {
             case WP_END_STATE:
@@ -197,8 +198,8 @@ public class WPDecoderState implements DecoderStateInterface {
             resp.setResponseType("buffer");
             resp.setResponseBuffer(wpBuffer);
             resp.setResponseSize(wpBuffer_idx);
-            Generic.debug("\r\nWP:" + resp + " " + wpBuffer_idx
-                    + " " + wpBuffer.length);
+//            Generic.debug("\r\nWP:" + resp + " " + wpBuffer_idx
+//                    + " " + wpBuffer.length);
             wpBuffer = null;
             current_state = WP_STATE;
             return resp;

@@ -117,7 +117,7 @@ public class GpsController implements BT747Thread, ProtocolConstants,
                 mtkC.reqData(dataType);
             }
         }
-        if (Generic.isDebug() && (Generic.getDebugLevel() >= 2)) {
+        if (Generic.isDebug() && (Generic.getDebugLevel() >= 3)) {
             Generic.debug("Data request of " + dataType + " skipped");
         }
     }

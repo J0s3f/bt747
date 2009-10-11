@@ -334,7 +334,7 @@ public class MtkModel implements EventPoster {
         if (!dataSupported[dataType]) {
             return false;
         }
-        if (Generic.getDebugLevel() > 1) {
+        if (Generic.getDebugLevel() > 3) {
             Generic.debug("ts:" + ts + " type:" + dataType + " timesout:"
                     + dataTimesOut[dataType] + " available:"
                     + dataAvailable[dataType] + " requested:"
@@ -513,8 +513,6 @@ public class MtkModel implements EventPoster {
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
-                        setAvailable(MtkModel.DATA_MEM_USED);
-                        postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
@@ -1116,6 +1114,9 @@ public class MtkModel implements EventPoster {
         this.logMemUsed = logMemUsed;
         logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                 / logMemUsefullSize();
+        setAvailable(MtkModel.DATA_MEM_USED);
+        postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
+
     }
 
     /**

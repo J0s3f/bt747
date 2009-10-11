@@ -4,6 +4,8 @@
 package gps.mvc;
 
 import gps.WondeproudConstants;
+import gps.mvc.commands.wp.WPEnterModeCommand;
+import gps.mvc.commands.wp.WPExitModeCommand;
 import gps.mvc.commands.wp.WPIntCommand;
 import gps.mvc.commands.wp.WPStrCommand;
 
@@ -122,7 +124,6 @@ public class WPController extends MtkController implements
         case MtkModel.DATA_LOG_OVERWRITE_STATUS:
             return false;
         case MtkModel.DATA_MEM_USED:
-            m.setExpectedDataType(MtkModel.DATA_MEM_USED);
             reqMemInUse();
             return true;
         case MtkModel.DATA_INITIAL_LOG:
@@ -144,8 +145,9 @@ public class WPController extends MtkController implements
     }
 
     public final void reqMemInUse() {
-        m.getHandler().sendCmd(new WPIntCommand(REQ_MEM_IN_USE, 4));
-        m.getHandler().sendCmd(new WPStrCommand(WP_AP_EXIT));
+        m.getHandler().sendCmd(new WPEnterModeCommand());
+        m.getHandler().sendCmd(new WPIntCommand(m,REQ_MEM_IN_USE, MtkModel.DATA_MEM_USED, 4));
+        m.getHandler().sendCmd(new WPExitModeCommand());
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
