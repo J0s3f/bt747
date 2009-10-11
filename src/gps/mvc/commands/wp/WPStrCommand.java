@@ -33,7 +33,7 @@ public class WPStrCommand implements GpsLinkExecCommand {
      * 
      * @see gps.mvc.commands.GpsLinkExecCommand#execute(gps.mvc.GPSrxtx)
      */
-    public final void execute(final GPSrxtx context) {
+    public void execute(final GPSrxtx context) {
         WPWriter.sendCmd(context, cmd, bufSize);
     }
 

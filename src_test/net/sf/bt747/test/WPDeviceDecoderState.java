@@ -54,6 +54,7 @@ public class WPDeviceDecoderState implements DecoderStateInterface {
         wpBuffer_idx = 0;
         wpBuffer = new byte[WPDeviceDecoderState.getNewBufferSize()];
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -172,7 +173,7 @@ public class WPDeviceDecoderState implements DecoderStateInterface {
                     wpBuffer_idx -= endStringIdx;
                     current_state = WPDeviceDecoderState.WP_END_STATE;
                     Generic.debug("End Wonde Proud");
-                    //context.newState(DecoderStateFactory.NMEA_STATE);
+                    // context.newState(DecoderStateFactory.NMEA_STATE);
                     continueReading = false;
                 } else if (((c >= 'A') && (c <= 'Z'))
                         || ((c >= 'a') && (c <= 'z')) || (c == ' ')
@@ -190,7 +191,12 @@ public class WPDeviceDecoderState implements DecoderStateInterface {
 
         if (current_state == WPDeviceDecoderState.WP_COMMAND) {
             final WPIntCommand resp = new WPIntCommand(
-                    ((wpBuffer[0] & 0xFF) << 24) + ((wpBuffer[1] & 0xFF) << 16) + ((wpBuffer[2] & 0xFF) << 8) + ((wpBuffer[3] & 0xFF) << 0),
+                    null,
+                    ((wpBuffer[0] & 0xFF) << 24)
+                            + ((wpBuffer[1] & 0xFF) << 16)
+                            + ((wpBuffer[2] & 0xFF) << 8)
+                            + ((wpBuffer[3] & 0xFF) << 0),
+                    -1,
                     ((wpBuffer[4] & 0xFF) << 8) + ((wpBuffer[5] & 0xFF) << 0),
                     wpBuffer_idx);
             wpBuffer_idx = 0;
@@ -198,15 +204,18 @@ public class WPDeviceDecoderState implements DecoderStateInterface {
             return resp;
         } else if (current_state == WPDeviceDecoderState.WP_END_STATE) {
             final WPDeviceResponseModel resp = new WPDeviceResponseModel();
-            resp.setResponseType(new String(wpEndString, 0,
-                    endStringIdx - 1));
+            resp
+                    .setResponseType(new String(wpEndString, 0,
+                            endStringIdx - 1));
             endStringIdx = 0;
             current_state = WP_STATE;
             resp.setResponseBuffer(wpBuffer);
             resp.setResponseSize(wpBuffer_idx);
             initBuffer();
-            if(resp.getResponseType().equals(WondeproudConstants.WP_AP_EXIT)) {
-                context.newState(new TextOrNMEADecoderState());  // Should call special factory.
+            if (resp.getResponseType().equals(WondeproudConstants.WP_AP_EXIT)) {
+                context.newState(new TextOrNMEADecoderState()); // Should call
+                                                                // special
+                                                                // factory.
             }
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time

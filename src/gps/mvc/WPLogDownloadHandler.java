@@ -87,7 +87,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
 
     public final void reqWPLog() {
         wpState = WP_GETLOG;
-        handler.sendCmd(new WPIntCommand(REQ_LOG, 10 * 1024 * 1024));
+        handler.sendCmd(new WPIntCommand(null, REQ_LOG, -1, 10 * 1024 * 1024));
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
@@ -103,44 +103,44 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
         wpState = WP_OFF;
     }
 
-    /**
-     * Request data from the log. Command 0x60b80000. Response: 16 bytes of
-     * representing date and time.
-     * 
-     */
-    public final void reqWPDateTime() {
-        handler.sendCmd(new WPIntCommand(REQ_DATE_TIME, 255));
-    }
+//    /**
+//     * Request data from the log. Command 0x60b80000. Response: 16 bytes of
+//     * representing date and time.
+//     * 
+//     */
+//    public final void reqWPDateTime() {
+//        handler.sendCmd(new WPIntCommand(REQ_DATE_TIME, 255));
+//    }
 
-    /**
-     * Do some selftest. Command 0x60b80000. Response: 16 bytes of
-     * representing date and time.
-     * 
-     */
-    public final void reqWPTest() {
-        handler.sendCmd(new WPIntCommand(REQ_SELFTEST, 255));
-    }
+//    /**
+//     * Do some selftest. Command 0x60b80000. Response: 16 bytes of
+//     * representing date and time.
+//     * 
+//     */
+//    public final void reqWPTest() {
+//        handler.sendCmd(new WPIntCommand(REQ_SELFTEST, 255));
+//    }
 
     // public final void reqWPLogSize() {
     // handler.sendCmd(new WPIntCommand(REQ_LOG_SIZE, 255));
     // }
 
-    /**
-     * Erases log data. Command 0x61b60000. Response: WP Update Over
-     * 
-     */
-    public final void reqWPErase() {
-        handler.sendCmd(new WPIntCommand(REQ_ERASE, 255));
-    }
+//    /**
+//     * Erases log data. Command 0x61b60000. Response: WP Update Over
+//     * 
+//     */
+//    public final void reqWPErase() {
+//        handler.sendCmd(new WPIntCommand(REQ_ERASE, 255));
+//    }
 
-    /**
-     * Get device information Command 0x5bb00000. Response: Byte 8-5: Serial
-     * number Byte 41-48: Device type [BT-CD100 = Nemerix] [BT-CD160=SIRFIII]
-     * 
-     */
-    public final void reqWPDeviceInfo() {
-        handler.sendCmd(new WPIntCommand(REQ_DEV_INFO1, 255));
-    }
+//    /**
+//     * Get device information Command 0x5bb00000. Response: Byte 8-5: Serial
+//     * number Byte 41-48: Device type [BT-CD100 = Nemerix] [BT-CD160=SIRFIII]
+//     * 
+//     */
+//    public final void reqWPDeviceInfo() {
+//        handler.sendCmd(new WPIntCommand(REQ_DEV_INFO1, 255));
+//    }
 
     /**
      * Get device information Command 0x62B60000. Response: Byte 4-1: Time
@@ -148,9 +148,9 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
      * 3-low, 0-disable Byte 25: Tag : 0-off, 1-on
      */
 
-    public final void getWPGetSettings() {
-        handler.sendCmd(new WPIntCommand(REQ_DEV_PARAM, 255));
-    }
+//    public final void getWPGetSettings() {
+//        handler.sendCmd(new WPIntCommand(REQ_DEV_PARAM, 255));
+//    }
 
     protected final void analyseWPData(final WPResponseModel resp) {
         final String s = resp.getResponseType();

@@ -32,7 +32,7 @@ public class WPModel extends MtkModel {
 
     private int expectedDataType = -1;
 
-    final protected void setExpectedDataType(int type) {
+    final public void setExpectedDataType(int type) {
         expectedDataType = type;
     }
 
@@ -52,7 +52,7 @@ public class WPModel extends MtkModel {
                 setLogMemUsed((rb[0]&0xFF)+
                         ((rb[1]&0xFF)<<8)+
                         ((rb[2]&0xFF)<<16)+
-                        ((rb[2]&0xFF)<<24));
+                        ((rb[3]&0xFF)<<24));
                 expectedDataType = -1;
                 result = true;
                 break;
