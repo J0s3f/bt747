@@ -74,6 +74,24 @@ public final class WPLogConvert extends GPSLogConvertInterface {
         }
     }
 
+    /** Creates utc time value of Phototrackr specific format.
+     * @param rawTime
+     * @return
+     */
+    public static final int longToUtcTime(final int rawTime) {
+        final int seconds = rawTime & 0x3F;
+        final int minutes = (rawTime >> 6) & 0x3F;
+        final int hour = (rawTime >> 12) & 0x1F;
+        final int day = (rawTime >> 17) & 0x1F;
+        final int month = (rawTime >> 22) & 0x0F;
+        final int year = (rawTime >> 26) & 0x3F;
+        final int utc = (JavaLibBridge.getDateInstance(day,
+                month, year + 2000))
+                .dateToUTCepoch1970() +
+         3600 * hour + 60 * minutes + seconds;
+        return utc;
+    }
+    
     public int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
@@ -218,16 +236,7 @@ public final class WPLogConvert extends GPSLogConvertInterface {
                                                 logFormat);
                                 speed = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
                                 tag = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                seconds = rawTime & 0x3F;
-                                minutes = (rawTime >> 6) & 0x3F;
-                                hour = (rawTime >> 12) & 0x1F;
-                                day = (rawTime >> 17) & 0x1F;
-                                month = (rawTime >> 22) & 0x0F;
-                                year = (rawTime >> 26) & 0x3F;
-                                r.utc = (JavaLibBridge.getDateInstance(day,
-                                        month, year + 2000))
-                                        .dateToUTCepoch1970();
-                                r.utc += 3600 * hour + 60 * minutes + seconds;
+                                r.utc = longToUtcTime(rawTime);
                                 break;
                             default:
                                 // NEMERIX

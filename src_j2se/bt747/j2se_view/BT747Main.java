@@ -144,7 +144,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private MyMap pnMap = new MyMap();
     private AgpsPanel pnAgpsPanel;
 
-    private final Component inScrollPane(final JPanel p) {
+    private final static Component inScrollPane(final JPanel p) {
         JScrollPane sp;
         sp = new JScrollPane(p);
         sp.setBorder(null);
@@ -183,6 +183,9 @@ public class BT747Main extends javax.swing.JFrame implements
     private final void completeGui() {
         pnLogOperationsPanel = new LogOperationsPanel();
         pnLogOperationsPanel.init(c);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
+        //System.err.println("pnLogOperationsPanel"+" "+pnLogOperationsPanel.getMinimumSize());
+        //System.err.println("pnLogOperationsPanel"+" "+inScrollPane(pnLogOperationsPanel).getMinimumSize());
         // pnLogOperationsPanel.setPreferredSize(new
         // java.awt.Dimension(800,800));
         // getLayout().preferredLayoutSize(tabbedPanelAll);
@@ -190,6 +193,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 getIcon("icon_home.gif"), inScrollPane(pnLogOperationsPanel),
                 null, 0);
         tabbedPanelAll.setSelectedIndex(0);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
         
         pnOutputSettingsPanel = new OutputSettingsPanel();
         tabbedPanelAll
@@ -197,6 +201,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.FileSettingsPanel.TabConstraints.tabTitle"),
                         getIcon("icon_outputsettungs.gif"),
                         inScrollPane(pnOutputSettingsPanel), null, 1);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
 
         pnFiltersPanel = new FiltersPanel();
         tabbedPanelAll
@@ -204,6 +209,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.LogFiltersPanel.TabConstraints.tabTitle"),
                         getIcon("hourglass.png"),
                         inScrollPane(pnFiltersPanel), null, 2);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
 
         pnDeviceSettingsPanel = new DeviceSettingsPanel();
         tabbedPanelAll
@@ -211,6 +217,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.DeviceSettingsPanel.TabConstraints.tabTitle"),
                         getIcon("icon_devicesettungs.gif"),
                         inScrollPane(pnDeviceSettingsPanel), null, 3);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
 
         pnAdvancedSettingsPanel = new AdvancedDeviceSettingsPanel();
         tabbedPanelAll
@@ -218,6 +225,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"),
                         getIcon("icon_addevicesettungs.gif"),
                         inScrollPane(pnAdvancedSettingsPanel), null, 4);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
 
         pnAdvancedFileSettingsPanel = new AdvancedFileSettingsPanel();
         pnAdvancedFileSettingsPanel.init(c);
@@ -226,6 +234,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
                         getIcon("page_right.gif"),
                         inScrollPane(pnAdvancedFileSettingsPanel), null, 5);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
 
         // fun
         pnLocationServerPanel = new LocationServerPanel();
@@ -235,12 +244,16 @@ public class BT747Main extends javax.swing.JFrame implements
         				"Location Serving",
         				getIcon("icon_locsrv.gif"),
         				inScrollPane(pnLocationServerPanel), null, 6);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
         
 
         // pnFilesToTagPanel = new FileTablePanel();
         pnFilesToTagPanel = new FilesPanel();
+        pnFilesToTagPanel.setMinimumSize(new Dimension(30,30));
+        //System.err.println("pnFilesToTagPanel"+" "+pnFilesToTagPanel.getMinimumSize());
         tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"),
                 getIcon("images.png"), pnFilesToTagPanel, null, 1);
+        //System.err.println("tabbedPanelAllFiles"+" "+tabbedPanelAll.getMinimumSize());
         try {
             // Currently debuggin
             // JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
@@ -251,6 +264,7 @@ public class BT747Main extends javax.swing.JFrame implements
             Generic.debug("During map setup", e);
             // TODO: handle exception
         }
+        //System.err.println("tabbedPanelAllMap"+" "+tabbedPanelAll.getMinimumSize());
 
         pnAgpsPanel = new AgpsPanel();
         pnAgpsPanel.init(c);
@@ -258,6 +272,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 getString("BT747Main.AgpsPanel.TabConstraints.tabTitle"),
                 null /* getIcon("icon_devicesettungs.gif") */,
                 inScrollPane(pnAgpsPanel), null, 7);
+        //System.err.println("tabbedPanelAll"+" "+tabbedPanelAll.getMinimumSize());
         // System.err.println(tabbedPanelAll.getPreferredSize());
         // tabbedPanelAll.invalidate();
         // pnBottomInformation.invalidate();
@@ -273,6 +288,7 @@ public class BT747Main extends javax.swing.JFrame implements
      * in the GUI.
      */
     private void initAppData() {
+        String dimensionMsg = "";
         c.setRootFrame(this);
         completeGui();
         final DropListener dl = new DropListener() {
@@ -302,7 +318,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 + (int) tabbedPanelAll.getPreferredSize().getHeight()
                 - tabbedPanelAll.getHeight() + 10;
         final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        String dimensionMsg = String.format("Initial: %dx%d  Screen: %dx%d",
+        dimensionMsg += String.format("Initial: %dx%d  Screen: %dx%d",
                 x, y, (int) dim.getWidth(), (int) dim.getHeight());
         if (x > dim.getWidth()) {
             x = (int) dim.getWidth();
