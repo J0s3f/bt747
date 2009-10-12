@@ -60,4 +60,6 @@ CLASSPATH="${RXTXJAR}:$CLASSPATH"
 
 #strace -e trace=file -f -o trace.log
 MEM_HEAP_OPTION=-Xmx192m
-"$JAVA" $MEM_HEAP_OPTION -Djava.library.path="${RXTXLIBPATH}" bt747.j2se_view.BT747Main $* &
+#CLASSPATH="${RXTXPATH}/RXTXcomm-debug.jar:$CLASSPATH"
+#DEBUG_OPTION='-Dgnu.io.log.mode=FILE_MODE'
+"$JAVA" $MEM_HEAP_OPTION $DEBUG_OPTION -Djava.library.path="${RXTXLIBPATH}" bt747.j2se_view.BT747Main $* &

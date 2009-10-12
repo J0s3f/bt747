@@ -3,7 +3,10 @@
  */
 package gps.mvc;
 
+import gps.GpsEvent;
 import gps.connection.WPResponseModel;
+import gps.log.GPSRecord;
+import gps.log.in.WPLogConvert;
 
 import bt747.sys.Generic;
 
@@ -18,12 +21,15 @@ public class WPModel extends MtkModel {
      */
     protected boolean holuxPHLX = false;
 
+    private GpsModel context;
+
     /**
      * @param context
      * @param handler
      */
     public WPModel(GpsModel context, GpsLinkHandler handler) {
         super(context, handler);
+        this.context = context;
         // TODO Auto-generated constructor stub
     }
 
@@ -42,25 +48,34 @@ public class WPModel extends MtkModel {
         boolean result = false;
         if (response instanceof WPResponseModel) {
             try {
-            WPResponseModel r = (WPResponseModel) response;
-            byte[] rb = r.getResponseBuffer();
-            switch (expectedDataType) {
-            case MtkModel.DATA_MEM_USED:
-                setLogMemUsed((rb[0]&0xFF)+
-                        ((rb[1]&0xFF)<<8)+
-                        ((rb[2]&0xFF)<<16)+
-                        ((rb[3]&0xFF)<<24));
-                expectedDataType = -1;
-                result = true;
-                break;
-            default:
-                break;
-            }
+                WPResponseModel r = (WPResponseModel) response;
+                byte[] rb = r.getResponseBuffer();
+                switch (expectedDataType) {
+                case MtkModel.DATA_MEM_USED:
+                    setLogMemUsed((rb[0] & 0xFF) + ((rb[1] & 0xFF) << 8)
+                            + ((rb[2] & 0xFF) << 16) + ((rb[3] & 0xFF) << 24));
+                    expectedDataType = -1;
+                    result = true;
+                    break;
+                case WPController.DATA_DATE_TIME:
+                    int time = (rb[0] & 0xFF) + ((rb[1] & 0xFF) << 8)
+                            + ((rb[2] & 0xFF) << 16) + ((rb[3] & 0xFF) << 24);
+                    int utc = WPLogConvert.longToUtcTime(time);
+                    GPSRecord gps = context.getGpsRecord();
+                    gps.setUtc(utc);
+                    context.postGpsEvent(GpsEvent.GPRMC, gps);
+                    break;
+                case WPController.DATA_DEV_INFO1:
+                    // TODO: Analyse data
+                    break;    
+                default:
+                    break;
+                }
             } catch (Exception e) {
                 Generic.debug("In DPL700Model decode", e);
             }
         } else {
-            result= super.analyseResponse(response);
+            result = super.analyseResponse(response);
         }
         return result;
     }

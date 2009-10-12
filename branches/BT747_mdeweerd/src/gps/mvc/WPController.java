@@ -26,7 +26,7 @@ public class WPController extends MtkController implements
     public WPController(final GpsController c, final MtkModel m) {
         super(c, m);
         this.c = c;
-        this.m = (WPModel)m;
+        this.m = (WPModel) m;
     }
 
     /**
@@ -70,15 +70,15 @@ public class WPController extends MtkController implements
         case MtkController.CMD_SET_LOG_TIME_INTERVAL:
         case MtkController.CMD_SET_LOG_OVERWRITE:
             return false;
-        // case MtkController.CMD_SET_DEVICE_NAME:
-        // setHoluxName(param.getString());
-        // break;
-        // case CMD_SET_LOG_DISTANCE_INTERVAL:
-        // setLogDistanceInterval(param.getInt());
-        // break;
-        // case CMD_SET_LOG_TIME_INTERVAL:
-        // setLogTimeInterval(param.getInt());
-        // break;
+            // case MtkController.CMD_SET_DEVICE_NAME:
+            // setHoluxName(param.getString());
+            // break;
+            // case CMD_SET_LOG_DISTANCE_INTERVAL:
+            // setLogDistanceInterval(param.getInt());
+            // break;
+            // case CMD_SET_LOG_TIME_INTERVAL:
+            // setLogTimeInterval(param.getInt());
+            // break;
         default:
             return super.cmd(cmd, param);
         }
@@ -107,7 +107,7 @@ public class WPController extends MtkController implements
      * functionality will be gradually implemented for this device type.
      */
     public boolean reqData(final int dataType) {
-        if(logDownloadOngoing) {
+        if (logDownloadOngoing) {
             return false;
         }
         switch (dataType) {
@@ -128,27 +128,91 @@ public class WPController extends MtkController implements
         case MtkModel.DATA_MEM_USED:
             reqMemInUse();
             return true;
-        // case MtkModel.DATA_DEVICE_NAME:
-        // sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
-        // sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);
-        // break;
-        // case MtkModel.DATA_LOG_TIME_INTERVAL:
-        // case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
-        // sendCmd(HoluxConstants.PHLX_LOG_GET_CRITERIA_REQUEST);
-        // break;
+            // case MtkModel.DATA_DEVICE_NAME:
+            // sendCmd(HoluxConstants.PHLX_CMD_PREFIX);
+            // sendCmd(HoluxConstants.PHLX_NAME_GET_REQUEST);
+            // break;
+            // case MtkModel.DATA_LOG_TIME_INTERVAL:
+            // case MtkModel.DATA_LOG_DISTANCE_INTERVAL:
+            // sendCmd(HoluxConstants.PHLX_LOG_GET_CRITERIA_REQUEST);
+            // break;
         default:
             return super.reqData(dataType);
         }
 
-        
         // return true;
     }
-
-    public final void reqMemInUse() {
+    
+    // Not sure if 4 bytes or 16 bytes of data.
+    // 00 00 00 00 0A 0B FF FF FF FF FF FF FF FF FF FF
+    private final void reqMemInUse() {
         m.getHandler().sendCmd(new WPEnterModeCommand());
-        m.getHandler().sendCmd(new WPIntCommand(m,REQ_MEM_IN_USE, MtkModel.DATA_MEM_USED, 4));
+        m.getHandler()
+                .sendCmd(
+                        new WPIntCommand(m, REQ_MEM_IN_USE,
+                                MtkModel.DATA_MEM_USED, 4));
         m.getHandler().sendCmd(new WPExitModeCommand());
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
+    public final static int DATA_DATE_TIME = 1000;
+    public final static int DATA_DEV_INFO1 = 1001;
+
+    /**
+     * Request data from the log. Command 0x60b80000. Response: 16 bytes of
+     * representing date and time.
+     * 
+     * 0E 18 05 09 0A 0B FF FF FF FF FF FF FF FF FF FF
+     */
+    public final void reqWPDateTime() {
+        m.getHandler().sendCmd(new WPEnterModeCommand());
+        m.getHandler().sendCmd(
+                new WPIntCommand(m, REQ_DATE_TIME, DATA_DATE_TIME, 4));
+        m.getHandler().sendCmd(new WPExitModeCommand());
+    }
+
+    /**
+     * Do some selftest. Command 0x60b80000.
+     * 
+     */
+    public final void reqWPTest() {
+        m.getHandler().sendCmd(new WPEnterModeCommand());
+        m.getHandler().sendCmd(new WPIntCommand(m, REQ_SELFTEST, -1, 4));
+        m.getHandler().sendCmd(new WPExitModeCommand());
+    }
+
+    // public final void reqWPLogSize() {
+    // handler.sendCmd(new WPIntCommand(REQ_LOG_SIZE, 255));
+    // }
+
+    /**
+     * Erases log data. Command 0x61b60000. Response: WP Update Over
+     * 
+     */
+    public final void reqWPErase() {
+        m.getHandler().sendCmd(new WPEnterModeCommand());
+        m.getHandler().sendCmd(new WPIntCommand(m, REQ_ERASE, -1, 4));
+        m.getHandler().sendCmd(new WPExitModeCommand());
+    }
+
+    /**
+     * Get device information Command 0x5bb00000. Response: Byte 8-5: Serial
+     * number Byte 41-48: Device type [BT-CD100 = Nemerix] [BT-CD160=SIRFIII]
+     * 
+     */
+    public final void reqWPDeviceInfo() {
+        m.getHandler().sendCmd(new WPEnterModeCommand());
+        m.getHandler().sendCmd(new WPIntCommand(m, REQ_DEV_INFO1, DATA_DEV_INFO1, 255));
+        m.getHandler().sendCmd(new WPExitModeCommand());
+    }
+
+    /**
+     * Get device information Command 0x62B60000. Response: Byte 4-1: Time
+     * step Byte 8-5: Distance step Byte 9: Sensitivity: 2-high, 1-middle,
+     * 3-low, 0-disable Byte 25: Tag : 0-off, 1-on
+     */
+
+    // public final void getWPGetSettings() {
+    // handler.sendCmd(new WPIntCommand(REQ_DEV_PARAM, 255));
+    // }
 }

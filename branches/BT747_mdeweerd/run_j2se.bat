@@ -15,16 +15,22 @@ rem echo CLASSPATH = %CLASSPATH%
 
 SET  MEM_HEAP_OPTION=-Xmx192m
 
+REM Uncommenting the next line will enable some logging by RXTX to file 'asdf'.
+#set  DEBUG_OPTION=-Dgnu.io.log.mode=FILE_MODE
+#set CLASSPATH=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%
+
 REM Change javaw to java in next line to see startup and debug messages
 if x"%*"==x"debug" goto debug:
 if NOT x"%*"==x"" goto cmdline:
-START javaw %MEM_HEAP_OPTION% bt747.j2se_view.BT747Main %*
+START javaw %MEM_HEAP_OPTION% %DEBUG_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :cmdline
-java %MEM_HEAP_OPTION% bt747.j2se_view.BT747Main %*
+java %MEM_HEAP_OPTION% %DEBUG_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :debug
-java %MEM_HEAP_OPTION% -verbose bt747.j2se_view.BT747Main
+set DEBUG_OPTION=-Dgnu.io.log.mode=FILE_MODE
+set CLASSPATH=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%
+java %MEM_HEAP_OPTION% %DEBUG_OPTION% -verbose bt747.j2se_view.BT747Main
 pause
 :end
 endlocal

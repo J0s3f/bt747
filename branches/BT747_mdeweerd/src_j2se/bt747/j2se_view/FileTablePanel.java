@@ -88,7 +88,6 @@ public class FileTablePanel extends javax.swing.JPanel implements
                 + m.getIntOpt(AppSettings.TAG_MAXTIMEDIFFERENCE));
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(AppSettings.TAG_OVERRIDEPOSITIONS));
-        
         updateGuiData();
     }
 

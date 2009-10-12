@@ -11,8 +11,12 @@
 
 package bt747.j2se_view;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
@@ -54,7 +58,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
         m.addListener(this);
     }
-    
+
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.UPDATE_LOG_FILE_LIST:
@@ -72,9 +76,10 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
 
+        spFileTablePanel = new javax.swing.JScrollPane(fileTablePanel);
         jSplitPane1 = new javax.swing.JSplitPane();
-        jSplitPane1.setBottomComponent(fileTablePanel);
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jSplitPane1.setBottomComponent(spFileTablePanel);
+        spLogFile = new javax.swing.JScrollPane();
         tbLogFile = new javax.swing.JTable();
 
         jSplitPane1.setBorder(null);
@@ -84,11 +89,11 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
         tbLogFile.setModel(logFileModel);
         tbLogFile.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
-        jScrollPane1.setViewportView(tbLogFile);
+        spLogFile.setViewportView(tbLogFile);
 
-        jSplitPane1.setTopComponent(jScrollPane1);
+        jSplitPane1.setTopComponent(spLogFile);
 
-        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -106,8 +111,9 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JScrollPane spFileTablePanel;
+    private javax.swing.JScrollPane spLogFile;
     private javax.swing.JTable tbLogFile;
     // End of variables declaration//GEN-END:variables
 
