@@ -258,6 +258,7 @@ public class MtkController implements ProtectedDevControllerIF {
             break;
         case CMD_EPO_CLEAR:
             nmeaCmd = MtkController.PMTK + BT747Constants.PMTK_CMD_EPO_CLEAR;
+            m.setUnAvailable(MtkModel.DATA_AGPS_STORED_RANGE);
             reqData = MtkModel.DATA_AGPS_STORED_RANGE;
             break;
         default:
