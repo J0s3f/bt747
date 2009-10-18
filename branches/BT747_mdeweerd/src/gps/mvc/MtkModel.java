@@ -362,8 +362,9 @@ public class MtkModel implements EventPoster {
     protected final void setAvailable(final int dataType,
             final boolean isAvailable) {
         dataAvailable[dataType] = isAvailable;
-        if (!isAvailable)
+        if (!isAvailable) {
             return;
+        }
         switch (dataType) {
         case DATA_FLASH_TYPE:
 

@@ -15,7 +15,6 @@
 package bt747.j2se_view;
 
 import java.awt.Component;
-import java.util.Formatter;
 
 import net.sf.bt747.j2se.app.utils.Utils;
 
