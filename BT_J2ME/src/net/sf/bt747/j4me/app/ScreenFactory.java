@@ -24,7 +24,8 @@ public final class ScreenFactory {
     public static final int LOGCONDITIONSCONFIGSCREEN = 8;
     public static final int AGPSSCREEN = 9;
     public static final int CONNECTCONFIGSCREEN = 10;
-	public static final int POS_SRV_SCREEN = 11;
+    public static final int POS_SRV_SCREEN = 11;
+    public static final int AGPSSTATUSSCREEN = 12;
 
     public static final BT747Dialog getScreen(final int type) {
         switch (type) {
@@ -46,11 +47,13 @@ public final class ScreenFactory {
             return new LogConditionsConfigScreen();
         case AGPSSCREEN:
             return new AgpsScreen();
+        case AGPSSTATUSSCREEN:
+            return new AgpsStatusScreen();
         case CONNECTCONFIGSCREEN:
             return new ConnectConfig();
         default:
             Generic.debug("Invalid screen number " + type);
-        // TODO : select rather the message log.
+            // TODO : select rather the message log.
             return new LoggerStatusScreen();
         }
 
