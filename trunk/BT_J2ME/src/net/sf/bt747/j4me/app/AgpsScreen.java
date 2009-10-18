@@ -34,7 +34,8 @@ public final class AgpsScreen extends BT747Dialog {
 
             append(new Label("Enter the URL where the AGPS data is located:"
                     + "scheme://user:password@host:port/url-path;parameters"));
-
+            append(new Label(
+                    "If URL = default or less max 5 chars, the BT747 URL is used."));
             tbAgpsUrl = new TextBox();
             // tbAgpsUrl.setForAnyText();
             tbAgpsUrl.setLabel("URL");
@@ -54,7 +55,7 @@ public final class AgpsScreen extends BT747Dialog {
         Log.debug("AGPS Menu");
         setupScreen();
     }
-
+    
     private final void updateButtons() {
         tbAgpsUrl.setString(m().getStringOpt(AppSettings.AGPSURL));
         repaint();
@@ -70,7 +71,7 @@ public final class AgpsScreen extends BT747Dialog {
         String tmp = m().getStringOpt(AppSettings.AGPSURL);
         if (tmp.length() < 6 || tmp.equals(AppSettings.DUMMY_AGPS_STRING)) {
             // #ifdef nodefault
-//@            tmp = Version.AURL + "MTK7d.EPO";
+            // @ tmp = Version.AURL + "MTK7d.EPO";
             // #else
             // This URL is only for BT747!
             // #define agpsurlbase = 'ftp://tsi0013:wrqttr@210.68.183.169/'
@@ -129,7 +130,8 @@ public final class AgpsScreen extends BT747Dialog {
                             }
 
                             if (Log.isDebugEnabled()) {
-                                Log.debug("<User>" + user //+ "<Pass>" + pass
+                                Log.debug("<User>"
+                                        + user // + "<Pass>" + pass
                                         + "<Site>" + hostname + "<Dir>" + dir
                                         + "<name>" + name);
                             }
@@ -161,11 +163,11 @@ public final class AgpsScreen extends BT747Dialog {
                         byte[] buf = new byte[1024];
                         int i = 0;
                         while (true) {
-                            final int n = is.read(buf,0,1024);
+                            final int n = is.read(buf, 0, 1024);
                             if (n == -1) {
                                 break;
                             }
-                            os.write(buf,0,n);
+                            os.write(buf, 0, n);
                         }
                         is.close();
                         buf = null;

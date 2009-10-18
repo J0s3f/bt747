@@ -39,7 +39,7 @@ public class ConnectConfig extends BT747Dialog {
             case BT747Constants.PROTOCOL_MTK:
                 index = 0;
                 break;
-            case BT747Constants.PROTOCOL_DPL700:
+            case BT747Constants.PROTOCOL_WONDE_PROUD:
                 index = 2;
                 break;
             case BT747Constants.PROTOCOL_PHLX:
@@ -83,7 +83,7 @@ public class ConnectConfig extends BT747Dialog {
         case 2:
             c
                     .setIntOpt(Model.DEVICE_PROTOCOL,
-                            BT747Constants.PROTOCOL_DPL700);
+                            BT747Constants.PROTOCOL_WONDE_PROUD);
             break;
         }
         

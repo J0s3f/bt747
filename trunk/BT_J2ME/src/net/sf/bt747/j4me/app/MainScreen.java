@@ -208,6 +208,8 @@ public final class MainScreen extends Dialog implements ModelListener {
             Menu subMenu;
 
             subMenu = new Menu("AGPS", rootMenu);
+            subMenu.appendMenuOption("AGPS Status", new DelayedDialog(
+                    ScreenFactory.AGPSSTATUSSCREEN, c, this, this));
             subMenu.appendMenuOption("AGPS Upload", new DelayedDialog(
                     ScreenFactory.AGPSSCREEN, c, this, this));
             subMenu.appendMenuOption(new MenuItem() {
