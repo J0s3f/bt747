@@ -711,7 +711,13 @@ public class IBlue747Model {
                 case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
                     break;
                 case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
-                    response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+                    StringBuffer nmeaOutResp = new StringBuffer();
+                    nmeaOutResp.append("PMTK514");
+                    for (int i = 0; i < mtkData.nmeaPeriods.length; i++) {
+                        nmeaOutResp.append(',');
+                        nmeaOutResp.append(mtkData.nmeaPeriods[i]);
+                    }
+                    response = nmeaOutResp.toString();
                     break;
                 case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
                 case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
@@ -723,20 +729,10 @@ public class IBlue747Model {
                 // case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
                 // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
                 // case BT747_dev.PMTK_DT_SBAS: // CMD 513
-                case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
-                    StringBuffer nmeaOutResp = new StringBuffer();
-                    nmeaOutResp.append("PMTK514");
-                    for (int i = 0; i < mtkData.nmeaPeriods.length; i++) {
-                        nmeaOutResp.append(',');
-                        nmeaOutResp.append(mtkData.nmeaPeriods[i]);
-                    }
-                    response = nmeaOutResp.toString();
-                    break;
+                //case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
                 // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
                 // case BT747_dev.PMTK_DT_DATUM: // CMD 530
-                case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
-                    response = "PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,115200";
-                    break;
+                //case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
                 // break;
                 case BT747Constants.PMTK_Q_RELEASE: // CMD 605
                     // m_sendPacket("PMTK" +
