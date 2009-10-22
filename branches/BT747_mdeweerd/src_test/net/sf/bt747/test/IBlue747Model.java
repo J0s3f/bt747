@@ -217,10 +217,15 @@ public class IBlue747Model {
                 pauseTime -= timepassed;
                 if (pauseTime < 0) {
                     pauseTime = 0;
+                    updatePeriods(mtkData);
                     if (sendPosition
                             && (mtkData.deviceMode == DeviceMode.DEVICE_MODE_NMEA)) {
-                        sendPacketWithChecksum(GPSNMEAFile.toGGA(r));
-                        sendPacketWithChecksum(GPSNMEAFile.toRMC(r));
+                        if (mtkData.currentPeriods[BT747Constants.NMEA_SEN_GGA_IDX] == 1) {
+                            sendPacketWithChecksum(GPSNMEAFile.toGGA(r));
+                        }
+                        if (mtkData.currentPeriods[BT747Constants.NMEA_SEN_RMC_IDX] == 1) {
+                            sendPacketWithChecksum(GPSNMEAFile.toRMC(r));
+                        }
                     }
                 }
 
@@ -342,6 +347,38 @@ public class IBlue747Model {
         public int recMethod = 2; // (2) Stop or (1) overwrite
 
         public int fixPeriod = 200;
+
+        public int[] nmeaPeriods = new int[19];
+        public int[] currentPeriods = new int[19];
+    }
+
+    private static void initNmeaPeriod(MtkDataModel md) {
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GLL_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_RMC_IDX] = 1;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_VTG_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GGA_IDX] = 1;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GSA_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GSV_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GRS_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_GST_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_TYPE8_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_TYPE9_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_TYPE10_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_TYPE11_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_TYPE12_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_MALM_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_MEPH_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_MDGP_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_MDBG_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_ZDA_IDX] = 0;
+        md.nmeaPeriods[BT747Constants.NMEA_SEN_MCHN_IDX] = 0;
+    }
+
+    private static final void updatePeriods(MtkDataModel md) {
+        for (int i = 0; i < md.nmeaPeriods.length; i++) {
+            md.currentPeriods[i] += 1;
+            md.currentPeriods[i] %= (md.nmeaPeriods[i] + 1);
+        }
     }
 
     public final MtkDataModel mtkData = new MtkDataModel();
@@ -644,7 +681,23 @@ public class IBlue747Model {
                     break;
                 case BT747Constants.PMTK_API_SET_DGPS_MODE: // CMD 301
                 case BT747Constants.PMTK_API_SET_SBAS: // CMD 313
+                    break;
                 case BT747Constants.PMTK_API_SET_NMEA_OUTPUT: // CMD 314
+                    z_Result = 0;
+                    try {
+                        if (Integer.valueOf(p_nmea[1]) == -1) {
+                            initNmeaPeriod(mtkData);
+                        } else {
+                            for (int i = 1; i < p_nmea.length; i++) {
+                                // TODO: check if value in range.
+                                mtkData.nmeaPeriods[i - 1] = Integer
+                                        .valueOf(p_nmea[i]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Generic.debug("Problem with " + p_nmea[0], e);
+                    }
+                    break;
                 case BT747Constants.PMTK_API_SET_PWR_SAV_MODE: // CMD 320
                 case BT747Constants.PMTK_API_SET_DATUM: // CMD 330
                 case BT747Constants.PMTK_API_SET_DATUM_ADVANCE: // CMD 331
@@ -671,7 +724,13 @@ public class IBlue747Model {
                 // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
                 // case BT747_dev.PMTK_DT_SBAS: // CMD 513
                 case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
-                    response = "PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+                    StringBuffer nmeaOutResp = new StringBuffer();
+                    nmeaOutResp.append("PMTK514");
+                    for (int i = 0; i < mtkData.nmeaPeriods.length; i++) {
+                        nmeaOutResp.append(',');
+                        nmeaOutResp.append(mtkData.nmeaPeriods[i]);
+                    }
+                    response = nmeaOutResp.toString();
                     break;
                 // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
                 // case BT747_dev.PMTK_DT_DATUM: // CMD 530
@@ -791,6 +850,7 @@ public class IBlue747Model {
         mtkData.modelNumber = "0011";
         mtkData.modelRef = "";
         mtkData.swVersion = "";
+        initNmeaPeriod(mtkData);
 
         /* Specific values */
         switch (modelType) {//
