@@ -127,6 +127,10 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      */
     public static final int OSM_UPLOAD_LOGTYPE = 15;
 
+    /**
+     * Call upon an external tool.
+     */
+    public static final int EXTERNAL_LOGTYPE = 16;
     
     /**
      * The number of seconds in a day.
