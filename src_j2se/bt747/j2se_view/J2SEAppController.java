@@ -323,6 +323,26 @@ public final class J2SEAppController extends J2SEController {
                 }
             }
             break;
+        case Model.EXTERNAL_LOGTYPE:
+            OsmUploadDialog extDialog = new OsmUploadDialog(this, rootFrame, true);
+//            OsmUploadDialog osmDialog = new OsmUploadDialog(this, rootFrame, true);
+//            osmDialog.setVisible(true);
+            if (extDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
+//                if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
+//                        || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
+//                    reportError(-1, getString("OSM_LOGIN_AND_PASS_SET"));
+//                    return;
+//                }
+//                GPSOSMUploadFile gpsFile = new GPSOSMUploadFile();
+//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_VISIBILITY, osmDialog.getVisibility());
+//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS, osmDialog.getTags());
+//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION, osmDialog.getDescription());
+//                if (doConvertLog(Model.OSM_LOGTYPE, gpsFile,
+//                        ".gpx") != 0) {
+//                    reportError(c.getLastError(), c.getLastErrorInfo());
+//                }
+            }
+            break;
         default:
             if (doConvertLog(logType) != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());

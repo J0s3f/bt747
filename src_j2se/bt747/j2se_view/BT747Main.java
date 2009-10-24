@@ -433,6 +433,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
     public void exitApplication() {
         c.saveSettings();
+        c.closeGPS();
         java.awt.EventQueue.invokeLater(new Runnable() {
             /*
              * (non-Javadoc)
