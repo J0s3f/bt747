@@ -19,13 +19,12 @@ import gps.log.out.GPSGPXFile;
 
 import java.io.File;
 
-import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
- * Class to write a KML file.
+ * Class to upload to OSM.
  * 
  * @author Mario De Weerd
  * 

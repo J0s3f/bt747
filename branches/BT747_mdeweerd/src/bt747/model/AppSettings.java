@@ -353,6 +353,16 @@ public class AppSettings implements BT747Thread {
      */
     public static final int GPSTIMEOFFSETQUARTERS = 68;
 
+    /**
+     * External command
+     */
+    public final static int EXTCOMMAND = 69;
+
+    /**
+     * External intermediate format type.
+     */
+    public final static int EXTTYPE = 70;
+
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
     private final static int START_IDX = 2;
@@ -597,7 +607,11 @@ public class AppSettings implements BT747Thread {
         case 46:
             setIntOpt(GPSTIMEOFFSETQUARTERS,
                     48 + getIntOpt(GPSTIMEOFFSETHOURS_OBSOLETE) * 4);
-            setStringOpt(AppSettings.VERSION, "0.47");
+            /* fall through */
+        case 47:
+            setIntOpt(EXTTYPE, Model.GPX_LOGTYPE);
+            setStringOpt(EXTCOMMAND, "echo Sample command for %f");
+            setStringOpt(AppSettings.VERSION, "0.48");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1789,8 +1803,14 @@ public class AppSettings implements BT747Thread {
     private static final int GPSTIMEOFFSETQUARTERS_IDX = AppSettings.POS_SRV_PERIOD_IDX
             + AppSettings.POS_SRV_PERIOD_SIZE;
     private static final int GPSTIMEOFFSETQUARTERS_SIZE = 4;
-    private static final int C_NEXT_IDX = AppSettings.GPSTIMEOFFSETQUARTERS_IDX
+    private static final int EXTCOMMAND_IDX = AppSettings.GPSTIMEOFFSETQUARTERS_IDX
             + AppSettings.GPSTIMEOFFSETQUARTERS_SIZE;
+    private static final int EXTCOMMAND_SIZE = 256;
+    private static final int EXTTYPE_IDX = AppSettings.EXTCOMMAND_IDX
+            + AppSettings.EXTCOMMAND_SIZE;
+    private static final int EXTTYPE_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.EXTTYPE_IDX
+            + AppSettings.EXTTYPE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1991,6 +2011,10 @@ public class AppSettings implements BT747Thread {
             { AppSettings.INT, AppSettings.GPSTIMEOFFSETQUARTERS,
                     AppSettings.GPSTIMEOFFSETQUARTERS_IDX,
                     AppSettings.GPSTIMEOFFSETQUARTERS_SIZE },
+            { AppSettings.STRING, AppSettings.EXTCOMMAND,
+                    AppSettings.EXTCOMMAND_IDX, AppSettings.EXTCOMMAND_SIZE },
+            { AppSettings.INT, AppSettings.EXTTYPE, AppSettings.EXTTYPE_IDX,
+                    AppSettings.EXTTYPE_SIZE },
     // End of list
     };
 

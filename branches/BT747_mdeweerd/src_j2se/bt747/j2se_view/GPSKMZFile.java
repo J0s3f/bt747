@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+import gps.log.out.GPSFileInterface;
 import gps.log.out.GPSKMLFile;
 
 import java.io.BufferedOutputStream;
@@ -33,7 +34,7 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  * 
  */
-public final class GPSKMZFile extends GPSKMLFile {
+public final class GPSKMZFile extends GPSKMLFile implements GPSFileInterface {
     private ZipOutputStream currentZipStream;
 
     private J2SEHashtable zips;

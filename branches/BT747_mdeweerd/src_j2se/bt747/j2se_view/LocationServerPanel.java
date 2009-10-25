@@ -140,7 +140,7 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         lbHostname.setText(bundle.getString("LocServerPanel.lbHostname.text")); // NOI18N
         lbHostname.setToolTipText(bundle.getString("LocServerPanel.lbHostname.toolTipText")); // NOI18N
 
-        tfHostname.setText(bundle.getString("LocServerPanel.tfHostname.text")); // NOI18N
+        tfHostname.setText(bundle.getString("LocationServerPanel.tfHostname.text")); // NOI18N
         tfHostname.setMinimumSize(new java.awt.Dimension(200, 20));
         tfHostname.setPreferredSize(new java.awt.Dimension(200, 20));
         tfHostname.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -153,7 +153,6 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         lbPort.setText(bundle.getString("LocServerPanel.lbPort.text")); // NOI18N
         lbPort.setToolTipText(bundle.getString("LocServerPanel.lbPort.toolTipText")); // NOI18N
 
-        tfPort.setText(bundle.getString("LocServerPanel.tfPort.text")); // NOI18N
         tfPort.setInputVerifier(J2SEAppController.IntVerifier);
         tfPort.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -165,14 +164,14 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         lbFile.setText(bundle.getString("LocServerPanel.lbFile.text")); // NOI18N
         lbFile.setToolTipText(bundle.getString("LocServerPanel.lbFile.toolTipText")); // NOI18N
 
-        tfFile.setText(bundle.getString("LocServerPanel.tfFile.text")); // NOI18N
+        tfFile.setText(bundle.getString("LocationServerPanel.tfFile.text")); // NOI18N
         tfFile.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfFileFocusLost(evt);
             }
         });
 
-        tfPeriod.setText(bundle.getString("LocServerPanel.tfPeriod.text")); // NOI18N
+        tfPeriod.setText(bundle.getString("LocationServerPanel.tfPeriod.text")); // NOI18N
         tfPeriod.setInputVerifier(J2SEAppController.IntVerifier);
         tfPeriod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,7 +188,7 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         lbPeriod.setText(bundle.getString("LocServerPanel.lbPeriod.text")); // NOI18N
         lbPeriod.setToolTipText(bundle.getString("LocServerPanel.lbPeriod.toolTipText")); // NOI18N
 
-        tfUsername.setText(bundle.getString("LocServerPanel.tfUsername.text")); // NOI18N
+        tfUsername.setText(bundle.getString("LocationServerPanel.tfUsername.text")); // NOI18N
         tfUsername.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfUsernameFocusLost(evt);
@@ -200,7 +199,7 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         lbUsername.setText(bundle.getString("LocServerPanel.lbUsername.text")); // NOI18N
         lbUsername.setToolTipText(bundle.getString("LocServerPanel.lbUsername.toolTipText")); // NOI18N
 
-        tfPassword.setText(bundle.getString("LocServerPanel.tfPassword.text")); // NOI18N
+        tfPassword.setText(bundle.getString("LocationServerPanel.tfPassword.text")); // NOI18N
         tfPassword.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfPasswordFocusLost(evt);

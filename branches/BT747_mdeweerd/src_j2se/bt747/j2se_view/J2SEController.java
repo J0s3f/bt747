@@ -79,7 +79,7 @@ public class J2SEController extends Controller {
         // );
         //
         // http://www.java-tips.org/java.net/how-to-detect-proxy-settings-for-internet-connection.html
-        
+
         // Currently usingn the simple hint:
         System.setProperty("java.net.useSystemProxies", "true");
     }
@@ -191,6 +191,9 @@ public class J2SEController extends Controller {
         img.writeImage(orgPath, newPath, 0);
     }
 
+    /** Add a log file with GPS data to the list of files.
+     * @param f
+     */
     public final static void addLogFile(final File f) {
         try {
             addLogFile(f.getCanonicalPath(), 0);
@@ -199,12 +202,20 @@ public class J2SEController extends Controller {
         }
     }
 
+    /**
+     * Get the AGPS data from the default Url and upload to the device.
+     */
     public final void downloadAndUploadAgpsData() {
         final String urlTxt = Version.AURL + "MTK7d.EPO";
         bt747.sys.Generic.debug("Getting MTK7d.EPO data.");
         downloadAndUploadAgpsData(urlTxt);
     }
 
+    /**
+     * Get AGPS data from the given URL and upload to the device.
+     * 
+     * @param url
+     */
     public final void downloadAndUploadAgpsData(final String url) {
         final String urlTxt = url;
         final Thread t = new Thread(new Runnable() {

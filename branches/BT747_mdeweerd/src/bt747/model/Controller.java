@@ -25,6 +25,7 @@ import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.TracksAndWayPoints;
+import gps.log.in.GPSFileConverterInterface;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.MultiLogConvert;
@@ -34,6 +35,8 @@ import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSCompoGPSTrkFile;
 import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
+import gps.log.out.GPSFileConfInterface;
+import gps.log.out.GPSFileInterface;
 import gps.log.out.GPSGPXFile;
 import gps.log.out.GPSGmapsHTMLEncodedFile;
 import gps.log.out.GPSKMLFile;
@@ -308,7 +311,7 @@ public class Controller implements ModelListener {
         CommonOut.getWayPointStyles().add(style);
     }
 
-    private GPSFile getOutFileHandler(final int logType) {
+    public final GPSFile getOutFileHandler(final int logType) {
         GPSFile gpsFile = null;
         switch (logType) {
         case Model.CSV_LOGTYPE:
@@ -343,7 +346,7 @@ public class Controller implements ModelListener {
         return gpsFile;
     }
 
-    private void configureGpsFile(final GPSFile gpsFile) {
+    private void configureGpsFile(final GPSFileConfInterface gpsFile) {
         if (gpsFile != null) {
             if (!(((gpsFile.getClass() == GPSGPXFile.class) && m
                     .getBooleanOpt(AppSettings.GPXUTC0)) || ((gpsFile
@@ -424,7 +427,7 @@ public class Controller implements ModelListener {
         }
     }
 
-    private String getOutFileExt(final int logType) {
+    public String getOutFileExt(final int logType) {
         String ext; // For debug
         switch (logType) {
         case Model.CSV_LOGTYPE:
@@ -578,7 +581,7 @@ public class Controller implements ModelListener {
         return userWayPoints;
     }
 
-    public final int doConvertLog(final int logType, final GPSFile gpsFile,
+    public final int doConvertLog(final int logType, final GPSFileInterface gpsFile,
             final String ext) {
         int result;
         final String parameters = ""; // For debug

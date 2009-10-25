@@ -19,6 +19,7 @@ import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.out.AllWayPointStyles;
 import gps.log.out.GPSConversionParameters;
+import gps.log.out.GPSFile;
 import gps.mvc.MtkController;
 
 import java.awt.Component;
@@ -324,23 +325,29 @@ public final class J2SEAppController extends J2SEController {
             }
             break;
         case Model.EXTERNAL_LOGTYPE:
-            OsmUploadDialog extDialog = new OsmUploadDialog(this, rootFrame, true);
-//            OsmUploadDialog osmDialog = new OsmUploadDialog(this, rootFrame, true);
-//            osmDialog.setVisible(true);
+            ExternalConversionDialog extDialog = new ExternalConversionDialog(
+                    rootFrame, true);
+            extDialog.setExternalProgram(m.getStringOpt(AppSettings.EXTCOMMAND));
+            extDialog.setIntermediateFormatType(m.getIntOpt(AppSettings.EXTTYPE));
+            extDialog.setVisible(true);
             if (extDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
-//                if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
-//                        || m.getStringOpt(AppSettings.OSMPASS).length() == 0) {
-//                    reportError(-1, getString("OSM_LOGIN_AND_PASS_SET"));
-//                    return;
-//                }
-//                GPSOSMUploadFile gpsFile = new GPSOSMUploadFile();
-//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_VISIBILITY, osmDialog.getVisibility());
-//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS, osmDialog.getTags());
-//                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION, osmDialog.getDescription());
-//                if (doConvertLog(Model.OSM_LOGTYPE, gpsFile,
-//                        ".gpx") != 0) {
-//                    reportError(c.getLastError(), c.getLastErrorInfo());
-//                }
+                int intermediateLogType = extDialog.getIntermediateFormatType();
+                String command = extDialog.getExternalProgram();
+                c.setStringOpt(AppSettings.EXTCOMMAND, command);
+                c.setIntOpt(AppSettings.EXTTYPE, intermediateLogType);
+
+                final GPSFile tmpFile = getOutFileHandler(intermediateLogType);
+
+                ExternalToolConvert gpsFile = new ExternalToolConvert(tmpFile);
+                gpsFile.getParamObject().setParam(GPSConversionParameters.EXT_COMMAND, command);
+                // osmDialog.getVisibility());
+                // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS,
+                // osmDialog.getTags());
+                // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION,
+                // osmDialog.getDescription());
+                if (doConvertLog(intermediateLogType, gpsFile, getOutFileExt(intermediateLogType)) != 0) {
+                    reportError(c.getLastError(), c.getLastErrorInfo());
+                }
             }
             break;
         default:

@@ -64,48 +64,44 @@ public class MapConfigurationDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText("OK");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        okButton.setText(bundle.getString("MapConfigurationDialog.okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(bundle.getString("MapConfigurationDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        pnTileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Tile Url Setings"));
+        pnTileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("MapConfigurationDialog.pnTileSettings.border.title"))); // NOI18N
 
-        lbShortName.setText("Short name:");
+        lbShortName.setText(bundle.getString("MapConfigurationDialog.lbShortName.text")); // NOI18N
 
-        txtShortName.setText(null);
+        txtShortName.setMinimumSize(new java.awt.Dimension(50, 20));
 
-        txtMinimumZoomLevel.setText(null);
         txtMinimumZoomLevel.setInputVerifier(J2SEAppController.IntVerifier);
 
-        lbMinZoomLevel.setText("Minimum Zoom Level:");
+        lbMinZoomLevel.setText(bundle.getString("MapConfigurationDialog.lbMinZoomLevel.text")); // NOI18N
 
-        lbXRightToLeft.setText("x Right To Left:");
+        lbXRightToLeft.setText(bundle.getString("MapConfigurationDialog.lbXRightToLeft.text")); // NOI18N
 
-        txtTotalMapZoom.setText(null);
         txtTotalMapZoom.setInputVerifier(J2SEAppController.IntVerifier);
 
-        lbTotalMapZoom.setText("Total Map Zoom:");
+        lbTotalMapZoom.setText(bundle.getString("MapConfigurationDialog.lbTotalMapZoom.text")); // NOI18N
 
-        lbYTopToBottom.setText("y Top to Bottom:");
+        lbYTopToBottom.setText(bundle.getString("MapConfigurationDialog.lbYTopToBottom.text")); // NOI18N
 
-        txtMaxZoomLevel.setText(null);
         txtMaxZoomLevel.setInputVerifier(J2SEAppController.IntVerifier);
 
-        lbMaxZoomLevel.setText("Maximum Zoom Level:");
+        lbMaxZoomLevel.setText(bundle.getString("MapConfigurationDialog.lbMaxZoomLevel.text")); // NOI18N
 
-        txtUrl.setText(null);
-
-        lbUrl.setText("Url:");
+        lbUrl.setText(bundle.getString("MapConfigurationDialog.lbUrl.text")); // NOI18N
 
         cbXRightToLeft.setText(null);
 
@@ -127,13 +123,14 @@ public class MapConfigurationDialog extends javax.swing.JDialog {
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, lbShortName))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnTileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(txtShortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(txtMinimumZoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(txtMaxZoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(txtTotalMapZoom, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(cbXRightToLeft)
                     .add(cbYTopToBottom)
-                    .add(txtUrl, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
+                    .add(txtUrl, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                    .add(pnTileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, txtTotalMapZoom)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, txtMinimumZoomLevel)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, txtShortName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, txtMaxZoomLevel)))
                 .addContainerGap())
         );
         pnTileSettingsLayout.setVerticalGroup(

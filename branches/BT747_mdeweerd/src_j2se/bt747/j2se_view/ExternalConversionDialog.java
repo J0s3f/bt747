@@ -11,20 +11,36 @@
 
 package bt747.j2se_view;
 
+import javax.swing.DefaultComboBoxModel;
+
+import bt747.model.Model;
+
 /**
  *
  * @author Mario
  */
 public class ExternalConversionDialog extends javax.swing.JDialog {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5659887530905870305L;
     /** A return status code - returned if Cancel button has been pressed */
     public static final int RET_CANCEL = 0;
     /** A return status code - returned if OK button has been pressed */
     public static final int RET_OK = 1;
 
+    
     /** Creates new form ExternalConversionDialog */
     public ExternalConversionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+        cbIntermediateFormat.setModel(new DefaultComboBoxModel(intermediateFormatStrings));
+    }
+
+    private final static String getString(final String s) {
+        return J2SEAppController.getString(s);
+
     }
 
     /** @return the return status of this dialog - one of RET_OK or RET_CANCEL */
@@ -32,6 +48,49 @@ public class ExternalConversionDialog extends javax.swing.JDialog {
         return returnStatus;
     }
 
+    /**
+     * Allowed values for combobox selection.
+     */
+    private int[] intermediateFormats = { Model.GPX_LOGTYPE,
+            Model.NMEA_LOGTYPE, Model.KML_LOGTYPE, Model.KMZ_LOGTYPE,
+            Model.CSV_LOGTYPE };
+    /**
+     * Allowed values for combobox selection.
+     */
+    private String[] intermediateFormatStrings = {
+            getString("GPX_Description"), getString("NMEA_Description"),
+            getString("KML_Description"), getString("KMZ_Description"),
+            getString("CSV_Description") };
+
+    /**
+     * 
+     */
+    public final void setExternalProgram(final String extProgramCall) {
+        txtExtProgramCall.setText(extProgramCall);
+    }
+
+    public final String getExternalProgram() {
+        return txtExtProgramCall.getText();
+    }
+    
+    
+    /**
+     * The format can be {@link Model.GPX_LOGTYPE}, {@link Model.NMEA_LOGTYPE}
+     * , {@link Model.KML_LOGTYPE}, {@link Model.KMZ_LOGTYPE, {
+     * @link Model.CSV_LOGTYPE}
+     */
+    public final void setIntermediateFormatType(final int fmt) {
+        for(int i=0; i<intermediateFormats.length;i++) {
+            if(fmt==intermediateFormats[i]) {
+                cbIntermediateFormat.setSelectedIndex(i);
+            }
+        }
+    }
+    
+    public final int getIntermediateFormatType() {
+        return intermediateFormats[cbIntermediateFormat.getSelectedIndex()];
+    }
+       
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -54,29 +113,26 @@ public class ExternalConversionDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText("OK");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        okButton.setText(bundle.getString("ExternalConversionDialog.okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(bundle.getString("ExternalConversionDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        pnExternalToolSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("External Tool Settings"));
+        pnExternalToolSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ExternalConversionDialog.pnExternalToolSettings.border.title"))); // NOI18N
 
-        lbExtProgram.setText("External program call:");
+        lbExtProgram.setText(bundle.getString("ExternalConversionDialog.lbExtProgram.text")); // NOI18N
 
-        lbIntermediateLogFormat.setText("Intermediate log format:");
-
-        cbIntermediateFormat.setModel(null);
-
-        txtExtProgramCall.setText(null);
+        lbIntermediateLogFormat.setText(bundle.getString("ExternalConversionDialog.lbIntermediateLogFormat.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnExternalToolSettingsLayout = new org.jdesktop.layout.GroupLayout(pnExternalToolSettings);
         pnExternalToolSettings.setLayout(pnExternalToolSettingsLayout);

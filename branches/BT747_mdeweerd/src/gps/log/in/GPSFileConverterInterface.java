@@ -3,6 +3,8 @@
  */
 package gps.log.in;
 
+import bt747.sys.interfaces.BT747HashSet;
+
 import gps.log.GPSRecord;
 
 /**
@@ -21,7 +23,9 @@ public interface GPSFileConverterInterface {
 
     public boolean nextPass();
 
-    public int getFilesCreated();
+    public int getNbrFilesCreated();
+    
+    public BT747HashSet getFilesCreated();
 
     public void finaliseFile();
 }

@@ -73,6 +73,11 @@ public final class GPSConversionParameters {
     public final static String OSM_TAGS = "osm-tags";
 
     /**
+     * Command for external tool 
+     */
+    public final static String EXT_COMMAND = "ext-cmd";
+    
+    /**
      * Indicates if a new track is needed when the logger is switched on.
      */
     public final static String NEW_TRACK_WHEN_LOG_ON = "log-on-trk";

@@ -535,7 +535,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         && gpsFile.nextPass());
             }
             gpsFile.finaliseFile();
-            if (gpsFile.getFilesCreated() == 0) {
+            if (gpsFile.getNbrFilesCreated() == 0) {
                 error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
             }
             try {

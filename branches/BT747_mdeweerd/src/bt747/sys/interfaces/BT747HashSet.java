@@ -16,4 +16,6 @@ public interface BT747HashSet {
     public boolean hasNext();
 
     public Object next();
+    
+    public int count();
 }

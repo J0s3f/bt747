@@ -19,12 +19,12 @@ import gps.Txt;
 import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
-import gps.log.in.GPSFileConverterInterface;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -40,8 +40,7 @@ import bt747.sys.interfaces.BT747Time;
  *         classes currently deriving from this class would be Builders. This
  *         will be given some thought. It is not urgent to make the change.
  */
-public abstract class GPSFile implements GPSFileConverterInterface {
-
+public abstract class GPSFile implements GPSFileInterface {
     /**
      * The track filters used.
      */
@@ -178,6 +177,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     private boolean calcDistance = false;
     private int splitDistance = 0;
     protected double distanceWithPrevious;
+    
+    private final BT747HashSet filenames = JavaLibBridge
+    .getHashSetInstance();
+
 
     /**
      * This function has to be called at some time to initialize the file
@@ -241,22 +244,15 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         initPass();
     };
 
-    /**
-     * Set the track separation time.
-     * 
-     * @param time
-     *            Seconds of unavailable positions require before deciding to
-     *            hava a new track.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setTrackSepTime(int)
      */
     public final void setTrackSepTime(final int time) {
         trackSepTime = time;
     }
 
-    /**
-     * Called to set the fields that are active in the current input. This is
-     * set by the internal algorithm that analyses the input file.
-     * 
-     * @param activeFileFieldsFormat
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setActiveFileFields(gps.log.GPSRecord)
      */
     public final void setActiveFileFields(
             final GPSRecord activeFileFieldsFormat) {
@@ -277,13 +273,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         }
     }
 
-    /**
-     * Set the fields that should be written to the output. This can be a
-     * superset of the active file fields, but only the fields that are both
-     * active and selected for output will be available in the output files.
-     * This is to be configured from the application.
-     * 
-     * @param selectedOutputFields
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setOutputFields(gps.log.GPSRecord)
      */
     public final void setOutputFields(final GPSRecord selectedOutputFields) {
         mySelectedFileFields = selectedOutputFields;
@@ -304,22 +295,15 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         updateFields();
     };
 
-    /**
-     * Set the track point and way point filters. To be called from the
-     * application.
-     * 
-     * @param ourFilters
-     *            Track point and way point filters.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setFilters(gps.log.GPSFilter[])
      */
     public final void setFilters(final GPSFilter[] ourFilters) {
         ptFilters = ourFilters;
     };
 
-    /**
-     * Indicate whether Imperial units (miles, knots, mph) should be used.
-     * 
-     * @param useImperial
-     *            when true, use imperial units.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setImperial(boolean)
      */
     public final void setImperial(final boolean useImperial) {
         imperial = useImperial;
@@ -361,10 +345,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     private GPSRecord[] userWayPointList;
 
-    /**
-     * Entry must be an ordered list (UTC time).
-     * 
-     * @param list
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setUserWayPointList(gps.log.GPSRecord[])
      */
     public void setUserWayPointList(final GPSRecord[] list) {
         userWayPointList = list;
@@ -387,6 +369,9 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     private int waypointTimeCorrection = 0;
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setWayPointTimeCorrection(int)
+     */
     public void setWayPointTimeCorrection(final int seconds) {
         waypointTimeCorrection = seconds;
     }
@@ -833,6 +818,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             outFile = null;
         } else {
             currentFileName = fileName;
+            filenames.add(currentFileName);
         }
         return error;
     }
@@ -896,9 +882,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return badTrackColor;
     }
 
-    /**
-     * @param badTrackColor
-     *            The badTrackColor to set.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setBadTrackColor(java.lang.String)
      */
     public final void setBadTrackColor(final String badTrackColor) {
         this.badTrackColor = badTrackColor;
@@ -912,9 +897,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return goodTrackColor;
     }
 
-    /**
-     * @param goodTrackColor
-     *            The goodTrackColor to set.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setGoodTrackColor(java.lang.String)
      */
     public final void setGoodTrackColor(final String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
@@ -930,9 +914,17 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     /**
      * @return Returns the filesCreated.
      */
-    public final int getFilesCreated() {
-        return filesCreated;
+    public final int getNbrFilesCreated() {
+        return filenames.count();
     }
+
+    /**
+     * @return Returns the filesCreated.
+     */
+    public final BT747HashSet getFilesCreated() {
+        return filenames;
+    }
+
 
     /**
      * @return Returns the recordNbrInLogs.
@@ -941,9 +933,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return recordNbrInLogs;
     }
 
-    /**
-     * @param recordNbrInLogs
-     *            The recordNbrInLogs to set.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setRecordNbrInLogs(boolean)
      */
     public final void setRecordNbrInLogs(final boolean recordNbrInLogs) {
         this.recordNbrInLogs = recordNbrInLogs;
@@ -955,6 +946,9 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return addLogConditionInfo;
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setAddLogConditionInfo(boolean)
+     */
     public final void setAddLogConditionInfo(final boolean addLogConditionInfo) {
         this.addLogConditionInfo = addLogConditionInfo;
     }
@@ -967,27 +961,33 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     protected boolean isTrkComment = true;
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setIncludeTrkComment(boolean)
+     */
     public final void setIncludeTrkComment(final boolean isTrkComment) {
         this.isTrkComment = isTrkComment;
     }
 
     protected boolean isIncludeTrkName = true;
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setIncludeTrkName(boolean)
+     */
     public final void setIncludeTrkName(final boolean isIncludeTrkName) {
         this.isIncludeTrkName = isIncludeTrkName;
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setFilenameBuilder(bt747.sys.interfaces.BT747FileName)
+     */
     public final void setFilenameBuilder(final BT747FileName filenameBuilder) {
         this.filenameBuilder = filenameBuilder;
     }
 
     protected int timeOffsetSeconds = 0;
 
-    /**
-     * The time offset to apply to the output records in seconds.
-     * 
-     * @param offset
-     *            The time offset in seconds.
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setTimeOffset(int)
      */
     public final void setTimeOffset(final int offset) {
         timeOffsetSeconds = offset;
@@ -1000,9 +1000,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return maxDiff;
     }
 
-    /**
-     * @param maxDiff
-     *            the maxDiff to set
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setMaxDiff(int)
      */
     public final void setMaxDiff(final int maxDiff) {
         this.maxDiff = maxDiff;
@@ -1015,9 +1014,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return overridePreviousTag;
     }
 
-    /**
-     * @param overridePreviousTag
-     *            the overridePreviousTag to set
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setOverridePreviousTag(boolean)
      */
     public final void setOverridePreviousTag(final boolean overridePreviousTag) {
         this.overridePreviousTag = overridePreviousTag;
@@ -1032,6 +1030,9 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         return paramObject;
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFileConfInterface#setParamObject(gps.log.out.GPSConversionParameters)
+     */
     public final void setParamObject(final GPSConversionParameters paramObject) {
         this.paramObject = paramObject;
     }

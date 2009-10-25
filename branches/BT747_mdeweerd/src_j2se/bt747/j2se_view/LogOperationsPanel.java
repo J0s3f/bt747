@@ -69,7 +69,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     public LogOperationsPanel() {
         initComponents();
         lbBusySpinner.setVisible(false);
-        btOTHERFmt.setVisible(false);
+        //btOTHERFmt.setVisible(false);
     }
 
     public void init(final J2SEAppController pC) {
@@ -410,21 +410,18 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnFiles.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFiles.border.title"))); // NOI18N
 
-        tfWorkDirectory.setText(bundle.getString("BT747Main.tfWorkDirectory.text")); // NOI18N
         tfWorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfWorkDirectoryFocusLost(evt);
             }
         });
 
-        tfRawLogFilePath.setText(bundle.getString("BT747Main.tfRawLogFilePath.text")); // NOI18N
         tfRawLogFilePath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfRawLogFilePathFocusLost(evt);
             }
         });
 
-        tfOutputFileBaseName.setText(bundle.getString("BT747Main.tfOutputFileBaseName.text")); // NOI18N
         tfOutputFileBaseName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfOutputFileBaseNameFocusLost(evt);
@@ -647,7 +644,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 .add(lbMinutes))
         );
 
-        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "KMZ", "OziExplorer (.PLT)", "NMEA" }));
         cbFormat.setToolTipText(bundle.getString("BT747Main.cbFormat.toolTipText")); // NOI18N
         cbFormat.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1349,7 +1345,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 }//GEN-LAST:event_btGUIActionPerformed
 
     private void btOTHERFmtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOTHERFmtActionPerformed
-        //doLogConversion(Model.ARRAY_LOGTYPE);
+        doLogConversion(Model.EXTERNAL_LOGTYPE);
 }//GEN-LAST:event_btOTHERFmtActionPerformed
 
     private void btOSMUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOSMUpActionPerformed
