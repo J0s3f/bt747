@@ -14,6 +14,7 @@ import java.io.IOException;
 import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
 import bt747.Version;
+import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;

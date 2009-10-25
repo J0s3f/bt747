@@ -17,6 +17,7 @@ package bt747.sys;
 import bt747.model.EventPoster;
 import bt747.model.ModelEvent;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -37,7 +38,7 @@ public final class Generic {
     }
 
     private static EventPoster poster = null;
-    
+
     public static final void setPoster(final EventPoster poster) {
         Generic.poster = poster;
     }
@@ -45,7 +46,8 @@ public final class Generic {
     public static final void exception(final String s, final Throwable e) {
         debug(s, e);
         if (poster != null) {
-            poster.postEvent(new ModelEvent(ModelEvent.EXCEPTION,new BT747Exception(s, e)));
+            poster.postEvent(new ModelEvent(ModelEvent.EXCEPTION,
+                    new BT747Exception(s, e)));
         }
     }
 
@@ -127,5 +129,44 @@ public final class Generic {
      */
     public static final double pow(final double x, final double y) {
         return JavaLibBridge.pow(x, y);
+    }
+
+    /**
+     * Fill a tokens list like this (for instance):<br>
+     * <code>
+     *   tokens.put("p", baseDir);<br>
+     *   tokens.put("e", fileExt);<br>
+     *   tokens.put("f", fileBase);<br>
+     * </code> and <code>%p</code>, <code>%e</code>, <code>%f</code> will be
+     * replaced accordingly.
+     * 
+     * @param s
+     *            String witn '%c' tokens where %c will be replaced if 'c' in
+     *            the list of tokens.
+     * @param tokens
+     *            Hashtable with tokens.
+     * @return String with replaced values.
+     */
+    public static final String expandPercentTokens(final String s,
+            final BT747Hashtable tokens) {
+        String r = s;
+        int lastIndex = 0;
+        int percentIndex;
+        while ((percentIndex = r.indexOf('%', lastIndex)) >= 0) {
+            if (percentIndex + 1 < r.length()) {
+                final char type = r.charAt(percentIndex + 1);
+                final String replaceStr = (String) tokens.get(String
+                        .valueOf(type));
+                if (replaceStr == null) {
+                    lastIndex = percentIndex + 1;
+                } else {
+                    r = r.substring(0, percentIndex) + replaceStr
+                            + r.substring(percentIndex + 2);
+                }
+            } else {
+                lastIndex = percentIndex + 1;
+            }
+        }
+        return r;
     }
 }

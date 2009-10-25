@@ -5,12 +5,13 @@ package net.sf.bt747.j2se.app.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.bt747.j2se.app.utils.StreamConnector;
+import java.util.Vector;
 
 import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
  * @author Mario
@@ -18,72 +19,43 @@ import bt747.sys.Generic;
  */
 public final class ExternalTool {
 
-    private final String externalToolPath;
+    private final String externalToolCmd;
 
     /**
      * 
      */
-    public ExternalTool(final String toolPath) {
-        externalToolPath = toolPath;
+    public ExternalTool(final String toolCmdLine) {
+        externalToolCmd = toolCmdLine;
     }
 
     /**
-     * May need semaphore.
-     */
-    private void execTool(final String params) {
-//        try {
-//            final byte[] result = execExifTool(VERSION_OPTS);
-//            exifToolVersion = (new String(result)).trim();
-//            hasExifTool = true;
-//        } catch (IOException e) {
-//            Generic.debug("ExifTool", e);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        tested = true;
-    }
-
-    /**
-     * check if exiftool can be executed and set the available field
-     * accordingly.
+     * Execute tool and use tokens to replace arguments
      * 
-     * @throws IOException
      * @throws InterruptedException
-     */
-    private byte[] execTool(String[] args) throws IOException,
-            InterruptedException {
-        final ArrayList<String> argsList = new ArrayList<String>();
-
-        /* User arguments */
-        for (String s : args) {
-            argsList.add(s);
-        }
-
-        return execTool(argsList);
-    }
-
-    /**
-     * check if exiftool can be executed and set the available field
-     * accordingly.
-     * 
      * @throws IOException
-     * @throws InterruptedException
      */
-    public byte[] execTool(final List<String> args)
+    public final byte[] execTool(final BT747Hashtable tokens)
             throws IOException, InterruptedException {
-
-        /* Setup the command */
-        final ArrayList<String> exifCommand = new ArrayList<String>();
-
-        /* Exif tool path */
-        exifCommand.add(externalToolPath);
-
-        /* User arguments */
-        for (String s : args) {
-            exifCommand.add(s);
+        // externalToolCmd;
+        final Vector<String> args = new Vector<String>();
+        final BT747StringTokenizer tk = JavaLibBridge
+                .getStringTokenizerInstance(externalToolCmd, ' ');
+        while (tk.hasMoreTokens()) {
+            final String param = Generic.expandPercentTokens(tk.nextToken(),
+                    tokens);
+            args.add(param);
         }
+        return execTool(args);
+    }
 
+    /**
+     * Execute the command.
+     * 
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private final byte[] execTool(final List<String> exifCommand)
+            throws IOException, InterruptedException {
         final ProcessBuilder exifProcessBuilder = new ProcessBuilder();
         exifProcessBuilder.command(exifCommand);
         exifProcessBuilder.redirectErrorStream(true);
