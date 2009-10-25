@@ -5,6 +5,10 @@ package bt747.j2se_view.helpers;
 
 import java.io.File;
 
+import bt747.sys.Generic;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Hashtable;
+
 /**
  * @author Mario De Weerd
  * 
@@ -16,11 +20,11 @@ public class TaggedFilePathFactory {
 
     /**
      * @param currentPath
-     *                Current path for the object.
+     *            Current path for the object.
      * @param refObject
-     *                Can be used in the future to use the object info (like a
-     *                factory) to determine a better output path. For example,
-     *                in the case of an image, use the description.
+     *            Can be used in the future to use the object info (like a
+     *            factory) to determine a better output path. For example, in
+     *            the case of an image, use the description.
      * @return
      */
     public String getTaggedFilePath(final String currentPath,
@@ -30,11 +34,11 @@ public class TaggedFilePathFactory {
 
     /**
      * @param currentPath
-     *                Current path for the object.
+     *            Current path for the object.
      * @param refObject
-     *                Can be used in the future to use the object info (like a
-     *                factory) to determine a better output path. For example,
-     *                in the case of an image, use the description.
+     *            Can be used in the future to use the object info (like a
+     *            factory) to determine a better output path. For example, in
+     *            the case of an image, use the description.
      * @return
      */
     public String getOrgFilePath(final String currentPath,
@@ -44,13 +48,13 @@ public class TaggedFilePathFactory {
 
     /**
      * @param template
-     *                The templacte used to determine the filename.
+     *            The templacte used to determine the filename.
      * @param currentPath
-     *                Current path for the object.
+     *            Current path for the object.
      * @param refObject
-     *                Can be used in the future to use the object info (like a
-     *                factory) to determine a better output path. For example,
-     *                in the case of an image, use the description.
+     *            Can be used in the future to use the object info (like a
+     *            factory) to determine a better output path. For example, in
+     *            the case of an image, use the description.
      * @return
      */
     public static final String getFilePath(final String template,
@@ -60,9 +64,6 @@ public class TaggedFilePathFactory {
         String orgFile;
         String fileBase;
         String fileExt;
-        String newPath;
-        int lastIndex;
-        int percentIndex;
 
         orgDirIndex = Math.max(currentPath.lastIndexOf('/'), currentPath
                 .lastIndexOf('\\'));
@@ -83,33 +84,12 @@ public class TaggedFilePathFactory {
             fileExt = "";
         }
 
-        newPath = template;
-        lastIndex = 0;
-        while ((percentIndex = newPath.indexOf('%', lastIndex)) >= 0) {
-            if (percentIndex + 1 < newPath.length()) {
-                final char type = newPath.charAt(percentIndex + 1);
-                String replaceStr = null;
-                switch (type) {
-                case 'p':
-                    replaceStr = baseDir;
-                    break;
-                case 'e':
-                    replaceStr = fileExt;
-                    break;
-                case 'f':
-                    replaceStr = fileBase;
-                    break;
-                default:
-                    lastIndex = percentIndex + 1;
-                    continue;
-                }
-                newPath = newPath.substring(0, percentIndex) + replaceStr
-                        + newPath.substring(percentIndex + 2);
-            } else {
-                lastIndex = percentIndex + 1;
-            }
-        }
-        return newPath;
+        final BT747Hashtable tokens = JavaLibBridge.getHashtableInstance(5);
+        tokens.put("p", baseDir);
+        tokens.put("e", fileExt);
+        tokens.put("f", fileBase);
+
+        return Generic.expandPercentTokens(template, tokens);
     }
 
     public final String getDestTemplate() {

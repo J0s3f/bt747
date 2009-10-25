@@ -39,6 +39,7 @@ import joptsimple.OptionSet;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
+import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.AppSettings;

@@ -24,6 +24,7 @@ import javax.swing.table.TableColumn;
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 
+import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;

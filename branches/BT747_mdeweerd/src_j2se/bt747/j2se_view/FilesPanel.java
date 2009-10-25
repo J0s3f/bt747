@@ -11,12 +11,8 @@
 
 package bt747.j2se_view;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
