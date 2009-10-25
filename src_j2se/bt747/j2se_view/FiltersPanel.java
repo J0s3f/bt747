@@ -13,7 +13,6 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import java.awt.Component;
-import java.util.Locale;
 
 import net.sf.bt747.j2se.app.utils.Utils;
 
@@ -498,7 +497,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         pnFilterOther.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilterOther.border.title"))); // NOI18N
 
         txtRecCntMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtRecCntMin.setText(bundle.getString("BT747Main.txtRecCntMin.text")); // NOI18N
         txtRecCntMin.setInputVerifier(c.IntVerifier);
         txtRecCntMin.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -508,7 +506,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         });
 
         txtDistanceMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDistanceMin.setText(bundle.getString("BT747Main.txtDistanceMin.text")); // NOI18N
         txtDistanceMin.setInputVerifier(c.FloatVerifier);
         txtDistanceMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -517,7 +514,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         });
 
         txtSpeedMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSpeedMin.setText(bundle.getString("BT747Main.txtSpeedMin.text")); // NOI18N
         txtSpeedMin.setInputVerifier(c.FloatVerifier);
         txtSpeedMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -530,7 +526,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         lbSpeedFltr.setText(bundle.getString("BT747Main.lbSpeedFltr.text")); // NOI18N
 
         txtRecCntMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtRecCntMax.setText(bundle.getString("BT747Main.txtRecCntMax.text")); // NOI18N
         txtRecCntMax.setInputVerifier(c.IntVerifier);
         txtRecCntMax.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -540,7 +535,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         });
 
         txtDistanceMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDistanceMax.setText(bundle.getString("BT747Main.txtDistanceMax.text")); // NOI18N
         txtDistanceMax.setInputVerifier(c.FloatVerifier);
         txtDistanceMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtDistanceMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -550,7 +544,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         });
 
         txtSpeedMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSpeedMax.setText(bundle.getString("BT747Main.txtSpeedMax.text")); // NOI18N
         txtSpeedMax.setInputVerifier(c.FloatVerifier);
         txtSpeedMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtSpeedMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -562,7 +555,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         lbNSATFltr.setText(bundle.getString("BT747Main.lbNSATFltr.text")); // NOI18N
 
         txtNSATMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtNSATMin.setText(bundle.getString("BT747Main.txtNSATMin.text")); // NOI18N
         txtNSATMin.setInputVerifier(c.IntVerifier);
         txtNSATMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -626,7 +618,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
         pnFilterPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilterPrecision.border.title"))); // NOI18N
 
-        txtPDOPMax.setText(bundle.getString("BT747Main.txtPDOPMax.text")); // NOI18N
         txtPDOPMax.setInputVerifier(c.FloatVerifier);
         txtPDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -636,7 +627,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
         lbPDOPMax.setText(bundle.getString("BT747Main.lbPDOPMax.text")); // NOI18N
 
-        txtHDOPMax.setText(bundle.getString("BT747Main.txtHDOPMax.text")); // NOI18N
         txtHDOPMax.setInputVerifier(c.FloatVerifier);
         txtHDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -646,7 +636,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
         lbHDOPLimit.setText(bundle.getString("BT747Main.lbHDOPLimit.text")); // NOI18N
 
-        txtVDOPMax.setText(bundle.getString("BT747Main.txtVDOPMax.text")); // NOI18N
         txtVDOPMax.setInputVerifier(c.FloatVerifier);
         txtVDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {

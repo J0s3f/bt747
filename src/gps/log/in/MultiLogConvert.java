@@ -215,7 +215,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());
         }
         gpsFile.finaliseFile();
-        if (gpsFile.getFilesCreated() == 0) {
+        if (gpsFile.getNbrFilesCreated() == 0) {
             error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
         }
 

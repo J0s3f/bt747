@@ -3,7 +3,6 @@
  */
 package net.sf.bt747.j2se.app.utils.test;
 
-import gps.convert.Conv;
 import junit.framework.TestCase;
 import net.sf.bt747.j2se.app.utils.ExternalTool;
 import net.sf.bt747.test.TestUtils;

@@ -112,31 +112,16 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="tfWorkDirectory">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.tfWorkDirectory.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfWorkDirectoryFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tfRawLogFilePath">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.tfRawLogFilePath.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfRawLogFilePathFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tfOutputFileBaseName">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.tfOutputFileBaseName.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfOutputFileBaseNameFocusLost"/>
           </Events>
@@ -268,9 +253,6 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbDownloadMethod">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
-                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbDownloadMethod.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
@@ -538,17 +520,6 @@
             </Container>
             <Component class="javax.swing.JComboBox" name="cbFormat">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="7">
-                    <StringItem index="0" value="GPX"/>
-                    <StringItem index="1" value="CSV"/>
-                    <StringItem index="2" value="CompeGPS (.TRK,.WPT)"/>
-                    <StringItem index="3" value="KML"/>
-                    <StringItem index="4" value="KMZ"/>
-                    <StringItem index="5" value="OziExplorer (.PLT)"/>
-                    <StringItem index="6" value="NMEA"/>
-                  </StringArray>
-                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbFormat.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>

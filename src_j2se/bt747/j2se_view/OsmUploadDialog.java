@@ -149,7 +149,6 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         lbLogin.setLabelFor(txtLogin);
         lbLogin.setText(bundle.getString("AgpsPanel.lbLogin.text")); // NOI18N
 
-        txtLogin.setText(null);
         txtLogin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtLoginFocusLost(evt);
@@ -159,7 +158,6 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         lbPassword.setLabelFor(txtPassword);
         lbPassword.setText(bundle.getString("AgpsPanel.lbPassword.text")); // NOI18N
 
-        txtPassword.setText(null);
         txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPasswordFocusLost(evt);
@@ -198,7 +196,6 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         lbDescription.setLabelFor(tfDescription);
         lbDescription.setText(bundle.getString("OsmUploadDialog.lbDescription.text")); // NOI18N
 
-        tfDescription.setText(null);
         tfDescription.setToolTipText(bundle.getString("OsmUploadDialog.tfDescription.toolTipText")); // NOI18N
 
         cbVisibility.setToolTipText(bundle.getString("OsmUploadDialog.cbVisibility.toolTipText")); // NOI18N
@@ -206,7 +203,6 @@ public class OsmUploadDialog extends javax.swing.JDialog {
         lbVisibility.setLabelFor(cbVisibility);
         lbVisibility.setText(bundle.getString("OsmUploadDialog.lbVisibility.text")); // NOI18N
 
-        tfTags.setText(null);
         tfTags.setToolTipText(bundle.getString("OsmUploadDialog.tfTags.toolTipText")); // NOI18N
 
         lbTags.setLabelFor(lbTags);

@@ -167,7 +167,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
 
         closeFileObject(gpx);
         gpsFile.finaliseFile();
-        if (gpsFile.getFilesCreated() == 0) {
+        if (gpsFile.getNbrFilesCreated() == 0) {
             error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
         }
         gpsFile = null;
