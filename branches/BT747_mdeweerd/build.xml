@@ -222,7 +222,6 @@
           -keep public class BT747
           -keep public class bt747.j2se_view.BT747
 	      -keep public class sun.audio.AudioStream
-          -keep public class * implements gps.log.in.GPSLogConvert
 			-keep public class gps.log.out.GPSConversionParameters { public final static java.lang.String *;}
           -keep public class * extends waba.ui.MainWindow
  	      -keep public class * implements bt747.lang.TxtInterface
@@ -502,7 +501,6 @@
               -printmapping ${dist}/${ant.project.name}_waba.map
               -keep public class BT747
               -keep public class sun.audio.AudioStream
-              -keep public class * implements gps.log.in.GPSLogConvert
               -keep public class * extends waba.ui.MainWindow
               -keep public class * implements bt747.lang.TxtInterface
               -keep public class * extends gps.connection.GPSPort
@@ -646,6 +644,7 @@
 			-keep public interface net.sf.bt747.j2se.system.J2SEMessageListener { *; }
 			-keep public interface gps.log.out.GPSFileInterface { *; }
 			-keep public interface gps.log.out.GPSFileConfInterface { *; }
+			-keep public interface gps.log.in.GPSFileConverterInterface { *; }
             -keep public class bt747.lang.* { public *; }
             -keep public interface bt747.sys.interfaces.* {
                 public *;
@@ -777,7 +776,6 @@
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
-                -keep public class * implements gps.log.in.GPSLogConvert
                 -keep public class * extends waba.ui.MainWindow
  		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort

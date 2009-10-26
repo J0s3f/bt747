@@ -17,7 +17,6 @@ package bt747.j2se_view;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.log.out.GPSConversionParameters;
-import gps.log.out.GPSFile;
 import gps.log.out.GPSFileInterface;
 
 import bt747.sys.interfaces.BT747FileName;
@@ -33,7 +32,7 @@ public class GpsFileProxyTemplate implements GPSFileInterface {
 
     final protected GPSFileInterface delegate;
 
-    public GpsFileProxyTemplate(final GPSFile gpsFile) {
+    public GpsFileProxyTemplate(final GPSFileInterface gpsFile) {
         delegate = gpsFile;
     }
 
