@@ -605,7 +605,7 @@
 			              !bt747/*_view/**,
 			              !bt747/gps/connection/GPSWabaPort.class)
                         -optimizationpasses 2
-            -keep public class bt747.sys.Generic { public *** exception(...); public *** setPoster(...); }
+            -keep public class bt747.sys.Generic { public *** exception(...); public *** setPoster(...); public *** expandPercentTokens(...);}
                         -keep public class bt747.sys.JavaLibBridge { *; }
 			            -keep public class bt747.sys.I18N { public *** *(...); }
 			            -keep public class bt747.sys.Settings { *; }
@@ -644,6 +644,8 @@
             -keep public class net.sf.bt747.j2se.map.* { *; }
             -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
 			-keep public interface net.sf.bt747.j2se.system.J2SEMessageListener { *; }
+			-keep public interface gps.log.out.GPSFileInterface { *; }
+			-keep public interface gps.log.out.GPSFileConfInterface { *; }
             -keep public class bt747.lang.* { public *; }
             -keep public interface bt747.sys.interfaces.* {
                 public *;
