@@ -1,0 +1,58 @@
+/**
+ * 
+ */
+package net.sf.bt747.j2se.app.utils.test;
+
+import junit.framework.TestCase;
+import net.sf.bt747.j2se.app.utils.ExternalTool;
+import net.sf.bt747.test.TestUtils;
+
+import org.junit.Test;
+
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Hashtable;
+
+
+/**
+ * @author Mario
+ *
+ */
+public class ExternalToolTest extends TestCase {
+
+    static {
+        TestUtils.setupEnvironment();
+    }
+
+    /**
+     * A simple execution of a command - no replacement requested.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEchoSimple() throws Exception {
+        ExternalTool et = new ExternalTool("echo abcd");
+        BT747Hashtable tokens = JavaLibBridge.getHashtableInstance(5);
+        String expectedResult = "abcd\n";
+        byte[] result;
+        result = et.execTool(tokens);
+        
+        assertEquals(expectedResult,new String(result));
+    }
+    
+    /**
+     * Execution of a command - with replacement.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEchoReplace() throws Exception {
+        ExternalTool et = new ExternalTool("echo ab%fcd");
+        BT747Hashtable tokens = JavaLibBridge.getHashtableInstance(5);
+        tokens.put("f","afilename");
+        String expectedResult = "abafilenamecd\n";
+        byte[] result;
+        result = et.execTool(tokens);
+        
+        assertEquals(expectedResult,new String(result));
+    }
+}
