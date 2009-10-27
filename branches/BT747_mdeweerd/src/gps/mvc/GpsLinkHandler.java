@@ -216,8 +216,8 @@ public final class GpsLinkHandler {
                     if (sentCmds.size() == 0 || !cmd.mustBeFirstInQueue()) {
                         // No more commands waiting for acknowledge
                         doSendCmdUnprotected(cmd);
+                        toSendCmds.removeElementAt(0);
                     }
-                    toSendCmds.removeElementAt(0);
                 }
             } catch (final Exception e) {
                 Generic.debug("checkSendCmdFromQueue", e);

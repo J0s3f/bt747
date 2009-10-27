@@ -11,16 +11,13 @@ PROBLEMS
 COSMETIC IMPROVEMENTS
 * Remove all GUI data when the input file is changed.
   Potentially make this configureable.
-* Show #position logged instead of memory.
 * Use part of file name in KML output (and others) in stead of GPS-extratext.
-* Use BT address in output file.
-* Use log on/off info in track to split log.    
+* Use BT address in output file.    
 
 IMPROVEMENTS
 (Things not very visible to the user).
 * Report error of GPX upload.
 * Detect power up/rest of device (Initial PMTK010) and use it to request all the values again.
-* More precise height conversion (at least on PC).
 * Need to indicate that the device needs formatting in all setups (J2ME, PDA).
 * Improve image thumbnail generation and caching.
 * Improve waypoint handling (when there are many): put drawing them in a separate thread.
@@ -55,13 +52,12 @@ Application
            [est. travel distance, travel time, precision
             and determine log conditions from that]
 * Incremental download of 'overwrite' data by appending to existing file.
-* Send SMS with current or past positions.
+* Send SMS with past positions.
 
 Device
-* Add AGPS capability.
+* AGPS capability.
    Add button to select local file for AGPS data.
    Add functionality to choose selected data range
-   Show data range of data in GUI.
 * Add SIRFIII support.
 * Detect that a device has bad blocks.  Skip the blocks/propose to repair.
   [Does not seem to happen that often]
