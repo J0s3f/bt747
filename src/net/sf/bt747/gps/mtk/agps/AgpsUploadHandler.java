@@ -135,9 +135,9 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         }
         if (timesOutAt == 0) {
             resetTimeOut();
-        } else if ((Generic.getTimeStamp() > timesOutAt)) {
+        } else if ((cmd!=null) &&(Generic.getTimeStamp() > timesOutAt)) {
             errorCnt++;
-            if (errorCnt < AgpsUploadHandler.MAX_ERROR_CNT) {
+            if (cmd!= null && errorCnt < AgpsUploadHandler.MAX_ERROR_CNT) {
                 MtkBinWriter.sendCmd(handler, cmd);
                 resetTimeOut();
                 return true;
@@ -186,6 +186,7 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         percent = 0;
         nextPacketPercentIdx = PERCENT_STEP;
         nextPacketPercentOffset = percentBytes;
+        cmd = null;
     }
 
     /**

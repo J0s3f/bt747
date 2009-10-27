@@ -593,7 +593,9 @@ public class MtkModel implements EventPoster {
         int cmd;
         boolean result;
         result = false;
-        if (sNmea[0].startsWith("PMTK")) {
+        if (!((sNmea != null) && (sNmea.length > 0))) {
+            return result;
+        } else if (sNmea[0].startsWith("PMTK")) {
             result = true;
             if (Generic.isDebug()) {
                 StringBuffer s;
@@ -768,27 +770,32 @@ public class MtkModel implements EventPoster {
         return result;
     } // End method
 
-    
     private final static class MtkVisitor implements CmdVisitor {
         private final String cmd;
+
         /**
          * 
          */
         public MtkVisitor(final String cmd) {
             this.cmd = cmd;
         }
-        /* (non-Javadoc)
-         * @see gps.mvc.commands.CmdVisitor#isAcknowledgeOf(gps.mvc.commands.GpsLinkExecCommand)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seegps.mvc.commands.CmdVisitor#isAcknowledgeOf(gps.mvc.commands.
+         * GpsLinkExecCommand)
          */
         public boolean isAcknowledgeOf(GpsLinkExecCommand cmd) {
-            if(cmd instanceof GpsLinkNmeaCommand) {
-                return ((GpsLinkNmeaCommand) cmd).getNmeaValue().startsWith(this.cmd);
+            if (cmd instanceof GpsLinkNmeaCommand) {
+                return ((GpsLinkNmeaCommand) cmd).getNmeaValue().startsWith(
+                        this.cmd);
             }
             // TODO Auto-generated method stub
             return false;
         }
     }
-    
+
     // TODO: When acknowledge is missing for some commands, take appropriate
     // action.
     protected boolean analyseMTK_Ack(final String[] sNmea) {
