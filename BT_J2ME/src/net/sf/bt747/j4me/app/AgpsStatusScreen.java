@@ -69,7 +69,7 @@ public final class AgpsStatusScreen extends BT747Dialog implements
     }
 
     private final void updateAgps() {
-        MtkModel mtk = m().mtkModel();
+        final MtkModel mtk = m().mtkModel();
         if (mtk != null && mtk.hasAgps()) {
             final String[] a = { String.valueOf(mtk.getAgpsDataCount()),
                     CommonOut.getDateTimeStr(mtk.getAgpsStartTime()),

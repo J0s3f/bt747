@@ -29,4 +29,10 @@ public final class J2MEHashSet implements BT747HashSet {
         return iterator.nextElement();
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747HashSet#count()
+     */
+    public int count() {
+        return hs.size();
+    }
 }
