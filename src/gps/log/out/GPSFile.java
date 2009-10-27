@@ -941,7 +941,7 @@ public abstract class GPSFile implements GPSFileInterface {
         if (nbr == 0) {
             nbr = filesCreated;  // Some output filters update this one.
         }
-        return filenames.count();
+        return nbr;
     }
 
     /**
