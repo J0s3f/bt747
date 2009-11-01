@@ -60,7 +60,6 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 new String[] { getString("One_file_per_day"),
                         getString("One_file_per_track"),
                         getString("Everything_in_one_file") }));
-
     }
 
     private static final String getString(final String s) {
@@ -89,6 +88,9 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         c = pC;
         m = c.getModel();
         m.addListener(this);
+
+        scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
+        spScale.setValue(scale);
 
         cbLanguage.setModel(new DefaultComboBoxModel(Calendar
                 .getAvailableLocales()));
@@ -157,10 +159,20 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         }
     }
     
+    protected int scale;
     
     public void modelEvent(final ModelEvent e) {
-        // TODO Auto-generated method stub
         switch (e.getType()) {
+        case ModelEvent.SETTING_CHANGE:
+            switch (Integer.parseInt((String)e.getArg())) {
+            case AppSettings.FONTSCALE:
+                scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
+                spScale.setValue(scale);
+                if(c instanceof J2SEAppController) {
+                    ((J2SEAppController) c).scaleUIFont(scale);
+                }
+                break;
+            }
         }
     }
 
@@ -228,6 +240,9 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         lbLanguage = new javax.swing.JLabel();
         cbLanguageChooser = new com.toedter.components.JLocaleChooser();
         cbLanguage = new javax.swing.JComboBox();
+        pnGUISettings = new javax.swing.JPanel();
+        lbFontScale = new javax.swing.JLabel();
+        spScale = new javax.swing.JSpinner();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnVarious.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnVarious.border.title"))); // NOI18N
@@ -855,13 +870,49 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .addContainerGap())
         );
 
+        pnGUISettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnGUISettings.border.title"))); // NOI18N
+
+        lbFontScale.setText(bundle.getString("OutputSettingsPanel.lbFontScale.text")); // NOI18N
+
+        spScale.setModel(new javax.swing.SpinnerNumberModel(100, 50, 200, 1));
+        spScale.setInputVerifier(J2SEAppController.IntVerifier);
+        spScale.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spScaleStateChanged(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnGUISettingsLayout = new org.jdesktop.layout.GroupLayout(pnGUISettings);
+        pnGUISettings.setLayout(pnGUISettingsLayout);
+        pnGUISettingsLayout.setHorizontalGroup(
+            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGUISettingsLayout.createSequentialGroup()
+                .add(pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    .add(pnGUISettingsLayout.createSequentialGroup()
+                        .add(10, 10, 10)
+                        .add(spScale))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbFontScale))
+                .addContainerGap())
+        );
+        pnGUISettingsLayout.setVerticalGroup(
+            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGUISettingsLayout.createSequentialGroup()
+                .add(lbFontScale)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spScale, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(layout.createSequentialGroup()
+                        .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -871,10 +922,16 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(45, 45, 45))))
             .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
     }//GEN-END:initComponents
@@ -1243,6 +1300,10 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .parseInt(tfTrackSeparationDistance.getText()));
 }//GEN-LAST:event_tfTrackSeparationDistanceFocusLost
 
+    private void spScaleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spScaleStateChanged
+        c.setIntOpt(AppSettings.FONTSCALE, (Integer) spScale.getValue());
+    }//GEN-LAST:event_spScaleStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
@@ -1280,6 +1341,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lbFontScale;
     private javax.swing.JLabel lbLanguage;
     private javax.swing.JLabel lbMetersAfter;
     private javax.swing.JLabel lbMinPause;
@@ -1292,10 +1354,12 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel pnFileReason;
     private javax.swing.JPanel pnFileSatInfo;
     private javax.swing.JPanel pnFileTime;
+    private javax.swing.JPanel pnGUISettings;
     private javax.swing.JPanel pnLanguage;
     private javax.swing.JPanel pnSeparation;
     private javax.swing.JPanel pnTrackPoints;
     private javax.swing.JPanel pnVarious;
+    private javax.swing.JSpinner spScale;
     private javax.swing.JTextField tfTrackSeparationDistance;
     private javax.swing.JTextField tfTrackSeparationTime;
     private javax.swing.JLabel txtHeight;

@@ -363,6 +363,11 @@ public class AppSettings implements BT747Thread {
      */
     public final static int EXTTYPE = 70;
 
+    /**
+     * Font scale in percent. 100 = original size.
+     */
+    public final static int FONTSCALE = 71;
+
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
     private final static int START_IDX = 2;
@@ -609,9 +614,12 @@ public class AppSettings implements BT747Thread {
                     48 + getIntOpt(GPSTIMEOFFSETHOURS_OBSOLETE) * 4);
             /* fall through */
         case 47:
-            setIntOpt(EXTTYPE, Model.GPX_LOGTYPE);
             setStringOpt(EXTCOMMAND, "echo Sample command for %f");
-            setStringOpt(AppSettings.VERSION, "0.48");
+            /* fall through */
+        case 48:
+            setIntOpt(EXTTYPE, Model.GPX_LOGTYPE);  // Changed field size
+            setIntOpt(FONTSCALE, 100);
+            setStringOpt(AppSettings.VERSION, "0.49");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1808,9 +1816,12 @@ public class AppSettings implements BT747Thread {
     private static final int EXTCOMMAND_SIZE = 256;
     private static final int EXTTYPE_IDX = AppSettings.EXTCOMMAND_IDX
             + AppSettings.EXTCOMMAND_SIZE;
-    private static final int EXTTYPE_SIZE = 4;
-    private static final int C_NEXT_IDX = AppSettings.EXTTYPE_IDX
+    private static final int EXTTYPE_SIZE = 1;
+    private static final int FONTSCALE_IDX = AppSettings.EXTTYPE_IDX
             + AppSettings.EXTTYPE_SIZE;
+    private static final int FONTSCALE_SIZE = 2;
+    private static final int C_NEXT_IDX = AppSettings.FONTSCALE_IDX
+            + AppSettings.FONTSCALE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -2015,6 +2026,8 @@ public class AppSettings implements BT747Thread {
                     AppSettings.EXTCOMMAND_IDX, AppSettings.EXTCOMMAND_SIZE },
             { AppSettings.INT, AppSettings.EXTTYPE, AppSettings.EXTTYPE_IDX,
                     AppSettings.EXTTYPE_SIZE },
+            { AppSettings.INT, AppSettings.FONTSCALE,
+                    AppSettings.FONTSCALE_IDX, AppSettings.FONTSCALE_SIZE },
     // End of list
     };
 

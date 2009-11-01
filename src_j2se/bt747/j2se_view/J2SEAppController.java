@@ -23,6 +23,7 @@ import gps.log.out.GPSFile;
 import gps.mvc.MtkController;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -47,8 +49,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.FontUIResource;
 
 import net.sf.bt747.j2se.app.BT747Translation;
 import net.sf.bt747.j2se.app.osm.GPSOSMUploadFile;
@@ -95,7 +99,6 @@ public final class J2SEAppController extends J2SEController {
 
     private J2SEAppModel m;
 
-    
     /*
      * (non-Javadoc)
      * 
@@ -260,6 +263,7 @@ public final class J2SEAppController extends J2SEController {
         initStaticsFirstTime();
         myLookAndFeel();
         c.setWayPointStyles(new AllWayPointStyles());
+        setScale();
     }
 
     private int startTimeNoOffset;
@@ -306,7 +310,8 @@ public final class J2SEAppController extends J2SEController {
             }
             break;
         case Model.OSM_UPLOAD_LOGTYPE:
-            OsmUploadDialog osmDialog = new OsmUploadDialog(this, rootFrame, true);
+            OsmUploadDialog osmDialog = new OsmUploadDialog(this, rootFrame,
+                    true);
             osmDialog.setVisible(true);
             if (osmDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
                 if (m.getStringOpt(AppSettings.OSMLOGIN).length() == 0
@@ -315,11 +320,16 @@ public final class J2SEAppController extends J2SEController {
                     return;
                 }
                 GPSOSMUploadFile gpsFile = new GPSOSMUploadFile();
-                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_VISIBILITY, osmDialog.getVisibility());
-                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS, osmDialog.getTags());
-                gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION, osmDialog.getDescription());
-                if (doConvertLog(Model.OSM_LOGTYPE, gpsFile,
-                        ".gpx") != 0) {
+                gpsFile.getParamObject().setParam(
+                        GPSConversionParameters.OSM_VISIBILITY,
+                        osmDialog.getVisibility());
+                gpsFile.getParamObject()
+                        .setParam(GPSConversionParameters.OSM_TAGS,
+                                osmDialog.getTags());
+                gpsFile.getParamObject().setParam(
+                        GPSConversionParameters.OSM_DESCRIPTION,
+                        osmDialog.getDescription());
+                if (doConvertLog(Model.OSM_LOGTYPE, gpsFile, ".gpx") != 0) {
                     reportError(c.getLastError(), c.getLastErrorInfo());
                 }
             }
@@ -327,11 +337,14 @@ public final class J2SEAppController extends J2SEController {
         case Model.EXTERNAL_LOGTYPE:
             ExternalConversionDialog extDialog = new ExternalConversionDialog(
                     rootFrame, true);
-            extDialog.setExternalProgram(m.getStringOpt(AppSettings.EXTCOMMAND));
-            extDialog.setIntermediateFormatType(m.getIntOpt(AppSettings.EXTTYPE));
+            extDialog.setExternalProgram(m
+                    .getStringOpt(AppSettings.EXTCOMMAND));
+            extDialog.setIntermediateFormatType(m
+                    .getIntOpt(AppSettings.EXTTYPE));
             extDialog.setVisible(true);
             if (extDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
-                int intermediateLogType = extDialog.getIntermediateFormatType();
+                int intermediateLogType = extDialog
+                        .getIntermediateFormatType();
                 String command = extDialog.getExternalProgram();
                 c.setStringOpt(AppSettings.EXTCOMMAND, command);
                 c.setIntOpt(AppSettings.EXTTYPE, intermediateLogType);
@@ -339,13 +352,15 @@ public final class J2SEAppController extends J2SEController {
                 final GPSFile tmpFile = getOutFileHandler(intermediateLogType);
 
                 ExternalToolConvert gpsFile = new ExternalToolConvert(tmpFile);
-                gpsFile.getParamObject().setParam(GPSConversionParameters.EXT_COMMAND, command);
+                gpsFile.getParamObject().setParam(
+                        GPSConversionParameters.EXT_COMMAND, command);
                 // osmDialog.getVisibility());
                 // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS,
                 // osmDialog.getTags());
                 // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION,
                 // osmDialog.getDescription());
-                if (doConvertLog(intermediateLogType, gpsFile, getOutFileExt(intermediateLogType)) != 0) {
+                if (doConvertLog(intermediateLogType, gpsFile,
+                        getOutFileExt(intermediateLogType)) != 0) {
                     reportError(c.getLastError(), c.getLastErrorInfo());
                 }
             }
@@ -941,6 +956,11 @@ public final class J2SEAppController extends J2SEController {
         }
     }
 
+    
+    public final void setScale() {
+        int scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
+        scaleUIFont(scale);
+    }
     /**
      * An integer input verifier available for use in the GUI buildup.
      */
@@ -1073,6 +1093,45 @@ public final class J2SEAppController extends J2SEController {
                 }
             }
         }.start();
+    }
+
+    public final void scaleUIFont(final int scalePercent) {
+        setUIFontsScale(rootFrame, scalePercent);
+        if(rootFrame!=null) {
+        }
+    }
+    
+    private static final void setUIFontsScale(final Component comp, final int scalePercent) {
+        // code taken from
+        // http://coding.derkeiler.com/Archive/Java/comp.lang.java.gui/2005-05/msg00219.html
+        UIDefaults defaults = UIManager.getDefaults();
+        Enumeration<?> keys = defaults.keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = defaults.get(key);
+            if (value != null && value instanceof Font) {
+                UIManager.put(key, null);
+                Font font = UIManager.getFont(key);
+                if (font != null) {
+                    final float size = font.getSize2D() / 100;
+                    UIManager.put(key, new FontUIResource(font
+                            .deriveFont(size * scalePercent)));
+                }
+            }
+        }
+        if(comp!=null) {
+            Font font = comp.getFont();
+            if (font != null) {
+                final float size = font.getSize2D() / 100;
+                comp.setFont(new FontUIResource(font
+                        .deriveFont(size * scalePercent)));
+            }
+            if(comp instanceof Frame) {
+                Frame f = (Frame) comp;
+                f.getLayout().layoutContainer(f);
+            }
+            comp.validate();
+        }
     }
 
     public final J2SEAppModel getAppModel() {
