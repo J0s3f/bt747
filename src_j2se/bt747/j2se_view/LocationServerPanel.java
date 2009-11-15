@@ -11,6 +11,8 @@
 
 package bt747.j2se_view;
 
+import net.sf.bt747.j2se.app.utils.Utils;
+
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -89,7 +91,7 @@ public class LocationServerPanel extends javax.swing.JPanel implements
         case ModelEvent.POS_SRV_SUCCESS:
             locationsServed++;
             try {
-            lbVisualizeServing.setText(String.format(
+            lbVisualizeServing.setText(Utils.format(
                         getString("INFOLOCATIONS"), locationsServed,
                         locationsFailed));
             } catch (Exception b) {

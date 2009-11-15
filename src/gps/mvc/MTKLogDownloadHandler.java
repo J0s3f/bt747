@@ -24,6 +24,7 @@ import gps.mvc.commands.GpsLinkNmeaCommand;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 
 final class MTKLogDownloadHandler {
 
@@ -251,7 +252,7 @@ final class MTKLogDownloadHandler {
         context.setLogState(MTKLogDownloadHandler.C_LOG_START);
     }
 
-    private final void realDownloadStart() {
+    private final void realDownloadStart() throws BT747Exception {
         try {
             if (context.isSmart && (new File(context.logFileName)).exists()) {
                 /**
@@ -403,12 +404,19 @@ final class MTKLogDownloadHandler {
             if (context.getLogState() == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
                 context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             }
+        } catch (final BT747Exception e) {
+            context.setLogState(MTKLogDownloadHandler.C_LOG_NOLOGGING);
+            context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
+                throw e;
         } catch (final Exception e) {
+            context.setLogState(MTKLogDownloadHandler.C_LOG_NOLOGGING);
+            context.mtkM.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             Generic.debug("getLogInit", e);
         }
     }
 
-    protected final void openNewLog(final String fileName, final int card) {
+    protected final void openNewLog(final String fileName, final int card)
+            throws BT747Exception {
         try {
             if ((context.logFile != null) && context.logFile.isOpen()) {
                 context.logFile.close();
@@ -433,12 +441,16 @@ final class MTKLogDownloadHandler {
             context.logFileCard = card;
 
             if ((context.logFile == null) || !(context.logFile.isOpen())) {
-                context.mtkM
-                        .postEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
+                throw new BT747Exception(BT747Exception.ERR_COULD_NOT_OPEN,
+                        new Throwable(fileName));
             }
-        } catch (final Exception e) {
+        } catch (BT747Exception e) {
+            throw e;
+        } catch (Exception e) {
             Generic.debug("openNewLog", e);
+            throw new BT747Exception("open", new Throwable(fileName));
         }
+
     }
 
     private void reOpenLogWrite(final String fileName, final int card) {
@@ -510,7 +522,7 @@ final class MTKLogDownloadHandler {
     }
 
     // Called when no outstanding requests
-    private void getLogPartNoOutstandingRequests() {
+    private void getLogPartNoOutstandingRequests() throws BT747Exception {
         switch (context.getLogState()) {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
@@ -712,8 +724,10 @@ final class MTKLogDownloadHandler {
      * not.
      * 
      * @param overwrite
+     * @throws BT747Exception
      */
-    protected final void replyToOkToOverwrite(final boolean overwrite) {
+    protected final void replyToOkToOverwrite(final boolean overwrite)
+            throws BT747Exception {
         if (context.getLogState() == MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
                 openNewLog(context.logFileName, context.logFileCard);
@@ -871,8 +885,10 @@ final class MTKLogDownloadHandler {
 
     /**
      * Called from within run of GPSstate (regularly called).
+     * 
+     * @throws BT747Exception
      */
-    protected void notifyRun() {
+    protected void notifyRun() throws BT747Exception {
         if ((context.mtkM.getHandler().getOutStandingCmdsCount() == 0)
                 && (context.getLogState() != MTKLogDownloadHandler.C_LOG_NOLOGGING)
                 && (context.getLogState() != MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {

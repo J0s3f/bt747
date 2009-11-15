@@ -121,14 +121,25 @@ public final class J2SEAppController extends J2SEController {
         case ModelEvent.EXCEPTION:
             notifyBT747Exception((BT747Exception) e.getArg());
             break;
+        case ModelEvent.SETTING_CHANGE:
+            switch (Integer.parseInt((String) e.getArg())) {
+            case AppSettings.FONTSCALE:
+                setScale();
+                break;
+            }
+            break;
         }
     }
 
-    private final void notifyBT747Exception(final BT747Exception e) {
-        JOptionPane.showMessageDialog(rootFrame, "<html><b>" + e.getCause()
-                + "</b><br><p>" + e.getMessage(),
-                getString("OPERATION_FAILED"), // TITLE
-                JOptionPane.ERROR_MESSAGE);
+    public final static void notifyBT747Exception(final BT747Exception e) {
+        if (e.getMessage().equals((BT747Exception.ERR_COULD_NOT_OPEN))) {
+            reportError(BT747Constants.ERROR_COULD_NOT_OPEN, e.getCause().getMessage());
+        } else {
+            JOptionPane.showMessageDialog(rootFrame, "<html><b>"
+                    + e.getCause() + "</b><br><p>" + e.getMessage(),
+                    getString("OPERATION_FAILED"), // TITLE
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private boolean loggerNeedsFormatQuestionAsked;
@@ -609,7 +620,7 @@ public final class J2SEAppController extends J2SEController {
      * @param errorInfo
      *            A text string related to the error (filename, ...).
      */
-    private void reportError(final int error, final String errorInfo) {
+    private static void reportError(final int error, final String errorInfo) {
         String errorMsg;
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
@@ -771,9 +782,9 @@ public final class J2SEAppController extends J2SEController {
      */
     private JOptionPane mbErase;
 
-    private Frame rootFrame = null;
+    private static Frame rootFrame = null;
 
-    public void setRootFrame(final Frame f) {
+    public static void setRootFrame(final Frame f) {
         rootFrame = f;
         rootFrame.setIconImage(appIcon);
     }
@@ -956,11 +967,11 @@ public final class J2SEAppController extends J2SEController {
         }
     }
 
-    
     public final void setScale() {
-        int scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
+        int scale = m.getIntOpt(AppSettings.FONTSCALE) & 0xFF;
         scaleUIFont(scale);
     }
+
     /**
      * An integer input verifier available for use in the GUI buildup.
      */
@@ -1097,11 +1108,12 @@ public final class J2SEAppController extends J2SEController {
 
     public final void scaleUIFont(final int scalePercent) {
         setUIFontsScale(rootFrame, scalePercent);
-        if(rootFrame!=null) {
+        if (rootFrame != null) {
         }
     }
-    
-    private static final void setUIFontsScale(final Component comp, final int scalePercent) {
+
+    private static final void setUIFontsScale(final Component comp,
+            final int scalePercent) {
         // code taken from
         // http://coding.derkeiler.com/Archive/Java/comp.lang.java.gui/2005-05/msg00219.html
         UIDefaults defaults = UIManager.getDefaults();
@@ -1119,17 +1131,22 @@ public final class J2SEAppController extends J2SEController {
                 }
             }
         }
-        if(comp!=null) {
+        if (comp != null) {
             Font font = comp.getFont();
             if (font != null) {
                 final float size = font.getSize2D() / 100;
-                comp.setFont(new FontUIResource(font
-                        .deriveFont(size * scalePercent)));
+                comp.setFont(new FontUIResource(font.deriveFont(size
+                        * scalePercent)));
             }
-            if(comp instanceof Frame) {
+            if (comp instanceof Frame) {
                 Frame f = (Frame) comp;
                 f.getLayout().layoutContainer(f);
             }
+            if (comp.isVisible()) {
+                comp.setVisible(false);
+                comp.setVisible(true);
+            }
+
             comp.validate();
         }
     }

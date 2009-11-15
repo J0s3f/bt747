@@ -48,7 +48,9 @@ import gps.log.GPSRecord;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 
 public abstract class LocationSender implements ModelListener {
 
@@ -131,16 +133,20 @@ public abstract class LocationSender implements ModelListener {
 		model = m;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
-	 */
-	public void modelEvent(ModelEvent e) {
-		if ((extractValuesFromEvent(e)) && (checkUpdateFrequency())) {
-			sendOutData();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
+    public void modelEvent(final ModelEvent e) {
+        if ((extractValuesFromEvent(e)) && (checkUpdateFrequency())) {
+            try {
+                sendOutData();
+            } catch (BT747Exception e1) {
+                Generic.debug("Location sending", e1);
+            }
+        }
+    }
 
 	/**
 	 * Evaluate a ModelEvent and check for events of type GpsEvent.GPRMC or
@@ -151,7 +157,7 @@ public abstract class LocationSender implements ModelListener {
 	 *            the ModelEvent
 	 * @return true if the event was of type GpsEvent.GPRMC or GpsEvent.GPGGA
 	 */
-	protected boolean extractValuesFromEvent(ModelEvent e) {
+	protected boolean extractValuesFromEvent(final ModelEvent e) {
 		final int type = e.getType();
 		switch (type) {
 		case GpsEvent.GPRMC:
@@ -191,8 +197,9 @@ public abstract class LocationSender implements ModelListener {
 	/**
 	 * Actually do the sending of the data. Subclasses will override with
 	 * specific technology.
+	 * @throws BT747Exception 
 	 */
-	protected abstract void sendOutData();
+	protected abstract void sendOutData() throws BT747Exception;
 
 	public int getUpdatePeriod() {
 		return updatePeriod;

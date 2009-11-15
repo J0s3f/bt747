@@ -44,6 +44,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -211,7 +212,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }
 
     public void modelEvent(final ModelEvent e) {
-        // TODO Auto-generated method stub
+        try {
         final int type = e.getType();
         switch (type) {
 
@@ -332,6 +333,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case ModelEvent.COULD_NOT_OPEN_FILE:
             c.couldNotOpenFileMessage((String) e.getArg());
             break;
+        }
+        } catch (BT747Exception b) {
+            J2SEAppController.notifyBT747Exception(b);
         }
     }
 

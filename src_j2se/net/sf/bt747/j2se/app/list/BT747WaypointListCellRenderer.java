@@ -9,7 +9,9 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
+import bt747.j2se_view.model.MapWaypoint;
 import bt747.sys.Generic;
 
 /**
@@ -30,25 +32,30 @@ public class BT747WaypointListCellRenderer implements
     }
 
     public final WaypointListCellComponent getRenderer(final Object waypoint) {
-        final WaypointListCellComponent renderer = renderHash.get(waypoint
-                .getClass());
-        if (renderer == null) {
-            for (int i = renderers.size() - 1; i >= 0; i--) {
-                final WaypointListCellComponent r = renderers.get(i);
-                if (r.isRendererOf(waypoint)) {
-                    renderHash.put(waypoint.getClass(), r);
-                    return r;
+        if (waypoint instanceof MapWaypoint) {
+            final MapWaypoint wpt = (MapWaypoint) waypoint;
+            final WaypointListCellComponent renderer = renderHash.get(wpt
+                    .getClass());
+            if (renderer == null) {
+                for (int i = renderers.size() - 1; i >= 0; i--) {
+                    final WaypointListCellComponent r = renderers.get(i);
+                    if (r.isRendererOf(waypoint)) {
+                        renderHash.put(wpt.getClass(), r);
+                        return r;
+                    }
                 }
             }
+            return renderer;
         }
-        return renderer;
+        return null;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList,
-     *      java.lang.Object, int, boolean, boolean)
+     * @see
+     * javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax
+     * .swing.JList, java.lang.Object, int, boolean, boolean)
      */
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,

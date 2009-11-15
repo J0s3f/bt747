@@ -24,7 +24,7 @@ public class J2SEAGPS {
     private final static String TRANS_AGPS_14d = TRANS_FTP_SITE + "MTK14.EPO";
     private final static String TRANS_AGPS_7d = TRANS_FTP_SITE + "MTK7d.EPO";
 
-    public static final byte[] getAGPS7d() {
+    public static final byte[] getAGPS7d() throws BT747Exception {
         return getBytesFromUrl(TRANS_AGPS_7d);
     }
 

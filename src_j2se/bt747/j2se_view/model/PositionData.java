@@ -39,8 +39,8 @@ public class PositionData extends AbstractBean {
     public final static String WPDISPLAYCHANGE = "wpdisplaychange";
     J2SEAppModel m;
     private List<List<GPSRecord>> trks = new Vector<List<GPSRecord>>();
-    private final Vector<BT747Waypoint> wayPoints = new Vector<BT747Waypoint>();
-    private final Vector<BT747Waypoint> userWayPoints = new Vector<BT747Waypoint>();
+    private final Vector<MapWaypoint> wayPoints = new Vector<MapWaypoint>();
+    private final Vector<MapWaypoint> userWayPoints = new Vector<MapWaypoint>();
 
     // private GPSRecord[] wayPoints = null;
     // private GPSRecord[] userWayPoints = null;
@@ -68,17 +68,17 @@ public class PositionData extends AbstractBean {
     public final GPSRecord[] getWayPoints() {
         final GPSRecord[] r = new GPSRecord[wayPoints.size()];
         int index = 0;
-        for (final BT747Waypoint w : wayPoints) {
+        for (final MapWaypoint w : wayPoints) {
             r[index++] = w.getGpsRecord();
         }
         return r;
     }
 
-    public final List<BT747Waypoint> getBT747Waypoints() {
+    public final List<MapWaypoint> getBT747Waypoints() {
         return wayPoints;
     }
 
-    public final List<BT747Waypoint> getBT747UserWaypoints() {
+    public final List<MapWaypoint> getBT747UserWaypoints() {
         return userWayPoints;
     }
 
@@ -86,7 +86,7 @@ public class PositionData extends AbstractBean {
         wayPoints.removeAllElements();
         if (waypoints != null) {
             for (final GPSRecord wp : waypoints) {
-                wayPoints.add(new BT747Waypoint(wp));
+                wayPoints.add(new MapWaypoint(wp));
             }
         }
         fireWaypointListUpdate();
@@ -95,13 +95,13 @@ public class PositionData extends AbstractBean {
     public final GPSRecord[] getUserWayPointsGPSRecords() {
         final GPSRecord[] r = new GPSRecord[userWayPoints.size()];
         int index = 0;
-        for (final BT747Waypoint w : userWayPoints) {
+        for (final MapWaypoint w : userWayPoints) {
             r[index++] = w.getGpsRecord();
         }
         return r;
     }
 
-    public final List<BT747Waypoint> getUserWayPoints() {
+    public final List<MapWaypoint> getUserWayPoints() {
         return userWayPoints;
     }
 
@@ -148,7 +148,7 @@ public class PositionData extends AbstractBean {
         GPSRecord[] rcrds;
         rcrds = new GPSRecord[userWayPoints.size()];
         int i = 0;
-        for (final BT747Waypoint w : userWayPoints) {
+        for (final MapWaypoint w : userWayPoints) {
             GPSRecord r = w.getGpsRecord();
             if (r != null) {
                 rcrds[i++] = r;
@@ -220,11 +220,11 @@ public class PositionData extends AbstractBean {
         public void add(final FileWaypoint id) {
             synchronized (imageTable) {
                 imageTable.put(id.getPath(), id);
-                add((BT747Waypoint) id);
+                add(new MapWaypoint(id));
             }
         }
 
-        public void add(final BT747Waypoint wp) {
+        public void add(final MapWaypoint wp) {
             synchronized (userWayPoints) {
                 userWayPoints.add(wp);
                 final int row = userWayPoints.size() - 1;
@@ -319,28 +319,29 @@ public class PositionData extends AbstractBean {
          * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
          */
         public void propertyChange(final PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(BT747Waypoint.PROPERTY_SELECTED)) {
+            if (evt.getPropertyName().equals(MapWaypoint.PROPERTY_SELECTED)) {
                 fireWpDisplayChange();
                 try {
                     if ((Boolean) evt.getNewValue()) {
-                        fireWpSelected((BT747Waypoint) evt.getSource());
+                        fireWpSelected((MapWaypoint) evt.getSource());
                     }
                 } catch (final Exception e) {
                     // TODO: handle exception
                 }
             } else if (evt.getPropertyName().equals(
-                    BT747Waypoint.PROPERTY_SHOWTAG)) {
+                    MapWaypoint.PROPERTY_SHOWTAG)) {
                 fireWpDisplayChange();
             }
         }
 
     }
 
-    private void fireWpSelected(final BT747Waypoint w) {
+    private void fireWpSelected(final MapWaypoint w) {
         firePropertyChange(WAYPOINTSELECTED, null, w);
     }
 
-    public static final Object getData(final BT747Waypoint w, final int type) {
+    public static final Object getData(final MapWaypoint wpt, final int type) {
+        final BT747Waypoint w = wpt.getBT747Waypoint();
         Object result;
         result = getValue(w.getGpsRecord(), type);
         if (result == null) {

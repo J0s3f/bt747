@@ -466,6 +466,11 @@
 	        	-injar ${swingx-ws.jar}
 	        	-injar ${swinglayout.jar}
 	                     -optimizationpasses 1
+			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+			-keep public class **swing.plaf**
+			-keep public class **ComponentUI**
+            -keep public class org.jdesktop.swingx.JXHyperlink
 	                     -keepclasseswithmembers public class bt747.j2se_view.* {
 	                          public static void main(java.lang.String[]); }
 	            </proguard>

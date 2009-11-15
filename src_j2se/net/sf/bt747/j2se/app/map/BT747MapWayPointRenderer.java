@@ -31,7 +31,7 @@ import java.awt.geom.Line2D;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 
-import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.MapWaypoint;
 
 /**
  * @author Mario
@@ -68,7 +68,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * @see net.sf.bt747.j2se.map.BT747WaypointRenderer#isRendererOf(java.lang.Object)
      */
     public boolean isRendererOf(final Object o) {
-        return true || BT747Waypoint.class.isInstance(o);
+        return true || MapWaypoint.class.isInstance(o);
     }
 
     private Color color = new Color(255, 0, 0, 125);
@@ -87,8 +87,8 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
             final Waypoint waypoint) {
         try {
             g.setColor(color);
-            if (waypoint instanceof BT747Waypoint) {
-                final BT747Waypoint wp = (BT747Waypoint) waypoint;
+            if (waypoint instanceof MapWaypoint) {
+                final MapWaypoint wp = (MapWaypoint) waypoint;
                 if (wp.isSelected()) {
                     g.setColor(selectedColor);
                 }
@@ -98,8 +98,8 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
             g.drawLine(-10, 0, 10, 0);
             g.drawLine(0, -10, 0, 10);
 
-            if (((BT747Waypoint) waypoint).isShowTag()) {
-                paintWaypointSummary(g, map, (BT747Waypoint) waypoint);
+            if (((MapWaypoint) waypoint).isShowTag()) {
+                paintWaypointSummary(g, map, (MapWaypoint) waypoint);
             }
         } catch (final Exception e) {
             // TODO: handle exception
@@ -153,7 +153,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
     }
 
     protected void paintWaypointSummary(final Graphics2D g,
-            final JXMapViewer map, final BT747Waypoint waypoint) {
+            final JXMapViewer map, final MapWaypoint waypoint) {
         final Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.75f));

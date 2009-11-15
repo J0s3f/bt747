@@ -19,7 +19,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import bt747.j2se_view.model.FileWaypoint;
 import bt747.j2se_view.model.ImageData;
+import bt747.j2se_view.model.MapWaypoint;
 
 /**
  * @author Mario
@@ -48,7 +50,8 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         String path;
-        final ImageData v = (ImageData) value;
+        final MapWaypoint wpt = (MapWaypoint) value;
+        final ImageData v = (ImageData) wpt.getBT747Waypoint();
         path = v.getPath();
         SoftReference<ImageListPanel> s;
         synchronized (panels) {
@@ -76,7 +79,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
             pn.setColors(list.getSelectionBackground(), list
                     .getSelectionForeground());
         }
-        v.setSelected(isSelected);
+        wpt.setSelected(isSelected);
 
         return pn;
     }
@@ -176,7 +179,9 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * .lang.Object)
      */
     public final boolean isRendererOf(final Object wp) {
-        return ImageData.class.isInstance(wp);
+        if (wp instanceof MapWaypoint) {
+            return ((MapWaypoint) wp).getBT747Waypoint() instanceof ImageData;
+        }
+        return false;
     }
-
 }

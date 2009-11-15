@@ -23,12 +23,14 @@ import javax.swing.JList;
 
 import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
+import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.FileWaypoint;
+import bt747.j2se_view.model.MapWaypoint;
 
 /**
  * @author Mario
  * 
- * TODO MUST BE COMPLETELY REWRITTEN TO HANDLE NON-IMAGE FILES.
+ *         TODO MUST BE COMPLETELY REWRITTEN TO HANDLE NON-IMAGE FILES.
  * 
  */
 @SuppressWarnings("serial")
@@ -54,7 +56,8 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         String path;
-        final FileWaypoint v = (FileWaypoint) value;
+        final MapWaypoint wpt = (MapWaypoint) value;
+        final FileWaypoint v = (FileWaypoint) wpt.getBT747Waypoint();
         path = v.getPath();
         SoftReference<ImageListPanel> s;
         synchronized (panels) {
@@ -82,7 +85,7 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
             pn.setColors(list.getSelectionBackground(), list
                     .getSelectionForeground());
         }
-        v.setSelected(isSelected);
+        wpt.setSelected(isSelected);
 
         return pn;
     }
@@ -95,7 +98,8 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
         private ImageListPanel pn;
         private String path;
         private JList c;
-        //private int index;
+
+        // private int index;
 
         IconLoader(final ImageListPanel pn, final String path, final JList c,
                 final int index) {
@@ -105,7 +109,7 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
             this.pn = pn;
             this.path = path;
             this.c = c;
-            //this.index = index;
+            // this.index = index;
             pn.setIconPreferredSize(dim);
         }
 
@@ -117,12 +121,12 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
                 availThreads.acquire();
                 try {
                     Icon icon;
-//                    final java.io.File file = new java.io.File(path);
-//                    FileInputStream fis = new FileInputStream(file);
-//                    icon = new ImageIcon(GraphicsUtilities.createThumbnail(
-//                            ImageIO.read(fis), 80));
-//                    fis.close();
-//                    fis = null;
+                    // final java.io.File file = new java.io.File(path);
+                    // FileInputStream fis = new FileInputStream(file);
+                    // icon = new ImageIcon(GraphicsUtilities.createThumbnail(
+                    // ImageIO.read(fis), 80));
+                    // fis.close();
+                    // fis = null;
                     icon = new ImageIcon(MyThumbNail.createThumbnail(
                             mediaTracker, path, 80, 70));
                     pn.setIcon(icon);
@@ -173,10 +177,15 @@ public final class FileListCellRenderer implements WaypointListCellComponent {
     /*
      * (non-Javadoc)
      * 
-     * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java.lang.Object)
+     * @see
+     * net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java
+     * .lang.Object)
      */
     public final boolean isRendererOf(final Object wp) {
-        return wp instanceof FileWaypoint;
+        if (wp instanceof MapWaypoint) {
+            return ((MapWaypoint) wp).getBT747Waypoint() instanceof FileWaypoint;
+        }
+        return false;
     }
 
 }

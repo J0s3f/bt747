@@ -140,7 +140,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return PositionData.getData((FileWaypoint) wpListModel
+        return PositionData.getData((MapWaypoint) wpListModel
                 .getElementAt(rowIndex), columnToDataType(columnIndex));
     }
 

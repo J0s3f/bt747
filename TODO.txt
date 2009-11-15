@@ -83,4 +83,3 @@ Map
 * Add statistics for the path:
    - traveled distance since start
    - traveled distance to end
-   

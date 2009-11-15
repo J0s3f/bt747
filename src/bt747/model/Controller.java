@@ -91,7 +91,7 @@ public class Controller implements ModelListener {
 
     /**
      * @param model
-     *                The model to associate with this controller.
+     *            The model to associate with this controller.
      */
     public Controller(final Model model) {
         setModel(model);
@@ -130,30 +130,30 @@ public class Controller implements ModelListener {
      */
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-		case ModelEvent.CONNECTED:
-			// Florian Unger
-			// If position service is configured in the setting start
-			// sending location data on conect to the GPS device
-			if (m.getBooleanOpt(AppSettings.POS_SRV_AUTOSTART)) {
-				this.startGPSPositionServing();
-			}
-			break;
-		case ModelEvent.DISCONNECTED:
-			// Florian Unger
-			// stop sending location data when no position updates
-			// can be retrieved from the GPS device.
-			if (this.isLocationServingActive()) {
-				this.stopGPSPositionServing();
-			}
-			break;
-		case ModelEvent.POS_SRV_FATAL_FAILURE:
-			// Florian Unger
-			// This event has been sent from a LocationSender instance
-			// On a fatal failure stop the sending process
-			if (this.isLocationServingActive()) {
-				this.stopGPSPositionServing();
-			}
-			break;
+        case ModelEvent.CONNECTED:
+            // Florian Unger
+            // If position service is configured in the setting start
+            // sending location data on conect to the GPS device
+            if (m.getBooleanOpt(AppSettings.POS_SRV_AUTOSTART)) {
+                this.startGPSPositionServing();
+            }
+            break;
+        case ModelEvent.DISCONNECTED:
+            // Florian Unger
+            // stop sending location data when no position updates
+            // can be retrieved from the GPS device.
+            if (this.isLocationServingActive()) {
+                this.stopGPSPositionServing();
+            }
+            break;
+        case ModelEvent.POS_SRV_FATAL_FAILURE:
+            // Florian Unger
+            // This event has been sent from a LocationSender instance
+            // On a fatal failure stop the sending process
+            if (this.isLocationServingActive()) {
+                this.stopGPSPositionServing();
+            }
+            break;
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
             // TODO: Possibly move this to the mtkController.
             if (m.mtkModel().isLoggingDisabled()) {
@@ -230,7 +230,7 @@ public class Controller implements ModelListener {
      * the BaseDirPath.
      * 
      * @param s
-     *                The relative log file path (including basename)
+     *            The relative log file path (including basename)
      */
     public final void setOutputFileRelPath(final String s) {
         setStringOpt(AppSettings.REPORTFILEBASE, s);
@@ -238,8 +238,8 @@ public class Controller implements ModelListener {
 
     /**
      * @param chunkSize
-     *                The amount of data that is requested from the device in
-     *                a single command when downloading the data.
+     *            The amount of data that is requested from the device in a
+     *            single command when downloading the data.
      */
 
     public final void setChunkSize(final int chunkSize) {
@@ -248,10 +248,9 @@ public class Controller implements ModelListener {
 
     /**
      * @param timeout
-     *                The timeout in ms after which the lack of reply from the
-     *                device will be considered as a communication failure.
-     *                Depending on the operation, a recovery will be
-     *                attempted.
+     *            The timeout in ms after which the lack of reply from the
+     *            device will be considered as a communication failure.
+     *            Depending on the operation, a recovery will be attempted.
      */
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
@@ -260,11 +259,11 @@ public class Controller implements ModelListener {
 
     /**
      * @param card
-     *                The card number that the filepaths refer to. This is
-     *                usefull on PDA's only and probably only on a Palm. This
-     *                is used by the 'SuperWaba' environment if used. '-1'
-     *                refers to the 'last card in the system' which is
-     *                normally the card that can be inserted by the PDA user.
+     *            The card number that the filepaths refer to. This is usefull
+     *            on PDA's only and probably only on a Palm. This is used by
+     *            the 'SuperWaba' environment if used. '-1' refers to the
+     *            'last card in the system' which is normally the card that
+     *            can be inserted by the PDA user.
      */
     public final void setCard(final int card) {
         m.setCard(card);
@@ -272,10 +271,10 @@ public class Controller implements ModelListener {
 
     /**
      * @param numberOfRequestsAhead
-     *                Especially when downloading using Bluetooth, downloading
-     *                is slow when no request pipeline is implemented. This
-     *                number defines how many 'chunk download' request will be
-     *                sent to device while the first reply is still pending.
+     *            Especially when downloading using Bluetooth, downloading is
+     *            slow when no request pipeline is implemented. This number
+     *            defines how many 'chunk download' request will be sent to
+     *            device while the first reply is still pending.
      */
     public final void setLogRequestAhead(final int numberOfRequestsAhead) {
         setIntOpt(AppSettings.LOGAHEAD, numberOfRequestsAhead);
@@ -402,9 +401,11 @@ public class Controller implements ModelListener {
             gpsFile.getParamObject().setParam(
                     GPSConversionParameters.OSM_PASS,
                     m.getStringOpt(AppSettings.OSMPASS));
-            gpsFile.getParamObject().setBoolParam(GPSConversionParameters.NEW_TRACK_WHEN_LOG_ON,
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.NEW_TRACK_WHEN_LOG_ON,
                     m.getBooleanOpt(AppSettings.IS_NEW_TRACK_WHEN_LOG_ON));
-            gpsFile.getParamObject().setIntParam(GPSConversionParameters.SPLIT_DISTANCE,
+            gpsFile.getParamObject().setIntParam(
+                    GPSConversionParameters.SPLIT_DISTANCE,
                     m.getIntOpt(AppSettings.SPLIT_DISTANCE));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
@@ -465,8 +466,8 @@ public class Controller implements ModelListener {
      *         returned and related text in {@link #getLastErrorInfo()}
      * 
      * @param logType
-     *                Indicates the type of log that should be written. For
-     *                example Model.CSV_LOGTYPE .
+     *            Indicates the type of log that should be written. For
+     *            example Model.CSV_LOGTYPE .
      * @see Model#CSV_LOGTYPE
      * @see Model#TRK_LOGTYPE
      * @see Model#KML_LOGTYPE
@@ -581,8 +582,8 @@ public class Controller implements ModelListener {
         return userWayPoints;
     }
 
-    public final int doConvertLog(final int logType, final GPSFileInterface gpsFile,
-            final String ext) {
+    public final int doConvertLog(final int logType,
+            final GPSFileInterface gpsFile, final String ext) {
         int result;
         final String parameters = ""; // For debug
         GPSLogConvertInterface lc;
@@ -695,7 +696,7 @@ public class Controller implements ModelListener {
      * 
      * @deprecated Use {@link #setDownloadMethod(int)} instead
      * @param incrementalDownload
-     *                true if the log download should be incremental.
+     *            true if the log download should be incremental.
      */
     public final void setIncremental(final boolean incrementalDownload) {
         m.setIncremental(incrementalDownload);
@@ -703,8 +704,10 @@ public class Controller implements ModelListener {
 
     /**
      * Set the download method. <br>
-     * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br> -
-     * {@link #DOWNLOAD_SMART}
+     * Possible values:<br>
+     * - {@link #DOWNLOAD_FILLED}<br>
+     * -{@link #DOWNLOAD_FULL}<br>
+     * - {@link #DOWNLOAD_SMART}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
@@ -728,10 +731,10 @@ public class Controller implements ModelListener {
             startDefaultDownload();
             break;
         case ProtocolConstants.PROTOCOL_SIRFIII:
-//            mtkC = new MtkController(this, mtkM);
+            // mtkC = new MtkController(this, mtkM);
             break;
         case ProtocolConstants.PROTOCOL_WONDEPROUD:
-          startWPDownload();
+            startWPDownload();
             break;
         }
     }
@@ -770,9 +773,11 @@ public class Controller implements ModelListener {
      * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *                If true, the existing log can be overwritten
+     *            If true, the existing log can be overwritten
+     * @throws BT747Exception
      */
-    public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
+    public final void replyToOkToOverwrite(final boolean isOkToOverwrite)
+            throws BT747Exception {
         mtkC().replyToOkToOverwrite(isOkToOverwrite);
     }
 
@@ -791,15 +796,15 @@ public class Controller implements ModelListener {
         // TODO: Should listen to AppSettings.GPSTYPE changes and activate
         // Wonde Proud when appropriate.
         // Initialisation method and download start should change.
-        getGpsC().getLog(
-                m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
+        getGpsC()
+                .getLog(m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 
     /**
      * Set logging status of device.
      * 
      * @param on
-     *                When true, logging will be turned on.
+     *            When true, logging will be turned on.
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
@@ -824,8 +829,8 @@ public class Controller implements ModelListener {
      * Set log overwrite mode on the device.
      * 
      * @param isOverWriteLog
-     *                true - overwrite data in device when full false - stop
-     *                logging when device is full
+     *            true - overwrite data in device when full false - stop
+     *            logging when device is full
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
         gpsCmd(MtkController.CMD_SET_LOG_OVERWRITE, new CmdParam(
@@ -845,33 +850,32 @@ public class Controller implements ModelListener {
      * Sets a new log format on the device.<br>
      * 
      * @param newLogFormat
-     *                <br>
-     *                The bits in the newLogFormat can be defined using a
-     *                bitwise OR of expressions like<br>
-     *                (1<< IDX) <br>
-     *                where IDX is one of the following:<br> -
-     *                {@link BT747Constants#FMT_UTC_IDX} <br> -
-     *                {@link BT747Constants#FMT_VALID_IDX} <br> -
-     *                {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
-     *                {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
-     *                {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
-     *                {@link BT747Constants#FMT_SPEED_IDX} <br> -
-     *                {@link BT747Constants#FMT_HEADING_IDX} <br> -
-     *                {@link BT747Constants#FMT_DSTA_IDX} <br> -
-     *                {@link BT747Constants#FMT_DAGE_IDX} <br> -
-     *                {@link BT747Constants#FMT_PDOP_IDX} <br> -
-     *                {@link BT747Constants#FMT_HDOP_IDX} <br> -
-     *                {@link BT747Constants#FMT_VDOP_IDX} <br> -
-     *                {@link BT747Constants#FMT_NSAT_IDX} <br> -
-     *                {@link BT747Constants#FMT_SID_IDX} <br> -
-     *                {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
-     *                {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
-     *                {@link BT747Constants#FMT_SNR_IDX} <br> -
-     *                {@link BT747Constants#FMT_RCR_IDX} <br> -
-     *                {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     *                {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
-     *                {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX}
-     *                <br>
+     * <br>
+     *            The bits in the newLogFormat can be defined using a bitwise
+     *            OR of expressions like<br>
+     *            (1<< IDX) <br>
+     *            where IDX is one of the following:<br>
+     *            - {@link BT747Constants#FMT_UTC_IDX} <br>
+     *            - {@link BT747Constants#FMT_VALID_IDX} <br>
+     *            - {@link BT747Constants#FMT_LATITUDE_IDX} <br>
+     *            - {@link BT747Constants#FMT_LONGITUDE_IDX} <br>
+     *            - {@link BT747Constants#FMT_HEIGHT_IDX} <br>
+     *            - {@link BT747Constants#FMT_SPEED_IDX} <br>
+     *            - {@link BT747Constants#FMT_HEADING_IDX} <br>
+     *            - {@link BT747Constants#FMT_DSTA_IDX} <br>
+     *            - {@link BT747Constants#FMT_DAGE_IDX} <br>
+     *            - {@link BT747Constants#FMT_PDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_HDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_VDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_NSAT_IDX} <br>
+     *            - {@link BT747Constants#FMT_SID_IDX} <br>
+     *            - {@link BT747Constants#FMT_ELEVATION_IDX} <br>
+     *            - {@link BT747Constants#FMT_AZIMUTH_IDX} <br>
+     *            - {@link BT747Constants#FMT_SNR_IDX} <br>
+     *            - {@link BT747Constants#FMT_RCR_IDX} <br>
+     *            - {@link BT747Constants#FMT_MILLISECOND_IDX} <br>
+     *            - {@link BT747Constants#FMT_DISTANCE_IDX} <br>
+     *            - {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX} <br>
      */
     public final void setLogFormat(final int newLogFormat) {
         mtkC().setLogFormat(newLogFormat);
@@ -930,8 +934,8 @@ public class Controller implements ModelListener {
      * Send an arbitrary GPS command.
      * 
      * @param cmd
-     *                Otherwise the class must be an implementation of
-     *                {@link GpsLinkExecCommand}.
+     *            Otherwise the class must be an implementation of
+     *            {@link GpsLinkExecCommand}.
      * 
      */
     public final void sendCmd(final GpsLinkExecCommand cmd) {
@@ -944,7 +948,7 @@ public class Controller implements ModelListener {
      * application fully controls what happens on the serial link.
      * 
      * @param isAuto
-     *                When true, the data is fetched automatically.
+     *            When true, the data is fetched automatically.
      */
     public final void setAutoFetch(final boolean isAuto) {
         m.mtkModel().setAutoFetch(isAuto);
@@ -978,7 +982,7 @@ public class Controller implements ModelListener {
      * the connection for data.
      * 
      * @param port
-     *                Port number to open
+     *            Port number to open
      */
     public final void setPort(final int port) {
         closeGPS();
@@ -990,7 +994,7 @@ public class Controller implements ModelListener {
      * Sets the port's speed (baud rate).
      * 
      * @param baudRate
-     *                The baud rate to set.
+     *            The baud rate to set.
      */
     public final void setBaudRate(final int baudRate) {
         m.gpsRxTx().setBaudRate(baudRate);
@@ -1000,7 +1004,7 @@ public class Controller implements ModelListener {
      * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
      * 
      * @param portName
-     *                The path to the port.
+     *            The path to the port.
      */
     public final void openFreeTextPort(final String portName) {
         closeGPS();
@@ -1038,7 +1042,7 @@ public class Controller implements ModelListener {
      * Set the debugging state of the connection.
      * 
      * @param isConnDebugActive
-     *                When true, the connection debug information is active.
+     *            When true, the connection debug information is active.
      */
     public final void setDebugConn(final boolean isConnDebugActive) {
         m.gpsRxTx().setDebugConn(isConnDebugActive,
@@ -1060,7 +1064,7 @@ public class Controller implements ModelListener {
      * Set the general debugging state.
      * 
      * @param isDebugActive
-     *                If true, activate general debug.
+     *            If true, activate general debug.
      * 
      * @see #setDebugConn(boolean) for other debug functionality.
      */
@@ -1092,24 +1096,24 @@ public class Controller implements ModelListener {
     /**
      * Sets the trackpoint RCR mask for the active filter.
      * 
-     * @param rcrMask -
-     *                {@link BT747Constants#RCR_TIME_MASK}<br> -
-     *                {@link BT747Constants#RCR_SPEED_MASK}<br> -
-     *                {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
-     *                {@link BT747Constants#RCR_BUTTON_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP0_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP1_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP2_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP3_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP4_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP5_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP6_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP7_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP8_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP9_MASK}<br> -
-     *                {@link BT747Constants#RCR_APPY_MASK}<br> -
-     *                {@link BT747Constants#RCR_APPZ_MASK}<br> -
-     *                {@link BT747Constants#RCR_ALL_APP_MASK}
+     * @param rcrMask
+     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
+     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setTrkPtRCR(final int rcrMask) {
         m.setTrkPtRCR(rcrMask);
@@ -1118,24 +1122,24 @@ public class Controller implements ModelListener {
     /**
      * Sets the waypoint RCR mask for the active filter.
      * 
-     * @param rcrMask -
-     *                {@link BT747Constants#RCR_TIME_MASK}<br> -
-     *                {@link BT747Constants#RCR_SPEED_MASK}<br> -
-     *                {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
-     *                {@link BT747Constants#RCR_BUTTON_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP0_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP1_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP2_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP3_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP4_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP5_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP6_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP7_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP8_MASK}<br> -
-     *                {@link BT747Constants#RCR_APP9_MASK}<br> -
-     *                {@link BT747Constants#RCR_APPY_MASK}<br> -
-     *                {@link BT747Constants#RCR_APPZ_MASK}<br> -
-     *                {@link BT747Constants#RCR_ALL_APP_MASK}
+     * @param rcrMask
+     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
+     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setWayPtRCR(final int rcrMask) {
         m.setWayPtRCR(rcrMask);
@@ -1145,17 +1149,18 @@ public class Controller implements ModelListener {
      * Sets the 'Valid' filter mask for the current track filter.
      * 
      * @param validMask
-     *                The filter mask to set for the validity filter. Use the
-     *                following constants:<br> -
-     *                {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
-     *                {@link BT747Constants#VALID_SPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_DGPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_PPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_RTK_MASK} <br> -
-     *                {@link BT747Constants#VALID_FRTK_MASK} <br> -
-     *                {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
-     *                {@link BT747Constants#VALID_MANUAL_MASK} <br> -
-     *                {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>
+     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     *            -
      * 
      */
     public final void setTrkPtValid(final int validMask) {
@@ -1166,17 +1171,18 @@ public class Controller implements ModelListener {
      * Sets the 'Valid' filter mask for the current waypoint filter.
      * 
      * @param validMask
-     *                The filter mask to set for the validity filter. Use the
-     *                following constants:<br> -
-     *                {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
-     *                {@link BT747Constants#VALID_SPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_DGPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_PPS_MASK} <br> -
-     *                {@link BT747Constants#VALID_RTK_MASK} <br> -
-     *                {@link BT747Constants#VALID_FRTK_MASK} <br> -
-     *                {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
-     *                {@link BT747Constants#VALID_MANUAL_MASK} <br> -
-     *                {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>
+     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     *            -
      * 
      */
     public final void setWayPtValid(final int validMask) {
@@ -1193,39 +1199,39 @@ public class Controller implements ModelListener {
      * 
      * 
      * @param lock
-     *                When true, subsequent changes in these settings will be
-     *                impossible.
+     *            When true, subsequent changes in these settings will be
+     *            impossible.
      * @param updateRate
-     *                The 'fix period' of the GPS in ms. When this is 200,
-     *                then the Fix is 5Hz.
+     *            The 'fix period' of the GPS in ms. When this is 200, then
+     *            the Fix is 5Hz.
      * @param baudRate
-     *                The speed of the serial communication of the MTK
-     *                chipset. Be carefull - this may be the internal speed -
-     *                not the external speed!
+     *            The speed of the serial communication of the MTK chipset. Be
+     *            carefull - this may be the internal speed - not the external
+     *            speed!
      * @param periodGLL
-     *                The period of emission of the GLL sentence (relative to
-     *                the fix).
+     *            The period of emission of the GLL sentence (relative to the
+     *            fix).
      * @param periodRMC
-     *                The period of emission of the RMC sentence (relative to
-     *                the fix).
+     *            The period of emission of the RMC sentence (relative to the
+     *            fix).
      * @param periodVTG
-     *                The period of emission of the VTG sentence (relative to
-     *                the fix).
+     *            The period of emission of the VTG sentence (relative to the
+     *            fix).
      * @param periodGSA
-     *                The period of emission of the GSA sentence (relative to
-     *                the fix).
+     *            The period of emission of the GSA sentence (relative to the
+     *            fix).
      * @param periodGSV
-     *                The period of emission of the GSV sentence (relative to
-     *                the fix).
+     *            The period of emission of the GSV sentence (relative to the
+     *            fix).
      * @param periodGGA
-     *                The period of emission of the GGA sentence (relative to
-     *                the fix).
+     *            The period of emission of the GGA sentence (relative to the
+     *            fix).
      * @param periodZDA
-     *                The period of emission of the ZDA sentence (relative to
-     *                the fix).
+     *            The period of emission of the ZDA sentence (relative to the
+     *            fix).
      * @param periodMCHN
-     *                The period of emission of the MCHN sentence (relative to
-     *                the fix).
+     *            The period of emission of the MCHN sentence (relative to the
+     *            fix).
      */
     public final void setFlashUserOption(final boolean lock,
             final int updateRate, final int baudRate, final int periodGLL,
@@ -1242,8 +1248,8 @@ public class Controller implements ModelListener {
      * Sets the MAC address for bluetooth (for devices that support it).
      * 
      * @param btMacAddr
-     *                The Mac address to set in the following format:<br>
-     *                00:1F:14:15:12:13.
+     *            The Mac address to set in the following format:<br>
+     *            00:1F:14:15:12:13.
      */
     public final void setBTMacAddr(final String btMacAddr) {
         mtkC().setBtMacAddr(btMacAddr);
@@ -1255,7 +1261,7 @@ public class Controller implements ModelListener {
      * devices.
      * 
      * @param deviceName
-     *                The string to set as the Device Name.
+     *            The string to set as the Device Name.
      */
     public final void setHoluxName(final String deviceName) {
         mtkC().cmd(MtkController.CMD_SET_DEVICE_NAME,
@@ -1267,21 +1273,22 @@ public class Controller implements ModelListener {
      * Set the NMEA period settings of the device.
      * 
      * @param periods
-     *                The array indexes are given by:<br> -
-     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br> -
+     *            The array indexes are given by:<br>
+     *            - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *            -
      */
     public final void setNMEAPeriods(final int[] periods) {
         mtkC().setNMEAPeriods(periods);
@@ -1299,7 +1306,7 @@ public class Controller implements ModelListener {
      * Sets the enable of SBAS (DGPS) satellites that are in test.
      * 
      * @param isSBASTestEnabled
-     *                When true, enable test satellites.
+     *            When true, enable test satellites.
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
         gpsCmd(MtkController.CMD_SET_SBAS_TEST_ENABLED, new CmdParam(
@@ -1311,7 +1318,7 @@ public class Controller implements ModelListener {
      * Enable SBAS (DGPS).
      * 
      * @param set
-     *                When true, enables SBAS.
+     *            When true, enables SBAS.
      */
     public final void setSBASEnabled(final boolean set) {
         gpsCmd(MtkController.CMD_SET_SBAS_ENABLED, new CmdParam(set));
@@ -1322,7 +1329,7 @@ public class Controller implements ModelListener {
      * Set GPS's Datum mode.
      * 
      * @param mode
-     *                The datum mode to set.
+     *            The datum mode to set.
      */
     public final void setDatumMode(final int mode) {
         mtkC().setDatumMode(mode);
@@ -1333,7 +1340,7 @@ public class Controller implements ModelListener {
      * Set the DGPS mode to use when SBAS enabled.
      * 
      * @param mode
-     *                The mode to use.
+     *            The mode to use.
      */
     public final void setDGPSMode(final int mode) {
         mtkC().setDGPSMode(mode);
@@ -1344,7 +1351,7 @@ public class Controller implements ModelListener {
      * Enable the power save mode on the device - this setting is untested.
      * 
      * @param set
-     *                If true, enable power save mode.
+     *            If true, enable power save mode.
      */
     public final void setPowerSaveEnabled(final boolean set) {
         gpsCmd(MtkController.CMD_SET_POWERSAVE_ENABLED, new CmdParam(set));
@@ -1356,23 +1363,23 @@ public class Controller implements ModelListener {
      * log reason.
      * 
      * @param value
-     *                {@link BT747Constants#RCR_TIME_MASK}
-     *                {@link BT747Constants#RCR_SPEED_MASK}
-     *                {@link BT747Constants#RCR_DISTANCE_MASK}
-     *                {@link BT747Constants#RCR_BUTTON_MASK}
-     *                {@link BT747Constants#RCR_APP0_MASK}
-     *                {@link BT747Constants#RCR_APP1_MASK}
-     *                {@link BT747Constants#RCR_APP2_MASK}
-     *                {@link BT747Constants#RCR_APP3_MASK}
-     *                {@link BT747Constants#RCR_APP4_MASK}
-     *                {@link BT747Constants#RCR_APP5_MASK}
-     *                {@link BT747Constants#RCR_APP6_MASK}
-     *                {@link BT747Constants#RCR_APP7_MASK}
-     *                {@link BT747Constants#RCR_APP8_MASK}
-     *                {@link BT747Constants#RCR_APP9_MASK}
-     *                {@link BT747Constants#RCR_APPY_MASK}
-     *                {@link BT747Constants#RCR_APPZ_MASK}
-     *                {@link BT747Constants#RCR_ALL_APP_MASK}
+     *            {@link BT747Constants#RCR_TIME_MASK}
+     *            {@link BT747Constants#RCR_SPEED_MASK}
+     *            {@link BT747Constants#RCR_DISTANCE_MASK}
+     *            {@link BT747Constants#RCR_BUTTON_MASK}
+     *            {@link BT747Constants#RCR_APP0_MASK}
+     *            {@link BT747Constants#RCR_APP1_MASK}
+     *            {@link BT747Constants#RCR_APP2_MASK}
+     *            {@link BT747Constants#RCR_APP3_MASK}
+     *            {@link BT747Constants#RCR_APP4_MASK}
+     *            {@link BT747Constants#RCR_APP5_MASK}
+     *            {@link BT747Constants#RCR_APP6_MASK}
+     *            {@link BT747Constants#RCR_APP7_MASK}
+     *            {@link BT747Constants#RCR_APP8_MASK}
+     *            {@link BT747Constants#RCR_APP9_MASK}
+     *            {@link BT747Constants#RCR_APPY_MASK}
+     *            {@link BT747Constants#RCR_APPZ_MASK}
+     *            {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void logImmediate(final int value) {
         mtkC().logImmediate(value);
@@ -1553,21 +1560,21 @@ public class Controller implements ModelListener {
      * Sets the NMEA string types to write to the NMEA output file format.
      * 
      * @param formatNMEA
-     *                Bit format using following bit indexes:<br> -
-     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
-     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *            Bit format using following bit indexes:<br>
+     *            - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     public final void setNMEAset(final int formatNMEA) {
         m.setNMEAset(formatNMEA);
@@ -1577,12 +1584,11 @@ public class Controller implements ModelListener {
      * The way we split the input data.
      * 
      * @param value
-     *                0=all data in one file;<br>
-     *                1=one file per day (split at midnight after time offset
-     *                calculation)<br>
-     *                2=one file per track (a track separation occurs when the
-     *                time between two log points is bigger than a given
-     *                number.
+     *            0=all data in one file;<br>
+     *            1=one file per day (split at midnight after time offset
+     *            calculation)<br>
+     *            2=one file per track (a track separation occurs when the
+     *            time between two log points is bigger than a given number.
      */
     public final void setOutputFileSplitType(final int value) {
         m.setOutputFileSplitType(value);
@@ -1591,9 +1597,10 @@ public class Controller implements ModelListener {
     /**
      * @param heightConversionMode
      * 
-     * When true the height (WGS84) will be converted to Mean Sea Level.
-     * {@link Model#HEIGHT_AUTOMATIC} {@link Model#HEIGHT_NOCHANGE}
-     * {@link Model#HEIGHT_WGS84_TO_MSL}
+     *            When true the height (WGS84) will be converted to Mean Sea
+     *            Level. {@link Model#HEIGHT_AUTOMATIC}
+     *            {@link Model#HEIGHT_NOCHANGE}
+     *            {@link Model#HEIGHT_WGS84_TO_MSL}
      */
     public final void setHeightConversionMode(final int heightConversionMode) {
         m.setHeightConversionMode(heightConversionMode);
@@ -1633,82 +1640,85 @@ public class Controller implements ModelListener {
     public final void setAgpsData(final byte[] agpsData) {
         getGpsC().setAgpsData(agpsData);
     }
-    
+
     public final void sendBT747Exception(final BT747Exception e) {
         m.postEvent(GpsEvent.EXCEPTION, e);
     }
 
-	/**
-	 * A LocationSender instance which is registered with this instance's Model.
-	 * Currently there may be only one LocationSender registered with a Model
-	 * from this Controller class.<br>
-	 * This instance is remembered here so that it can be used to be removed
-	 * again from the Model.
-	 * 
-	 * @author Florian Unger
-	 */
-	private LocationSender registeredLocSender = null;
+    /**
+     * A LocationSender instance which is registered with this instance's
+     * Model. Currently there may be only one LocationSender registered with a
+     * Model from this Controller class.<br>
+     * This instance is remembered here so that it can be used to be removed
+     * again from the Model.
+     * 
+     * @author Florian Unger
+     */
+    private LocationSender registeredLocSender = null;
 
-	/**
-	 * Check whether location updates currently are sent out to external
-	 * servers.
-	 * 
-	 * @return true if the location serving is currently active, false
-	 *         otherwise.
-	 */
-	public boolean isLocationServingActive() {
-		return registeredLocSender != null;
-	}
+    /**
+     * Check whether location updates currently are sent out to external
+     * servers.
+     * 
+     * @return true if the location serving is currently active, false
+     *         otherwise.
+     */
+    public boolean isLocationServingActive() {
+        return registeredLocSender != null;
+    }
 
-	/**
-	 * If there is no LocationSender yet registered with the Model create such a
-	 * LocationSender and register it with the Model so that it starts sending
-	 * out position updates.<br>
-	 * As usually with Controllers this is an operation which implements the
-	 * reaction of the application to some user interaction (Although this is
-	 * called with other ways also). This is useful for example for a type of
-	 * interaction where a user activates position sending with pressing a
-	 * button.
-	 * 
-	 * @author Florian Unger
-	 */
-	public void startGPSPositionServing() {
-		if (registeredLocSender == null) {
-			LocationSender ls = m.createAndConfigureLocationSender();
-			this.getModel().addListener(ls);
-			// remember this not before it really is registered with the model.
-			this.registeredLocSender = ls;
-		}
-	}
+    /**
+     * If there is no LocationSender yet registered with the Model create such
+     * a LocationSender and register it with the Model so that it starts
+     * sending out position updates.<br>
+     * As usually with Controllers this is an operation which implements the
+     * reaction of the application to some user interaction (Although this is
+     * called with other ways also). This is useful for example for a type of
+     * interaction where a user activates position sending with pressing a
+     * button.
+     * 
+     * @author Florian Unger
+     */
+    public void startGPSPositionServing() {
+        if (registeredLocSender == null) {
+            LocationSender ls = m.createAndConfigureLocationSender();
+            this.getModel().addListener(ls);
+            // remember this not before it really is registered with the
+            // model.
+            this.registeredLocSender = ls;
+        }
+    }
 
-	/**
-	 * If there is a LocationSender currently registered as Listener with the
-	 * Model of this instance then remove it from the Listeners of the Model and
-	 * set registeredLocSender to null.<br>
-	 * This is the complementing operation to startGPSPositionServing and may be
-	 * used just the same way. For example the user might stop position serving
-	 * by pressing a push button.
-	 * 
-	 * @author Florian Unger
-	 */
-	public void stopGPSPositionServing() {
-		if (registeredLocSender != null) {
-			try {
-				this.getModel().removeListener(registeredLocSender);
-			} catch (Exception e) {
-				// Normally we would check whether the instance to be removed
-				// from the listeners is register at all (it may have been
-				// removed by someone else). If it would not be contained in
-				// the listeners we would not try to remove.
-				// Unfortunately there is no way in the implementation of Model
-				// to check for the existence of an Object in teh listeners. So
-				// we just try the removing and take any resulting Exception
-				// as sign that the Object to remove is not in teh listeners
-				// anymore.
-			}
-			registeredLocSender = null;
-		}
+    /**
+     * If there is a LocationSender currently registered as Listener with the
+     * Model of this instance then remove it from the Listeners of the Model
+     * and set registeredLocSender to null.<br>
+     * This is the complementing operation to startGPSPositionServing and may
+     * be used just the same way. For example the user might stop position
+     * serving by pressing a push button.
+     * 
+     * @author Florian Unger
+     */
+    public void stopGPSPositionServing() {
+        if (registeredLocSender != null) {
+            try {
+                this.getModel().removeListener(registeredLocSender);
+            } catch (Exception e) {
+                // Normally we would check whether the instance to be removed
+                // from the listeners is register at all (it may have been
+                // removed by someone else). If it would not be contained in
+                // the listeners we would not try to remove.
+                // Unfortunately there is no way in the implementation of
+                // Model
+                // to check for the existence of an Object in teh listeners.
+                // So
+                // we just try the removing and take any resulting Exception
+                // as sign that the Object to remove is not in teh listeners
+                // anymore.
+            }
+            registeredLocSender = null;
+        }
 
-	}
+    }
 
 }

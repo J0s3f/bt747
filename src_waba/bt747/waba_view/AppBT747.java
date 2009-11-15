@@ -33,6 +33,8 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import javax.swing.JOptionPane;
+
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.*;
@@ -44,6 +46,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.waba_view.ui.BT747MessageBox;
 
 /**
@@ -750,7 +753,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
         mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt
                 .getString(Txt.DATA_NOT_SAME), mbStr);
         mb.popupBlockingModal();
-        c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
+        try {
+            c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
+        } catch (BT747Exception e) {
+            notifyBT747Exception(e);
+        }
     }
 
     /**
@@ -785,13 +792,25 @@ public class AppBT747 extends MainWindow implements ModelListener {
         c.stopErase();
     }
 
+    
+    public final static void notifyBT747Exception(final BT747Exception e) {
+        String msg = e.getMessage();
+        if(msg.equals(BT747Exception.ERR_COULD_NOT_OPEN)) {
+            couldNotOpenFileMessage(e.getCause().toString());
+        } else {
+            String box = e.getCause().toString() + '|' + e.getMessage();  
+            (new BT747MessageBox(Txt.getString(Txt.ERROR), box))
+                    .popupBlockingModal();
+        }
+    }
+
     /**
      * Show error message that file could not be opened.
      * 
      * @param fileName
      *                The file that could not be opened.
      */
-    private void couldNotOpenFileMessage(final String fileName) {
+    private static void couldNotOpenFileMessage(final String fileName) {
         (new BT747MessageBox(Txt.getString(Txt.ERROR), Txt
                 .getString(Txt.COULD_NOT_OPEN)
                 + fileName + Txt.getString(Txt.CHK_PATH)))

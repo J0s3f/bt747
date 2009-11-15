@@ -9,7 +9,9 @@ import bt747.sys.Generic;
  * @author Mario
  * 
  */
-public class BT747Exception extends Error {
+public class BT747Exception extends Exception {
+    public final static String ERR_COULD_NOT_OPEN = "open";
+    
     private Throwable t;
     /**
      * 

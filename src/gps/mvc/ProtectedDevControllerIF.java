@@ -3,6 +3,8 @@
  */
 package gps.mvc;
 
+import bt747.sys.interfaces.BT747Exception;
+
 /**
  * @author Mario
  * 
@@ -19,8 +21,9 @@ interface ProtectedDevControllerIF extends DeviceControllerIF {
     /**
      * Called regularly so that the controller can notify the log download
      * handler for instance.
+     * @throws BT747Exception 
      */
-    public void notifyRun();
+    public void notifyRun() throws BT747Exception;
     
     /**
      * The environment indicates a disconnect happened.
