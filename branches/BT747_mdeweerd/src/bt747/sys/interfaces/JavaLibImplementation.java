@@ -182,6 +182,7 @@ public interface JavaLibImplementation {
 	 * @return an instance of a class implementing the BT747HttpSender
 	 *         interface.
 	 * @author Florian Unger
+	 * @throws BT747Exception 
 	 */
-	BT747HttpSender getHttpSenderInstance();
+	BT747HttpSender getHttpSenderInstance() throws BT747Exception;
 }

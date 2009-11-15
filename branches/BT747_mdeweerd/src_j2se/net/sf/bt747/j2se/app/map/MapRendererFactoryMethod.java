@@ -12,7 +12,7 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
-import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.MapWaypoint;
 
 /**
  * @author Mario
@@ -83,8 +83,8 @@ public class MapRendererFactoryMethod implements WaypointRenderer {
     }
 
     public final void toggleSelected(final Waypoint waypoint) {
-        if (waypoint instanceof BT747Waypoint) {
-            ((BT747Waypoint) (waypoint)).toggleShowTag();
+        if (waypoint instanceof MapWaypoint) {
+            ((MapWaypoint) (waypoint)).toggleShowTag();
         }
     }
 }

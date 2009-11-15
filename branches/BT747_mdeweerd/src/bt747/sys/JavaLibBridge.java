@@ -15,6 +15,7 @@
 package bt747.sys;
 
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
@@ -250,8 +251,9 @@ public final class JavaLibBridge {
 	 * 
 	 * @return an instance of a class implementing BT747HttpSender
 	 * @author Florian Unger
+	 * @throws BT747Exception 
 	 */
-	public static final BT747HttpSender getHttpSenderInstance() {
+	public static final BT747HttpSender getHttpSenderInstance() throws BT747Exception {
 		return JavaLibBridge.imp.getHttpSenderInstance();
 	}
 }

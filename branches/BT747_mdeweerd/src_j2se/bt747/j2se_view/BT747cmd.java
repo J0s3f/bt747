@@ -34,10 +34,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
+import net.sf.bt747.j2se.app.utils.Utils;
 
 import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
@@ -48,6 +51,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Int;
 
@@ -261,6 +265,19 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
+    
+    public final static void notifyBT747Exception(final BT747Exception e) {
+        String message = "";
+        System.err.println("\n####    ERROR  !!! ####");
+        if (e.getCause().toString().equals(BT747Exception.ERR_COULD_NOT_OPEN)) {
+            message = "Could not open " + e.getMessage();
+        } else {
+            message = e.getCause().toString() + '\n' + e.getMessage();
+        }
+        System.err.println(message);
+    }
+
+
     // Code snippet kept for reference
 
     // public void modelEvent(ModelEvent e) {
@@ -317,6 +334,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     private volatile boolean overwriteDownloadOk = false;
 
     public void modelEvent(final ModelEvent e) {
+        try {
         switch (e.getType()) {
         // case ModelEvent.DEBUG_MSG:
         // System.out.flush();
@@ -386,6 +404,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             break;
         }
 
+        } catch (BT747Exception b) {
+            notifyBT747Exception(b);
+        }
     }
 
     private void flushOutstandingCmds() {
@@ -829,7 +850,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                             + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
                                     .getMainVersion())
                                     : ""));
-            System.out.println(String.format(Locale.US,
+            System.out.println(Utils.format(
                     "Log Conditions: Time:%.1f Distance:%.1f Speed:%d", m
                             .getLogTimeInterval() / 10., m
                             .getLogDistanceInterval() / 10., m

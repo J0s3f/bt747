@@ -26,6 +26,7 @@ import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 
 import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.AppSettings;
@@ -155,10 +156,11 @@ public class FileTablePanel extends javax.swing.JPanel implements
     
     private void doSavePositions() {
 
-        for (final BT747Waypoint w : m.getPositionData().getUserWayPoints()) {
+        for (final MapWaypoint w : m.getPositionData().getUserWayPoints()) {
             try {
-                if (w instanceof ImageData) {
-                    final ImageData id = (ImageData) w;
+                final BT747Waypoint wpt = w.getBT747Waypoint(); 
+                if (wpt instanceof ImageData) {
+                    final ImageData id = (ImageData) wpt;
                     final TaggedFilePathFactory fpf = new TaggedFilePathFactory();
                     final String t = m.getStringOpt(J2SEAppModel.TAGGEDFILE_TEMPLATE);
                     fpf.setDestTemplate(t);

@@ -36,6 +36,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.JavaLibImplementation;
 
 /**
@@ -87,7 +88,7 @@ public class SimpleExample implements bt747.model.ModelListener {
     }
 
     private void initAppData() {
-        m.init();  // Initialise the app 
+        m.init(); // Initialise the app
         // This is an example without an user interface.
         // BT747Main is an example with a user interface.
 
@@ -205,8 +206,8 @@ public class SimpleExample implements bt747.model.ModelListener {
             // Print the first ten positions
             for (int i = 0; i < positions.length && i < 10; i++) {
                 GPSRecord record = positions[i];
-                System.out.println("Position " + i + ":" + record.getLatitude()
-                        + "," + record.getLongitude());
+                System.out.println("Position " + i + ":"
+                        + record.getLatitude() + "," + record.getLongitude());
             }
         }
 
@@ -233,65 +234,70 @@ public class SimpleExample implements bt747.model.ModelListener {
     }
 
     public void modelEvent(ModelEvent e) {
-        int type = e.getType();
-        if (type == ModelEvent.GPRMC) {
-            // updateRMCData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.GPGGA) {
-            // updateGPSData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
-            // updateLogFormatData();
-            // } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            // // getRawLogFilePath();
-            // } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            // // getOutputFilePath();
-            // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            // // getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-            // getIncremental();
-        } else if (type == ModelEvent.TRK_VALID_CHANGE
-                || type == ModelEvent.TRK_RCR_CHANGE
-                || type == ModelEvent.WAY_VALID_CHANGE
-                || type == ModelEvent.WAY_RCR_CHANGE) {
-            // updateGuiLogFilterSettings();
-        } else if (type == ModelEvent.CONVERSION_STARTED) {
-            // conversionStartTime = System.currentTimeMillis();
-        } else if (type == ModelEvent.CONVERSION_ENDED) {
-            // lbConversionTime
-            // .setText("Time to convert: "
-            // + ((int) (System.currentTimeMillis() - conversionStartTime))
-            // + " ms");
-            // lbConversionTime.setVisible(true);
-        } else if (type == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) {
-            // When the data on the device is not the same, overwrite
-            // automatically.
-            System.out
-                    .println("Overwriting previously downloaded data that looks different.");
-            c.replyToOkToOverwrite(true);
-        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
-                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
-            progressUpdate();
-        } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
-            progressUpdate();
-            handleDownloadEnded();
-            // } else if (type == ModelEvent.DEBUG_MSG) {
-            // System.out.flush();
-            // System.err.println((String) e.getArg());
-            // System.err.flush();
-            // progressUpdate();
-        } else if (type == ModelEvent.CONNECTED) {
-            // btConnect.setText("Disconnect");
-            // btConnectFunctionIsConnect = false;
+        try {
+            int type = e.getType();
+            if (type == ModelEvent.GPRMC) {
+                // updateRMCData((GPSRecord) e.getArg());
+            } else if (type == ModelEvent.GPGGA) {
+                // updateGPSData((GPSRecord) e.getArg());
+            } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
+                // updateLogFormatData();
+                // } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+                // // getRawLogFilePath();
+                // } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+                // // getOutputFilePath();
+                // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+                // // getWorkDirPath();
+            } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+                // getIncremental();
+            } else if (type == ModelEvent.TRK_VALID_CHANGE
+                    || type == ModelEvent.TRK_RCR_CHANGE
+                    || type == ModelEvent.WAY_VALID_CHANGE
+                    || type == ModelEvent.WAY_RCR_CHANGE) {
+                // updateGuiLogFilterSettings();
+            } else if (type == ModelEvent.CONVERSION_STARTED) {
+                // conversionStartTime = System.currentTimeMillis();
+            } else if (type == ModelEvent.CONVERSION_ENDED) {
+                // lbConversionTime
+                // .setText("Time to convert: "
+                // + ((int) (System.currentTimeMillis() -
+                // conversionStartTime))
+                // + " ms");
+                // lbConversionTime.setVisible(true);
+            } else if (type == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) {
+                // When the data on the device is not the same, overwrite
+                // automatically.
+                System.out
+                        .println("Overwriting previously downloaded data that looks different.");
+                c.replyToOkToOverwrite(true);
+            } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+                    || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
+                progressUpdate();
+            } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
+                progressUpdate();
+                handleDownloadEnded();
+                // } else if (type == ModelEvent.DEBUG_MSG) {
+                // System.out.flush();
+                // System.err.println((String) e.getArg());
+                // System.err.flush();
+                // progressUpdate();
+            } else if (type == ModelEvent.CONNECTED) {
+                // btConnect.setText("Disconnect");
+                // btConnectFunctionIsConnect = false;
 
-            // Launching in another thread - not really needed.
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    afterConnection();
-                }
-            });
+                // Launching in another thread - not really needed.
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        afterConnection();
+                    }
+                });
 
-        } else if (type == ModelEvent.DISCONNECTED) {
-            // btConnect.setText("Connect");
-            // btConnectFunctionIsConnect = true;
+            } else if (type == ModelEvent.DISCONNECTED) {
+                // btConnect.setText("Connect");
+                // btConnectFunctionIsConnect = true;
+            }
+        } catch (BT747Exception e2) {
+            // TODO: handle exception
         }
     }
 
@@ -331,7 +337,7 @@ public class SimpleExample implements bt747.model.ModelListener {
 
     /**
      * @param args
-     *                the command line arguments
+     *            the command line arguments
      */
     public static void main(String args[]) {
         Settings.setAppSettings(new String(new byte[AppSettings.SIZE]));

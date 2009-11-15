@@ -11,6 +11,7 @@ package net.sf.bt747.loc;
 
 import bt747.model.Model;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
 
@@ -114,10 +115,11 @@ public class HttpLocationSender extends LocationSender {
 	 * implementation of Http protocol needs to be different.<br>
 	 * This is the concrete implementation of the abstract method in the
 	 * superclass.
+	 * @throws BT747Exception 
 	 * 
 	 * @see net.sf.bt747.loc.LocationSender#sendOutData()
 	 */
-	protected void sendOutData() {
+	protected void sendOutData() throws BT747Exception {
 		final BT747Hashtable data = prepareDataToSend();
 		final BT747HttpSender hsi = JavaLibBridge.getHttpSenderInstance();
 		hsi.doRequest(targetHostname, targetPort, targetFile, user, password,

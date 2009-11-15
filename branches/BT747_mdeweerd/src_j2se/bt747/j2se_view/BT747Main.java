@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
+import net.sf.bt747.j2se.app.utils.Utils;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
@@ -318,7 +319,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 + (int) tabbedPanelAll.getPreferredSize().getHeight()
                 - tabbedPanelAll.getHeight() + 10;
         final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        dimensionMsg += String.format("Initial: %dx%d  Screen: %dx%d",
+        dimensionMsg += Utils.format("Initial: %dx%d  Screen: %dx%d",
                 x, y, (int) dim.getWidth(), (int) dim.getHeight());
         if (x > dim.getWidth()) {
             x = (int) dim.getWidth();
@@ -334,7 +335,7 @@ public class BT747Main extends javax.swing.JFrame implements
         }
 
         setSize(x, y);
-        dimensionMsg += String.format(" Final: %dx%d", x, y);
+        dimensionMsg += Utils.format(" Final: %dx%d", x, y);
         validate();
         updateGuiData(); // For internationalisation - not so easy in
         // netbeans

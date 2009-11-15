@@ -240,7 +240,13 @@ public class GpsController implements BT747Thread, ProtocolConstants,
                 nextRun = timeStamp + 10;
                 int loopsToGo = 0; // Setting to 0 for more responsiveness
                 if (handler.isConnected()) {
-                    mtkC.notifyRun();
+                    try {
+                        mtkC.notifyRun();
+                    } catch (BT747Exception e) {
+                        setDeviceOperationHandler(null);
+                        Generic.debug("Controller: ", e);
+                        gpsM.postEvent(new GpsEvent(GpsEvent.EXCEPTION, e));
+                    }
                     {
                         // local value
                         final DeviceOperationHandlerIF h = operationHandler;
@@ -336,17 +342,18 @@ public class GpsController implements BT747Thread, ProtocolConstants,
     public final boolean isSupportedCmd(int cmd) {
         return mtkC.isSupportedCmd(cmd);
     }
-    
+
     public final void setAgpsData(final byte[] agpsData) {
         mtkC.setAgpsData(agpsData);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.mvc.DeviceControllerIF#getLog(java.lang.String, int)
      */
     public void getLog(String fileName, int card) {
         mtkC.getLog(fileName, card);
     }
-
 
 }

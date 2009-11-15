@@ -211,7 +211,7 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
 		return new WabaHashSet();
 	}
 
-	public BT747HttpSender getHttpSenderInstance() {
+	public BT747HttpSender getHttpSenderInstance() throws BT747Exception {
 		throw new BT747Exception(
 				"This feature is not implemented in this platform!");
 	}

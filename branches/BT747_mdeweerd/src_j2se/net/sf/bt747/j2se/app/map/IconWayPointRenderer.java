@@ -35,7 +35,7 @@ import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 
-import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.GPSPositionWaypoint;
 
 /**
@@ -106,8 +106,8 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
                 g.drawImage(img,-img.getWidth()/2,-img.getHeight(),null);
             } else {
             g.setColor(color);
-            if (BT747Waypoint.class.isInstance(waypoint)) {
-                if (((BT747Waypoint) waypoint).isSelected()) {
+            if (MapWaypoint.class.isInstance(waypoint)) {
+                if (((MapWaypoint) waypoint).isSelected()) {
                     g.setColor(selectedColor);
                 }
             }
@@ -116,8 +116,8 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
             g.drawLine(-10, 0, 10, 0);
             g.drawLine(0, -10, 0, 10);
 
-            if (((BT747Waypoint) waypoint).isShowTag()) {
-                paintWaypointSummary(g, map, (BT747Waypoint) waypoint);
+            if (((MapWaypoint) waypoint).isShowTag()) {
+                paintWaypointSummary(g, map, (MapWaypoint) waypoint);
             }
             }
         } catch (final Exception e) {
@@ -172,7 +172,7 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
     }
 
     protected void paintWaypointSummary(final Graphics2D g,
-            final JXMapViewer map, final BT747Waypoint waypoint) {
+            final JXMapViewer map, final MapWaypoint waypoint) {
         final Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.75f));

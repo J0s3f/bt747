@@ -58,7 +58,7 @@ import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
-import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.GPSPositionWaypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.model.AppSettings;
@@ -155,7 +155,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             try {
-                final BT747Waypoint w = (BT747Waypoint) evt.getNewValue();
+                final MapWaypoint w = (MapWaypoint) evt.getNewValue();
                 if (w != waypointList.getSelectedValue()) {
                     waypointList.setSelectedValue(w, true);
                     ml.selectedWaypoint(w);
@@ -296,7 +296,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
-        for (final BT747Waypoint w : m.getPositionData().getBT747Waypoints()) {
+        for (final MapWaypoint w : m.getPositionData().getBT747Waypoints()) {
             final GPSRecord r = w.getGpsRecord();
             if (r.hasLatitude() && r.hasLongitude()) {
                 if (r.latitude < minlat) {
@@ -315,7 +315,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
-        for (final BT747Waypoint w : m.getPositionData()
+        for (final MapWaypoint w : m.getPositionData()
                 .getBT747UserWaypoints()) {
             final GPSRecord r = w.getGpsRecord();
             if (r.hasLatitude() && r.hasLongitude()) {
@@ -540,10 +540,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * @return
          */
         private Waypoint findContainingWaypoint(
-                final List<BT747Waypoint> list, final Point pt,
+                final List<MapWaypoint> list, final Point pt,
                 final Rectangle2D vp2, final Rectangle2D vp3,
                 final MapRendererFactoryMethod factory) {
-            for (final Waypoint w : list) {
+            for (final MapWaypoint w : list) {
                 final Point2D point = map.getTileFactory().geoToPixel(
                         w.getPosition(), map.getZoom());
                 int x, y;
@@ -598,7 +598,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
 
         private class I implements Iterator<Waypoint> {
-            private Iterator<BT747Waypoint> i = null;
+            private Iterator<MapWaypoint> i = null;
             private WaypointTypes type = WaypointTypes.GpsPosition;
 
             public I() {
@@ -685,7 +685,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             case MouseEvent.BUTTON3: {
                 final Point pt = e.getPoint();
 
-                final BT747Waypoint w = (BT747Waypoint) waypointPainter
+                final MapWaypoint w = (MapWaypoint) waypointPainter
                         .getContains(pt);
                 if (w != null) {
                     w.toggleShowTag();
@@ -728,7 +728,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         }
 
-        private BT747Waypoint currentWaypoint = null;
+        private MapWaypoint currentWaypoint = null;
         /*
          * (non-Javadoc)
          * 
@@ -747,7 +747,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         /**
          * 
          */
-        private void selectedWaypoint(final BT747Waypoint w) {
+        private void selectedWaypoint(final MapWaypoint w) {
             if (w != currentWaypoint) {
                 clearWaypointSelection();
             }
@@ -762,7 +762,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 final Point pt = e.getPoint();
 
                 try {
-                    final BT747Waypoint w = (BT747Waypoint) waypointPainter
+                    final MapWaypoint w = (MapWaypoint) waypointPainter
                             .getContains(pt);
 
                     if (w == null) {

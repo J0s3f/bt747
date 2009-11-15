@@ -89,8 +89,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         m = c.getModel();
         m.addListener(this);
 
-        scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
-        spScale.setValue(scale);
+        updateScale();
 
         cbLanguage.setModel(new DefaultComboBoxModel(Calendar
                 .getAvailableLocales()));
@@ -159,23 +158,25 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         }
     }
     
-    protected int scale;
-    
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.SETTING_CHANGE:
             switch (Integer.parseInt((String)e.getArg())) {
             case AppSettings.FONTSCALE:
-                scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
-                spScale.setValue(scale);
-                if(c instanceof J2SEAppController) {
-                    ((J2SEAppController) c).scaleUIFont(scale);
-                }
+                updateScale();
                 break;
             }
         }
     }
 
+    /**
+     * @return the scale
+     */
+    private final void updateScale() {
+        int scale = m.getIntOpt(AppSettings.FONTSCALE)&0xFF;
+        spScale.setValue(scale);
+
+    }
     /**
      * This method is called from within the constructor to initialize the
      * form. WARNING: Do NOT modify this code. The content of this method is

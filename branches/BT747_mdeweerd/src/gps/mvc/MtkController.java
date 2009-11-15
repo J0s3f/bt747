@@ -14,6 +14,7 @@ import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
@@ -720,8 +721,9 @@ public class MtkController implements ProtectedDevControllerIF {
      * 
      * @param isOkToOverwrite
      *            If true, the existing log can be overwritten
+     * @throws BT747Exception 
      */
-    public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
+    public final void replyToOkToOverwrite(final boolean isOkToOverwrite) throws BT747Exception {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
     }
 
@@ -738,7 +740,7 @@ public class MtkController implements ProtectedDevControllerIF {
      * 
      * @see gps.mvc.ProtectedDevControllerIF#notifyRun()
      */
-    public void notifyRun() {
+    public void notifyRun() throws BT747Exception {
         if (mtkLogHandler != null) {
             mtkLogHandler.notifyRun();
         }

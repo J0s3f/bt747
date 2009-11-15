@@ -44,6 +44,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.JavaLibImplementation;
 
 /**
@@ -145,6 +146,7 @@ public class TestDevice implements bt747.model.ModelListener {
         // GET AGPS Data
         //J2SEAGPS agpsFetcher = new J2SEAGPS();
         //agpsFetcher.getBytesFromUrl("ftp://tsi0001:passwd@www.transystem.com.tw/MTK7d.EPO")
+        try {
         byte[] agpsData = J2SEAGPS.getBytesFromUrl("http://bt747.free.fr/MTK7d.EPO");
         
 
@@ -337,6 +339,9 @@ public class TestDevice implements bt747.model.ModelListener {
 
         testSingleNMEA("PMTK815");
 
+        } catch (BT747Exception e) {
+            // TODO: handle exception
+        }
         System.exit(0);
     }
 
@@ -360,7 +365,7 @@ public class TestDevice implements bt747.model.ModelListener {
     }
 
     public void modelEvent(ModelEvent e) {
-        // TODO Auto-generated method stub
+        try {
         int type = e.getType();
         if (type == ModelEvent.GPRMC) {
             // updateRMCData((GPSRecord) e.getArg());
@@ -420,6 +425,9 @@ public class TestDevice implements bt747.model.ModelListener {
         } else if (type == ModelEvent.DISCONNECTED) {
             // btConnect.setText("Connect");
             // btConnectFunctionIsConnect = true;
+        }
+        } catch (BT747Exception e1) {
+            // TODO: handle exception
         }
     }
 
