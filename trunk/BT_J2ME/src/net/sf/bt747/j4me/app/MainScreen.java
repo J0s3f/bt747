@@ -513,7 +513,12 @@ public final class MainScreen extends Dialog implements ModelListener {
                     break;
                 case DOWNLOAD_OVERWRITE_CONFIRM:
                     // The confirm screen confirms erasal or not
-                    c.replyToOkToOverwrite(confirmScreen.getConfirmation());
+                    try {
+                        c.replyToOkToOverwrite(confirmScreen
+                                .getConfirmation());
+                    } catch (BT747Exception e) {
+                        
+                    }
                     if (interruptedScreen != null) {
                         confirmScreen = null;
                         interruptedScreen.show();

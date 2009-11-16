@@ -17,6 +17,7 @@ import java.io.InputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
@@ -42,8 +43,12 @@ public class J2MEHttpSenderImpl implements BT747HttpSender {
 			final LocationSender caller) {
 		Thread t = new Thread() {
 			public void run() {
-				doRequestAsynchronously(hostname, port, file, user, password,
-						data, caller);
+				try {
+                    doRequestAsynchronously(hostname, port, file, user, password,
+                    		data, caller);
+                } catch (BT747Exception e) {
+                    Generic.debug("During location sending",e);
+                }
 				super.run();
 			}
 		};
@@ -69,10 +74,11 @@ public class J2MEHttpSenderImpl implements BT747HttpSender {
 	 * @param caller
 	 *            the calling KocationSender instance. This object will get the
 	 *            notifications about success or failure of the request.
+	 * @throws BT747Exception 
 	 */
 	private void doRequestAsynchronously(final String hostname, final int port,
 			final String file, final String user, final String password,
-			final BT747Hashtable data, final LocationSender caller) {
+			final BT747Hashtable data, final LocationSender caller) throws BT747Exception {
 
 		HttpConnection conn = null;
 		InputStream inputStream = null;
