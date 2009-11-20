@@ -178,7 +178,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 newLogFormat = (0xFF & bytes[2]) << 0
                         | (0xFF & bytes[3]) << 8 | (0xFF & bytes[4]) << 16
                         | (0xFF & bytes[5]) << 24;
-                setLogMode(gpsFile,(0xFF & bytes[6]) << 0 | (0xFF & bytes[7]) << 8);
+                setLogMode(gpsFile, (0xFF & bytes[6]) << 0
+                        | (0xFF & bytes[7]) << 8);
 
                 isBlockStartOverwrite = (logMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
                 // Generic.debug("OVERWRITE? "
@@ -224,6 +225,14 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         newLogFormat = logFormat;
                     }
                 }
+                // if (newLogFormat == 0x00FFFFFF) {
+                // // Observed with Royaltek MBT-1100
+                // //if (logFormat == 0) {
+                // newLogFormat = 0x800FFFFF;
+                // //} else {
+                // //newLogFormat = logFormat;
+                // //}
+                // }
                 if (newLogFormat != logFormat) {
                     updateLogFormat(gpsFile, newLogFormat);
                 }
@@ -333,7 +342,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                         - ((((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_DISTANCE_IDX]
                                                 : 0)
                                                 + (((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_MILLISECOND_IDX]
-                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_RCR_IDX]
+                                                        : 0)
+                                                + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_RCR_IDX]
+                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_ROYALTEKNEW_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_ROYALTEKNEW_IDX]
                                                 : 0));
                             } else {
                                 rcrIdx = offsetInBuffer
@@ -341,7 +352,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                         - ((((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_DISTANCE_IDX]
                                                 : 0)
                                                 + (((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_MILLISECOND_IDX]
-                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_RCR_IDX]
+                                                        : 0)
+                                                + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_RCR_IDX]
+                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_ROYALTEKNEW_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_ROYALTEKNEW_IDX]
                                                 : 0));
                             }
 
@@ -604,9 +617,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[offsetInBuffer + 11]) << 24;
             // There is a special operation here
             final int type = 0xFF & bytes[offsetInBuffer + 7];
-//            if(type!=7&&type!=3&&type!=4&&type!=5) {
-//            System.out.println("Type = "+type + ", value = " + value);
-//            }
+            // if(type!=7&&type!=3&&type!=4&&type!=5) {
+            // System.out.println("Type = "+type + ", value = " + value);
+            // }
             switch (type) {
             case 0x02: // logBitMaskChange
                 newLogFormat = value;
@@ -706,21 +719,21 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         return nbrBytesDone;
     }
 
-    
     private int prevLogModeRecNbr = 0;
-    private final void setLogMode(final GPSFileConverterInterface gpsFile, final int value) {
-        //System.out.println("diff "+value+" "+logMode+" "+prevLogModeRecNbr+" "+recCount);
-        if (((logMode & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))>
-                ((value & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))
-                && (prevLogModeRecNbr==recCount)) {
-            final GPSRecord logOnRecord = GPSRecord
-                    .getLogFormatRecord(0);
+
+    private final void setLogMode(final GPSFileConverterInterface gpsFile,
+            final int value) {
+        // System.out.println("diff "+value+" "+logMode+" "+prevLogModeRecNbr+" "+recCount);
+        if (((logMode & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK)) > ((value & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK))
+                && (prevLogModeRecNbr == recCount)) {
+            final GPSRecord logOnRecord = GPSRecord.getLogFormatRecord(0);
             logOnRecord.setVoxStr(GPSRecord.VOX_LOG_ON_OFF);
             gpsFile.addLogRecord(logOnRecord);
         }
         prevLogModeRecNbr = recCount;
         logMode = value;
     }
+
     /**
      * Tries to find a normal record at the indicated offset.
      * 

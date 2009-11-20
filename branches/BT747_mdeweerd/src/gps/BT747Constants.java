@@ -72,6 +72,8 @@ public final class BT747Constants { // dev as in device
     /** Index of bit for log format setting */
     public static final int FMT_DISTANCE_IDX = 19;
     /** Index of bit for log format setting */
+    public static final int FMT_ROYALTEKNEW_IDX = 20;
+    /** Index of bit for log format setting */
     public static final int FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX = 31;
 
     /**
@@ -104,7 +106,7 @@ public final class BT747Constants { // dev as in device
             2, // "RCR", // = 0x20000 // 11
             2, // "MILISECOND",// = 0x40000 // 12
             8, // "DISTANCE" // = 0x80000 // 13
-            0, // 14
+            1, // 14  //Royaltek new ???
             0, // 15
             0, // 16
             0, // 17
@@ -691,6 +693,7 @@ public final class BT747Constants { // dev as in device
                 case BT747Constants.FMT_RCR_IDX:
                 case BT747Constants.FMT_MILLISECOND_IDX:
                 case BT747Constants.FMT_DISTANCE_IDX:
+                case BT747Constants.FMT_ROYALTEKNEW_IDX:
 
                     // These fields do not contribute to the sat offset
                     break;
@@ -774,6 +777,8 @@ public final class BT747Constants { // dev as in device
             // Do nothing
         } else if (device.startsWith("TSI_747A+")) {
             mdStr = "iBlue 747 A+";
+        } else if (device.startsWith("MBT-1100")) {
+            mdStr = "Royaltek MBT-1100";
         } else if (device.startsWith("TSI747")) {
             mdStr = "iBlue 747";
         } else if (device.startsWith("TSI757")) {
