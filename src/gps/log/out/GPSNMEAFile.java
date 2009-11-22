@@ -54,7 +54,7 @@ public final class GPSNMEAFile extends GPSFile {
 
     private final void writeNMEA(final String s) {
         int z_Checksum = 0;
-        for (int i = rec.length() - 1; i >= 0; i--) {
+        for (int i = s.length() - 1; i >= 0; i--) {
             z_Checksum ^= (byte) s.charAt(i);
         }
         writeTxt("$");
