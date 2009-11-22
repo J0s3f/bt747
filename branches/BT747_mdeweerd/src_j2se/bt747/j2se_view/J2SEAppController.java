@@ -901,6 +901,7 @@ public final class J2SEAppController extends J2SEController {
     private static final String[] lookAndFeels = {
             "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", // NOI18N
             "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", // NOI18N
+            "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel", //NOI18N
             "com.sun.java.swing.plaf.gtk.GTKLookAndFeel", // NOI18N
             "com.sun.java.swing.plaf.motif.MotifLookAndFeel", // NOI18N
             "javax.swing.plaf.metal.MetalLookAndFeel", // NOI18N
