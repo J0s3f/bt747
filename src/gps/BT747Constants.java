@@ -897,7 +897,7 @@ public final class BT747Constants { // dev as in device
     private static final int SPI_MAN_ID_EON = 0x1C;
     // private static final int SPI_MAN_ID_MITSUBISHI = 0x1C;
     // private static final int SPI_MAN_ID_ATMEL = 0x1F;
-    // private static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
+    private static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
     // private static final int SPI_MAN_ID_CATALYST = 0x31;
     // private static final int SPI_MAN_ID_SYNCMOS = 0x40;
     // private static final int SPI_MAN_ID_INTEL = 0x89;
@@ -960,7 +960,14 @@ public final class BT747Constants { // dev as in device
                 // flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
             }
             break;
-
+        case BT747Constants.SPI_MAN_ID_STMICROELECTRONICS:
+            if ((devType == 0x20)) { // || (DevType == 0x24)) {
+                // Supposing the same rule as macronix.
+                // Example device: EN25P16
+                memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
+                // flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
+            }
+            break;
         default:
             break;
         }

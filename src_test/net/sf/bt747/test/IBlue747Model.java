@@ -52,7 +52,8 @@ public class IBlue747Model {
     }
 
     enum DeviceModelType {
-        ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C
+        ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C,
+        MBT1100
     };
 
     public GPSrxtx gpsRxTx = null;
@@ -83,7 +84,8 @@ public class IBlue747Model {
      */
     public IBlue747Model() {
         // setupModel(DeviceModelType.HOLUXM1000C);
-        setupModel(DeviceModelType.IBLUE747PLUS);
+        //setupModel(DeviceModelType.IBLUE747PLUS);
+        setupModel(DeviceModelType.MBT1100);
     }
 
     /**
@@ -900,6 +902,14 @@ public class IBlue747Model {
             mtkData.modelNumber = "0001";
             mtkData.modelRef = "QST1000";
             mtkData.swVersion = "1.0";
+            break;
+        case MBT1100:
+            mtkData.coreVersion = "M-core_1.94"; // Not sure
+            mtkData.modelNumber = "000A";
+            mtkData.modelRef = "MBT-1100";
+            mtkData.swVersion = "1.0"; // Not confirmed
+            mtkData.logVersion = 139;
+            mtkData.flashCode = 0x20201710;
             break;
         case QST1300:
         default:
