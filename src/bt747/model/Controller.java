@@ -746,9 +746,13 @@ public class Controller implements ModelListener {
     public final void startDefaultDownload() {
         try {
             int endAddress;
+            endAddress = m.logMemUsed() - 1;
             if ((m.getDownloadMethod() == Model.DOWNLOAD_FULL)
                     || m.mtkModel().isInitialLogOverwrite()) {
-                endAddress = m.logMemSize() - 1;
+                if (endAddress < m.logMemSize()) {
+                    // Download at least the reported used memory.
+                    endAddress = m.logMemSize() - 1;
+                }
             } else {
                 endAddress = m.logMemUsed() - 1;
             }
