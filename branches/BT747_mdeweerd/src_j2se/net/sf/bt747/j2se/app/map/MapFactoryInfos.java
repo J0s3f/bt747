@@ -47,7 +47,7 @@ public class MapFactoryInfos {
             "osmcycle", 4, 18, 19, 256, true, true,
             "http://www.thunderflames.org/tiles/cycle", "x", "y", "z",
             "OpenCycleMap.org - Creative Commons-by-SA License",
-            "http://www.opencylemap.org") {
+            "http://www.opencyclemap.org") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
