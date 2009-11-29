@@ -3,6 +3,8 @@
  */
 package net.sf.bt747.j2se.app.map;
 
+import java.io.File;
+
 import org.jdesktop.swingx.mapviewer.wms.WMSService;
 
 /**
@@ -36,6 +38,10 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+        }
     };
     public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
             "osmcycle", 4, 18, 19, 256, true, true,
@@ -46,6 +52,10 @@ public class MapFactoryInfos {
             zoom = getTotalMapZoom() - zoom;
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
+        }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSMARENDER = new MyTileFactoryInfo(
@@ -58,6 +68,10 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+        }
     };
     public final static MyTileFactoryInfo tfiOpnvStreetMap = new MyTileFactoryInfo(
             "opnv", 1, 18, 19, 256, true, true,
@@ -68,6 +82,10 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+        }
     };
     public final static MyTileFactoryInfo tfiOpenPisteMap = new MyTileFactoryInfo(
             "openpiste", 2, 18, 19, 256, true, true,
@@ -77,6 +95,10 @@ public class MapFactoryInfos {
             zoom = getTotalMapZoom() - zoom;
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
+        }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
         }
     };
     /* Can not use due to licensing limitations ? => not used */
@@ -100,6 +122,10 @@ public class MapFactoryInfos {
             int z = 4;
             z = (int) Math.pow(2, (double) zz - 1);
             return wms.toWMSURL(x - z, z - 1 - y, zz, getTileSize(zoom));
+        }
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
         }
     };
 

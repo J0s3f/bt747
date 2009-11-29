@@ -43,6 +43,12 @@ public class TagFilePopupMenu {
 
     protected static final String DELETE_CMD = "DeleteSelectedRows";
 
+    protected static final String REMOVE_CMD = "RemoveSelectedItems";
+
+    protected static final String ADD_POSITION_CMD = "AddPosition";
+    
+    protected static final String COMMIT_TO_DISK_CMD = "CommitToDisk";
+    
     public final static String getString(final String s) {
         return J2SEAppController.getString(s);
     }
@@ -55,7 +61,7 @@ public class TagFilePopupMenu {
         // JMenuItem menuItem = new JMenuItem(getString(INSERT_CMD));
         // menuItem.addActionListener(new ActionAdapter(this));
         // popupMenu.add(menuItem);
-        menuItem = new JMenuItem(getString(DELETE_CMD));
+        menuItem = new JMenuItem(getString(REMOVE_CMD));
         menuItem.addActionListener(new ActionAdapter(this));
         popupMenu.add(menuItem);
 
