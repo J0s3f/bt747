@@ -34,8 +34,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.junit.runner.Description;
-
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
