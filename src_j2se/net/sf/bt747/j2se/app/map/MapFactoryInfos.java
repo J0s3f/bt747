@@ -38,9 +38,11 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
@@ -53,9 +55,11 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
     public final static MyTileFactoryInfo tfiOSM_OSMARENDER = new MyTileFactoryInfo(
@@ -68,9 +72,11 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
     public final static MyTileFactoryInfo tfiOpnvStreetMap = new MyTileFactoryInfo(
@@ -82,9 +88,11 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
     public final static MyTileFactoryInfo tfiOpenPisteMap = new MyTileFactoryInfo(
@@ -96,9 +104,11 @@ public class MapFactoryInfos {
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
             return url;
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
     /* Can not use due to licensing limitations ? => not used */
@@ -123,9 +133,11 @@ public class MapFactoryInfos {
             z = (int) Math.pow(2, (double) zz - 1);
             return wms.toWMSURL(x - z, z - 1 - y, zz, getTileSize(zoom));
         }
+
         public String getTileBaseKey(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            return "" + zoom + File.separatorChar + x + File.separatorChar + y;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
         }
     };
 
@@ -138,15 +150,9 @@ public class MapFactoryInfos {
 
     // http://openaerialmap.org/wms/?VERSION=1.0&request=GetMap&layers=world&styles=&srs=EPSG:4326&format=image/jpeg
     public final static MyTileFactoryInfo tfiOpenAerial = new WmsEPSG4326TileFactoryInfo(
-            "oa256",
-            1,
-            18,
-            19,
-            256,
-            true,
-            true,
-            "http://openaerialmap.org/wms/?",
-            "x", "y", "z", "OpenAerialMap", "http://openaerialmap.org") {
+            "oa256", 1, 18, 19, 256, true, true,
+            "http://openaerialmap.org/wms/?", "x", "y", "z", "OpenAerialMap",
+            "http://openaerialmap.org") {
 
         public String getLayer() {
             return "world";
@@ -160,33 +166,39 @@ public class MapFactoryInfos {
          */
         @Override
         public String getFormat() {
-            return "image/jpeg"; //&styles=
+            return "image/jpeg"; // &styles=
         }
 
     };
 
-    // No longer works.
-    // public final static MyTileFactoryInfo tfiDigitalGlobe = new
-    // WmsEPSG4326TileFactoryInfo(
-    // "dig256", 1, 18, 19, 256, true, true,
-    // "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
-    // "Digital Globe", "http://www.digitalglobe.com") {
-    //
-    // public String getLayer() {
-    // return "GlobeXplorer%20Image";
-    // }
-    //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
-    // */
-    // @Override
-    // public String getFormat() {
-    // return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
-    // }
-    //
-    // };
+    // No longer works. ... Works again
+    public final static MyTileFactoryInfo tfiDigitalGlobe = new WmsEPSG4326TileFactoryInfo(
+            "dig256", 1, 18, 19, 256, true, true,
+            "http://wms.globexplorer.com/gexservlets/wms?", "x", "y", "z",
+            "Digital Globe", "http://www.digitalglobe.com") {
+
+        public String getLayer() {
+            return "GlobeXplorer%20Image";
+        }
+
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y + ".png";
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+         */
+        @Override
+        public String getFormat() {
+            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+        }
+
+    };
 
     // public final static MyTileFactoryInfo tfiDigitalGlobe128 = new
     // WmsEPSG4326TileFactoryInfo(
