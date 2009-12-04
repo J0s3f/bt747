@@ -16,6 +16,10 @@ package bt747.j2se_view;
  * @author Mario
  */
 public class MapConfigurationDialog extends javax.swing.JDialog {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8644311268966824336L;
     /** A return status code - returned if Cancel button has been pressed */
     public static final int RET_CANCEL = 0;
     /** A return status code - returned if OK button has been pressed */
@@ -30,6 +34,45 @@ public class MapConfigurationDialog extends javax.swing.JDialog {
     /** @return the return status of this dialog - one of RET_OK or RET_CANCEL */
     public int getReturnStatus() {
         return returnStatus;
+    }
+    
+    public void setValues(final String shortName, final int minZoomLevel, final int maxZoomLevel, final int totalZoom,
+            final boolean xRightToLeft, final boolean yTopToBottom, final String url) {
+        txtShortName.setText(shortName);
+        txtMinimumZoomLevel.setText(String.valueOf(minZoomLevel));
+        txtMaxZoomLevel.setText(String.valueOf(maxZoomLevel));
+        txtTotalMapZoom.setText(String.valueOf(totalZoom));
+        cbXRightToLeft.setSelected(xRightToLeft);
+        cbYTopToBottom.setSelected(yTopToBottom);
+        txtUrl.setText(url);
+    };
+    
+    public String getShortName() {
+        return txtShortName.getText();
+    }
+    
+    public int getMinZoomLevel() {
+        return Integer.valueOf(txtMinimumZoomLevel.getText());
+    }
+    
+    public int getMaxZoomLevel() {
+        return Integer.valueOf(txtMaxZoomLevel.getText());
+    }
+    
+    public int getTotalZoomLevel() {
+        return Integer.valueOf(txtTotalMapZoom.getText());
+    }
+    
+    public boolean getXLeftToRight() {
+        return cbXRightToLeft.isSelected();
+    }
+    
+    public boolean getYTopToBottom() {
+        return cbYTopToBottom.isSelected();
+    }
+    
+    public String getUrl() {
+        return txtUrl.getText();
     }
 
     /** This method is called from within the constructor to

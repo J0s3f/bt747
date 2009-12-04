@@ -21,10 +21,12 @@ import gps.mvc.MtkModel;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Enumeration;
 
 import javax.swing.Icon;
@@ -32,8 +34,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.junit.runner.Description;
+
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
+import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.app.utils.Utils;
 import net.sf.bt747.j2se.system.J2SEGeneric;
@@ -359,6 +364,7 @@ public class BT747Main extends javax.swing.JFrame implements
         progressBarUpdate();
         getDefaultPort();
         updateSerialSpeed();
+        //addMapMenuItem("Test", MyMap.MapType.UserType);
         updateMapType();
         updateDownloadType();
         updateUsePreciseGeoid();
@@ -490,6 +496,8 @@ public class BT747Main extends javax.swing.JFrame implements
             miCycle.setSelected(mt == MapType.Cycle);
             mOpvnMap.setSelected(mt == MapType.Opvn);
             mOpenPisteMap.setSelected(mt == MapType.OpenPisteMap);
+            mDigitalGlobe.setSelected(mt == MapType.DigitalGlobe);
+            
         } catch (final Exception ex) {
             // TODO: handle exception
         }
@@ -644,6 +652,48 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private PositionTablePanel trackPanel = null;
     private PositionTablePanel waypointPanel = null;
+    
+    private void addMapMenuItem(final String desc, final MyMap.MapType mapType) {
+        final Frame f = this;
+        mDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
+        mDigitalGlobe.setText(desc); // NOI18N
+        mDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                c.setIntOpt(Model.MAPTYPE, mapType.ordinal());
+                if(mapType==MyMap.MapType.UserType) {
+                    MapConfigurationDialog mcd = new MapConfigurationDialog(f, true);
+                    mcd.setLocationByPlatform(true);
+                    //mcd.setEnabled(true);
+                    mcd.setVisible(true);
+                    mcd.setTitle("Map configuration");
+                    
+                    mcd.setValues("osm", 1, 18, 19, true, true, "http://tile.openstreetmap.org/$z/$x/$y");
+                    MyTileFactoryInfo tfiUser = new MyTileFactoryInfo(mcd
+                            .getShortName(), mcd.getMinZoomLevel(), mcd
+                            .getMaxZoomLevel(), mcd.getTotalZoomLevel(), 256,
+                            mcd.getXLeftToRight(), mcd.getYTopToBottom(),
+                            "http://tile.openstreetmap.org", "x", "y", "z",
+                            "User Defined Map",
+                            "") {
+                        public String getTileUrl(int x, int y, int zoom) {
+                            zoom = getTotalMapZoom() - zoom;
+                            String url = baseURL + "/" + zoom + "/" + x + "/"
+                                    + y + ".png";
+                            return url;
+                        }
+
+                        public String getTileBaseKey(int x, int y, int zoom) {
+                            zoom = getTotalMapZoom() - zoom;
+                            return "" + zoom + File.separatorChar + x + File.separatorChar
+                                    + y;
+                        }
+                    };
+                }
+            }
+        });
+        miMap.add(mDigitalGlobe);
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the
@@ -693,6 +743,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miCycle = new javax.swing.JRadioButtonMenuItem();
         mOpvnMap = new javax.swing.JRadioButtonMenuItem();
         mOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
+        mDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
         miDownloadDevice = new javax.swing.JMenu();
         miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
         miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
@@ -1123,6 +1174,14 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miMap.add(mOpenPisteMap);
 
+        mDigitalGlobe.setText(bundle.getString("BT747Main.mDigitalGlobe.text")); // NOI18N
+        mDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mDigitalGlobeActionPerformed(evt);
+            }
+        });
+        miMap.add(mDigitalGlobe);
+
         SettingsMenu.add(miMap);
 
         miDownloadDevice.setText(bundle.getString("BT747Main.miDownloadDevice.text")); // NOI18N
@@ -1538,6 +1597,10 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMap.ordinal());
 }//GEN-LAST:event_mOpenPisteMapActionPerformed
 
+    private void mDigitalGlobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mDigitalGlobeActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.DigitalGlobe.ordinal());
+}//GEN-LAST:event_mDigitalGlobeActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -1575,6 +1638,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lbSerialSpeed;
+    private javax.swing.JRadioButtonMenuItem mDigitalGlobe;
     private javax.swing.JRadioButtonMenuItem mOpenPisteMap;
     private javax.swing.JRadioButtonMenuItem mOpvnMap;
     private javax.swing.JRadioButtonMenuItem miCycle;
