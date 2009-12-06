@@ -729,8 +729,11 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea = new javax.swing.JTextArea();
         jMenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
-        miFindSerialPorts = new javax.swing.JMenuItem();
+        miPopulateSerialPorts = new javax.swing.JMenuItem();
+        miFindSerialPort = new javax.swing.JMenuItem();
         miMapCacheDir = new javax.swing.JMenuItem();
+        miClearCache = new javax.swing.JMenuItem();
+        jSep = new javax.swing.JSeparator();
         miExit = new javax.swing.JMenuItem();
         SettingsMenu = new javax.swing.JMenu();
         btGPSDebug = new javax.swing.JRadioButtonMenuItem();
@@ -1085,22 +1088,44 @@ public class BT747Main extends javax.swing.JFrame implements
 
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
-        miFindSerialPorts.setText(bundle.getString("BT747Main.miFindSerialPorts.text")); // NOI18N
-        miFindSerialPorts.setToolTipText(bundle.getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
-        miFindSerialPorts.addActionListener(new java.awt.event.ActionListener() {
+        miPopulateSerialPorts.setText(bundle.getString("BT747Main.miPopulateSerialPorts.text")); // NOI18N
+        miPopulateSerialPorts.setToolTipText(bundle.getString("BT747Main.miPopulateSerialPorts.toolTipText")); // NOI18N
+        miPopulateSerialPorts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miFindSerialPortsActionPerformed(evt);
+                miPopulateSerialPortsActionPerformed(evt);
             }
         });
-        FileMenu.add(miFindSerialPorts);
+        FileMenu.add(miPopulateSerialPorts);
+
+        miFindSerialPort.setText(bundle.getString("BT747Main.miFindSerialPort.text")); // NOI18N
+        miFindSerialPort.setToolTipText(bundle.getString("BT747Main.miFindSerialPort.toolTipText")); // NOI18N
+        miFindSerialPort.setEnabled(false);
+        miFindSerialPort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miFindSerialPortActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miFindSerialPort);
 
         miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
+        miMapCacheDir.setToolTipText(bundle.getString("BT747Main.miMapCacheDir.toolTipText")); // NOI18N
         miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 miMapCacheDirActionPerformed(evt);
             }
         });
         FileMenu.add(miMapCacheDir);
+
+        miClearCache.setText(bundle.getString("BT747Main.miClearCache.text")); // NOI18N
+        miClearCache.setToolTipText(bundle.getString("BT747Main.miClearCache.toolTipText")); // NOI18N
+        miClearCache.setEnabled(false);
+        miClearCache.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miClearCacheActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miClearCache);
+        FileMenu.add(jSep);
 
         miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
         miExit.addActionListener(new java.awt.event.ActionListener() {
@@ -1416,7 +1441,7 @@ public class BT747Main extends javax.swing.JFrame implements
         c.selectMapCacheDirectory();
     }//GEN-LAST:event_miMapCacheDirActionPerformed
 
-    private void miFindSerialPortsActionPerformed(
+    private void miPopulateSerialPortsActionPerformed(
             final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortsActionPerformed
         // Looking for ports asynchronously
         new Thread() {
@@ -1599,6 +1624,14 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.DigitalGlobe.ordinal());
 }//GEN-LAST:event_mDigitalGlobeActionPerformed
 
+    private void miFindSerialPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miFindSerialPortActionPerformed
+
+    private void miClearCacheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miClearCacheActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miClearCacheActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -1634,21 +1667,24 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSep;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JRadioButtonMenuItem mDigitalGlobe;
     private javax.swing.JRadioButtonMenuItem mOpenPisteMap;
     private javax.swing.JRadioButtonMenuItem mOpvnMap;
+    private javax.swing.JMenuItem miClearCache;
     private javax.swing.JRadioButtonMenuItem miCycle;
     private javax.swing.JMenu miDownloadDevice;
     private javax.swing.JMenuItem miExit;
-    private javax.swing.JMenuItem miFindSerialPorts;
+    private javax.swing.JMenuItem miFindSerialPort;
     private javax.swing.JRadioButtonMenuItem miMTKProtocol;
     private javax.swing.JMenu miMap;
     private javax.swing.JMenuItem miMapCacheDir;
     private javax.swing.JRadioButtonMenuItem miMapnik;
     private javax.swing.JRadioButtonMenuItem miOsmarender;
     private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
+    private javax.swing.JMenuItem miPopulateSerialPorts;
     private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;
     private javax.swing.JCheckBoxMenuItem miUsePreciseGeoid;
     private javax.swing.JMenuItem mnSiteLink;

@@ -58,8 +58,6 @@ public final class AgpsPanel extends javax.swing.JPanel
         txtAgpsUrl.setVisible(false);
         updateConnected();
         updateAppURL();
-        txtLogin.setText(m.getStringOpt(AppSettings.OSMLOGIN));
-        txtPassword.setText(m.getStringOpt(AppSettings.OSMPASS));
     }
 
     private final void updateAppURL() {
@@ -78,12 +76,6 @@ public final class AgpsPanel extends javax.swing.JPanel
             switch (Integer.parseInt((String)e.getArg())) {
             case AppSettings.AGPSURL:
                 txtAgpsUrl.setText(m.getStringOpt(AppSettings.AGPSURL));
-                break;
-            case AppSettings.OSMLOGIN:
-                txtLogin.setText(m.getStringOpt(AppSettings.OSMLOGIN));
-                break;
-            case AppSettings.OSMPASS:
-                txtPassword.setText(m.getStringOpt(AppSettings.OSMPASS));
                 break;
             default:
                 break;
@@ -153,11 +145,6 @@ public final class AgpsPanel extends javax.swing.JPanel
         txtAgpsInfo1 = new javax.swing.JLabel();
         txtAgpsInfo2 = new javax.swing.JLabel();
         btClearAgpsData = new javax.swing.JButton();
-        osmAccountPanel = new javax.swing.JPanel();
-        lbLogin = new javax.swing.JLabel();
-        txtLogin = new javax.swing.JTextField();
-        lbPassword = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JPasswordField();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         agpsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AgpsPanel.agpsPanel.border.title"))); // NOI18N
@@ -229,70 +216,15 @@ public final class AgpsPanel extends javax.swing.JPanel
                 .add(txtAgpsInfo2))
         );
 
-        osmAccountPanel.setToolTipText(bundle.getString("AgpsPanel.osmAccountPanel.toolTipText")); // NOI18N
-        osmAccountPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AgpsPanel.osmAccountPanel.border.title"))); // NOI18N
-
-        lbLogin.setText(bundle.getString("AgpsPanel.lbLogin.text")); // NOI18N
-
-        txtLogin.setText(bundle.getString("AgpsPanel.txtLogin.text")); // NOI18N
-        txtLogin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtLoginFocusLost(evt);
-            }
-        });
-
-        lbPassword.setText(bundle.getString("AgpsPanel.lbPassword.text")); // NOI18N
-
-        txtPassword.setText(bundle.getString("AgpsPanel.txtPassword.text")); // NOI18N
-        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPasswordFocusLost(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout osmAccountPanelLayout = new org.jdesktop.layout.GroupLayout(osmAccountPanel);
-        osmAccountPanel.setLayout(osmAccountPanelLayout);
-        osmAccountPanelLayout.setHorizontalGroup(
-            osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(osmAccountPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lbLogin)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lbPassword))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(txtLogin, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .add(txtPassword))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        osmAccountPanelLayout.linkSize(new java.awt.Component[] {txtLogin, txtPassword}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
-
-        osmAccountPanelLayout.setVerticalGroup(
-            osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(osmAccountPanelLayout.createSequentialGroup()
-                .add(osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(txtLogin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbLogin))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(osmAccountPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbPassword)
-                    .add(txtPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-        );
-
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(osmAccountPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(agpsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
     }//GEN-END:initComponents
 
@@ -308,28 +240,15 @@ public final class AgpsPanel extends javax.swing.JPanel
         c.gpsCmd(MtkController.CMD_EPO_CLEAR);
     }//GEN-LAST:event_btClearAgpsDataActionPerformed
 
-    private void txtLoginFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLoginFocusLost
-        c.setStringOpt(AppSettings.OSMLOGIN, txtLogin.getText());
-    }//GEN-LAST:event_txtLoginFocusLost
-
-    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
-        c.setStringOpt(AppSettings.OSMPASS, String.copyValueOf(txtPassword.getPassword()));
-    }//GEN-LAST:event_txtPasswordFocusLost
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel agpsPanel;
     private javax.swing.JButton btClearAgpsData;
     private javax.swing.JButton btDownloadAgpsData;
     private javax.swing.JButton btUploadAgpsData;
     private javax.swing.JLabel lbAgpsUrl;
-    private javax.swing.JLabel lbLogin;
-    private javax.swing.JLabel lbPassword;
-    private javax.swing.JPanel osmAccountPanel;
     private javax.swing.JLabel txtAgpsInfo1;
     private javax.swing.JLabel txtAgpsInfo2;
     private javax.swing.JTextField txtAgpsUrl;
-    private javax.swing.JTextField txtLogin;
-    private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 
 }
