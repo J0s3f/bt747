@@ -7,8 +7,6 @@ import junit.framework.TestCase;
 import net.sf.bt747.j2se.app.utils.ExternalTool;
 import net.sf.bt747.test.TestUtils;
 
-import org.junit.Test;
-
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
 
@@ -28,7 +26,6 @@ public class ExternalToolTest extends TestCase {
      * 
      * @throws Exception
      */
-    @Test
     public void testEchoSimple() throws Exception {
         ExternalTool et = new ExternalTool("echo abcd");
         BT747Hashtable tokens = JavaLibBridge.getHashtableInstance(5);
@@ -44,7 +41,6 @@ public class ExternalToolTest extends TestCase {
      * 
      * @throws Exception
      */
-    @Test
     public void testEchoReplace() throws Exception {
         ExternalTool et = new ExternalTool("echo ab%fcd");
         BT747Hashtable tokens = JavaLibBridge.getHashtableInstance(5);

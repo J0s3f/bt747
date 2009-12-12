@@ -18,6 +18,7 @@ public class StreamConnector extends Thread {
     private final OutputStream os;
     final byte[] buf;
     private final static int BUF_SIZE = 1024;
+    
 
     /**
      * 
@@ -26,12 +27,11 @@ public class StreamConnector extends Thread {
         this.is = is;
         this.os = os;
         this.buf = new byte[BUF_SIZE];
-        start();
     }
 
     public static final void connect(final InputStream is,
             final OutputStream os) {
-        new StreamConnector(is, os);
+        (new StreamConnector(is, os)).start();
     }
 
     /*

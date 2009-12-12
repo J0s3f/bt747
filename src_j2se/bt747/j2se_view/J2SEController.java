@@ -236,6 +236,6 @@ public class J2SEController extends Controller {
                 }
             }
         });
-        t.run();
+        t.start();
     }
 }

@@ -308,7 +308,7 @@ public class BT747Main extends javax.swing.JFrame implements
         new FileDrop(this, dl);
 
         pnMap.init(c);
-        mOpvnMap.setVisible(true);
+        miOpvnMap.setVisible(true);
         pnFilesToTagPanel.init(c);
         pnAdvancedSettingsPanel.init(c);
         pnDeviceSettingsPanel.init(c);
@@ -491,10 +491,11 @@ public class BT747Main extends javax.swing.JFrame implements
 //            }
             miMapnik.setSelected(mt == MapType.OpenStreetMap);
             miOsmarender.setSelected(mt == MapType.OsmaRender);
-            miCycle.setSelected(mt == MapType.Cycle);
-            mOpvnMap.setSelected(mt == MapType.Opvn);
-            mOpenPisteMap.setSelected(mt == MapType.OpenPisteMap);
-            mDigitalGlobe.setSelected(mt == MapType.DigitalGlobe);
+            miCycleCloudmade.setSelected(mt == MapType.CycleCloudmade);
+            miCycleThunderflame.setSelected(mt == MapType.CycleThunderFlames);
+            miOpvnMap.setSelected(mt == MapType.Opvn);
+            miOpenPisteMap.setSelected(mt == MapType.OpenPisteMap);
+            miDigitalGlobe.setSelected(mt == MapType.DigitalGlobe);
             
         } catch (final Exception ex) {
             // TODO: handle exception
@@ -653,9 +654,9 @@ public class BT747Main extends javax.swing.JFrame implements
     
     private void addMapMenuItem(final String desc, final MyMap.MapType mapType) {
         final Frame f = this;
-        mDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
-        mDigitalGlobe.setText(desc); // NOI18N
-        mDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+        miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
+        miDigitalGlobe.setText(desc); // NOI18N
+        miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 c.setIntOpt(Model.MAPTYPE, mapType.ordinal());
                 if(mapType==MyMap.MapType.UserType) {
@@ -689,7 +690,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 }
             }
         });
-        miMap.add(mDigitalGlobe);
+        miMap.add(miDigitalGlobe);
 
     }
 
@@ -741,10 +742,11 @@ public class BT747Main extends javax.swing.JFrame implements
         miMap = new javax.swing.JMenu();
         miMapnik = new javax.swing.JRadioButtonMenuItem();
         miOsmarender = new javax.swing.JRadioButtonMenuItem();
-        miCycle = new javax.swing.JRadioButtonMenuItem();
-        mOpvnMap = new javax.swing.JRadioButtonMenuItem();
-        mOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
-        mDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
+        miCycleCloudmade = new javax.swing.JRadioButtonMenuItem();
+        miCycleThunderflame = new javax.swing.JRadioButtonMenuItem();
+        miOpvnMap = new javax.swing.JRadioButtonMenuItem();
+        miOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
+        miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
         miDownloadDevice = new javax.swing.JMenu();
         miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
         miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
@@ -1173,37 +1175,46 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miMap.add(miOsmarender);
 
-        miCycle.setText(bundle.getString("BT747Main.miCycle.text")); // NOI18N
-        miCycle.addActionListener(new java.awt.event.ActionListener() {
+        miCycleCloudmade.setText(bundle.getString("BT747Main.miCycleCloudmade.text")); // NOI18N
+        miCycleCloudmade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miCycleActionPerformed(evt);
+                miCycleCloudmadeActionPerformed(evt);
             }
         });
-        miMap.add(miCycle);
+        miMap.add(miCycleCloudmade);
 
-        mOpvnMap.setText(bundle.getString("BT747Main.mOpvnMap.text")); // NOI18N
-        mOpvnMap.addActionListener(new java.awt.event.ActionListener() {
+        miCycleThunderflame.setSelected(true);
+        miCycleThunderflame.setText(bundle.getString("BT747Main.miCycleThunderflame.text")); // NOI18N
+        miCycleThunderflame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mOpvnMapActionPerformed(evt);
+                miCycleThunderflameActionPerformed(evt);
             }
         });
-        miMap.add(mOpvnMap);
+        miMap.add(miCycleThunderflame);
 
-        mOpenPisteMap.setText(bundle.getString("BT747Main.mOpenPisteMap.text")); // NOI18N
-        mOpenPisteMap.addActionListener(new java.awt.event.ActionListener() {
+        miOpvnMap.setText(bundle.getString("BT747Main.miOpvnMap.text")); // NOI18N
+        miOpvnMap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mOpenPisteMapActionPerformed(evt);
+                miOpvnMapActionPerformed(evt);
             }
         });
-        miMap.add(mOpenPisteMap);
+        miMap.add(miOpvnMap);
 
-        mDigitalGlobe.setText(bundle.getString("BT747Main.mDigitalGlobe.text")); // NOI18N
-        mDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+        miOpenPisteMap.setText(bundle.getString("BT747Main.miOpenPisteMap.text")); // NOI18N
+        miOpenPisteMap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mDigitalGlobeActionPerformed(evt);
+                miOpenPisteMapActionPerformed(evt);
             }
         });
-        miMap.add(mDigitalGlobe);
+        miMap.add(miOpenPisteMap);
+
+        miDigitalGlobe.setText(bundle.getString("BT747Main.miDigitalGlobe.text")); // NOI18N
+        miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miDigitalGlobeActionPerformed(evt);
+            }
+        });
+        miMap.add(miDigitalGlobe);
 
         SettingsMenu.add(miMap);
 
@@ -1461,13 +1472,13 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OsmaRender.ordinal());
     }//GEN-LAST:event_miOsmarenderActionPerformed
 
-    private void miCycleActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCycleActionPerformed
-        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Cycle.ordinal());
-    }//GEN-LAST:event_miCycleActionPerformed
+    private void miCycleCloudmadeActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCycleCloudmadeActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.CycleCloudmade.ordinal());
+}//GEN-LAST:event_miCycleCloudmadeActionPerformed
 
-    private void mOpvnMapActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpvnMapActionPerformed
+    private void miOpvnMapActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpvnMapActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Opvn.ordinal());
-}//GEN-LAST:event_mOpvnMapActionPerformed
+}//GEN-LAST:event_miOpvnMapActionPerformed
 
     private void mnSiteLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSiteLinkActionPerformed
         BareBonesBrowserLaunch.openURL("http://www.bt747.org");
@@ -1616,13 +1627,13 @@ public class BT747Main extends javax.swing.JFrame implements
         }
 }//GEN-LAST:event_btToolLocServeActionPerformed
 
-    private void mOpenPisteMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpenPisteMapActionPerformed
+    private void miOpenPisteMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenPisteMapActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMap.ordinal());
-}//GEN-LAST:event_mOpenPisteMapActionPerformed
+}//GEN-LAST:event_miOpenPisteMapActionPerformed
 
-    private void mDigitalGlobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mDigitalGlobeActionPerformed
+    private void miDigitalGlobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDigitalGlobeActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.DigitalGlobe.ordinal());
-}//GEN-LAST:event_mDigitalGlobeActionPerformed
+}//GEN-LAST:event_miDigitalGlobeActionPerformed
 
     private void miFindSerialPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortActionPerformed
         // TODO add your handling code here:
@@ -1631,6 +1642,10 @@ public class BT747Main extends javax.swing.JFrame implements
     private void miClearCacheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miClearCacheActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_miClearCacheActionPerformed
+
+    private void miCycleThunderflameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCycleThunderflameActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.CycleThunderFlames.ordinal());
+}//GEN-LAST:event_miCycleThunderflameActionPerformed
 
     // public static void main(String args) {
     // main((String[])null);
@@ -1670,11 +1685,10 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JSeparator jSep;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lbSerialSpeed;
-    private javax.swing.JRadioButtonMenuItem mDigitalGlobe;
-    private javax.swing.JRadioButtonMenuItem mOpenPisteMap;
-    private javax.swing.JRadioButtonMenuItem mOpvnMap;
     private javax.swing.JMenuItem miClearCache;
-    private javax.swing.JRadioButtonMenuItem miCycle;
+    private javax.swing.JRadioButtonMenuItem miCycleCloudmade;
+    private javax.swing.JRadioButtonMenuItem miCycleThunderflame;
+    private javax.swing.JRadioButtonMenuItem miDigitalGlobe;
     private javax.swing.JMenu miDownloadDevice;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miFindSerialPort;
@@ -1682,6 +1696,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JMenu miMap;
     private javax.swing.JMenuItem miMapCacheDir;
     private javax.swing.JRadioButtonMenuItem miMapnik;
+    private javax.swing.JRadioButtonMenuItem miOpenPisteMap;
+    private javax.swing.JRadioButtonMenuItem miOpvnMap;
     private javax.swing.JRadioButtonMenuItem miOsmarender;
     private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
     private javax.swing.JMenuItem miPopulateSerialPorts;

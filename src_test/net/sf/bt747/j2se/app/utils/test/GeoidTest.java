@@ -17,8 +17,6 @@ import junit.framework.TestCase;
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 import net.sf.bt747.j2se.app.utils.Geoid;
 
-import org.junit.Test;
-
 /**
  * @author Mario
  * 
@@ -35,7 +33,6 @@ public class GeoidTest extends TestCase {
      * 
      * @throws Exception
      */
-    @Test
     public void testWgs84Separation() throws Exception {
         GeoidIF gIF = Geoid.getInstance();
         assertEquals("Some value", -12.0, gIF.wgs84Separation(50., 50.));

@@ -62,7 +62,7 @@ public class J2SEHttpSenderImpl implements BT747HttpSender {
 				super.run();
 			}
 		};
-		t.run();
+		t.start();
 	}
 
 	/**

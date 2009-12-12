@@ -642,7 +642,7 @@ public class IBlue747Model {
         // if(GPS_DEBUG) {
         // waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
         final StringBuffer nmea = new StringBuffer();
-        Object response = null;
+        String response = null;
         Acknowledge acknowledge = null;
         for (final String s : p_nmea) {
             nmea.append(s);
@@ -818,13 +818,10 @@ public class IBlue747Model {
             Generic.debug("Problem in reception", e);
         }
         if (response != null) {
-            if (response instanceof String) {
-                final String resp = (String) response;
-                if (resp.length() != 0) {
-                    sendPacket(resp);
-                    if (z_Result == -1) {
-                        z_Result = 0;
-                    }
+            if (response.length() != 0) {
+                sendPacket(response);
+                if (z_Result == -1) {
+                    z_Result = 0;
                 }
             }
         }

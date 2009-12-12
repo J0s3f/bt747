@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_rxtx"/>
 	<classpathentry kind="src" path="src_j2se"/>
@@ -25,5 +24,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jdic.jar" sourcepath="C:/Download/jdic-0.9.5-src.zip"/>
 	<classpathentry kind="lib" path="lib/jopt-simple-2.4.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

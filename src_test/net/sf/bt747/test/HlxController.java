@@ -59,7 +59,7 @@ public class HlxController {
         int z_Result = 0;
 
         final StringBuffer nmea = new StringBuffer();
-        Object response = null;
+        String response = null;
         for (final String s : p_nmea) {
             nmea.append(s);
             nmea.append(',');
@@ -105,12 +105,9 @@ public class HlxController {
         }
 
         if (response != null) {
-            if (response instanceof String) {
-                final String resp = (String) response;
-                mtkDeviceModel.sendPacket(resp);
-                if (z_Result == -1) {
-                    z_Result = 0;
-                }
+            mtkDeviceModel.sendPacket(response);
+            if (z_Result == -1) {
+                z_Result = 0;
             }
         }
 
