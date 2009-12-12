@@ -245,7 +245,7 @@ public class ExiftoolData extends FileWaypoint {
                 // .getHour(), t.getMinute(), t.getSecond());
                 final String timeStr = String.format("%02d:%02d:%02d", t
                         .getHour(), t.getMinute(), t.getSecond());
-                final String dateStr = String.format("%04d:%02d%:02d", t
+                final String dateStr = String.format("%04d:%02d:%02d", t
                         .getYear(), t.getMonth(), t.getDay());
                 exifToolArgs.add("-GPSDateStamp=" + dateStr); //$NON-NLS-1$
                 exifToolArgs.add("-GPSTimeStamp=" + timeStr); //$NON-NLS-1$            }

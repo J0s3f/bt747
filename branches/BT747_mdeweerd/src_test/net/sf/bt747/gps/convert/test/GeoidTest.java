@@ -6,8 +6,6 @@ package net.sf.bt747.gps.convert.test;
 import gps.convert.GeoidIF;
 import gps.convert.Geoid;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
 
 /**
@@ -261,7 +259,6 @@ public class GeoidTest extends TestCase {
      * 
      * @throws Exception
      */
-    @Test
     public void testWgs84Separation() throws Exception {
         GeoidIF gIF = Geoid.getInstance();
         assertEquals("Some value", -10.0, gIF.wgs84Separation(50., 50.));
@@ -276,7 +273,6 @@ public class GeoidTest extends TestCase {
                 .wgs84Separation(-56., -10.));
     }
 
-    @Test
     public void testTAlbe() throws Exception {
         // recreates a table that can be pasted
         byteTableToString(geoid_delta);

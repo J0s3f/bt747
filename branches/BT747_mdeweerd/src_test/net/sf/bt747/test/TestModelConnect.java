@@ -20,8 +20,8 @@ import bt747.sys.interfaces.JavaLibImplementation;
 public class TestModelConnect {
     final static PipedInputStream appIs = new PipedInputStream();
     final static PipedInputStream modelIs = new PipedInputStream();
-    static PipedOutputStream appOs;
-    static PipedOutputStream modelOs;
+    protected static PipedOutputStream appOs;
+    protected static PipedOutputStream modelOs;
     protected static GPSPort appPort;
 
     /**

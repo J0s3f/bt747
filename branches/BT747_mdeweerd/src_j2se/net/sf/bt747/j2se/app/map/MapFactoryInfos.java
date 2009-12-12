@@ -45,8 +45,26 @@ public class MapFactoryInfos {
                     + y;
         }
     };
-    public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
-            "osmcycle", 4, 18, 19, 256, true, true,
+    public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE_CLOUDMADE = new MyTileFactoryInfo(
+            "osmcycle_cloudmade", 2, 18, 19, 256, true, true,
+            "http://andy.sandbox.cloudmade.com/tiles/cycle", "x", "y", "z",
+            "OpenCycleMap.org - Creative Commons-by-SA License",
+            "http://www.opencyclemap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
+        }
+    };
+
+    public final static MyTileFactoryInfo tfiOSM_OSM_CYCLE_THUNDER = new MyTileFactoryInfo(
+            "osmcycle_thunder", 4, 18, 19, 256, true, true,
             "http://www.thunderflames.org/tiles/cycle", "x", "y", "z",
             "OpenCycleMap.org - Creative Commons-by-SA License",
             "http://www.opencyclemap.org") {
@@ -62,6 +80,7 @@ public class MapFactoryInfos {
                     + y;
         }
     };
+
     public final static MyTileFactoryInfo tfiOSM_OSMARENDER = new MyTileFactoryInfo(
             "osmarender", 2, 18, 19, 256, true, true,
             "http://tah.openstreetmap.org/Tiles/tile", "x", "y", "z",
