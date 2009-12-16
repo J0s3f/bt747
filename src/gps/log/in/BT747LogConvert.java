@@ -45,7 +45,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
     private int initialBlock = 0;
 
-    private int badrecord_count = 0;
+    private int badrecordCount = 0;
 
     private void updateLogFormat(final GPSFileConverterInterface gpsFile,
             final int newLogFormat) {
@@ -76,7 +76,26 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
     private static final int minValidUtcTime = JavaLibBridge.getDateInstance(
             1, 1, 1995).dateToUTCepoch1970();
 
-    int recCount;
+    private int recCount;
+    
+    private boolean lastRecordIsBad = false;
+    
+    private void isBadRecord(final int recCount, final int offset) {
+        if (!lastRecordIsBad) {
+            Generic.debug("Bad record(s) @" + recCount + "("
+                    + JavaLibBridge.unsigned2hex(offset, 8) + ")", null);
+            lastRecordIsBad = true;
+        }
+        badrecordCount++;
+    }
+    
+    private void isGoodRecord(final int offset) {
+        if(lastRecordIsBad) {
+            Generic.debug("Recovered ("
+                    + JavaLibBridge.unsigned2hex(offset, 8) + ")", null);
+            lastRecordIsBad = false;
+        }
+    }
 
     /**
      * Parse the binary input file and convert it.
@@ -113,7 +132,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             wrapOK = true;
         }
         nextPointIsWayPt = false;
-        badrecord_count = 0;
+        badrecordCount = 0;
+        lastRecordIsBad = false;
         try {
             fileSize = mFile.getSize();
         } catch (final Exception e) {
@@ -267,7 +287,11 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         firstBlockDone = true;
                     }
                     lookForRecord = (nbrBytes != 0);
-                    offsetInBuffer += nbrBytes;
+                    if (lookForRecord) {
+                        isGoodRecord(nextAddrToRead
+                                - sizeToRead + offsetInBuffer);
+                        offsetInBuffer += nbrBytes;
+                    }
                 }
 
                 /*************************************************************
@@ -394,22 +418,17 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                             }
                                         }
                                     }
+                                    isGoodRecord(nextAddrToRead
+                                            - sizeToRead + recIdx);
                                     okInBuffer = offsetInBuffer;
                                     foundRecord = true;
                                 } else {
-                                    Generic.debug("Bad record @"
-                                            + r.recCount
-                                            + "("
-                                            + JavaLibBridge.unsigned2hex(
-                                                    nextAddrToRead
-                                                            - sizeToRead
-                                                            + recIdx, 8)
-                                            + ")", null);
+                                    isBadRecord(r.recCount, nextAddrToRead
+                                            - sizeToRead + recIdx);
                                     // Recover ...
                                     recCount--;
-                                    foundRecord = false;
                                     offsetInBuffer = recIdx;
-                                    badrecord_count++;
+                                    foundRecord = false;
                                 }
                             }
                             /*************************************************
@@ -434,7 +453,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                 // Generic.debug(indexInBuffer +"skip
                                 // ff",null);
                             } else {
-                                badrecord_count++;
+                                isBadRecord(recCount, nextAddrToRead
+                                        - sizeToRead + offsetInBuffer);
                             }
                         }
                     } else {
@@ -749,6 +769,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         int idx;
         recIdx = startIdx;
         valid = true;
+        String invalidReason = "";
 
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             r.logPeriod = logPeriod;
@@ -759,7 +780,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
             if ((r.utc & 0x80000000) != 0) {
-                Generic.debug("Invalid time:" + r.utc);
+                invalidReason += "Invalid time:" + r.utc + ";";
                 valid = false;
             }
         } else {
@@ -790,7 +811,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 r.latitude = JavaLibBridge.toFloatBitwise(latitude);
             }
             if ((r.latitude > 90.00) || (r.latitude < -90.00)) {
-                Generic.debug("Invalid latitude:" + r.latitude);
+                invalidReason += "Invalid latitude:" + r.latitude + ";";
                 valid = false;
             }
         }
@@ -813,7 +834,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 r.longitude = JavaLibBridge.toFloatBitwise(longitude);// *1.0;
             }
             if ((r.longitude > 180.00) || (r.latitude < -180.00)) {
-                Generic.debug("Invalid longitude:" + r.height);
+                invalidReason += "Invalid longitude:" + r.longitude + ";";
                 valid = false;
             }
         }
@@ -874,12 +895,12 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             }
             if (((r.valid & 0x0001) != 1) // record has a fix
                     && ((r.height < -3000.) || (r.height > 15000.))) {
-                Generic.debug("Invalid height:" + r.height);
+                invalidReason += "Invalid height:" + r.height + ";";
                 valid = false;
             }
         }
         if (r.hasSpeed() && (r.speed < -10.)) {
-            Generic.debug("Invalid speed:" + r.speed);
+            invalidReason += "Invalid speed:" + r.speed + ";";
             valid = false;
         }
 
@@ -959,11 +980,13 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 satidx++;
             }
         } else {
-            Generic.debug("Problem in sat decode", null);
+            invalidReason += "Problem in sat decode" + ";";
+            valid = false;
         }
         // Generic.debug("Offset1:"+recIdx+" "+rcrIdx);
         if (recIdx != rcrIdx) {
-            Generic.debug("Problem in sat decode (end idx)", null);
+            invalidReason += "Problem in sat decode (end idx)" + ";";
+            valid = false;
         }
         recIdx = rcrIdx; // Sat information limit is rcrIdx
         if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
@@ -994,6 +1017,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             r.distance = JavaLibBridge.longBitsToDouble(distance);
         }
 
+        if(!valid) {
+            Generic.debug("Log corrupted?: "+ invalidReason);
+        }
         return valid;
 
     }
