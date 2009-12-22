@@ -418,10 +418,10 @@ public final class MainScreen extends Dialog implements ModelListener {
             if (dataShown != MainScreen.SHOWN_NOCONNECTION) {
                 dataShown = MainScreen.SHOWN_NOCONNECTION;
                 deleteAll();
-                append(new Label("Enable the RCR log field to enable"
-                        + " advanced waypoint selection.\n"
-                        + "(This message disappears once connected"
-                        + " with RCR log field set)."));
+                append(new Label("Advanced waypoint events are"
+                        + " available once your device is connected.\n"
+                        + "The 'RCR field' also needs to be active "
+                        + "(see log Format)."));
                 repaint();
             }
         }
