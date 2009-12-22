@@ -1,5 +1,5 @@
 SETLOCAL
-perl -n -e 'if(/MIDlet-Version: (.*)/) { $_=$1; s/\./_/g; print; }' deployed/BT_J2ME.jad > tmp
+perl -n -e 'if(/MIDlet-Version: (.*)/) { $_=$1; s/\./_/g; print; }' deployed/DefaultCldcPhone2/BT_J2ME.jad > tmp
 
 SET /P DT=<tmp
 rm tmp
@@ -19,7 +19,7 @@ svnversion ../BT747 -n -c >> dist/SVNVERSION.txt
 
 SET FILES=
 
-SET FILES=%FILES% deployed/BT_J2ME.jar deployed/BT_J2ME.jad
+SET FILES=%FILES% deployed/DefaultCldcPhone2/BT_J2ME.jar deployed/DefaultCldcPhone2/BT_J2ME.jad
 SET FILES=%FILES% deployed/BT_J2ME.cod
 SET FILES=%FILES% src_j4me/NOTICE doc/INSTALL.txt
 SET FILES=%FILES% COPYING LICENSE-2.0-APACHE.txt
@@ -33,4 +33,9 @@ call build_cod.bat
 zip -9 -r %PACK_DIR%/BT_J2ME_%DT%.zip dist -x nbproject/private/\* \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
 REM bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip"
 bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip /home/frs/project/b/bt/bt747/bt747_dev/development"
+
+
+CALL ..\uploadBT747.bat dist\BT_J2ME.jar J2ME/BT_J2ME.jar
+CALL ..\uploadBT747.bat dist\BT_J2ME.jad J2ME/BT_J2ME.jad
+
 ENDLOCAL

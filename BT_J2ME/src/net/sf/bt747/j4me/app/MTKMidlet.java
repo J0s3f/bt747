@@ -30,7 +30,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     /**
      * The one and only instance of this class.
      */
-    private static MTKMidlet instance;
+    private static MTKMidlet appSingleton;
 
     static {
         JavaLibBridge.setJavaLibImplementation(new J2MEJavaTranslations());
@@ -54,17 +54,14 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     private volatile boolean ok = false;
 
-    private static MTKMidlet appSingleton;
-
     /**
      * Constructs the midlet. This is called before
      * &lt;code&gt;startApp&lt;/code&gt;.
      */
     public MTKMidlet() {
-        appSingleton = this;
+        MTKMidlet.setInstance(this);
         try {
             UIManager.init(this);
-            MTKMidlet.setInstance(this);
 
             BluetoothPort provider = null;
             try {
@@ -89,7 +86,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     }
 
     private static void setInstance(final MTKMidlet midlet) {
-        MTKMidlet.instance = midlet;
+        MTKMidlet.appSingleton = midlet;
     }
 
     /**
@@ -221,9 +218,17 @@ public class MTKMidlet extends MIDlet implements CommandListener {
      */
     protected final void destroyApp(final boolean arg0)
             throws MIDletStateChangeException {
+        try {
         // Add cleanup code here.
         if (MTKMidlet.c != null) {
+            MTKMidlet.c.closeGPS();
+            MTKMidlet.c.cancelGetLog();
+            MTKMidlet.c.stopLogConvert();
+            MTKMidlet.c.stopErase();
             MTKMidlet.c.saveSettings();
+        }
+        } catch (Throwable t) {
+            
         }
         // Exit the application.
         notifyDestroyed();
@@ -234,7 +239,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
      */
     public static void exit() {
         try {
-            MTKMidlet.instance.destroyApp(true);
+            MTKMidlet.appSingleton.destroyApp(true);
         } catch (final MIDletStateChangeException e) {
             // Ignore.
         }
