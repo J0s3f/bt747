@@ -70,7 +70,7 @@ public class IBlue747Model {
     static {
         // Set up the low level functions interface.
         JavaLibBridge
-                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+                .setJavaLibImplementation(net.sf.bt747.j2se.system.J2SEJavaTranslations.getInstance());
         // Set the serial port class instance to use (also system specific).
         if (!GPSrxtx.hasDefaultPortInstance()) {
             GPSrxtx

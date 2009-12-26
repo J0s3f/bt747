@@ -30,6 +30,19 @@ import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaLibImplementation;
 
 public final class J2SEJavaTranslations implements JavaLibImplementation {
+    private static J2SEJavaTranslations singleton;
+    
+    private J2SEJavaTranslations() {
+        
+    };
+
+    public static final J2SEJavaTranslations getInstance() {
+        if (singleton == null) {
+            singleton = new J2SEJavaTranslations();
+        }
+        return singleton;
+    }
+
     public final BT747Date getDateInstance() {
         return new J2SEDate();
     }

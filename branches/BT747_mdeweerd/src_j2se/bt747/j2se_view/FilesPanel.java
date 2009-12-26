@@ -12,11 +12,15 @@
 package bt747.j2se_view;
 
 import java.awt.FontMetrics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
 import bt747.j2se_view.model.LogFileTableModel;
+import bt747.j2se_view.model.MapWaypoint;
+import bt747.j2se_view.model.PositionData;
 import bt747.model.Controller;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -30,6 +34,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
 
     private final LogFileTableModel logFileModel = new LogFileTableModel();
     private final FileTablePanel fileTablePanel = new FileTablePanel();
+    private WaypointMapKit map;
     
     /** Creates new form FilesPanel */
     public FilesPanel() {
@@ -42,6 +47,9 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
+        map.init(c);
+        map.setZoomSliderVisible(false);
+        map.setMiniMapVisible(false);
         logFileModel.setLogfileInfos(Controller.logFiles);
         fileTablePanel.init(pC);
         tbLogFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -53,6 +61,9 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
         new LogFilePopupMenu(this,tbLogFile);
 
         m.addListener(this);
+        
+        m.getPositionData().addPropertyChangeListener(
+                PositionData.WAYPOINTSELECTED, wpSelectedListener);
     }
 
     public void modelEvent(final ModelEvent e) {
@@ -62,6 +73,19 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
             break;
         }
     }
+
+    private final PropertyChangeListener wpSelectedListener = new PropertyChangeListener() {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            try {
+                final MapWaypoint w = (MapWaypoint) evt.getNewValue();
+                map.setZoom(5);
+            } catch (Exception e) {
+                bt747.sys.Generic.debug("Waypoint selection", e);
+                // TODO: handle exception
+            }
+        }
+    };
 
     
     /** This method is called from within the constructor to
@@ -73,8 +97,11 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     private void initComponents() {//GEN-BEGIN:initComponents
 
         spFileTablePanel = new javax.swing.JScrollPane(fileTablePanel);
+        map = new WaypointMapKit();
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane1.setBottomComponent(spFileTablePanel);
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jSplitPane2.setRightComponent(map);
         spLogFile = new javax.swing.JScrollPane();
         tbLogFile = new javax.swing.JTable();
 
@@ -83,31 +110,36 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
 
+        jSplitPane2.setOneTouchExpandable(true);
+
         tbLogFile.setModel(logFileModel);
         tbLogFile.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
         spLogFile.setViewportView(tbLogFile);
 
-        jSplitPane1.setTopComponent(spLogFile);
+        jSplitPane2.setTopComponent(spLogFile);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 400, Short.MAX_VALUE)
+            .add(0, 124, Short.MAX_VALUE)
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 169, Short.MAX_VALUE)
+            .add(0, 97, Short.MAX_VALUE)
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
         );
     }//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JScrollPane spFileTablePanel;
     private javax.swing.JScrollPane spLogFile;
     private javax.swing.JTable tbLogFile;

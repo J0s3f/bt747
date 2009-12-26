@@ -5,8 +5,11 @@ package bt747.j2se_view.model;
 
 import java.awt.FontMetrics;
 
+import javax.swing.JTable;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.model.PositionData.UserWayPointListModel;
@@ -39,7 +42,7 @@ public class FileTableModel extends AbstractTableModel {
 
     public void removeRows(int[] indexes) {
         final Object[] elements = new Object[indexes.length];
-        for(int i=0;i<indexes.length;i++) {
+        for (int i = 0; i < indexes.length; i++) {
             elements[i] = wpListModel.getElementAt(indexes[i]);
         }
         wpListModel.remove(elements);
@@ -51,7 +54,9 @@ public class FileTableModel extends AbstractTableModel {
         /*
          * (non-Javadoc)
          * 
-         * @see javax.swing.event.ListDataListener#contentsChanged(javax.swing.event.ListDataEvent)
+         * @see
+         * javax.swing.event.ListDataListener#contentsChanged(javax.swing.
+         * event.ListDataEvent)
          */
         public void contentsChanged(final ListDataEvent e) {
             fireTableRowsUpdated(e.getIndex0(), e.getIndex1());
@@ -60,7 +65,9 @@ public class FileTableModel extends AbstractTableModel {
         /*
          * (non-Javadoc)
          * 
-         * @see javax.swing.event.ListDataListener#intervalAdded(javax.swing.event.ListDataEvent)
+         * @see
+         * javax.swing.event.ListDataListener#intervalAdded(javax.swing.event
+         * .ListDataEvent)
          */
         public void intervalAdded(final ListDataEvent e) {
             fireTableRowsInserted(e.getIndex0(), e.getIndex1());
@@ -70,7 +77,9 @@ public class FileTableModel extends AbstractTableModel {
         /*
          * (non-Javadoc)
          * 
-         * @see javax.swing.event.ListDataListener#intervalRemoved(javax.swing.event.ListDataEvent)
+         * @see
+         * javax.swing.event.ListDataListener#intervalRemoved(javax.swing.
+         * event.ListDataEvent)
          */
         public void intervalRemoved(final ListDataEvent e) {
             fireTableRowsDeleted(e.getIndex0(), e.getIndex1());
@@ -158,7 +167,7 @@ public class FileTableModel extends AbstractTableModel {
      * (non-Javadoc)
      * 
      * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int,
-     *      int)
+     * int)
      */
     public void setValueAt(final Object value, final int rowIndex,
             final int columnIndex) {
@@ -170,5 +179,4 @@ public class FileTableModel extends AbstractTableModel {
             final int columnIndex) {
         return DataTypes.defaultDataWidth(columnToDataType(columnIndex), fm);
     }
-
 }

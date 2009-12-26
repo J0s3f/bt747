@@ -352,7 +352,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
     }
 
     public static void main(final String[] args) {
-        JavaLibBridge.setJavaLibImplementation(new J2SEJavaTranslations());
+        JavaLibBridge.setJavaLibImplementation(J2SEJavaTranslations.getInstance());
         final GPXLogConvert x = new GPXLogConvert();
         x.toGPSFile("c:/BT747/20080915_2010.gpx", null, 0);
     }
