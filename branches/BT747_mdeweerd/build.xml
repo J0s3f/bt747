@@ -610,6 +610,7 @@
                         -optimizationpasses 2
             -keep public class bt747.sys.Generic { public *** exception(...); public *** setPoster(...); public *** expandPercentTokens(...);}
                         -keep public class bt747.sys.JavaLibBridge { *; }
+		                -keep public class net.sf.bt747.j2se.system.J2SEJavaTranslations { public *** getInstance(); }
 			            -keep public class bt747.sys.I18N { public *** *(...); }
 			            -keep public class bt747.sys.Settings { *; }
 			            -keep public class bt747.sys.File { *; }
