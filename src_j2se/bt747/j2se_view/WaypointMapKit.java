@@ -39,9 +39,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.ScrollPaneConstants;
 
-import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapFactoryInfos;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
@@ -65,13 +63,14 @@ import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Generic;
+import javax.swing.event.EventListenerList;
 
 /**
  * 
  * @author Mario
  */
 @SuppressWarnings("serial")
-public class MyMap extends javax.swing.JPanel implements ModelListener {
+public class WaypointMapKit extends javax.swing.JPanel implements ModelListener {
 
     private JXMapViewer mapViewer;
     private MyWaypointPainter<JXMapViewer> waypointPainter;
@@ -79,16 +78,21 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     private BT747TrackRenderer trackRenderer;
 
     /** Creates new form MapReference */
-    public MyMap() {
+    public WaypointMapKit() {
         initComponents();
     }
 
     private J2SEAppController c;
     private J2SEAppModel m;
 
+
+    private EventListenerList listeners = new EventListenerList();
+
     public void init(final J2SEAppController pC) {
+        // Set up references to Controller and Model.
         c = pC;
         m = c.getAppModel();
+        // Listen to the Model.
         m.addListener(this);
 
         initGui();
@@ -109,14 +113,12 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         setMapTileCacheDirectory();
     }
 
-    mouseListener ml;
+    private mouseListener ml;
 
     private void initGui() {
         map.setMiniMapVisible(true);
         // wayPointScrollPane
         // .setVisible(Version.VERSION_NUMBER.equals("d.evel"));
-        wayPointScrollPane
-                .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
@@ -132,12 +134,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         ml = new mouseListener();
         mapViewer.addMouseListener(ml);
         mapViewer.addMouseMotionListener(ml);
-        waypointList.setModel(m.getPositionData().getWaypointListModel());
-        waypointList.setCellRenderer(new BT747WaypointListCellRenderer());
-        // waypointList.setPreferredSize(new Dimension(100,0));
-        splitPane.setDividerLocation(100);
 
-        new TagFilePopupMenu(wayPointScrollPane, waypointList);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
@@ -156,10 +153,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         public void propertyChange(PropertyChangeEvent evt) {
             try {
                 final MapWaypoint w = (MapWaypoint) evt.getNewValue();
-                if (w != waypointList.getSelectedValue()) {
-                    waypointList.setSelectedValue(w, true);
-                    ml.selectedWaypoint(w);
-                }
                 if (w.getGpsRecord().hasPosition()) {
                     map.setAddressLocation(w.getPosition());
                 }
@@ -170,6 +163,18 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
     };
+
+    
+    public void setZoom(final int zoom) {
+        map.setZoom(zoom);
+    }
+    public void setZoomSliderVisible(final boolean visible) {
+        map.setZoomSliderVisible(visible);
+    }
+    
+    public void setMiniMapVisible(final boolean visible) {
+        map.setMiniMapVisible(visible);
+    }
 
     private volatile GPSPositionWaypoint gpsPosition = null;
 
@@ -231,14 +236,14 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         default:
             break;
         }
-        // TODO Auto-generated method stub
-
     }
 
+    /** Change the Map Layer to the current Map Type */
     private void updateMap() {
         setMap(m.getIntOpt(AppSettings.MAPTYPE));
     }
 
+    /** Use the current MapTileDirectory */
     public void setMapTileCacheDirectory() {
         if (m != null) {
             setMapTileCacheDirectory(m
@@ -246,6 +251,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     }
 
+    /** Use the current MapTileDirectory */
     public void setMapTileCacheDirectory(final String path) {
         File f;
         f = new File(path);
@@ -260,7 +266,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     }
 
     /**
-     * 
+     * Determine zoom automatically.
      */
     private boolean setZoom() {
         // TODO Auto-generated method stub
@@ -344,20 +350,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         return hasPositions;
     }
 
-    enum MapType {
-        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade
-    };
-
-    private void setMap(final int maptypeOrdinal) {
-        try {
-            setMap(MapType.values()[maptypeOrdinal]);
-        } catch (final Exception e) {
-            setMap(MapType.values()[0]);
-        }
-    }
-
+    /** Action to act upon click on map information link.
+     * Opens up the external browser.
+     */
     private static class MyLinkAction extends LinkAction<String> {
-
         /**
          * 
          */
@@ -370,6 +366,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             url = b;
         }
 
+        @Override
         public String toString() {
             return des;
         };
@@ -385,8 +382,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     };
 
+        public enum MapType {
+        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade
+    };
+
+    /** Set the current map based on the map index */
+    private void setMap(final int maptypeOrdinal) {
+        try {
+            setMap(MapType.values()[maptypeOrdinal]);
+        } catch (final Exception e) {
+            setMap(MapType.values()[0]);
+        }
+    }
+
+
     /**
-     * 
+     * Set the map type based on the MapType enum value.
      */
     private void setMap(final MapType maptype) {
         TileFactoryInfo info = null;
@@ -418,7 +429,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         default:
             info = MapFactoryInfos.tfiOpenStreetMap;
         }
+        // Get the current boundaries of the map.
         final Rectangle r = map.getMainMap().getViewportBounds();
+        // Set containing position that must be in the new map.
         final Set<GeoPosition> bounds = new HashSet<GeoPosition>();
         final TileFactory currentFactory = map.getMainMap().getTileFactory();
         final int zoom = map.getMainMap().getZoom();
@@ -426,11 +439,11 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 .getY()), zoom));
         bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(), r
                 .getY()
-                + r.getHeight()), zoom));
+                + r.getHeight() - 1), zoom));
         bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()
-                + r.getWidth(), r.getY()), zoom));
+                + r.getWidth() - 1, r.getY()), zoom));
         bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()
-                + r.getWidth(), r.getY() + r.getHeight()), zoom));
+                + r.getWidth() - 1, r.getY() + r.getHeight() - 1), zoom));
 
         tf = new DefaultTileFactory(info);
         setMapTileCacheDirectory();
@@ -489,6 +502,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             Generic.debug("Waypoints should not be set this way");
         }
 
+        @Override
         public java.lang.Iterable<Waypoint> getWaypoints() {
             return getWaypointsIterable();
         }
@@ -853,6 +867,46 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
     }
 
+//    // Left here for future reference if needed.
+//    public static class WaypointSelectEvent extends EventObject {
+//        private Waypoint waypoint;
+//        protected WaypointSelectEvent(final Object source, final Waypoint waypoint) {
+//            super(source);
+//        }
+//
+//        public Waypoint getWaypoint(Waypoint waypoint) {
+//            return this.waypoint;
+//        }
+//    }
+//
+//    /** A listener class - abstract for convienience */
+//    public static abstract class Listener implements EventListener {
+//        public void waypointSelected(WaypointSelectEvent evt) {};
+//    }
+//
+//    /** Add listener to events of this class. */
+//    public  void addListener(WaypointMapKit.Listener l) {
+//        listeners.add(WaypointMapKit.Listener.class, l);
+//    }
+//
+//    public void removeListener(WaypointMapKit.Listener l) {
+//        listeners.remove(WaypointMapKit.Listener.class, l);
+//    }
+//
+//    /** Notify of waypoint selection in GUI */
+//    protected void fireSelectWaypointEvent(final Waypoint waypoint) {
+//        final Object[] listenersList = listeners.getListenerList();
+//
+//        for (int i = listenersList.length - 2; i >= 0; i -= 2) {
+//            if (listenersList[i] == WaypointMapKit.Listener.class) {
+//                // Lazily create the event:
+//                WaypointSelectEvent waypointSelectEvent =
+//                        new WaypointSelectEvent(this, waypoint);
+//                ((WaypointMapKit.Listener) listenersList[i + 1]).waypointSelected(waypointSelectEvent);
+//            }
+//        }
+//    }
+    
     /**
      * This method is called from within the constructor to initialize the
      * form. WARNING: Do NOT modify this code. The content of this method is
@@ -861,55 +915,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
 
-        splitPane = new javax.swing.JSplitPane();
         map = new org.jdesktop.swingx.JXMapKit();
-        wayPointScrollPane = new javax.swing.JScrollPane();
-        waypointList = new javax.swing.JList();
 
-        splitPane.setBorder(null);
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setOpaque(false);
-        splitPane.setRightComponent(map);
-
-        wayPointScrollPane
-                .setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        wayPointScrollPane
-                .setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        waypointList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Waypoint" };
-
-            public int getSize() {
-                return strings.length;
-            }
-
-            public Object getElementAt(final int i) {
-                return strings[i];
-            }
-        });
-        waypointList
-                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        waypointList.setOpaque(false);
-        wayPointScrollPane.setViewportView(waypointList);
-
-        splitPane.setLeftComponent(wayPointScrollPane);
-
-        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                this);
-        setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                layout.createSequentialGroup().add(0, 0, 0).add(splitPane)));
-        layout.setVerticalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                layout.createSequentialGroup().add(0, 0, 0).add(splitPane)));
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
     }//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXMapKit map;
-    private javax.swing.JSplitPane splitPane;
-    private javax.swing.JScrollPane wayPointScrollPane;
-    private javax.swing.JList waypointList;
     // End of variables declaration//GEN-END:variables
 
 }

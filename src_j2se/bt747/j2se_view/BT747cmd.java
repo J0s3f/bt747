@@ -31,16 +31,14 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
-
-import javax.swing.JOptionPane;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 import net.sf.bt747.j2se.app.utils.Utils;
+import net.sf.bt747.j2se.system.J2SEJavaTranslations;
 
 import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
@@ -192,13 +190,16 @@ public class BT747cmd implements bt747.model.ModelListener {
     /** Cold parameter for start. */
     private static final String OPT_FACTORY = "factory";
 
+    private int eraseTimeoutMs = 60000;
+
     /**
      * Set up system specific classes.
      */
     static {
         // Set up the low level functions interface.
         JavaLibBridge
-                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+                .setJavaLibImplementation(net.sf.bt747.j2se.system.J2SEJavaTranslations
+                        .getInstance());
         // Set the serial port class instance to use (also system specific).
         if (!GPSrxtx.hasDefaultPortInstance()) {
             GPSrxtx
@@ -247,36 +248,34 @@ public class BT747cmd implements bt747.model.ModelListener {
     // }
 
     private void reportError(final int error, final String errorInfo) {
-        System.err.println("\n####    ERROR  !!! ####");
+        System.err.println("\n####    PROBLEM  !!! ####");
 
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
-            System.err.println("Could not open " + errorInfo);
+            System.err.println("ERROR - Could not open " + errorInfo);
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
             System.err
                     .println("WARNING - No files were created - Check the input type.");
             break;
         case BT747Constants.ERROR_READING_FILE:
-            System.err.println("Problem reading" + errorInfo);
+            System.err.println("ERROR - Problem reading" + errorInfo);
             break;
         default:
             break;
         }
     }
 
-    
     public final static void notifyBT747Exception(final BT747Exception e) {
         String message = "";
         System.err.println("\n####    ERROR  !!! ####");
         if (e.getCause().toString().equals(BT747Exception.ERR_COULD_NOT_OPEN)) {
-            message = "Could not open " + e.getMessage();
+            message = "Error - Could not open " + e.getMessage();
         } else {
             message = e.getCause().toString() + '\n' + e.getMessage();
         }
         System.err.println(message);
     }
-
 
     // Code snippet kept for reference
 
@@ -335,74 +334,76 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     public void modelEvent(final ModelEvent e) {
         try {
-        switch (e.getType()) {
-        // case ModelEvent.DEBUG_MSG:
-        // System.out.flush();
-        // System.err.println((String) e.getArg());
-        // System.err.flush();
-        // break;
-        case ModelEvent.LOG_DOWNLOAD_STARTED:
-            downloadStartTime = System.currentTimeMillis();
-            downloadIsSuccessFull = false;
-            progressUpdate();
-            break;
-        case ModelEvent.DOWNLOAD_STATE_CHANGE:
-            progressUpdate();
-            break;
-        case ModelEvent.LOG_DOWNLOAD_DONE:
-            progressUpdate();
-            if (!downloadIsSuccessFull) {
-                System.out.println("\n#### DOWNLOAD FAILED ####");
-            } else {
-                System.out.println("\n#### DOWNLOAD SUCCESS ####");
-            }
-            System.out
-                    .println("Time to download data (ms): "
-                            + ((int) (System.currentTimeMillis() - downloadStartTime))
-                            + " ms");
-            break;
-        case ModelEvent.LOG_DOWNLOAD_SUCCESS:
-            downloadIsSuccessFull = true;
-            break;
-        case ModelEvent.AGPS_UPLOAD_DONE:
-            agpsProgressBarDone();
-            break;
-        case ModelEvent.AGPS_UPLOAD_PERCENT:
-            agpsProgressBarUpdate(((BT747Int) e.getArg()).getValue());
-            break;
-        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            if (overwriteDownloadOk) {
-                // // When the data on the device is not the same, overwrite
-                // // automatically.
-                System.out.println("Overwriting previously downloaded data"
-                        + " that looks different.");
-                c.replyToOkToOverwrite(true);
-            } else {
+            switch (e.getType()) {
+            // case ModelEvent.DEBUG_MSG:
+            // System.out.flush();
+            // System.err.println((String) e.getArg());
+            // System.err.flush();
+            // break;
+            case ModelEvent.LOG_DOWNLOAD_STARTED:
+                downloadStartTime = System.currentTimeMillis();
+                downloadIsSuccessFull = false;
+                progressUpdate();
+                break;
+            case ModelEvent.DOWNLOAD_STATE_CHANGE:
+                progressUpdate();
+                break;
+            case ModelEvent.LOG_DOWNLOAD_DONE:
+                progressUpdate();
+                if (!downloadIsSuccessFull) {
+                    System.out.println("\n#### DOWNLOAD FAILED ####");
+                } else {
+                    System.out.println("\n#### DOWNLOAD SUCCESS ####");
+                }
                 System.out
-                        .println("\n#### DOWNLOAD ABORTED BECAUSE DATA ON DISK IS DIFFERENT ####");
+                        .println("Time to download data (ms): "
+                                + ((int) (System.currentTimeMillis() - downloadStartTime))
+                                + " ms");
+                break;
+            case ModelEvent.LOG_DOWNLOAD_SUCCESS:
+                downloadIsSuccessFull = true;
+                break;
+            case ModelEvent.AGPS_UPLOAD_DONE:
+                agpsProgressBarDone();
+                break;
+            case ModelEvent.AGPS_UPLOAD_PERCENT:
+                agpsProgressBarUpdate(((BT747Int) e.getArg()).getValue());
+                break;
+            case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+                if (overwriteDownloadOk) {
+                    // // When the data on the device is not the same,
+                    // overwrite
+                    // // automatically.
+                    System.out
+                            .println("Overwriting previously downloaded data"
+                                    + " that looks different.");
+                    c.replyToOkToOverwrite(true);
+                } else {
+                    System.out
+                            .println("\n#### DOWNLOAD ABORTED BECAUSE DATA ON DISK IS DIFFERENT ####");
+                    System.out
+                            .println("\n####    Change destination file or use '-overwrite'     ####");
+                    c.replyToOkToOverwrite(false);
+                }
+                break;
+            case ModelEvent.ERASE_ONGOING_NEED_POPUP:
+                setEraseOngoing(true);
+                break;
+            case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+                setEraseOngoing(false);
+                break;
+            case ModelEvent.CONVERSION_STARTED:
+                conversionStartTime = System.currentTimeMillis();
+                break;
+            case ModelEvent.CONVERSION_ENDED:
                 System.out
-                        .println("\n####    Change destination file or use '-overwrite'     ####");
-                c.replyToOkToOverwrite(false);
+                        .println("Time to convert data (ms): "
+                                + ((int) (System.currentTimeMillis() - conversionStartTime))
+                                + " ms");
+                break;
+            default:
+                break;
             }
-            break;
-        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
-            setEraseOngoing(true);
-            break;
-        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
-            setEraseOngoing(false);
-            break;
-        case ModelEvent.CONVERSION_STARTED:
-            conversionStartTime = System.currentTimeMillis();
-            break;
-        case ModelEvent.CONVERSION_ENDED:
-            System.out
-                    .println("Time to convert data (ms): "
-                            + ((int) (System.currentTimeMillis() - conversionStartTime))
-                            + " ms");
-            break;
-        default:
-            break;
-        }
 
         } catch (BT747Exception b) {
             notifyBT747Exception(b);
@@ -483,15 +484,25 @@ public class BT747cmd implements bt747.model.ModelListener {
         agpsUploadDone = true;
     }
 
-    private void waitForErase() {
+    private String waitForErase() {
         final byte[] progressStr = { '-', '\\', '|', '/' };
         final int sleepPeriod = 50;
         final int progressLimit = 512;
+        J2SEJavaTranslations.getInstance().getTimeStamp();
+        long eraseTimeoutTime = 0;
         int progress = 0;
         int progressIdx = 0;
         flushOutstandingCmds();
         System.out.print(progressStr[progressIdx]);
-        while (!eraseStarted || getEraseOngoing()) {
+        while ((eraseTimeoutTime == 0) // 0 as long as erase did not start
+                || (getEraseOngoing() // Erase still going on
+                // And no time out.
+                && (eraseTimeoutTime > System.currentTimeMillis()))) {
+            if (!eraseStarted && eraseTimeoutTime == 0) {
+                eraseTimeoutTime = System.currentTimeMillis()
+                        + eraseTimeoutMs;
+            }
+
             try {
                 Thread.sleep(sleepPeriod);
                 progress += sleepPeriod;
@@ -500,13 +511,18 @@ public class BT747cmd implements bt747.model.ModelListener {
                     progressIdx++;
                     progressIdx &= 0x3; // Limit to 3.
                     System.out.print("\r"); // Cariage return
-                    System.out.print((char)progressStr[progressIdx]);
+                    System.out.print((char) progressStr[progressIdx]);
                     System.out.flush();
                 }
             } catch (final Exception e) {
                 e.printStackTrace();
                 // Do nothing
             }
+        }
+        if(eraseOngoing) {
+            return "WARNING: Waiting for end of erase timed out";
+        } else {
+            return null;
         }
     }
 
@@ -800,9 +816,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (m.isConnected()) {
             // Connection is made.
-            if(options.has(OPT_START)) {
+            if (options.has(OPT_START)) {
                 final String arg = options.argumentOf(OPT_START)
-                .toLowerCase();
+                        .toLowerCase();
                 if (arg.equals(OPT_COLD)) {
                     c.gpsCmd(MtkController.CMD_COLDSTART);
                 } else if (arg.equals(OPT_WARM)) {
@@ -1020,8 +1036,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             if (options.has(OPT_OVERLAP_STOP_SETTING)) {
-                final String arg = options.argumentOf(OPT_OVERLAP_STOP_SETTING)
-                        .toLowerCase();
+                final String arg = options.argumentOf(
+                        OPT_OVERLAP_STOP_SETTING).toLowerCase();
                 if (arg.equals("overlap")) {
                     System.out
                             .println(">> Setting method OVERLAP on memory full\n");
@@ -1040,9 +1056,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println("Device reports " + m.logMemUsed()
                     + " bytes used (" + m.logMemUsedPercent() + "% of "
                     + m.logMemSize() + ").");
-            System.out.println(
-                    "Device is in " + (m.isLogFullOverwrite()? "OVERLAP" : "STOP")
-                    + " ("
+            System.out.println("Device is in "
+                    + (m.isLogFullOverwrite() ? "OVERLAP" : "STOP") + " ("
                     + (m.isInitialLogOverwrite() ? "OVERLAP" : "STOP")
                     + " on erase or memory wrap)");
 
@@ -1085,10 +1100,13 @@ public class BT747cmd implements bt747.model.ModelListener {
                 if (downloadIsSuccessFull) {
                     System.out.println(">> Erasing log memory...\n");
                     c.eraseLog();
-                    waitForErase();
+                    String msg = waitForErase();
+                    if (msg != null) {
+                        System.out.println(msg);
+                    }
                 } else {
                     System.out
-                            .println(">> Not erasing memory - download failed.\n");
+                            .println("WARNING - Not erasing memory - download failed.\n");
                 }
             }
 
@@ -1100,7 +1118,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     waitForErase();
                 } else {
                     System.out
-                            .println(">> Not recovering memory - download failed.\n");
+                            .println("WARNING - Not recovering memory - download failed.\n");
                 }
             }
             c.closeGPS();
@@ -1187,7 +1205,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     type = Model.GPX_LOGTYPE;
                 } else if (typeStr.equals("NMEA")) {
                     type = Model.NMEA_LOGTYPE;
-                } else if (typeStr.equals("GMAP")) {
+                } else if (typeStr.equals("GMAP") || typeStr.equals("HTML")) {
                     type = Model.GMAP_LOGTYPE;
                 } else if (typeStr.equals("CSV")) {
                     type = Model.CSV_LOGTYPE;
@@ -1313,7 +1331,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Create a gpx file with waypoints");
                 accepts(
                         OPT_OUTPUT_TYPE,
-                        "Create a gpx file of type NMEA, GPX, GMAP, KML, KMZ, CSV, PLT, TRK."
+                        "Create a gpx file of type NMEA, GPX, GMAP or HTML, KML, KMZ, CSV, PLT, TRK."
                                 + "More than one format can be specified when separated with ','")
                         .withRequiredArg().describedAs("OUTPUTTYPE")
                         .withValuesSeparatedBy(',');
@@ -1390,7 +1408,6 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts(OPT_START,
                         "Perform HOT, WARM or COLD start.  FACTORY will set GPS to factory values.")
                         .withRequiredArg().describedAs("METHOD");
-                
 
             }
         };

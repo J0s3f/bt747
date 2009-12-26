@@ -5,6 +5,7 @@ package bt747.j2se_view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -111,7 +112,7 @@ public class TagFilePopupMenu {
         // delete column here
     }
 
-    class PopupListener implements MouseListener {
+    private class PopupListener extends MouseAdapter {
         public void mousePressed(MouseEvent e) {
             showPopup(e);
         }
@@ -124,15 +125,6 @@ public class TagFilePopupMenu {
             if (e.isPopupTrigger()) {
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
-        }
-
-        public void mouseClicked(MouseEvent e) {
-        }
-
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        public void mouseExited(MouseEvent e) {
         }
     }
 

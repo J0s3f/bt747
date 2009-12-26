@@ -16,9 +16,13 @@ package bt747.j2se_view;
 
 import java.awt.FontMetrics;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
@@ -29,6 +33,7 @@ import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;
+import bt747.j2se_view.model.PositionData.UserWayPointListModel;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -52,15 +57,18 @@ public class FileTablePanel extends javax.swing.JPanel implements
     private J2SEAppController c;
     private J2SEAppModel m;
 
+    private UserWayPointListModel wpListModel;
+
     public final void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
         m.addListener(this);
 
-        fileTableModel = new FileTableModel(m.getPositionData()
-                .getWaypointListModel());
+        wpListModel = m.getPositionData().getWaypointListModel();
+        fileTableModel = new FileTableModel(wpListModel);
         tbImageList.setModel(fileTableModel);
         tbImageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        setupSelectionListener(tbImageList);
         // m.addListener(this);
         final FontMetrics fm = tbImageList.getFontMetrics(tbImageList.getFont());
         for (int i = tbImageList.getColumnCount() - 1; i >= 0; i--) {
@@ -234,6 +242,80 @@ public class FileTablePanel extends javax.swing.JPanel implements
 
     private FileTableModel fileTableModel;
 
+    private void setupSelectionListener(final JTable table) {
+        SelectionListener listener = new SelectionListener(table);
+        table.getSelectionModel().addListSelectionListener(listener);
+        table.getColumnModel().getSelectionModel().addListSelectionListener(
+                listener);
+
+        // TODO: should listen to selection model changes ...
+    }
+
+    private Object previousSelected;
+    
+    public class SelectionListener implements ListSelectionListener {
+        JTable table;
+
+        // It is necessary to keep the table since it is not possible
+        // to determine the table from the event's source
+        SelectionListener(JTable table) {
+            this.table = table;
+        }
+
+        public void valueChanged(ListSelectionEvent e) {
+            // If cell selection is enabled, both row and column change events
+            // are fired
+            if (e.getSource() == table.getSelectionModel()
+                    && table.getRowSelectionAllowed()) {
+                // Column selection changed
+                //int first = e.getFirstIndex();
+                //int last = e.getLastIndex();
+                int selected = table.getSelectedRow();
+                Object wp = wpListModel.getElementAt(selected);
+                if(previousSelected!=wp) {
+                    if(previousSelected!=null) {
+                        visitSetSelected(previousSelected, false);
+                    }
+                    visitSetSelected(wp, true);
+                    previousSelected = wp;
+                }
+
+            } else if (e.getSource() == table.getColumnModel()
+                    .getSelectionModel()
+                    && table.getColumnSelectionAllowed()) {
+                // Row selection changed
+                int first = e.getFirstIndex();
+                int last = e.getLastIndex();                
+            }
+            
+            if (e.getValueIsAdjusting()) {
+                // The mouse button has not yet been released
+            }
+        }
+    }
+    
+    private void visitSetSelected(Object o, final boolean selected) {
+        try {
+            Method m = o.getClass().getMethod("setSelected", boolean.class);
+            m.invoke(o, selected);
+        } catch (IllegalArgumentException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (SecurityException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+    }
     /**
      * This method is called from within the constructor to initialize the
      * form. WARNING: Do NOT modify this code. The content of this method is

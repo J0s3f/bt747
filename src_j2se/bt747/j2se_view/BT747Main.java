@@ -68,7 +68,7 @@ public class BT747Main extends javax.swing.JFrame implements
      */
     static {
         JavaLibBridge
-                .setJavaLibImplementation(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
+                .setJavaLibImplementation(net.sf.bt747.j2se.system.J2SEJavaTranslations.getInstance());
         // Set the serial port class instance to use (also system specific).
         if (!GPSrxtx.hasDefaultPortInstance()) {
             GPSrxtx
@@ -145,7 +145,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private AdvancedFileSettingsPanel pnAdvancedFileSettingsPanel;
     // private FileTablePanel pnFilesToTagPanel;
     private FilesPanel pnFilesToTagPanel;
-    private MyMap pnMap = new MyMap();
+    private WaypointListMapPanel pnMap = new WaypointListMapPanel();
     private AgpsPanel pnAgpsPanel;
 
     private final static Component inScrollPane(final JPanel p) {

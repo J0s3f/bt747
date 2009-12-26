@@ -21,7 +21,7 @@ public class TestUtils {
 
     public static final void setupEnvironment() {
         /* Get instance of implementation */
-        final JavaLibImplementation imp = new net.sf.bt747.j2se.system.J2SEJavaTranslations();
+        final JavaLibImplementation imp = net.sf.bt747.j2se.system.J2SEJavaTranslations.getInstance();
         /* Declare the implementation */
         JavaLibBridge.setJavaLibImplementation(imp);
         /* Set the serial port class instance to use (also system specific). */
