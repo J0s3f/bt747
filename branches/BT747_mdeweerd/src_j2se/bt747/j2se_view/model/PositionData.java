@@ -260,7 +260,7 @@ public class PositionData extends AbstractBean {
          * @see javax.swing.ListModel#getElementAt(int)
          */
         public Object getElementAt(final int index) {
-            if (index < userWayPoints.size()) {
+            if (index >=0 && index < userWayPoints.size()) {
                 return userWayPoints.get(index);
             }
             return null;
