@@ -18,6 +18,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to write a GPX file.
@@ -45,9 +46,9 @@ public final class GPSGmapsHTMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext,
-            final int Card, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, Card, oneFilePerDay);
+    public void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, oneFilePerDay);
         m_currentFilter = GPSFilter.WAYPT;
         m_isWayType = true;
     }

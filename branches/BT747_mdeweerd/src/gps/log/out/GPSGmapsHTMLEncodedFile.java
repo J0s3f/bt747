@@ -24,6 +24,7 @@ import bt747.Version;
 import bt747.sys.I18N;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -71,9 +72,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public final void initialiseFile(final String basename, final String ext,
-            final int card, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, card, oneFilePerDay);
+    public final void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
 

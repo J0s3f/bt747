@@ -19,6 +19,7 @@ import gps.log.in.WindowedFile;
 import bt747.Version;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario De Weerd
@@ -38,16 +39,9 @@ import bt747.sys.Generic;
  */
 public class ExifTIFF {
 
-    private String Path; // Path to the file
-    private int card = -1; // Card number on Palm
+    private BT747Path Path; // Path to the file
 
-    public final boolean setPath(final String p) {
-        Path = p;
-        return getInfo();
-    }
-
-    public final boolean setPath(final String p, final int c) {
-        card = c;
+    public final boolean setPath(final BT747Path p) {
         Path = p;
         return getInfo();
     }
@@ -58,7 +52,7 @@ public class ExifTIFF {
 
         try {
             // bt747.sys.Generic.debug(Path);
-            p = new WindowedFile(Path, File.READ_ONLY, card);
+            p = new WindowedFile(Path, File.READ_ONLY);
             if ((p != null) && p.isOpen()) {
                 byte[] buffer;
                 int sz;
@@ -194,7 +188,7 @@ public class ExifTIFF {
         }
     }
 
-    public final boolean copyTo(final String path, final int card) {
+    public final boolean copyTo(final BT747Path path) {
         File toFile = null;
         WindowedFile fromFile = null;
         int currentIdxInBuffer = 0;
@@ -202,7 +196,7 @@ public class ExifTIFF {
 
         try {
             // bt747.sys.Generic.debug(Path);
-            fromFile = new WindowedFile(Path, File.READ_ONLY, card);
+            fromFile = new WindowedFile(Path, File.READ_ONLY);
             if ((exifApp1 != null) && (fromFile != null) && fromFile.isOpen()) {
                 
                 // TODO: This code is not validated and surely incorrect.
@@ -210,7 +204,7 @@ public class ExifTIFF {
                 // bt747.sys.Generic.debug(this.toString());
                 fromFile.setBufferSize(64 * 1024);
 
-                toFile = new File(path, File.CREATE, card);
+                toFile = new File(path, File.CREATE);
                 // buffer = null;
                 byte[] exif;
                 exif = getBuffer();

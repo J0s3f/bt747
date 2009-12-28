@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.*;
 
 /**
  * @author Mario De Weerd
@@ -73,7 +74,7 @@ public class BTCD110mController implements WondeproudConstants {
     private void replyLog() {
         GpsLinkExecCommand reply = null;
         String fn = getResourcePath(TEST_BTCD110m_FILE);
-        File fh = new File(fn);
+        File fh = new File(new BT747Path(fn));
         int size = fh.getSize();
         try {
             FileInputStream fi = new FileInputStream(fn);

@@ -20,6 +20,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -43,11 +44,9 @@ public final class GPSNMEAFile extends GPSFile {
      * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
      * java.lang.String, int, int)
      */
-    public void initialiseFile(final String baseName, final String extension,
-            final int fileCard, final int fileSeparationFreq) {
-        // TODO Auto-generated method stub
-        super.initialiseFile(baseName, extension, fileCard,
-                fileSeparationFreq);
+    public void initialiseFile(final BT747Path baseName, final String extension,
+            final int fileSeparationFreq) {
+        super.initialiseFile(baseName, extension, fileSeparationFreq);
         fieldsNmeaOut = getParamObject().getIntParam(
                 GPSConversionParameters.NMEA_OUTFIELDS);
     }

@@ -12,6 +12,7 @@ import gps.mvc.commands.wp.WPStrCommand;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario
@@ -21,8 +22,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
         WondeproudConstants {
     private final WPController wpC;
     // DPL700 Functionality
-    private String wpLogFileName;
-    private int wpCard;
+    private BT747Path wpLogPath;
     private static final int WP_OFF = 0;
     private static final int WP_NEEDGETLOG = 1;
     private static final int WP_GETLOG = 2;
@@ -80,10 +80,9 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
         this.handler = handler;
     }
 
-    public final void getWPLog(final String p_FileName, final int card) {
+    public final void getWPLog(final BT747Path path) {
         wpC.setLogDownloadOngoing(true);
-        wpLogFileName = p_FileName;
-        wpCard = card;
+        wpLogPath = path;
         enterWPMode();
         wpState = WP_NEEDGETLOG;
     }
@@ -122,11 +121,11 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
             }
         } else if (s.equals(WP_UPDATE_OVER)) {
             if (wpState == WP_GETLOG) {
-                if (wpLogFileName != null) {
-                    if (!wpLogFileName.endsWith(".sr")) {
-                        wpLogFileName += ".sr";
+                if (wpLogPath != null) {
+                    if (!wpLogPath.getPath().endsWith(".sr")) {
+                        wpLogPath = wpLogPath.proto(wpLogPath + ".sr");
                     }
-                    logFile.openNewLog(wpLogFileName, wpCard);
+                    logFile.openNewLog(wpLogPath);
                     try {
                         logFile.getLogFile().writeBytes(
                                 resp.getResponseBuffer(), 0,
@@ -136,7 +135,7 @@ public class WPLogDownloadHandler implements DeviceOperationHandlerIF,
                         Generic.debug("", e);
                         // TODO: handle exception
                     }
-                    wpLogFileName = null;
+                    wpLogPath = null;
                     exitWPMode();
                     Generic.debug("End WP");
                     handler.getGPSRxtx().newState(DecoderStateFactory.NMEA_STATE);  // Not sure this is appropriate.

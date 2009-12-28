@@ -28,11 +28,9 @@ public interface JavaLibImplementation {
 
 	BT747Time getTimeInstance();
 
-	BT747File getFileInstance(String path);
+	BT747File getFileInstance(BT747Path path);
 
-	BT747File getFileInstance(String path, int mode, int card);
-
-	BT747File getFileInstance(String path, int mode);
+	BT747File getFileInstance(BT747Path path, int mode);
 
 	boolean isAvailable();
 

@@ -25,6 +25,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -79,17 +80,12 @@ public abstract class GPSFile implements GPSFileInterface {
     /**
      * The basename for the output file.
      */
-    protected String basename;
+    protected BT747Path basename;
 
     /**
      * The extension for the output file.
      */
     protected String ext;
-
-    /**
-     * On certain systems, the card index.
-     */
-    protected int card;
 
     /**
      * The number of passes that must still be done on the source.
@@ -190,8 +186,6 @@ public abstract class GPSFile implements GPSFileInterface {
      * @param extension
      *            Extension of the output file. This value will be provided to
      *            the filename builder.
-     * @param fileCard
-     *            Card number used on certain devices like a Palm.
      * @param fileSeparationFreq
      *            Indicates how the file must be separated.
      * 
@@ -200,12 +194,11 @@ public abstract class GPSFile implements GPSFileInterface {
      * @see #FILE_SPLIT_ONE_FILE_PER_TRACK_
      * 
      */
-    public void initialiseFile(final String baseName, final String extension,
-            final int fileCard, final int fileSeparationFreq) {
+    public void initialiseFile(final BT747Path baseName,
+            final String extension, final int fileSeparationFreq) {
         nbrOfPassesToGo = numberOfPasses - 1;
         ext = extension;
         basename = baseName;
-        card = fileCard;
         switch (fileSeparationFreq) {
         case FILE_SPLIT_ONE_FILE_PER_DAY:
             oneFilePerDay = true;
@@ -796,23 +789,23 @@ public abstract class GPSFile implements GPSFileInterface {
     protected void writeDataFooter() {
     };
 
-    private String currentFileName;
+    private BT747Path currentFileName;
 
-    protected String getCurrentFileName() {
+    protected BT747Path getCurrentFileName() {
         return currentFileName;
     }
 
     protected int createFile(final int utc, final String extra_ext,
             final boolean createNewFile) {
         currentFileName = null;
-        String fileName;
-        fileName = filenameBuilder.getOutputFileName(basename, utc, ext,
+        BT747Path path;
+        path = filenameBuilder.getOutputFileName(basename, utc, ext,
                 extra_ext);
         int error = BT747Constants.NO_ERROR;
 
         try {
             if (createNewFile) {
-                final File tmpFile = new File(fileName, File.DONT_OPEN, card);
+                final File tmpFile = new File(path, File.DONT_OPEN);
                 if (tmpFile.exists()) {
                     tmpFile.delete();
                 }
@@ -823,17 +816,17 @@ public abstract class GPSFile implements GPSFileInterface {
         }
         try {
             final int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
-            outFile = new File(fileName, mode, card);
+            outFile = new File(path, mode);
         } catch (final Exception e) {
             Generic.debug("File creation", e);
             // TODO: handle exception
         }
         if ((outFile != null) && !outFile.isOpen()) {
-            errorInfo = fileName + "|" + outFile.getLastError();
+            errorInfo = path + "|" + outFile.getLastError();
             error = BT747Constants.ERROR_COULD_NOT_OPEN;
             outFile = null;
         } else {
-            currentFileName = fileName;
+            currentFileName = path;
             filenames.add(currentFileName);
         }
         return error;

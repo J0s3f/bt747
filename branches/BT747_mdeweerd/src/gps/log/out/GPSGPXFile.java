@@ -23,6 +23,7 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to write a GPX file.
@@ -60,9 +61,9 @@ public class GPSGPXFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext,
-            final int Card, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, Card, oneFilePerDay);
+    public void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, oneFilePerDay);
         if (getParamObject().hasParam(
                 GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL)) {
             isTrkSegSplitOnlyWhenSmall = getParamObject().getBoolParam(

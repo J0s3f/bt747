@@ -28,6 +28,7 @@ import bt747.j2se_view.J2SEAppModel;
 import bt747.model.Controller;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario
@@ -175,7 +176,7 @@ public class PositionData extends AbstractBean {
                         final String path = files[i].getCanonicalPath();
                         if (filter.accept(f)) {
                             // Log file
-                            Controller.addLogFile(path, -1);
+                            Controller.addLogFile(new BT747Path(path));
                         } else {
                             userWpListModel.add(path);
                         }
@@ -206,11 +207,11 @@ public class PositionData extends AbstractBean {
             synchronized (imageTable) {
                 if (!imageTable.contains(path)) {
                     final ImageData id = new ImageData();
-                    if(id.setPath(path)) {
+                    if(id.setFilePath(new BT747Path(path))) {
                     add(id);
                     } else {
                         final FileWaypoint fw = new FileWaypoint();
-                        fw.setPath(path);
+                        fw.setFilePath(new BT747Path(path));
                         add(fw);
                     }
                 }
@@ -219,7 +220,7 @@ public class PositionData extends AbstractBean {
 
         public void add(final FileWaypoint id) {
             synchronized (imageTable) {
-                imageTable.put(id.getPath(), id);
+                imageTable.put(id.getFilePath().getPath(), id);
                 add(new MapWaypoint(id));
             }
         }
@@ -238,7 +239,7 @@ public class PositionData extends AbstractBean {
             for (Object element : elements) {
                 if (element instanceof ImageData) {
                     final ImageData new_name = (ImageData) element;
-                    imageTable.remove(new_name.getPath());
+                    imageTable.remove(new_name.getFilePath());
                 }
                 userWayPoints.remove(element);
             }
@@ -355,7 +356,7 @@ public class PositionData extends AbstractBean {
                 case DataTypes.FILE_DATETIME:
                     return CommonOut.getDateTimeStr(fw.getUtc());
                 case DataTypes.FILE_PATH:
-                    return fw.getPath();
+                    return fw.getFilePath();
                 }
             }
             if (w instanceof ImageData) {

@@ -24,6 +24,7 @@ import net.sf.bt747.j2se.app.exif.ExifJPG;
 import bt747.sys.File;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -64,7 +65,7 @@ public class ImageData extends FileWaypoint {
      * @return true if file can ge interpreted.
      */
     private boolean getImageInfo() {
-        getGpsRecord().voxStr = getPath();
+        getGpsRecord().voxStr = getFilePath().getPath();
         // TODO: change path setting.
         int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
         final int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
@@ -80,7 +81,7 @@ public class ImageData extends FileWaypoint {
             getGpsRecord().voxStr = getGpsRecord().voxStr.substring(idx1 + 1);
         }
         final ExifJPG exifJpg = new ExifJPG();
-        if (!exifJpg.setPath(getPath())) {
+        if (!exifJpg.setFilePath(getFilePath())) {
             return false;
         } else {
             // bt747.sys.Generic.debug(exifJpg.toString());
@@ -211,7 +212,7 @@ public class ImageData extends FileWaypoint {
                 }
             } else {
                 // Get file date & time.
-                final File f = new File(getPath());
+                final File f = new File(getFilePath());
                 final int u = f.getModificationTime();
                 if (u != 0) {
                     setUtc(u);
@@ -221,14 +222,13 @@ public class ImageData extends FileWaypoint {
         }
     }
 
-    public final void writeImage(final String destPath, final int card) {
-        writeImage(getPath(), destPath, card);
+    public final void writeImage(final BT747Path destPath) {
+        writeImage(getFilePath(), destPath);
     }
 
-    public final void writeImage(final String orgPath, final String destPath,
-            final int card) {
+    public final void writeImage(final BT747Path orgPath, final BT747Path destPath) {
         final ExifJPG exifJpg = new ExifJPG();
-        exifJpg.setPath(orgPath); // Get exif data from file
+        exifJpg.setFilePath(orgPath); // Get exif data from file
         if (getGpsRecord().hasPosition()) {
             final GPSRecord g = getGpsRecord();
             if (g.hasPosition()) {
@@ -279,7 +279,7 @@ public class ImageData extends FileWaypoint {
             }
             exifJpg.setUsedSoftWare();
         }
-        exifJpg.copyTo(destPath, card);
+        exifJpg.copyTo(destPath);
     }
 
     private final static String nsatInfoToString(final GPSRecord r) {

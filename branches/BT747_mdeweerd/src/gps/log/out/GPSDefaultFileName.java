@@ -15,6 +15,7 @@
 package gps.log.out;
 
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Path;
 
 public final class GPSDefaultFileName implements BT747FileName {
 
@@ -24,16 +25,17 @@ public final class GPSDefaultFileName implements BT747FileName {
      * @see bt747.sys.interfaces.BT747FileName#getOutputFileName(java.lang.String,
      *      int, java.lang.String, java.lang.String)
      */
-    public final String getOutputFileName(final String baseName,
+    public final BT747Path getOutputFileName(final BT747Path basePath,
             final int utcTimeSeconds, final String proposedExtension,
             final String proposedTimeSpec) {
+        final String baseName = basePath.getPath();
         if (((baseName.length() == 0)
                 || (baseName.charAt(baseName.length() - 1) == '/') || (baseName
                 .charAt(baseName.length() - 1) == '\\'))
                 && (proposedTimeSpec.charAt(0) == '-')) {
-            return (baseName + proposedTimeSpec.substring(1) + proposedExtension);
+            return basePath.proto(baseName + proposedTimeSpec.substring(1) + proposedExtension);
         } else {
-            return (baseName + proposedTimeSpec + proposedExtension);
+            return basePath.proto(baseName + proposedTimeSpec + proposedExtension);
         }
     }
 

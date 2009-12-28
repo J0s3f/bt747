@@ -22,6 +22,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Vector;
@@ -69,6 +70,7 @@ public class AppSettings implements BT747Thread {
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 4000; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
 
+    
     // Parameter types
     //
     private static final int INT = 1;
@@ -76,7 +78,8 @@ public class AppSettings implements BT747Thread {
     private static final int STRING = 3;
     private static final int FLOAT = 4;
 
-    // New method for parameters.
+    // Some virtual parameters
+    public static final int REPORTFILEBASEPATH = -1;
 
     // List of indexes to parameters.
     // To be used as parameter to functions to get the values.
@@ -368,6 +371,15 @@ public class AppSettings implements BT747Thread {
      */
     public final static int FONTSCALE = 71;
 
+    /**
+     * 
+     * The card number that the filepaths refer to. This is usefull on PDA's
+     * only and probably only on a Palm. This is used by the 'SuperWaba'
+     * environment if used. '-1' refers to the 'last card in the system' which
+     * is normally the card that can be inserted by the PDA user.
+     */
+    public final static int CARD = 72;
+
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
     private final static int START_IDX = 2;
@@ -422,7 +434,8 @@ public class AppSettings implements BT747Thread {
         case 0:
             setIntOpt(AppSettings.PORTNBR, -1);
             setIntOpt(AppSettings.BAUDRATE, 115200);
-            setCard(-1);
+            setLocalIntOpt(0, (-1), AppSettings.C_CARD_IDX,
+            AppSettings.C_CARD_SIZE);
             setStringOpt(AppSettings.OUTPUTDIRPATH,
                     AppSettings.defaultBaseDirPath);
             setStringOpt(AppSettings.LOGFILERELPATH, "BT747log.bin");
@@ -683,9 +696,14 @@ public class AppSettings implements BT747Thread {
         // }
         if ((param < AppSettings.paramsList.length)
                 && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)) {
-            return getLocalIntOpt(
-                    AppSettings.paramsList[param][AppSettings.START_IDX],
-                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+            switch (param) {
+            case CARD:
+                return getLocalCard();
+            default:
+                return getLocalIntOpt(
+                        AppSettings.paramsList[param][AppSettings.START_IDX],
+                        AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+            }
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter @ index " + param);
@@ -716,7 +734,9 @@ public class AppSettings implements BT747Thread {
         switch (param) {
         case GOOGLEMAPKEY:
             return getGoogleMapKeyInternal();
-
+        case REPORTFILEBASEPATH:
+            return getStringOpt(AppSettings.OUTPUTDIRPATH) + "/"
+                    + getStringOpt(AppSettings.REPORTFILEBASE);
         default:
             break;
         }
@@ -795,7 +815,7 @@ public class AppSettings implements BT747Thread {
     /**
      * @return The default chunk size
      */
-    public final int getCard() {
+    private final int getLocalCard() {
         int card = getLocalIntOpt(AppSettings.C_CARD_IDX,
                 AppSettings.C_CARD_SIZE);
         if ((card <= 0) || (card >= 255)) {
@@ -803,21 +823,7 @@ public class AppSettings implements BT747Thread {
         }
         return card;
     }
-
-    /**
-     * @param card
-     *            The Card to set as a default.
-     */
-    public final void setCard(final int card) {
-        setLocalIntOpt(0, card, AppSettings.C_CARD_IDX,
-                AppSettings.C_CARD_SIZE);
-    }
-
-    public final String getReportFileBasePath() {
-        return getStringOpt(AppSettings.OUTPUTDIRPATH) + "/"
-                + getStringOpt(AppSettings.REPORTFILEBASE);
-    }
-
+    
     public final int getWayPtRCR() {
         return getLocalIntOpt(AppSettings.C_WAYPT_RCR_IDX,
                 AppSettings.C_WAYPT_RCR_SIZE);
@@ -1180,7 +1186,7 @@ public class AppSettings implements BT747Thread {
      * @return The google map key
      */
     private final String getGoogleMapKeyInternal() {
-        String path = "";
+        BT747Path path = new BT747Path("");
         String gkey = "";
         int idx;
         boolean notok = true;
@@ -1191,25 +1197,26 @@ public class AppSettings implements BT747Thread {
                 // path = CONFIG_FILE_NAME;
                 // break;
             case 1:
-                path = getStringOpt(AppSettings.OUTPUTDIRPATH) + "/";
+                path = new BT747Path(getStringOpt(AppSettings.OUTPUTDIRPATH) + "/");
                 break;
             case 2:
-                path = getStringOpt(AppSettings.LOGFILEPATH);
+                path = new BT747Path(getStringOpt(AppSettings.LOGFILEPATH));
                 break;
             case 3:
-                path = getReportFileBasePath();
+                path = getPath(REPORTFILEBASEPATH);
                 break;
             default:
                 break;
             }
-            idx = path.lastIndexOf('/');
+            idx = path.getPath().lastIndexOf('/');
             if (idx != -1) {
-                path = path.substring(0, path.lastIndexOf('/'));
+                path = path.proto(path.getPath().substring(0, path.getPath().lastIndexOf('/')));
             }
             try {
-                final String gmapPath = path + "/"
-                        + AppSettings.C_GMAP_KEY_FILENAME;
-                if (new File(gmapPath).exists()) {
+                final BT747Path gmapPath = path.proto(path.getPath() + "/"
+                        + AppSettings.C_GMAP_KEY_FILENAME);
+                //TODO: take into account BT747Path characteristics(card for instance.)
+                if (new File(new BT747Path(gmapPath)).exists()) {
                     final File gmap = new File(gmapPath, File.READ_ONLY);
 
                     if (gmap.isOpen()) {
@@ -1403,7 +1410,18 @@ public class AppSettings implements BT747Thread {
             this.e = e;
         }
     }
-
+    
+    
+    /**
+     * Get a path. Override on some systems to take additional parameters into
+     * account like the card number.
+     * 
+     * @param pathType
+     * @return
+     */
+    public BT747Path getPath(final int pathType) {
+        return new BT747Path(getStringOpt(pathType));
+    }
     /**
      * Indicates if there are changes to the listeners that are waiting in the
      * action list. Protected with listenerActionsSema.
@@ -2028,6 +2046,8 @@ public class AppSettings implements BT747Thread {
                     AppSettings.EXTTYPE_SIZE },
             { AppSettings.INT, AppSettings.FONTSCALE,
                     AppSettings.FONTSCALE_IDX, AppSettings.FONTSCALE_SIZE },
+                    { AppSettings.INT, AppSettings.CARD,
+                        AppSettings.C_CARD_IDX, AppSettings.C_CARD_SIZE },
     // End of list
     };
 

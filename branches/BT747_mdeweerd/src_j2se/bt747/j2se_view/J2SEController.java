@@ -21,6 +21,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario
@@ -104,8 +105,8 @@ public class J2SEController extends Controller {
          */
         @Override
         public final GPSLogConvertInterface getInputConversionInstance(
-                final String logFile) {
-            final String logFileLC = logFile.toLowerCase();
+                final BT747Path logFile) {
+            final String logFileLC = logFile.getPath().toLowerCase();
             if (logFileLC.endsWith(".gpx")) {
                 return new GPXLogConvert();
             } else {
@@ -172,7 +173,7 @@ public class J2SEController extends Controller {
             // Do not do anything for images without a position
             return;
         }
-        final String p = img.getPath();
+        final String p = img.getFilePath().getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);
 
         final String f1 = (new File(newPath)).getCanonicalPath();
@@ -188,7 +189,7 @@ public class J2SEController extends Controller {
             }
         }
         // now convert from orgPath to newPath.
-        img.writeImage(orgPath, newPath, 0);
+        img.writeImage(new BT747Path(orgPath), new BT747Path(newPath));
     }
 
     /** Add a log file with GPS data to the list of files.
@@ -196,7 +197,7 @@ public class J2SEController extends Controller {
      */
     public final static void addLogFile(final File f) {
         try {
-            addLogFile(f.getCanonicalPath(), 0);
+            addLogFile(new BT747Path(f.getCanonicalPath()));
         } catch (final Exception e) {
             bt747.sys.Generic.debug("Problem adding log file", e);
         }

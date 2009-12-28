@@ -56,21 +56,6 @@ public final class J2SEFile implements BT747File {
      *                The path to the file to operate on.
      * @param mode
      *                The way the file should be opened.
-     * @param card
-     *                The card where the file is located. Not applicable on
-     *                this system.
-     */
-    public J2SEFile(final String path, final int mode, final int card) {
-        this(path, mode);
-    }
-
-    /**
-     * Initializer called by the Interface.
-     * 
-     * @param path
-     *                The path to the file to operate on.
-     * @param mode
-     *                The way the file should be opened.
      */
     public J2SEFile(final String path, final int mode) {
         try {

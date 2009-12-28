@@ -116,7 +116,7 @@ public final class GPSLogFile extends Container implements ModelListener {
         // - left it here because it is platform dependent.
         if (Settings.platform.startsWith("Palm")) {
             Vector v = new Vector(50);
-            int Card = m.getCard();
+            int Card = m.getIntOpt(AppSettings.CARD);
             for (int i = 0; i < 255; i++) {
                 if (WabaFile.isCardInserted(i)) {
                     v.addElement("" + i);
@@ -180,8 +180,8 @@ public final class GPSLogFile extends Container implements ModelListener {
                         .setDownloadTimeOut(JavaLibBridge.toInt(edTimeout
                                 .getText()));
                 if (Settings.platform.startsWith("Palm")) {
-                    c.setCard(JavaLibBridge.toInt((String) cbVolumes
-                            .getSelectedItem()));
+                    c.setIntOpt(AppSettings.CARD,JavaLibBridge.toInt((String) cbVolumes
+                    .getSelectedItem()));
                 }
                 c.setLogRequestAhead(JavaLibBridge
                         .toInt((String) cblogReqAhead.getSelectedItem()));

@@ -17,6 +17,7 @@ package gps.log.in;
 import gps.log.out.GPSFile;
 
 import bt747.model.Model;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Interface defining a Log conversion class.
@@ -41,8 +42,7 @@ public abstract class GPSLogConvertInterface {
      * 
      * @return
      */
-    protected abstract Object getFileObject(final String filename,
-            final int card);
+    protected abstract Object getFileObject(final BT747Path path);
 
     protected abstract void closeFileObject(final Object file);
 
@@ -60,8 +60,8 @@ public abstract class GPSLogConvertInterface {
         factorConversionWGS84ToMSL = mode;
     }
 
-    public abstract int toGPSFile(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int card);
+    public abstract int toGPSFile(final BT747Path fileName,
+            final GPSFileConverterInterface gpsFile);
 
     /**
      * Returns some information regarding the reported error. To be thrown in

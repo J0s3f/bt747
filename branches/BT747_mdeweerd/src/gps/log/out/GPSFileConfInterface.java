@@ -7,6 +7,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Path;
 
 /*
  * *
@@ -35,8 +36,8 @@ public interface GPSFileConfInterface {
      * @see #FILE_SPLIT_ONE_FILE_PER_TRACK_
      * 
      */
-    public void initialiseFile(final String baseName, final String extension,
-            final int fileCard, final int fileSeparationFreq);
+    public void initialiseFile(final BT747Path baseName, final String extension,
+            final int fileSeparationFreq);
 
     /**
      * Set the track separation time.

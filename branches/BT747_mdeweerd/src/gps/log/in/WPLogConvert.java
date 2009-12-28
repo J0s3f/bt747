@@ -22,6 +22,7 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /** Conversion of Wonde Proud logs (Phototrackr, ...)
  * This class is used to convert the binary log to a new format. Basically
@@ -309,11 +310,11 @@ public final class WPLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(final String fileName, final int card) {
+    protected Object getFileObject(final BT747Path fileName) {
         File inFile = null;
 
         if (File.isAvailable()) {
-            inFile = new File(fileName, File.READ_ONLY, card);
+            inFile = new File(fileName, File.READ_ONLY);
             if (!inFile.isOpen()) {
                 errorInfo = fileName + "|" + inFile.getLastError();
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
@@ -332,13 +333,13 @@ public final class WPLogConvert extends GPSLogConvertInterface {
         ((File) o).close();
     }
 
-    public int toGPSFile(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int card) {
+    public int toGPSFile(final BT747Path path,
+            final GPSFileConverterInterface gpsFile) {
         Object inFile;
         error = BT747Constants.NO_ERROR;
 
         try {
-            inFile = getFileObject(fileName, card);
+            inFile = getFileObject(path);
             if (inFile != null) {
                 passToFindFieldsActivatedInLog = gpsFile
                         .needPassToFindFieldsActivatedInLog();

@@ -21,6 +21,7 @@ import gps.log.out.GPSFileInterface;
 
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Pure template to gpsFile class
@@ -127,10 +128,9 @@ public class GpsFileProxyTemplate implements GPSFileInterface {
      * @see gps.log.out.GPSFileConfInterface#initialiseFile(java.lang.String,
      * java.lang.String, int, int)
      */
-    public void initialiseFile(String baseName, String extension,
-            int fileCard, int fileSeparationFreq) {
-        delegate.initialiseFile(baseName, extension, fileCard,
-                fileSeparationFreq);
+    public void initialiseFile(BT747Path baseName, String extension,
+            int fileSeparationFreq) {
+        delegate.initialiseFile(baseName, extension, fileSeparationFreq);
     }
 
     /*

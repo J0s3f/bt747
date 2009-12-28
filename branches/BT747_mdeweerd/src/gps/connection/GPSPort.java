@@ -17,6 +17,7 @@ package gps.connection;
 // import bt747.io.DataStream;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * abstract class defining interface for serial port implementation. Allows
@@ -37,7 +38,7 @@ public abstract class GPSPort {
     // for debug
 
     protected File debugFile = null;
-    protected String debugFileName = "/Palm/gpsRAW.txt";
+    protected BT747Path debugFileName = new BT747Path("/Palm/gpsRAW.txt");
 
     // Hooked reference to java os string h ere to avoid creating extra
     // classes
@@ -182,7 +183,7 @@ public abstract class GPSPort {
             try {
                 debugFile = new File(debugFileName, File.READ_WRITE);
             } catch (final Exception e) {
-                Generic.debug(debugFileName, e);
+                Generic.debug(debugFileName.toString(), e);
             }
         }
     }
@@ -192,7 +193,7 @@ public abstract class GPSPort {
             try {
                 debugFile.close();
             } catch (final Exception e) {
-                Generic.debug(debugFileName, e);
+                Generic.debug(debugFileName.toString(), e);
             }
             debugFile = null;
         }
@@ -201,7 +202,7 @@ public abstract class GPSPort {
     /**
      * @return Returns the debugFileName.
      */
-    public String getDebugFileName() {
+    public BT747Path getDebugFileName() {
         return debugFileName;
     }
 
@@ -210,6 +211,6 @@ public abstract class GPSPort {
      *                The debugFileName to set.
      */
     public final void setDebugFileName(final String debugFileName) {
-        this.debugFileName = debugFileName;
+        this.debugFileName = new BT747Path(debugFileName);
     }
 }
