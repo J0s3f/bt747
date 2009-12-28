@@ -75,9 +75,9 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
     }
 
     private final GPSLogConvertInterface getConvertInstance(
-            final BT747Path fileName, final GPSFileConverterInterface gpsFile) {
+            final BT747Path path, final GPSFileConverterInterface gpsFile) {
         final GPSLogConvertInterface lc = GPSInputConversionFactory
-                .getHandler().getInputConversionInstance(fileName);
+                .getHandler().getInputConversionInstance(path);
         final int sourceHeightReference = BT747Constants
                 .getHeightReference(lc.getType());
         final int destinationHeightReference = BT747Constants
