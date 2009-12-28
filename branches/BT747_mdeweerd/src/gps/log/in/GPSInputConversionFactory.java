@@ -59,9 +59,9 @@ public class GPSInputConversionFactory {
             GPSInputConversionFactory {
 
         public final GPSLogConvertInterface getInputConversionInstance(
-                final String logFile) {
+                final BT747Path logFile) {
 
-            final String logFileLC = logFile.toLowerCase();
+            final String logFileLC = logFile.getPath().toLowerCase();
             if (logFileLC.endsWith(".trl")) {
                 return new HoluxTrlLogConvert();
             } else if (logFileLC.endsWith(".csv")) {
