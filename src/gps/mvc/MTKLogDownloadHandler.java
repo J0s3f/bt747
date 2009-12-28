@@ -25,6 +25,7 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Path;
 
 final class MTKLogDownloadHandler {
 
@@ -108,12 +109,7 @@ final class MTKLogDownloadHandler {
         /**
          * Currently selected file path for download.
          */
-        protected String logFileName = "";
-        /**
-         * Card (for Palm) of binary log file. Defaults to last card in
-         * device.
-         */
-        protected int logFileCard = -1;
+        protected BT747Path logPath = null;
 
         protected int startAddr; // Parameter
         protected int endAddr; // Parameter
@@ -184,7 +180,7 @@ final class MTKLogDownloadHandler {
      *            End address for the log download.
      * @param requestStep
      *            Size of data to download with each request (chunk size).
-     * @param fileName
+     * @param path
      *            The filename to save to.
      * @param isSmart
      *            When true, perform incremental read.
@@ -192,14 +188,13 @@ final class MTKLogDownloadHandler {
      *            Disable logging during download when true.
      */
     protected final void getLogInit(final int startAddr, final int endAddr,
-            final int requestStep, final String fileName, final int card,
+            final int requestStep, final BT747Path path,
             final boolean isSmart, final boolean disableLogging) {
         context.startAddr = startAddr;
         context.endAddr = endAddr;
         // The size of each individual request.
         context.logRequestStep = requestStep;
-        context.logFileName = fileName;
-        context.logFileCard = card;
+        context.logPath = path;
         context.isSmart = isSmart;
         context.disableLogging = disableLogging;
         MTKLogDownloadHandler.logInit(context);
@@ -254,7 +249,7 @@ final class MTKLogDownloadHandler {
 
     private final void realDownloadStart() throws BT747Exception {
         try {
-            if (context.isSmart && (new File(context.logFileName)).exists()) {
+            if (context.isSmart && (new File(context.logPath)).exists()) {
                 /**
                  * File already exists and incremental download requested.
                  * Checking if the content is the same.
@@ -266,8 +261,7 @@ final class MTKLogDownloadHandler {
                 // Storing the file specifics - needed in subsequent opens.
                 // Opening the existing log file in read only mode.
                 final WindowedFile windowedLogFile = new WindowedFile(
-                        context.logFileName, File.READ_ONLY,
-                        context.logFileCard);
+                        context.logPath, File.READ_ONLY);
                 windowedLogFile.setBufferSize(0x200);
                 if ((windowedLogFile != null) && windowedLogFile.isOpen()) {
                     // There is a file with data.
@@ -390,7 +384,7 @@ final class MTKLogDownloadHandler {
             }
             if (!(context.getLogState() == MTKLogDownloadHandler.C_LOG_CHECK)) {
                 // File could not be opened or is not incremental.
-                openNewLog(context.logFileName, context.logFileCard);
+                openNewLog(context.logPath);
                 if (Generic.isDebug()) {
                     Generic.debug("Starting download from "
                             + JavaLibBridge.unsigned2hex(context
@@ -415,50 +409,44 @@ final class MTKLogDownloadHandler {
         }
     }
 
-    protected final void openNewLog(final String fileName, final int card)
+    protected final void openNewLog(final BT747Path path)
             throws BT747Exception {
         try {
             if ((context.logFile != null) && context.logFile.isOpen()) {
                 context.logFile.close();
             }
 
-            context.logFile = new File(fileName, bt747.sys.File.DONT_OPEN,
-                    card);
-            context.logFileName = fileName;
-            context.logFileCard = card;
+            context.logFile = new File(path, bt747.sys.File.DONT_OPEN);
+            context.logPath = path;
             if (context.logFile.exists()) {
                 context.logFile.delete();
             }
 
-            context.logFile = new File(fileName, bt747.sys.File.CREATE, card);
+            context.logFile = new File(path, bt747.sys.File.CREATE);
             // lastError 10530 = Read only
-            context.logFileName = fileName;
-            context.logFileCard = card;
+            context.logPath = path;
             context.logFile.close();
-            context.logFile = new File(fileName, bt747.sys.File.WRITE_ONLY,
-                    card);
-            context.logFileName = fileName;
-            context.logFileCard = card;
+            context.logFile = new File(path, bt747.sys.File.WRITE_ONLY);
+            context.logPath = path;
 
             if ((context.logFile == null) || !(context.logFile.isOpen())) {
                 throw new BT747Exception(BT747Exception.ERR_COULD_NOT_OPEN,
-                        new Throwable(fileName));
+                        new Throwable(path.toString()));
             }
         } catch (BT747Exception e) {
             throw e;
         } catch (Exception e) {
             Generic.debug("openNewLog", e);
-            throw new BT747Exception("open", new Throwable(fileName));
+            throw new BT747Exception("open", new Throwable(path.toString()));
         }
 
     }
 
-    private void reOpenLogWrite(final String fileName, final int card) {
+    private void reOpenLogWrite(final BT747Path path) {
         closeLog();
         try {
-            context.logFile = new File(fileName, File.WRITE_ONLY, card);
-            context.logFileName = fileName;
-            context.logFileCard = card;
+            context.logFile = new File(path, File.WRITE_ONLY);
+            context.logPath = path;
         } catch (final Exception e) {
             Generic.debug("reOpenLogWrite", e);
         }
@@ -663,7 +651,7 @@ final class MTKLogDownloadHandler {
                 if (success) {
                     // Downloaded data seems to correspond - start incremental
                     // download
-                    reOpenLogWrite(context.logFileName, context.logFileCard);
+                    reOpenLogWrite(context.logPath);
                     try {
                         context.logFile.setPos(context.getLogNextReadAddr());
                     } catch (final Exception e) {
@@ -730,7 +718,7 @@ final class MTKLogDownloadHandler {
             throws BT747Exception {
         if (context.getLogState() == MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
-                openNewLog(context.logFileName, context.logFileCard);
+                openNewLog(context.logPath);
                 context.setLogNextReadAddr(0);
                 context.setLogNextReadAddr(0);
                 context.setLogState(MTKLogDownloadHandler.C_LOG_ACTIVE);

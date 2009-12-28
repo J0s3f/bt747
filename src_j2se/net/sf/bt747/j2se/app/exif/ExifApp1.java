@@ -431,6 +431,22 @@ public class ExifApp1 {
             Ifd0.set(v);
         }
     }
+    
+    public final byte[] getThumbnailData() {
+        byte[] ret;
+        ret = null; // Default value
+        
+        if(Ifd1 !=null) {
+            if(Ifd1.hasTag(ExifConstants.TAG_JPEGINTERCHANGEFORMAT)
+                    &&Ifd1.hasTag(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH)) {
+                int idx = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMAT).getIntValue(0);
+                int len = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH).getIntValue(0);
+                
+            }
+        }
+        
+        return ret;
+    }
 
     public final void setIfd0Attribute(final ExifAttribute atr) {
         if (Ifd0 == null) {

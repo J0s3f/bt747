@@ -56,6 +56,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -255,18 +256,6 @@ public class Controller implements ModelListener {
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
         getGpsC().setDownloadTimeOut(timeout);
-    }
-
-    /**
-     * @param card
-     *            The card number that the filepaths refer to. This is usefull
-     *            on PDA's only and probably only on a Palm. This is used by
-     *            the 'SuperWaba' environment if used. '-1' refers to the
-     *            'last card in the system' which is normally the card that
-     *            can be inserted by the PDA user.
-     */
-    public final void setCard(final int card) {
-        m.setCard(card);
     }
 
     /**
@@ -535,7 +524,7 @@ public class Controller implements ModelListener {
     public final GPSLogConvertInterface getInputConversionInstance() {
         return GPSInputConversionFactory.getHandler()
                 .getInputConversionInstance(
-                        m.getStringOpt(AppSettings.LOGFILEPATH));
+                        m.getPath(AppSettings.LOGFILEPATH));
     }
 
     public final GPSFilter[] getLogFiltersToUse() {
@@ -619,13 +608,11 @@ public class Controller implements ModelListener {
             if (Generic.isDebug()) {
                 Generic.debug(parameters);
             }
-            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m
-                    .getCard(), m.getOutputFileSplitType());
+            gpsFile.initialiseFile(m.getPath(AppSettings.REPORTFILEBASEPATH), ext, m.getOutputFileSplitType());
             m.logConversionStarted(logType);
             try {
-                lastError = lc.toGPSFile(m
-                        .getStringOpt(AppSettings.LOGFILEPATH), gpsFile, m
-                        .getCard());
+                lastError = lc.toGPSFile(m.getPath(AppSettings.LOGFILEPATH),
+                        gpsFile);
             } catch (final Throwable e) {
                 Generic.debug("During conversion", e);
             }
@@ -668,13 +655,12 @@ public class Controller implements ModelListener {
         gpsFile = (GPSArray) getOutFileHandler(Model.ARRAY_LOGTYPE);
         configureGpsFile(gpsFile);
 
-        gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
+        gpsFile.initialiseFile(new BT747Path(""), "", m.getOutputFileSplitType());
         m.logConversionStarted(Model.ARRAY_LOGTYPE);
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
-            error = lc.toGPSFile(m.getStringOpt(AppSettings.LOGFILEPATH),
-                    gpsFile, m.getCard());
+            error = lc.toGPSFile(m.getPath(AppSettings.LOGFILEPATH), gpsFile);
         } catch (final Throwable e) {
             Generic.debug("During conversion", e);
         }
@@ -759,8 +745,7 @@ public class Controller implements ModelListener {
             mtkC().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
-            m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
-            m.getCard(), /* Card for file operations */
+            m.getPath(AppSettings.LOGFILEPATH),
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_SMART,
                     m.getBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD));
@@ -801,7 +786,7 @@ public class Controller implements ModelListener {
         // Wonde Proud when appropriate.
         // Initialisation method and download start should change.
         getGpsC()
-                .getLog(m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
+                .getLog(m.getStringOpt(AppSettings.LOGFILEPATH), m.getIntOpt(AppSettings.CARD));
     }
 
     /**
@@ -1636,8 +1621,8 @@ public class Controller implements ModelListener {
         m.setStringOpt(param, value);
     }
 
-    public final static void addLogFile(final String path, final int card) {
-        final LogFileInfo loginfo = new LogFileInfo(path, card);
+    public final static void addLogFile(final BT747Path path) {
+        final LogFileInfo loginfo = new LogFileInfo(path);
         Controller.logFiles.addElement(loginfo);
     }
 

@@ -28,6 +28,7 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario
@@ -103,10 +104,10 @@ public class GPXLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(BT747Path fileName) {
         if (gpx == null && File.isAvailable()) {
             try {
-                final java.io.File mFile = new java.io.File(fileName);
+                final java.io.File mFile = new java.io.File(fileName.getPath());
                 final DocumentBuilder builder = DocumentBuilderFactory
                         .newInstance().newDocumentBuilder();
                 final Document doc = builder.parse(mFile);
@@ -145,12 +146,12 @@ public class GPXLogConvert extends GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#toGPSFile(java.lang.String,
      *      gps.log.in.GPSFileConverterInterface, int)
      */
-    public int toGPSFile(final String fileName,
-            GPSFileConverterInterface gpsFile, final int card) {
+    public int toGPSFile(final BT747Path fileName,
+            GPSFileConverterInterface gpsFile) {
         error = BT747Constants.NO_ERROR;
         Object gpx;
 
-        gpx = getFileObject(fileName, card);
+        gpx = getFileObject(fileName);
         if (gpx == null) {
             return error;
         }
@@ -354,7 +355,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
     public static void main(final String[] args) {
         JavaLibBridge.setJavaLibImplementation(J2SEJavaTranslations.getInstance());
         final GPXLogConvert x = new GPXLogConvert();
-        x.toGPSFile("c:/BT747/20080915_2010.gpx", null, 0);
+        x.toGPSFile(new BT747Path("c:/BT747/20080915_2010.gpx"), null);
     }
 
     /* (non-Javadoc)

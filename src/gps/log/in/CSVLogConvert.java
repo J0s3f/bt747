@@ -23,6 +23,7 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
@@ -734,18 +735,18 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(final String fileName, final int card) {
+    protected Object getFileObject(final BT747Path fileName) {
         WindowedFile mFile = null;
         if (File.isAvailable()) {
             try {
-                mFile = new WindowedFile(fileName, File.READ_ONLY, card);
+                mFile = new WindowedFile(fileName, File.READ_ONLY);
                 mFile.setBufferSize(CSVLogConvert.BUF_SIZE);
                 errorInfo = fileName + "|" + mFile.getLastError();
             } catch (final Exception e) {
                 Generic.debug("Error during initial open", e);
             }
             if ((mFile == null) || !mFile.isOpen()) {
-                errorInfo = fileName;
+                errorInfo = fileName.toString();
                 if (mFile != null) {
                     errorInfo += "|" + mFile.getLastError();
                 }
@@ -767,12 +768,12 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
 
     private int error;
 
-    public final int toGPSFile(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int card) {
+    public final int toGPSFile(final BT747Path path,
+            final GPSFileConverterInterface gpsFile) {
         Object mFile;
         error = BT747Constants.NO_ERROR;
         try {
-            mFile = getFileObject(fileName, card);
+            mFile = getFileObject(path);
             if (mFile != null) {
                 passToFindFieldsActivatedInLog = gpsFile
                         .needPassToFindFieldsActivatedInLog();

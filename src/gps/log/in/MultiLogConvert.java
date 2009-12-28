@@ -12,6 +12,7 @@ import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -25,7 +26,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
      */
     private GPSLogConvertInterface currentConverter;
 
-    protected Object getFileObject(final String fileName, final int card) {
+    protected Object getFileObject(final BT747Path path) {
         return null;
     }
 
@@ -74,8 +75,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
     }
 
     private final GPSLogConvertInterface getConvertInstance(
-            final String fileName, final GPSFileConverterInterface gpsFile,
-            final int card) {
+            final BT747Path fileName, final GPSFileConverterInterface gpsFile) {
         final GPSLogConvertInterface lc = GPSInputConversionFactory
                 .getHandler().getInputConversionInstance(fileName);
         final int sourceHeightReference = BT747Constants
@@ -103,12 +103,13 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#toGPSFile(java.lang.String,
      *      gps.log.in.GPSFileConverterInterface, int)
      */
-    public int toGPSFile(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int card) {
+    public int toGPSFile(final BT747Path fileName,
+            final GPSFileConverterInterface gpsFile) {
         int error = BT747Constants.NO_ERROR;
         /**
          * Table of {@link GPSLogConvertInterface} used to convert input
          * files.
+         * The key is the logFilePath.
          */
         final BT747Hashtable converters = JavaLibBridge
                 .getHashtableInstance(logFiles.size() + 1);
@@ -123,19 +124,18 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          */
         for (int fileIdx = 0; !stop && (fileIdx < logFiles.size()); fileIdx++) {
             final LogFileInfo li = (LogFileInfo) (logFiles.elementAt(fileIdx));
-            final String fn = li.getPath();
+            final BT747Path fn = li.getPath();
             if (converters.get(fn) == null) {
-                converters.put(fn, getConvertInstance(fn, gpsFile, card));
+                converters.put(fn, getConvertInstance(fn, gpsFile));
                 logFileInfoLookup.put(fn, li);
             }
         }
 
-        if ((fileName != null) && (fileName.length() != 0)) {
+        if ((fileName != null) && (fileName.getPath().length() != 0)) {
             if (converters.get(fileName) == null) {
                 converters.put(fileName, getConvertInstance(fileName,
-                        gpsFile, card));
-                logFileInfoLookup.put(fileName, new LogFileInfo(fileName,
-                        card));
+                        gpsFile));
+                logFileInfoLookup.put(fileName, new LogFileInfo(fileName));
             }
         }
 
@@ -159,7 +159,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                 statsConv.initStats();
                 // TODO: manage cards on different volumes.
                 currentConverter = i;
-                i.parseFile(i.getFileObject((String) key, card), statsConv);
+                i.parseFile(i.getFileObject((BT747Path) key), statsConv);
                 // Get date range.
                 currentConverter = null;
                 loginfo.setStartTime(statsConv.minTime);
@@ -207,7 +207,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                             .get(key);
                     currentConverter = i;
                     // TODO: manage cards on different volumes.
-                    error = i.parseFile(i.getFileObject((String) key, card),
+                    error = i.parseFile(i.getFileObject((BT747Path) key),
                             gpsFile);
                     currentConverter = null;
                     // Get date range.

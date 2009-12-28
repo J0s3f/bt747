@@ -3,13 +3,7 @@
  */
 package net.sf.bt747.gps.log.in.test;
 
-import java.io.PipedOutputStream;
-
-import net.sf.bt747.test.IBlue747Model;
-import net.sf.bt747.test.MyVirtualPort;
-import net.sf.bt747.test.TestModelConnect;
 import gps.BT747Constants;
-import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
@@ -21,6 +15,7 @@ import gps.log.out.GPSKMLFile;
 import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.JavaLibImplementation;
 
 /**
@@ -28,14 +23,15 @@ import bt747.sys.interfaces.JavaLibImplementation;
  * 
  */
 public class TestConvertInBase extends junit.framework.TestCase {
-    
+
     /**
      * Initialize the bridge to the platform. Required for BT747 that runs on
      * at least 3 different platforms.
      */
     static {
         /* Get instance of implementation */
-        final JavaLibImplementation imp = net.sf.bt747.j2se.system.J2SEJavaTranslations.getInstance();
+        final JavaLibImplementation imp = net.sf.bt747.j2se.system.J2SEJavaTranslations
+                .getInstance();
         /* Declare the implementation */
         JavaLibBridge.setJavaLibImplementation(imp);
         /* Set the serial port class instance to use (also system specific). */
@@ -48,7 +44,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
 
     /**
      * @param inputConverter
-     *                the inputConverter to set
+     *            the inputConverter to set
      */
     public void setInputConverter(GPSLogConvertInterface inputConverter) {
         this.lc = inputConverter;
@@ -117,22 +113,21 @@ public class TestConvertInBase extends junit.framework.TestCase {
 
         configureGpsArray(gpsFile);
 
-        gpsFile.initialiseFile("", "", -1, Model.SPLIT_ONE_FILE);
+        gpsFile.initialiseFile(new BT747Path(""), "", Model.SPLIT_ONE_FILE);
     }
-    
+
     public TracksAndWayPoints doConvert(String path) {
         int error = -1;
         TracksAndWayPoints result;
         try {
-            error = lc.toGPSFile(path,
-                    gpsFile, 0);
+            error = lc.toGPSFile(new BT747Path(path), gpsFile);
         } catch (final Throwable e) {
             Generic.debug("During conversion", e);
         }
 
         if (error != 0) {
-//            lastError = error;
-//            lastErrorInfo = lc.getErrorInfo();
+            // lastError = error;
+            // lastErrorInfo = lc.getErrorInfo();
             result = null;
         } else {
             result = gpsFile.getResult();

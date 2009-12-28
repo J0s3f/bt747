@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import bt747.j2se_view.model.ImageData;
 import bt747.sys.File;
+import bt747.sys.interfaces.BT747Path;
 
 import junit.framework.TestCase;
 import junit.framework.Assert.*;
@@ -35,47 +36,49 @@ public class TestExifToolTest extends TestCase {
     public void testExifToolRead() throws Exception {
         String imgPath = TestUtils.getTestResourcePath("IMG_0307_tagged.jpg");
         ExiftoolData ed = new ExiftoolData();
-        ed.setPath(imgPath);
+        ed.setFilePath(new BT747Path(imgPath));
         GPSRecord r = ed.getGpsRecord();
         GPSRecord ref = GPSRecord.getLogFormatRecord(0);
-        ref.tagutc = 1235139881;  // Should recover tagutc.
+        ref.tagutc = 1235139881; // Should recover tagutc.
         ref.valid = 0x00000080;
         ref.latitude = 45.83736936118868;
         ref.longitude = 6.573693555725945;
-        ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;  // To check what the correct value is - ImageData says 257
+        ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY; // To check what the
+                                                        // correct value is -
+                                                        // ImageData says 257
         ref.height = 1080.29f;
 
         TestUtils.assertEquals(imgPath, ref, r);
     }
-    
+
     @Test
     public void testExifToolWrite() throws Exception {
         String imgPath = TestUtils.getTestResourcePath("IMG_0307_tagged.jpg");
-        String imgTestPath = imgPath+"tst.jpg";
+        String imgTestPath = imgPath + "tst.jpg";
         ExiftoolData ed = new ExiftoolData();
-        ed.setPath(imgPath);
+        ed.setFilePath(new BT747Path(imgPath));
         GPSRecord ref = ed.getGpsRecord();
-        
-        ref.latitude +=10;
-        ref.longitude -=10;
+
+        ref.latitude += 10;
+        ref.longitude -= 10;
         ref.tagutc += 100;
         ref.rcr ^= 0x3;
         ref.height += 10;
-        
+
         ed.setGpsRec(ref);
-        
-        (new File(imgTestPath)).delete();
-        ed.writeImage(imgTestPath, 0);
+
+        (new File(new BT747Path(imgTestPath))).delete();
+        ed.writeImage(new BT747Path(imgTestPath));
 
         ImageData id = new ImageData();
-        id.setPath(imgTestPath);
+        id.setFilePath(new BT747Path(imgTestPath));
         GPSRecord r = id.getGpsRecord();
-        
+
         ref.tagutc -= 100;
         ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;
         TestUtils.assertEquals(imgPath, ref, r);
-        
-        (new File(imgTestPath)).delete();
+
+        (new File(new BT747Path(imgTestPath))).delete();
     }
 
 }

@@ -15,6 +15,7 @@
 package bt747.sys;
 
 import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario De Weerd
@@ -44,15 +45,11 @@ public final class File {
 
     private final BT747File file;
 
-    public File(final String path) {
+    public File(final BT747Path path) {
         file = JavaLibBridge.getFileInstance(path);
     }
 
-    public File(final String path, final int mode, final int card) {
-        file = JavaLibBridge.getFileInstance(path, mode, card);
-    }
-
-    public File(final String path, final int mode) {
+    public File(final BT747Path path, final int mode) {
         file = JavaLibBridge.getFileInstance(path, mode);
     }
 

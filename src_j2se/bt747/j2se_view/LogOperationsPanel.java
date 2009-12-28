@@ -1191,7 +1191,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
     private File getOutputFilePath() {
         File curDir;
-        curDir = new File(m.getReportFileBasePath());
+        curDir = new File(m.getPath(AppSettings.REPORTFILEBASEPATH).getPath());
         tfOutputFileBaseName.setText(m
                 .getStringOpt(AppSettings.REPORTFILEBASE));
         return curDir;

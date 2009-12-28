@@ -52,7 +52,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
         String path;
         final MapWaypoint wpt = (MapWaypoint) value;
         final ImageData v = (ImageData) wpt.getBT747Waypoint();
-        path = v.getPath();
+        path = v.getFilePath().getPath();
         SoftReference<ImageListPanel> s;
         synchronized (panels) {
             s = panels.get(path);
@@ -147,7 +147,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#getText()
      */
     public final String getText(final Object wp) {
-        final String path = ((ImageData) wp).getPath();
+        final String path = ((ImageData) wp).getFilePath().getPath();
         int li = 0;
         int n;
         n = path.lastIndexOf('/');

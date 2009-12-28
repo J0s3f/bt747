@@ -3,6 +3,8 @@
  */
 package gps.mvc;
 
+import bt747.sys.interfaces.BT747Path;
+
 import gps.WondeproudConstants;
 import gps.mvc.commands.wp.WPEnterModeCommand;
 import gps.mvc.commands.wp.WPExitModeCommand;
@@ -35,10 +37,10 @@ public class WPController extends MtkController implements
      * @param fileName
      * @param card
      */
-    public void getLog(final String fileName, final int card) {
+    public void getLog(final BT747Path path) {
         WPLogDownloadHandler h = new WPLogDownloadHandler(this, m
                 .getHandler());
-        h.getWPLog(fileName, card);
+        h.getWPLog(path);
         c.setDeviceOperationHandler(h);
     }
 

@@ -19,6 +19,7 @@ import gps.log.GPSRecord;
 import gps.log.out.AllWayPointStyles;
 
 import bt747.sys.File;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario De Weerd
@@ -36,24 +37,14 @@ public class FileWaypoint extends BT747Waypoint {
     // values.
     private int utc;
 
-    private String path;
-    private int card;
+    private BT747Path path;
 
-    public void setPath(final String path, final int card) {
-        setCard(card);
-        setPath(path);
-    }
-
-    /**
-     * @param path
-     * @return true if file can be handled.
-     */
-    public boolean setPath(final String path) {
+    public boolean setFilePath(final BT747Path path) {
         this.path = path;
         return getInfo();
     }
 
-    public String getPath() {
+    public BT747Path getFilePath() {
         return path;
     }
 
@@ -61,7 +52,7 @@ public class FileWaypoint extends BT747Waypoint {
      * @return true if file can ge interpreted.
      */
     protected boolean getInfo() {
-        getGpsRecord().voxStr = path;
+        getGpsRecord().voxStr = path.getPath();
         // TODO: change path setting.
         int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
         final int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
@@ -101,20 +92,5 @@ public class FileWaypoint extends BT747Waypoint {
      */
     public int getUtc() {
         return utc;
-    }
-
-    /**
-     * @param card
-     *                the card to set
-     */
-    private void setCard(final int card) {
-        this.card = card;
-    }
-
-    /**
-     * @return the card
-     */
-    public int getCard() {
-        return card;
     }
 }

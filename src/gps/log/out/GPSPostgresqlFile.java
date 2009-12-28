@@ -19,6 +19,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to write a CSV file.
@@ -50,9 +51,9 @@ public final class GPSPostgresqlFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext,
-            final int ard, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, ard, oneFilePerDay);
+    public void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, oneFilePerDay);
 
         if (getParamObject().hasParam(
                 GPSConversionParameters.SQL_TABLE_NAME)) {

@@ -15,6 +15,7 @@ import bt747.model.Model;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 import bt747.waba_view.ui.BT747MessageBox;
 // #if RXTX import bt747.sys.JavaLibBridge;
 
@@ -306,9 +307,9 @@ public final class AppController extends Controller {
 
                 // bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
                 // bt747.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
-                File preferencesFile = new File("");
+                File preferencesFile = null;
                 try {
-                    preferencesFile = new File(CONFIG_FILE_NAME, File.READ_ONLY);
+                    preferencesFile = new File(new BT747Path(CONFIG_FILE_NAME), File.READ_ONLY);
                     readLength = preferencesFile.getSize();
                     if (readLength >= 100) {
                         final int len = Math.max(AppSettings.SIZE, readLength);
@@ -322,8 +323,11 @@ public final class AppController extends Controller {
                 } catch (Exception e) {
                     // Vm.debug("Exception new log create");
                 }
+                
                 try {
-                    preferencesFile.close();
+                    if (preferencesFile != null) {
+                        preferencesFile.close();
+                    }
                 } catch (Exception e) {
 
                 }
@@ -354,10 +358,11 @@ public final class AppController extends Controller {
         // #if RXTX ||java.lang.System.getProperty("os.name").startsWith("Mac")
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
         ) {
-            File preferencesFile = new File("");
+            File preferencesFile = null;
+            BT747Path configPath = new BT747Path(CONFIG_FILE_NAME);
             try {
-                File dir = new File(CONFIG_FILE_NAME.substring(0,
-                        CONFIG_FILE_NAME.lastIndexOf('/')), File.DONT_OPEN);
+                File dir = new File(configPath.proto(CONFIG_FILE_NAME.substring(0,
+                        CONFIG_FILE_NAME.lastIndexOf('/'))), File.DONT_OPEN);
                 if (!dir.exists()) {
                     dir.createDir();
                 }
@@ -366,7 +371,7 @@ public final class AppController extends Controller {
                 // e.printStackTrace();
             }
             try {
-                preferencesFile = new File(CONFIG_FILE_NAME, File.DONT_OPEN);
+                preferencesFile = new File(configPath, File.DONT_OPEN);
                 if (preferencesFile.exists()) {
                     preferencesFile.delete();
                 }
@@ -374,9 +379,9 @@ public final class AppController extends Controller {
                 Generic.debug("Exception config delete", e);
             }
             try {
-                preferencesFile = new File(CONFIG_FILE_NAME, File.CREATE);
+                preferencesFile = new File(configPath, File.CREATE);
                 preferencesFile.close();
-                preferencesFile = new File(CONFIG_FILE_NAME, File.READ_WRITE);
+                preferencesFile = new File(configPath, File.READ_WRITE);
                 preferencesFile.writeBytes(bt747.sys.Settings.getAppSettings()
                         .getBytes(), 0, bt747.sys.Settings.getAppSettings()
                         .length());

@@ -19,6 +19,7 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to write a CompeGPS TRK file or WPT file.
@@ -64,9 +65,9 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
         numberOfPasses = 2;
     }
 
-    public final void initialiseFile(final String basename, final String ext,
+    public final void initialiseFile(final BT747Path basename, final String ext,
             final int card, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, card, oneFilePerDay);
+        super.initialiseFile(basename, ext, oneFilePerDay);
         isWayType = false;
     }
 

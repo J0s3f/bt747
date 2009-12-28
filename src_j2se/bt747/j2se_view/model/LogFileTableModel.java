@@ -12,6 +12,7 @@ import gps.log.out.CommonOut;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.model.Controller;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -60,7 +61,7 @@ public class LogFileTableModel extends AbstractTableModel {
     }
 
     public void add(final String path) {
-        getLogfileInfos().addElement(new LogFileInfo(path, 0));
+        getLogfileInfos().addElement(new LogFileInfo(new BT747Path(path)));
     }
 
     public void notifyUpdate() {

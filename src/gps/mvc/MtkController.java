@@ -15,6 +15,7 @@ import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
@@ -728,11 +729,11 @@ public class MtkController implements ProtectedDevControllerIF {
     }
 
     public final void getLogInit(final int startAddr, final int endAddr,
-            final int requestStep, final String fileName, final int card,
+            final int requestStep, final BT747Path fileName,
             final boolean isSmart, // True if incremental read
             final boolean disableLogging) {
         mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
-                card, isSmart, disableLogging);
+                isSmart, disableLogging);
     }
 
     /*

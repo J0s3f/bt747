@@ -4,20 +4,17 @@
 package net.sf.bt747.j2se.app.app.exiftool.test;
 
 import gps.log.GPSRecord;
-import net.sf.bt747.j2se.app.exiftool.ExiftoolData;
+import junit.framework.TestCase;
 import net.sf.bt747.test.TestUtils;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import org.junit.Test;
 
 import bt747.j2se_view.model.ImageData;
-
-import junit.framework.TestCase;
-import junit.framework.Assert.*;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * @author Mario
@@ -58,7 +55,7 @@ public class TestImageData extends TestCase {
     public void testImageDataRead() throws Exception {
         String imgPath = TestUtils.getTestResourcePath("IMG_0307_tagged.jpg");
         ImageData ed = new ImageData();
-        ed.setPath(imgPath);
+        ed.setFilePath(new BT747Path(imgPath));
         GPSRecord r = ed.getGpsRecord();
         GPSRecord ref = GPSRecord.getLogFormatRecord(0);
         ref.tagutc = 1235139881;

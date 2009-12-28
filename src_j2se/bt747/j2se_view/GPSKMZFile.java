@@ -27,6 +27,7 @@ import java.util.zip.ZipOutputStream;
 import net.sf.bt747.j2se.system.J2SEHashtable;
 
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to write a KML file.
@@ -51,9 +52,9 @@ public final class GPSKMZFile extends GPSKMLFile implements GPSFileInterface {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public final void initialiseFile(final String basename, final String ext,
-            final int card, final int oneFilePerDay) {
-        super.initialiseFile(basename, ext, card, oneFilePerDay);
+    public final void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, oneFilePerDay);
         zips = new J2SEHashtable(10);
     }
 
@@ -92,7 +93,7 @@ public final class GPSKMZFile extends GPSKMLFile implements GPSFileInterface {
         String zipEntryFileName;
         setTrackName(extra_ext);
         zipFileName = filenameBuilder.getOutputFileName(basename, utc,
-                ".kmz", extra_ext);
+                ".kmz", extra_ext).getPath();
         zipEntryFileName = basename + extra_ext + ".kml";
         int l;
         l = zipEntryFileName.lastIndexOf('/');

@@ -256,8 +256,10 @@ public class ExifConstants {
     /** GPS differential correction GPSDifferential 30 1E SHORT 1 */
     public static final int TAG_GPSDIFFERENTIAL = 0x001E;
 
+    
+    
     /**
-     * EXIF FIeld types
+     * EXIF Field types
      * 
      */
 

@@ -3,6 +3,8 @@
  */
 package gps.log.in;
 
+import bt747.sys.interfaces.BT747Path;
+
 /**
  * @author Mario De Weerd
  * 
@@ -28,7 +30,7 @@ public class GPSInputConversionFactory {
      * @return conversion instance.
      */
     public GPSLogConvertInterface getInputConversionInstance(
-            final String logFile) {
+            final BT747Path logFile) {
         if (next != null) {
             return next.getInputConversionInstance(logFile);
         } else {

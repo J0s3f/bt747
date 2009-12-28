@@ -35,6 +35,6 @@ public interface BT747FileName {
      *                Proposed extension to filename.
      * @return
      */
-    String getOutputFileName(final String baseName, final int utcTimeSeconds,
+    BT747Path getOutputFileName(final BT747Path baseNamePath, final int utcTimeSeconds,
             final String proposedExtension, final String proposedTimeSpec);
 }

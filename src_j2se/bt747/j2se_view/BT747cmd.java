@@ -52,6 +52,7 @@ import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Int;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * 
@@ -567,7 +568,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (filesToTag.size() != 0) {
             for (File f : filesToTag) {
                 ImageData id = new ImageData();
-                id.setPath(f.getAbsolutePath());
+                id.setFilePath(new BT747Path(f.getAbsolutePath()));
                 waypointsToTag.add(id);
             }
         }
@@ -1143,16 +1144,16 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setTrkPtRCR(0xFFFFFFFF);
             // The output filename does not depend on the time.
             c.setFileNameBuilder(new BT747FileName() {
-                public String getOutputFileName(final String baseName,
+                public BT747Path getOutputFileName(final BT747Path baseName,
                         final int utcTimeSeconds,
                         final String proposedExtension,
                         final String proposedTimeSpec) {
                     switch (m.getOutputFileSplitType()) {
                     case 0:
-                        return baseName + "_trk" + proposedExtension;
+                        return new BT747Path(baseName.getPath() + "_trk" + proposedExtension);
                     default:
-                        return baseName + proposedTimeSpec + "_trk"
-                                + proposedExtension;
+                        return new BT747Path(baseName.getPath() + proposedTimeSpec + "_trk"
+                                + proposedExtension);
                     }
                 }
             });
@@ -1175,16 +1176,16 @@ public class BT747cmd implements bt747.model.ModelListener {
                     | BT747Constants.RCR_ALL_APP_MASK);
             c.setTrkPtRCR(0);
             c.setFileNameBuilder(new BT747FileName() {
-                public String getOutputFileName(final String baseName,
+                public BT747Path getOutputFileName(final BT747Path baseName,
                         final int utcTimeSeconds,
                         final String proposedExtension,
                         final String proposedTimeSpec) {
                     switch (m.getOutputFileSplitType()) {
                     case 0:
-                        return baseName + "_wpt" + proposedExtension;
+                        return new BT747Path(baseName.getPath() + "_wpt" + proposedExtension);
                     default:
-                        return baseName + proposedTimeSpec + "_wpt"
-                                + proposedExtension;
+                        return new BT747Path(baseName.getPath() + proposedTimeSpec + "_wpt"
+                                + proposedExtension);
                     }
                 }
             });
@@ -1232,17 +1233,17 @@ public class BT747cmd implements bt747.model.ModelListener {
                             | BT747Constants.RCR_ALL_APP_MASK);
                     c.setTrkPtRCR(0xFFFFFFFF);
                     c.setFileNameBuilder(new BT747FileName() {
-                        public String getOutputFileName(
-                                final String baseName,
+                        public BT747Path getOutputFileName(
+                                final BT747Path baseName,
                                 final int utcTimeSeconds,
                                 final String proposedExtension,
                                 final String proposedTimeSpec) {
                             switch (m.getOutputFileSplitType()) {
                             case 0:
-                                return baseName + proposedExtension;
+                                return new BT747Path(baseName + proposedExtension);
                             default:
-                                return baseName + proposedTimeSpec
-                                        + proposedExtension;
+                                return new BT747Path(baseName + proposedTimeSpec
+                                        + proposedExtension);
                             }
                         }
                     });

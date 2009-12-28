@@ -20,6 +20,7 @@ import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -43,10 +44,9 @@ public final class GPSArray extends GPSFile {
      * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
      * java.lang.String, int, int)
      */
-    public void initialiseFile(final String baseName, final String extension,
-            final int fileCard, final int fileSeparationFreq) {
-        super.initialiseFile(baseName, extension, fileCard,
-                fileSeparationFreq);
+    public void initialiseFile(final BT747Path baseName,
+            final String extension, final int fileSeparationFreq) {
+        super.initialiseFile(baseName, extension, fileSeparationFreq);
         result = new TracksAndWayPoints();
         gpsWayPoints = result.waypoints;
         track = JavaLibBridge.getVectorInstance();

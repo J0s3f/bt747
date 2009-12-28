@@ -2,6 +2,7 @@ package gps.log.in;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * This class copes with the inability of the VM to handle random access files
@@ -16,20 +17,18 @@ import bt747.sys.Generic;
 public final class WindowedFile {
 
     private File file;
-    private String path;
+    private BT747Path path;
     private int mode;
-    private int card;
 
-    public WindowedFile(final String path, final int mode, final int card)
+    public WindowedFile(final BT747Path path, final int mode)
             throws Exception {
         this.path = path;
         this.mode = mode;
-        this.card = card;
         open();
     }
 
     private void open() {
-        file = new File(path, mode, card);
+        file = new File(path, mode);
     }
 
     private int bufferSize = 0x400;

@@ -3,6 +3,8 @@
  */
 package gps.log;
 
+import bt747.sys.interfaces.BT747Path;
+
 /**
  * Object keeping information about a log file.
  * 
@@ -10,8 +12,7 @@ package gps.log;
  * 
  */
 public class LogFileInfo {
-    private String path;
-    private int card; // For some systems
+    private BT747Path path;
     private int startTime;
     private int endTime;
     private GPSRecord activeFileFields;
@@ -27,41 +28,23 @@ public class LogFileInfo {
     /**
      * 
      */
-    public LogFileInfo(final String path, final int startTimeUTC,
+    public LogFileInfo(final BT747Path path, final int startTimeUTC,
             final int endTimeUTC) {
         this.path = path;
         startTime = startTimeUTC;
         endTime = endTimeUTC;
     }
 
-    /**
-     * 
-     */
-    public LogFileInfo(final String path, final int card,
-            final int startTimeUTC, final int endTimeUTC) {
-        this(path, startTimeUTC, endTimeUTC);
-        this.card = card;
-    }
-
-    public LogFileInfo(final String path, final int card) {
+    public LogFileInfo(final BT747Path path) {
         this.path = path;
-        this.card = card;
     }
 
-    public final String getPath() {
+    public final BT747Path getPath() {
         return path;
     }
 
-    public final void setPath(final String path) {
+    public final void setPath(final BT747Path path) {
         this.path = path;
-    }
-
-    public final int getCard() {
-        return card;
-    }
-
-    public final void setCard(final int card) {
-        this.card = card;
     }
 
     public final int getStartTime() {

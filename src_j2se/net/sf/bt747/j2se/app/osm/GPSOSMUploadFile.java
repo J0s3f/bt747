@@ -22,6 +22,7 @@ import java.io.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to upload to OSM.
@@ -45,9 +46,9 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public final void initialiseFile(final String basename, final String ext,
-            final int card, final int oneFilePerDay) {
-        super.initialiseFile(basename + basenamePostfix, ext, card,
+    public final void initialiseFile(final BT747Path basename, final String ext,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename.proto(basename.getPath() + basenamePostfix), ext,
                 oneFilePerDay);
     }
 
@@ -64,7 +65,7 @@ public final class GPSOSMUploadFile extends GPSGPXFile {
             final boolean createNewFile) {
         final int error = super.createFile(utc, extra_ext, createNewFile);
 
-        final String newFileName = getCurrentFileName();
+        final String newFileName = getCurrentFileName().getPath();
         if (newFileName != null
                 && newFileName.length() > basenamePostfix.length()) {
             int idx = newFileName.lastIndexOf(basenamePostfix);

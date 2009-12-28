@@ -33,6 +33,7 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -92,7 +93,7 @@ public class ExiftoolData extends FileWaypoint {
      * @return true if file can get interpreted.
      */
     private boolean getImageInfo() {
-        getGpsRecord().voxStr = getPath();
+        getGpsRecord().voxStr = getFilePath().getPath();
         // TODO: change path setting.
         int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
         final int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
@@ -110,7 +111,7 @@ public class ExiftoolData extends FileWaypoint {
 
         String exifResult;
         try {
-            exifResult = getExifToolInfo(getGpsRecord(), getPath());
+            exifResult = getExifToolInfo(getGpsRecord(), getFilePath());
         } catch (Exception e) {
             return false;
         }
@@ -168,7 +169,7 @@ public class ExiftoolData extends FileWaypoint {
             }
         } else {
             // Get file date & time.
-            final File f = new File(getPath());
+            final File f = new File(getFilePath());
             final int u = f.getModificationTime();
             if (u != 0) {
                 setUtc(u);
@@ -180,7 +181,7 @@ public class ExiftoolData extends FileWaypoint {
     /**
      * 
      */
-    private static String getExifToolInfo(final GPSRecord g, final String path) {
+    private static String getExifToolInfo(final GPSRecord g, final BT747Path path) {
         String exifResult;
         ArrayList<String> params = new ArrayList<String>(
                 exifGetParams.length + 5);
@@ -188,7 +189,7 @@ public class ExiftoolData extends FileWaypoint {
             params.add(p);
         }
 
-        params.add(path);
+        params.add(path.getPath());
         try {
             exifResult = new String(ExifTool.execExifTool(params));
             Generic.debug(exifResult);
@@ -199,8 +200,8 @@ public class ExiftoolData extends FileWaypoint {
         return null;
     }
 
-    public final void writeImage(final String destPath, final int card) {
-        writeImage(getPath(), destPath, card);
+    public final void writeImage(final BT747Path destPath) {
+        writeImage(getFilePath(), destPath);
     }
 
     private final static String SW = "BT747 " + Version.VERSION_NUMBER;
@@ -302,12 +303,11 @@ public class ExiftoolData extends FileWaypoint {
             "-GPSSpeed", "-GPSSatellites", "-GPSDifferential",
             "-GPSTimeStamp", "-GPSDateStamp", "-GPSMeasureMode", "-GPSDOP" };
 
-    public final void writeImage(final String orgPath, final String destPath,
-            final int card) {
+    public final void writeImage(final BT747Path orgPath, final BT747Path destPath) {
         List<String> exiftoolArgs = writeExifArguments(getGpsRecord());
         exiftoolArgs.add("-o");
-        exiftoolArgs.add(destPath);
-        exiftoolArgs.add(orgPath);
+        exiftoolArgs.add(destPath.getPath());
+        exiftoolArgs.add(orgPath.getPath());
         try {
             ExifTool.execExifTool(exiftoolArgs);
         } catch (Exception e) {
