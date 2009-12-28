@@ -189,7 +189,8 @@ final class MTKLogDownloadHandler {
     private final void realDownloadStart() {
         try {
             if (context.incremental
-                    && (new File(context.logFileName)).exists()) {
+                    && (new File(context.logFileName, File.DONT_OPEN,
+                            context.logFileCard)).exists()) {
                 /**
                  * File already exists and incremental download requested.
                  * Checking if the content is the same.
