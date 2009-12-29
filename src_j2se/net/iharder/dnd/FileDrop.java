@@ -332,9 +332,8 @@ public class FileDrop {
                             // Get a useful list
                             final Object lst = tr
                                     .getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
-                            if (lst instanceof java.util.List) {
-                                final java.util.List<File> fileList = (java.util.List<File>) tr
-                                        .getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+                            if (lst instanceof java.util.List<?>) {
+                                final java.util.List<File> fileList = (java.util.List<File>) lst;
                                 // java.util.Iterator iterator =
                                 // fileList.iterator();
 

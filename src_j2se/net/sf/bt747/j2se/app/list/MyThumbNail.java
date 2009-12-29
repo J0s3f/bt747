@@ -66,6 +66,12 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.File;
+
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+import org.apache.sanselan.common.IImageMetadata;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 
 // import java.io.BufferedOutputStream;
 // import java.io.FileOutputStream;
@@ -81,6 +87,10 @@ public final class MyThumbNail {
     public final static BufferedImage createThumbnail(final MediaTracker mt,
             final String imgFilePath, int thumbWidth, int thumbHeight)
             throws Exception {
+        if(bt747.Version.VERSION_NUMBER.equals("2.dev") && hasSanselan()) {
+            return createThumbnailSanselan(mt, imgFilePath, thumbWidth,
+                    thumbHeight);
+        }
         return createThumbnailSingleStep(mt, imgFilePath, thumbWidth,
                 thumbHeight);
     }
@@ -118,6 +128,28 @@ public final class MyThumbNail {
         mediaTracker.addImage(image, id);
         mediaTracker.waitForID(id);
 
+        return getThumbnail(thumbWidth, thumbHeight, image);
+        // BufferedOutputStream out = new BufferedOutputStream(
+        // new FileOutputStream(thumbPath));
+        // JPEGCodec.
+        // JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+        // JPEGEncodeParam param =
+        // encoder.getDefaultJPEGEncodeParam(thumbImage);
+        // int quality = 100;
+        // param.setQuality((float) quality / 100.0f, false);
+        // encoder.setJPEGEncodeParam(param);
+        // encoder.encode(thumbImage);
+        // out.close();
+    }
+
+    /**
+     * @param thumbWidth
+     * @param thumbHeight
+     * @param image
+     * @return
+     */
+    private static BufferedImage getThumbnail(int thumbWidth,
+            int thumbHeight, final Image image) {
         final double thumbRatio = (double) thumbWidth / (double) thumbHeight;
         final int imageWidth = image.getWidth(null);
         final int imageHeight = image.getHeight(null);
@@ -135,19 +167,9 @@ public final class MyThumbNail {
         graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
 
         return thumbImage;
-        // BufferedOutputStream out = new BufferedOutputStream(
-        // new FileOutputStream(thumbPath));
-        // JPEGCodec.
-        // JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-        // JPEGEncodeParam param =
-        // encoder.getDefaultJPEGEncodeParam(thumbImage);
-        // int quality = 100;
-        // param.setQuality((float) quality / 100.0f, false);
-        // encoder.setJPEGEncodeParam(param);
-        // encoder.encode(thumbImage);
-        // out.close();
     }
 
+    
     // Following function taken from the public domain at:
     // http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html?page=last#thread
     /**
@@ -223,4 +245,44 @@ public final class MyThumbNail {
         return ret;
     }
 
+
+    private static int hasSanselanState = 0;
+    
+    private static boolean hasSanselan() {
+        if (hasSanselanState == 0) {
+            try {
+                if (Class.forName("org.apache.sanselan.Sanselan") != null)
+                    hasSanselanState = 1;
+            } catch (ClassNotFoundException e) {
+                hasSanselanState = -1;
+            }
+        }
+        return hasSanselanState == 1;
+    }
+    
+    
+    public final static BufferedImage createThumbnailSanselan(
+            final MediaTracker mt, final String imgFilePath, int thumbWidth,
+            int thumbHeight) throws Exception {
+        final IImageMetadata metadata = Sanselan.getMetadata(new File(
+                imgFilePath));
+        BufferedImage thumb = null;
+        if (metadata instanceof JpegImageMetadata) {
+            JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+            
+            try {
+                thumb = jpegMetadata.getEXIFThumbnail();
+            } catch (ImageReadException e) {
+                // This error is not an issue
+            }
+        }            
+ 
+        if(thumb!=null) {
+            thumb.getWidth();
+            thumb = getThumbnail(thumbWidth, thumbHeight, thumb);
+        } else {
+            thumb = createThumbnailSingleStep(mt, imgFilePath, thumbWidth, thumbHeight);
+        }
+        return thumb;
+    }
 }

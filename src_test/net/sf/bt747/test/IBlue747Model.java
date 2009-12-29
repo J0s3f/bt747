@@ -53,7 +53,7 @@ public class IBlue747Model {
 
     enum DeviceModelType {
         ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C,
-        MBT1100
+        MBT1100, IBLUE747PLUS_TYPE2
     };
 
     public GPSrxtx gpsRxTx = null;
@@ -862,6 +862,14 @@ public class IBlue747Model {
             mtkData.swVersion = "1.0";
             mtkData.logVersion = 139;
             mtkData.flashCode = 0x1C20161C;
+            break;
+        case IBLUE747PLUS_TYPE2:
+            mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
+            mtkData.modelNumber = "0006";
+            mtkData.modelRef = "TSI_747A+";
+            mtkData.swVersion = "1.0";
+            mtkData.logVersion = 139;
+            mtkData.flashCode = 0x1C31161C;
             break;
         case ML7:
             mtkData.coreVersion = "M-core_2.02";
