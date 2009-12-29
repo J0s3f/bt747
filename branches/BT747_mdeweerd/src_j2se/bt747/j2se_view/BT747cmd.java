@@ -131,6 +131,10 @@ public class BT747cmd implements bt747.model.ModelListener {
     /**
      * 
      */
+    private static final String OPT_MACADDR = "mac_address";
+    /**
+     * 
+     */
     private static final String OPT_TIMESPLIT = "timesplit";
     /**
      * 
@@ -855,6 +859,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
 
+            if(options.has(OPT_MACADDR)) {
+                c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
+            }
             // c.req
             // c.reqMtkLogVersion();
 
@@ -867,6 +874,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                             + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
                                     .getMainVersion())
                                     : ""));
+            if(options.has(OPT_MACADDR)) {
+                System.out.println("Bluetooth Mac Addr:"+ m.getBTAddr());
+            }
             System.out.println(Utils.format(
                     "Log Conditions: Time:%.1f Distance:%.1f Speed:%d", m
                             .getLogTimeInterval() / 10., m
@@ -1343,6 +1353,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                         OPT_DEVICETYPE,
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245).")
                         .withRequiredArg().describedAs("DEVICE");
+                accepts(OPT_MACADDR,
+                    "Report the BT Mac Address.  Can be used for unique identification.");
                 accepts(OPT_TRKPTINFO,
                         "Add record information for each trackpoint.");
                 accepts(OPT_TRKPTNAME,

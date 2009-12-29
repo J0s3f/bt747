@@ -34,6 +34,7 @@
 	<property name="swingx-ws.jar" value="${lib.dir}/swingx-ws.jar" />
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
+	<property name="sanselan.jar" value="${lib.dir}/sanselan-0.97-incubator.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
@@ -273,6 +274,7 @@
 		<pathelement location="${jopt-simple.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
+        <pathelement location="${sanselan.jar}" />
 	</path>
 
 
@@ -357,7 +359,7 @@
 			           value="${full.build.version}"
 			/>
 			<attribute name="Class-Path"
-			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx.jar lib/swingx-ws.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar"
+			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar"
 			/>
 		</manifest>
 		<!-- It might be possible to read the version in the application:
