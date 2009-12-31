@@ -22,7 +22,9 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.RAFile;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 
 /** Conversion of Wonde Proud logs (Phototrackr, ...)
  * This class is used to convert the binary log to a new format. Basically
@@ -96,7 +98,7 @@ public final class WPLogConvert extends GPSLogConvertInterface {
     public int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
-            final File inFile = (File) file;
+            final BT747RAFile inFile = (BT747RAFile) file;
             GPSRecord r = GPSRecord.getLogFormatRecord(0);
             final int C_BUF_SIZE = 0x800;
             final byte[] bytes = new byte[C_BUF_SIZE];

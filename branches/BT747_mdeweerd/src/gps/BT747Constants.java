@@ -886,6 +886,10 @@ public final class BT747Constants { // dev as in device
     /** Application */
     public static final int NMEA_SEN_WPL_IDX = 19;
 
+    
+    // Interesting resource can be:
+    // http://www.flashrom.org/trac/flashrom/browser/trunk/flashchips.h
+    //
     // private static final int SPI_Y2_MAN_ID_MASK = 0xff00;
     // private static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
 

@@ -24,6 +24,7 @@ import gps.mvc.commands.GpsLinkNmeaCommand;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.RAFile;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747Path;
 
@@ -104,7 +105,7 @@ final class MTKLogDownloadHandler {
         }
 
         // private final LogFile lf = new LogFile();
-        protected File logFile = null;
+        protected RAFile logFile = null;
 
         /**
          * Currently selected file path for download.
@@ -416,17 +417,17 @@ final class MTKLogDownloadHandler {
                 context.logFile.close();
             }
 
-            context.logFile = new File(path, bt747.sys.File.DONT_OPEN);
+            context.logFile = new RAFile(path, bt747.sys.File.DONT_OPEN);
             context.logPath = path;
             if (context.logFile.exists()) {
                 context.logFile.delete();
             }
 
-            context.logFile = new File(path, bt747.sys.File.CREATE);
+            context.logFile = new RAFile(path, bt747.sys.File.CREATE);
             // lastError 10530 = Read only
             context.logPath = path;
             context.logFile.close();
-            context.logFile = new File(path, bt747.sys.File.WRITE_ONLY);
+            context.logFile = new RAFile(path, bt747.sys.File.WRITE_ONLY);
             context.logPath = path;
 
             if ((context.logFile == null) || !(context.logFile.isOpen())) {
@@ -445,7 +446,7 @@ final class MTKLogDownloadHandler {
     private void reOpenLogWrite(final BT747Path path) {
         closeLog();
         try {
-            context.logFile = new File(path, File.WRITE_ONLY);
+            context.logFile = new RAFile(path, File.WRITE_ONLY);
             context.logPath = path;
         } catch (final Exception e) {
             Generic.debug("reOpenLogWrite", e);

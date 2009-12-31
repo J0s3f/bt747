@@ -20,7 +20,7 @@ import bt747.sys.interfaces.BT747Path;
 /**
  * @author Mario De Weerd
  */
-public final class File {
+public class File {
     /**
      * Mode: Do not open the file.
      */
@@ -43,8 +43,16 @@ public final class File {
      */
     public static final int CREATE = 4;
 
-    private final BT747File file;
+    final BT747File file;
+    
+    protected final BT747File getFile() {
+        return file;
+    }
 
+    protected File(final BT747File file) {
+        this.file = file;
+    }
+    
     public File(final BT747Path path) {
         file = JavaLibBridge.getFileInstance(path);
     }
@@ -78,10 +86,6 @@ public final class File {
 
     public final boolean close() {
         return file.close();
-    }
-
-    public final boolean setPos(final int pos) {
-        return file.setPos(pos);
     }
 
     public final boolean isOpen() {

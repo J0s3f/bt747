@@ -14,22 +14,17 @@
 // *** *********************************************************** ***
 package net.sf.bt747.j2se.system;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 import bt747.sys.Generic;
-import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747RAFile;
 
 /**
  * Implement the system interface of BT747File.
  * 
  * @author Mario De Weerd
  */
-public final class J2SEFile implements BT747File {
+public final class J2SERAFile implements BT747RAFile {
 
     /**
      * Path corresponding to current file. The current file is not necessarily
@@ -42,10 +37,7 @@ public final class J2SEFile implements BT747File {
     /**
      * When open, pointer to the system file.
      */
-    private java.io.File file = null;
-    
-    private OutputStream os = null;
-    private InputStream is = null;
+    private RandomAccessFile raf = null;
 
     /**
      * Initializer called by the Interface.
@@ -53,7 +45,7 @@ public final class J2SEFile implements BT747File {
      * @param path
      *                The path to the file to operate on.
      */
-    public J2SEFile(final String path) {
+    public J2SERAFile(final String path) {
         filePath = path;
     }
 
@@ -65,41 +57,37 @@ public final class J2SEFile implements BT747File {
      * @param mode
      *                The way the file should be opened.
      */
-    public J2SEFile(final String path, final int mode) {
+    public J2SERAFile(final String path, final int mode) {
         try {
             String modeStr = "";
             filePath = path;
-            file = new java.io.File(path);
             switch (mode) {
             case READ_ONLY:
                 modeStr = "r";
-                is = new BufferedInputStream(new FileInputStream(file));
                 break;
             case WRITE_ONLY:
                 modeStr = "rw";
-                os = new BufferedOutputStream(new FileOutputStream(file,true));
                 break;
             case CREATE:
                 modeStr = "rw";
                 try {
-                    file.createNewFile();
+                    final java.io.File tmp = new java.io.File(path);
+                    tmp.createNewFile();
                 } catch (final Exception e) {
                     Generic.debug("File creation failed:" + path, e);
                 }
-                os = new BufferedOutputStream(new FileOutputStream(file));
                 break;
             case READ_WRITE:
                 modeStr = "rw";
-                is = new BufferedInputStream(new FileInputStream(file));
-                os = new BufferedOutputStream(new FileOutputStream(file));
-                break;
-            case DONT_OPEN:
                 break;
             default:
-                is = new BufferedInputStream(new FileInputStream(file));
                 modeStr = "r";
             }
             if (mode != DONT_OPEN) {
+                raf = new RandomAccessFile(path, modeStr);
+                if (mode == WRITE_ONLY) {
+                    raf.seek(raf.length()); // To append
+                }
                 if (Generic.isDebug()) {
                     Generic.debug("Opened file " + path + " in mode " + mode
                             + " " + modeStr, null);
@@ -121,10 +109,10 @@ public final class J2SEFile implements BT747File {
 
     public int getSize() {
         try {
-            if (file == null) {
+            if (raf == null) {
                 return (int) (new java.io.File(filePath).length());
             } else {
-                return (int) file.length();
+                return (int) raf.length();
             }
         } catch (final Exception e) {
             Generic.debug("getSize", e);
@@ -163,21 +151,28 @@ public final class J2SEFile implements BT747File {
 
     public boolean close() {
         try {
-            if (isopen && (file != null)) {
+            if (isopen && (raf != null)) {
                 isopen = false;
-                if(os!=null) {
-                    os.flush();
-                    os.close();
-                }
-                if(is!=null) {
-                    is.close();
-                }
+                raf.close();
             }
             return true;
         } catch (final Exception e) {
             Generic.debug("close", e);
             e.printStackTrace();
             // TODO: handle exceptions
+            return false;
+        }
+    }
+
+    public boolean setPos(final int pos) {
+        try {
+            if (raf != null) {
+                raf.seek(pos);
+                return true;
+            }
+            return false;
+        } catch (final Exception e) {
+            Generic.debug("setPos", e);
             return false;
         }
     }
@@ -189,7 +184,7 @@ public final class J2SEFile implements BT747File {
     }
 
     public boolean isOpen() {
-        if (file != null) {
+        if (raf != null) {
             return isopen;
         } else {
             return false;
@@ -198,7 +193,7 @@ public final class J2SEFile implements BT747File {
 
     public int writeBytes(final byte[] b, final int off, final int len) {
         try {
-            os.write(b, off, len);
+            raf.write(b, off, len);
             return len;
         } catch (final Exception e) {
             Generic.debug("writeBytes", e);
@@ -209,7 +204,7 @@ public final class J2SEFile implements BT747File {
 
     public int readBytes(final byte[] b, final int off, final int len) {
         try {
-            return is.read(b, off, len);
+            return raf.read(b, off, len);
         } catch (final Exception e) {
             Generic.debug("writeBytes", e);
             // TODO: handle exceptions

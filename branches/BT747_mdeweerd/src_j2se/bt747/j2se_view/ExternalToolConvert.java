@@ -17,7 +17,7 @@ package bt747.j2se_view;
 import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import net.sf.bt747.j2se.app.utils.ExternalTool;
-import net.sf.bt747.j2se.system.J2SEFile;
+import net.sf.bt747.j2se.system.J2SERAFile;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -82,7 +82,7 @@ public final class ExternalToolConvert extends GpsFileProxyTemplate {
                     BT747Hashtable ht = JavaLibBridge.getHashtableInstance(5);
                     ht.put("f", fileName);
                     Generic.debug(new String(et.execTool(ht)));
-                    (new J2SEFile(fileName)).delete();
+                    (new J2SERAFile(fileName)).delete();
                 } catch (Exception e) {
                     // TODO: improve upload error message handling.
                     Generic.exception("External tool error for "
