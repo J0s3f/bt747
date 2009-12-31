@@ -28,6 +28,7 @@ import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -62,7 +63,8 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
         return new WabaTime();
     }
 
-    public final BT747File getFileInstance(final BT747Path path) {
+    
+    public final BT747RAFile getRAFileInstance(final BT747Path path) {
         if(path instanceof WabaPath) {
             final WabaPath p = (WabaPath) path;
             return new WabaFile(p.getPath(), p.getCard());
@@ -70,8 +72,12 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
             return new WabaFile(path.getPath());
         }
     }
+    
+    public final BT747File getFileInstance(final BT747Path path) {
+        return getRAFileInstance(path);
+    }
 
-    public final BT747File getFileInstance(final BT747Path path,
+    public final BT747RAFile getRAFileInstance(final BT747Path path,
             final int mode) {
         int localMode;
         if (mode == bt747.sys.File.WRITE_ONLY) {
@@ -90,18 +96,23 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
         }
     }
 
-    public final BT747File getFileInstance(final String path, final int mode) {
-        int localMode;
-        if (mode == bt747.sys.File.WRITE_ONLY) {
-            // On SuperWaba, WRITE_ONLY might erase, so transforming in
-            // READ_WRITE.
-            // Must be in append mode too.
-            localMode = waba.io.File.READ_WRITE;
-        } else {
-            localMode = mode;
-        }
-        return new WabaFile(path, localMode);
+    public final BT747File getFileInstance(final BT747Path path,
+            final int mode) {
+        return getRAFileInstance(path, mode);
     }
+
+//    public final BT747File getRAFileInstance(final String path, final int mode) {
+//        int localMode;
+//        if (mode == bt747.sys.File.WRITE_ONLY) {
+//            // On SuperWaba, WRITE_ONLY might erase, so transforming in
+//            // READ_WRITE.
+//            // Must be in append mode too.
+//            localMode = waba.io.File.READ_WRITE;
+//        } else {
+//            localMode = mode;
+//        }
+//        return new WabaFile(path, localMode);
+//    }
 
     public final boolean isAvailable() {
         return waba.io.File.isAvailable();

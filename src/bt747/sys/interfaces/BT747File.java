@@ -1,7 +1,6 @@
 // ********************************************************************
 // *** BT 747 ***
-// *** April 14, 2007 ***
-// *** (c)2007 Mario De Weerd ***
+// *** (c)2007-2009 Mario De Weerd ***
 // *** m.deweerd@ieee.org ***
 // *** ********************************************************** ***
 // *** Software is provided "AS IS," without a warranty of any ***
@@ -56,14 +55,6 @@ public interface BT747File extends BT747InputStream, BT747OutputStream {
      * @return true if success.
      */
     boolean close();
-
-    /**
-     * Set the file position.
-     * 
-     * @param pos
-     * @return true if success.
-     */
-    boolean setPos(int pos);
 
     /**
      * Determine if the file handle is open.

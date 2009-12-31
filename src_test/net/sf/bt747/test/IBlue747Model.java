@@ -865,7 +865,7 @@ public class IBlue747Model {
             break;
         case IBLUE747PLUS_TYPE2:
             mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
-            mtkData.modelNumber = "0006";
+            mtkData.modelNumber = "000F";
             mtkData.modelRef = "TSI_747A+";
             mtkData.swVersion = "1.0";
             mtkData.logVersion = 139;

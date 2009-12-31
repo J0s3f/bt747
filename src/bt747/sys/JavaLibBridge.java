@@ -21,6 +21,7 @@ import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -189,6 +190,15 @@ public final class JavaLibBridge {
     public static final BT747File getFileInstance(final BT747Path path,
             final int mode) {
         return JavaLibBridge.imp.getFileInstance(path, mode);
+    }
+
+    public static final BT747RAFile getRAFileInstance(final BT747Path path) {
+        return JavaLibBridge.imp.getRAFileInstance(path);
+    }
+
+    public static final BT747RAFile getRAFileInstance(final BT747Path path,
+            final int mode) {
+        return JavaLibBridge.imp.getRAFileInstance(path, mode);
     }
 
     public static final boolean isAvailable() {

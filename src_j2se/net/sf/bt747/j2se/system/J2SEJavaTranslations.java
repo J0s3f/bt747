@@ -19,11 +19,11 @@ import java.util.Locale;
 
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
-import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -71,13 +71,24 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
         return new J2SETime();
     }
 
-    public final BT747File getFileInstance(final BT747Path path) {
-        return new J2SEFile(path.getPath());
+    public final BT747RAFile getRAFileInstance(final BT747Path path) {
+        return new J2SERAFile(path.getPath());
     }
 
-    public final BT747File getFileInstance(final BT747Path filePath, final int mode) {
-        return new J2SEFile(filePath.getPath(), mode);
+    public final BT747RAFile getRAFileInstance(final BT747Path filePath, final int mode) {
+        return new J2SERAFile(filePath.getPath(), mode);
     }
+    
+
+    public final BT747File getFileInstance(final BT747Path path) {
+        return new J2SERAFile(path.getPath());
+    }
+
+    public final BT747File getFileInstance(final BT747Path path,
+            final int mode) {
+        return getRAFileInstance(path, mode);
+    }
+
 
     public final boolean isAvailable() {
         return true;

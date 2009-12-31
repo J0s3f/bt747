@@ -16,171 +16,176 @@ package bt747.sys.interfaces;
 
 public interface JavaLibImplementation {
 
-	BT747Date getDateInstance();
+    BT747Date getDateInstance();
 
-	BT747Date getDateInstance(final int d, final int m, final int y);
+    BT747Date getDateInstance(final int d, final int m, final int y);
 
-	BT747Date getDateInstance(final String strDate, final byte dateFormat);
+    BT747Date getDateInstance(final String strDate, final byte dateFormat);
 
-	BT747Hashtable getHashtableInstance(final int initialCapacity);
+    BT747Hashtable getHashtableInstance(final int initialCapacity);
 
-	BT747Vector getVectorInstance();
+    BT747Vector getVectorInstance();
 
-	BT747Time getTimeInstance();
+    BT747Time getTimeInstance();
 
-	BT747File getFileInstance(BT747Path path);
+    BT747File getFileInstance(BT747Path path);
 
-	BT747File getFileInstance(BT747Path path, int mode);
+    BT747File getFileInstance(BT747Path path, int mode);
 
-	boolean isAvailable();
+    BT747RAFile getRAFileInstance(BT747Path path);
 
-	void debug(final String s, final Throwable e);
+    BT747RAFile getRAFileInstance(BT747Path path, int mode);
 
-	double pow(final double x, final double y);
+    boolean isAvailable();
 
-	double acos(final double x);
+    void debug(final String s, final Throwable e);
 
-	void addThread(final BT747Thread t, final boolean b);
+    double pow(final double x, final double y);
 
-	void removeThread(final BT747Thread t);
+    double acos(final double x);
 
-	/**
-	 * System method to convert a boolean to a string.
-	 * 
-	 * @param p
-	 *            boolean to convert.
-	 * @return String corresponding to boolean.
-	 */
-	String toString(final boolean p);
+    void addThread(final BT747Thread t, final boolean b);
 
-	/**
-	 * System method to convert an int to a string.
-	 * 
-	 * @param p
-	 *            int to convert.
-	 * @return String corresponding to boolean.
-	 */
-	// String toString(final int p);
-	/**
-	 * System method to convert a float to a string.
-	 * 
-	 * @param p
-	 *            float to convert.
-	 * @return String corresponding to floating number.
-	 */
-	String toString(final float p);
+    void removeThread(final BT747Thread t);
 
-	/**
-	 * System method to convert a double to a string.
-	 * 
-	 * @param p
-	 *            double to convert.
-	 * @return String corresponding to double number.
-	 */
-	String toString(final double p);
+    /**
+     * System method to convert a boolean to a string.
+     * 
+     * @param p
+     *            boolean to convert.
+     * @return String corresponding to boolean.
+     */
+    String toString(final boolean p);
 
-	/**
-	 * System method to convert a double to a string.
-	 * 
-	 * @param p
-	 *            double to convert.
-	 * @param i
-	 *            Number of digits after the decimal point.
-	 * @return String corresponding to double number.
-	 */
-	String toString(final double p, final int i);
+    /**
+     * System method to convert an int to a string.
+     * 
+     * @param p
+     *            int to convert.
+     * @return String corresponding to boolean.
+     */
+    // String toString(final int p);
+    /**
+     * System method to convert a float to a string.
+     * 
+     * @param p
+     *            float to convert.
+     * @return String corresponding to floating number.
+     */
+    String toString(final float p);
 
-	/**
-	 * System method to convert an integer to a hexadecimal string.
-	 * 
-	 * @param p
-	 *            The integer to convert. Interpreted as an unsigned.
-	 * @param i
-	 *            The number of characters in the hexadecimal string. For
-	 *            instance, if this value is 8, a value of 0x123 would be
-	 *            converted to "00000123"
-	 * @return String value containing the hex representation of the integer
-	 */
-	String unsigned2hex(final int p, final int i);
+    /**
+     * System method to convert a double to a string.
+     * 
+     * @param p
+     *            double to convert.
+     * @return String corresponding to double number.
+     */
+    String toString(final double p);
 
-	/**
-	 * System method to convert a string to an integer.
-	 * 
-	 * @param s
-	 *            The string to convert.
-	 * @return The integer corresponding to the string.
-	 */
-	int toInt(final String s);
+    /**
+     * System method to convert a double to a string.
+     * 
+     * @param p
+     *            double to convert.
+     * @param i
+     *            Number of digits after the decimal point.
+     * @return String corresponding to double number.
+     */
+    String toString(final double p, final int i);
 
-	/**
-	 * System method to convert a string to a float.
-	 * 
-	 * @param s
-	 *            The string to convert.
-	 * @return The float corresponding to the string.
-	 */
-	float toFloat(final String s);
+    /**
+     * System method to convert an integer to a hexadecimal string.
+     * 
+     * @param p
+     *            The integer to convert. Interpreted as an unsigned.
+     * @param i
+     *            The number of characters in the hexadecimal string. For
+     *            instance, if this value is 8, a value of 0x123 would be
+     *            converted to "00000123"
+     * @return String value containing the hex representation of the integer
+     */
+    String unsigned2hex(final int p, final int i);
 
-	/**
-	 * System method to convert a string to a double.
-	 * 
-	 * @param s
-	 *            The string to convert.
-	 * @return The double corresponding to the string.
-	 */
-	double toDouble(final String s);
+    /**
+     * System method to convert a string to an integer.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The integer corresponding to the string.
+     */
+    int toInt(final String s);
 
-	/**
-	 * System method to bitwise convert a long to a double. The long corresponds
-	 * to 8 bytes that represent a floating number in IEEE ... format.
-	 * 
-	 * @param l
-	 *            The value to bitwise convert.
-	 * @return The double corresponding to the bitwise conversion.
-	 */
-	double longBitsToDouble(final long l);
+    /**
+     * System method to convert a string to a float.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The float corresponding to the string.
+     */
+    float toFloat(final String s);
 
-	/**
-	 * System method to bitwise convert a long to a float. The int corresponds
-	 * to 4 bytes that represent a floating number in IEEE ... format.
-	 * 
-	 * @param l
-	 *            The value to bitwise convert.
-	 * @return The float corresponding to the bitwise conversion.
-	 */
-	float toFloatBitwise(final int l);
+    /**
+     * System method to convert a string to a double.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The double corresponding to the string.
+     */
+    double toDouble(final String s);
 
-	/**
-	 * System method to bitwise convert a float to an int. The int can then be
-	 * written to a byte array for example.
-	 * 
-	 * @param l
-	 *            The value to bitwise convert.
-	 * @return The float corresponding to the bitwise conversion.
-	 */
-	int toIntBitwise(final float f);
+    /**
+     * System method to bitwise convert a long to a double. The long
+     * corresponds to 8 bytes that represent a floating number in IEEE ...
+     * format.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The double corresponding to the bitwise conversion.
+     */
+    double longBitsToDouble(final long l);
 
-	void debug(final String s);
+    /**
+     * System method to bitwise convert a long to a float. The int corresponds
+     * to 4 bytes that represent a floating number in IEEE ... format.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The float corresponding to the bitwise conversion.
+     */
+    float toFloatBitwise(final int l);
 
-	int getTimeStamp();
+    /**
+     * System method to bitwise convert a float to an int. The int can then be
+     * written to a byte array for example.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The float corresponding to the bitwise conversion.
+     */
+    int toIntBitwise(final float f);
 
-	String getAppSettings();
+    void debug(final String s);
 
-	void setAppSettings(final String appSettings);
+    int getTimeStamp();
 
-	BT747Semaphore getSemaphoreInstance(final int value);
+    String getAppSettings();
 
-	BT747StringTokenizer getStringTokenizer(final String a, final char b);
+    void setAppSettings(final String appSettings);
 
-	BT747HashSet getHashSetInstance();
+    BT747Semaphore getSemaphoreInstance(final int value);
 
-	/**
-	 * Obtain an implementation of the BT747HttpSender interface.
-	 * 
-	 * @return an instance of a class implementing the BT747HttpSender
-	 *         interface.
-	 * @author Florian Unger
-	 * @throws BT747Exception 
-	 */
-	BT747HttpSender getHttpSenderInstance() throws BT747Exception;
+    BT747StringTokenizer getStringTokenizer(final String a, final char b);
+
+    BT747HashSet getHashSetInstance();
+
+    /**
+     * Obtain an implementation of the BT747HttpSender interface.
+     * 
+     * @return an instance of a class implementing the BT747HttpSender
+     *         interface.
+     * @author Florian Unger
+     * @throws BT747Exception
+     */
+    BT747HttpSender getHttpSenderInstance() throws BT747Exception;
 }
