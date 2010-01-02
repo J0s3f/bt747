@@ -527,12 +527,12 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
 
     private void cbNotApplyUTCOffsetStateChanged(
             final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbNotApplyUTCOffsetStateChanged
-        c.setGpxUTC0(cbNotApplyUTCOffset.isSelected());
+        c.setBooleanOpt(AppSettings.GPXUTC0, cbNotApplyUTCOffset.isSelected());
     }//GEN-LAST:event_cbNotApplyUTCOffsetStateChanged
 
     private void cbGPXTrkSegWhenSmallStateChanged(
             final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbGPXTrkSegWhenSmallStateChanged
-        c.setGpxTrkSegWhenBig(cbGPXTrkSegWhenSmall.isSelected());
+        c.setBooleanOpt(AppSettings.GPXTRKSEGBIG, cbGPXTrkSegWhenSmall.isSelected());
     }//GEN-LAST:event_cbGPXTrkSegWhenSmallStateChanged
 
     private void cbAltitudeModeItemStateChanged(

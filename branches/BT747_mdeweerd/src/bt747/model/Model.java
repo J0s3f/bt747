@@ -353,19 +353,19 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
         setupBasicSettingsFilter(filters);
         for (int i = logFiltersAdv.length - 1; i >= 0; i--) {
             final GPSFilterAdvanced filter = filters[i];
-            filter.setMinRecCount(getFilterMinRecCount());
-            filter.setMaxRecCount(getFilterMaxRecCount());
-            filter.setMinSpeed(getFilterMinSpeed());
-            filter.setMaxSpeed(getFilterMaxSpeed());
-            filter.setMinDist(getFilterMinDist());
-            filter.setMaxDist(getFilterMaxDist());
+            filter.setMinRecCount(getIntOpt(MIN_RECCOUNT));
+            filter.setMaxRecCount(getIntOpt(MAX_RECCOUNT));
+            filter.setMinSpeed(getFloatOpt(MIN_SPEED));
+            filter.setMaxSpeed(getFloatOpt(MAX_SPEED));
+            filter.setMinDist(getFloatOpt(MIN_DISTANCE));
+            filter.setMaxDist(getFloatOpt(MAX_DISTANCE));
             filter
-                    .setMaxPDOP((int) (getFilterMaxPDOP() * Model.XDOP_FLOAT_TO_INT_100));
+                    .setMaxPDOP((int) (getFloatOpt(MAX_PDOP) * Model.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxHDOP((int) (getFilterMaxHDOP() * Model.XDOP_FLOAT_TO_INT_100));
+                    .setMaxHDOP((int) (getFloatOpt(MAX_HDOP) * Model.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxVDOP((int) (getFilterMaxVDOP() * Model.XDOP_FLOAT_TO_INT_100));
-            filter.setMinNSAT(getFilterMinNSAT());
+                    .setMaxVDOP((int) (getFloatOpt(MAX_VDOP) * Model.XDOP_FLOAT_TO_INT_100));
+            filter.setMinNSAT(getIntOpt(MIN_NSAT));
         }
     }
 

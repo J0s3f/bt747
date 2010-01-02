@@ -611,8 +611,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setStringOpt(Model.COLOR_INVALIDTRACK, "0000FF");
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
-        c.setOutputFileSplitType(0);
-        c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+        c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, 0);
+        c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_AUTOMATIC);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -693,13 +693,13 @@ public class BT747cmd implements bt747.model.ModelListener {
             String heightOpt;
             heightOpt = ((String) options.valueOf(OPT_HEIGHT)).toUpperCase();
             if (heightOpt.equals("AUTOMATIC")) {
-                c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_AUTOMATIC);
             } else if (heightOpt.equals("MSL_TO_WGS84")) {
-                c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_MSL_TO_WGS84);
             } else if (heightOpt.equals("WGS84_TO_MSL")) {
-                c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_WGS84_TO_MSL);
             } else if (heightOpt.equals("KEEP")) {
-                c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_NOCHANGE);
             } else {
                 System.err.println("Height parameter (" + heightOpt
                         + "unknown");
@@ -761,11 +761,11 @@ public class BT747cmd implements bt747.model.ModelListener {
              * @return Current setting.
              */
             if (option.equals("DAY")) {
-                c.setOutputFileSplitType(1);
+                c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, 1);
             } else if (option.equals("TRACK")) {
-                c.setOutputFileSplitType(2);
+                c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, 2);
             } else {
-                c.setOutputFileSplitType(0);
+                c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, 0);
             }
         }
 

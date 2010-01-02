@@ -126,32 +126,32 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
 
     private void setSettings() {
 
-        c.setFilterMinRecCount(JavaLibBridge.toInt(minRecCount.getText()));
-        c.setFilterMaxRecCount(JavaLibBridge.toInt(maxRecCount.getText()));
-        c.setFilterMinSpeed(JavaLibBridge.toFloat(minSpeed.getText()));
-        c.setFilterMaxSpeed(JavaLibBridge.toFloat(maxSpeed.getText()));
-        c.setFilterMinDist(JavaLibBridge.toFloat(minDist.getText()));
-        c.setFilterMaxDist(JavaLibBridge.toFloat(maxDist.getText()));
-        c.setFilterMaxPDOP((JavaLibBridge.toFloat(maxPDOP.getText())));
-        c.setFilterMaxHDOP((JavaLibBridge.toFloat(maxHDOP.getText())));
-        c.setFilterMaxVDOP((JavaLibBridge.toFloat(maxVDOP.getText())));
-        c.setFilterMinNSAT(JavaLibBridge.toInt(minNSAT.getText()));
+        c.setIntOpt(AppSettings.MIN_RECCOUNT, JavaLibBridge.toInt(minRecCount.getText()));
+        c.setIntOpt(AppSettings.MAX_RECCOUNT, JavaLibBridge.toInt(maxRecCount.getText()));
+        c.setFloatOpt(AppSettings.MIN_SPEED, JavaLibBridge.toFloat(minSpeed.getText()));
+        c.setFloatOpt(AppSettings.MAX_SPEED, JavaLibBridge.toFloat(maxSpeed.getText()));
+        c.setFloatOpt(AppSettings.MIN_DISTANCE, JavaLibBridge.toFloat(minDist.getText()));
+        c.setFloatOpt(AppSettings.MAX_DISTANCE, JavaLibBridge.toFloat(maxDist.getText()));
+        c.setFloatOpt(AppSettings.MAX_PDOP, (JavaLibBridge.toFloat(maxPDOP.getText())));
+        c.setFloatOpt(AppSettings.MAX_HDOP,(JavaLibBridge.toFloat(maxHDOP.getText())));
+        c.setFloatOpt(AppSettings.MAX_VDOP, (JavaLibBridge.toFloat(maxVDOP.getText())));
+        c.setIntOpt(AppSettings.MIN_NSAT, JavaLibBridge.toInt(minNSAT.getText()));
 
         c.saveSettings();
         c.setFilters();
     }
 
     private void getSettings() {
-        minRecCount.setText("" + m.getFilterMinRecCount());
-        maxRecCount.setText("" + m.getFilterMaxRecCount());
-        minSpeed.setText(JavaLibBridge.toString(m.getFilterMinSpeed(), 2));
-        maxSpeed.setText(JavaLibBridge.toString(m.getFilterMaxSpeed(), 2));
-        minDist.setText(JavaLibBridge.toString(m.getFilterMinDist(), 2));
-        maxDist.setText(JavaLibBridge.toString(m.getFilterMaxDist(), 2));
-        maxPDOP.setText(JavaLibBridge.toString(m.getFilterMaxPDOP(), 2));
-        maxHDOP.setText(JavaLibBridge.toString(m.getFilterMaxHDOP(), 2));
-        maxVDOP.setText(JavaLibBridge.toString(m.getFilterMaxVDOP(), 2));
-        minNSAT.setText("" + m.getFilterMinNSAT());
+        minRecCount.setText("" + m.getIntOpt(AppSettings.MIN_RECCOUNT));
+        maxRecCount.setText("" + m.getIntOpt(AppSettings.MAX_RECCOUNT));
+        minSpeed.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MIN_SPEED), 2));
+        maxSpeed.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MAX_SPEED), 2));
+        minDist.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MIN_DISTANCE), 2));
+        maxDist.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MAX_DISTANCE), 2));
+        maxPDOP.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MAX_PDOP), 2));
+        maxHDOP.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MAX_HDOP), 2));
+        maxVDOP.setText(JavaLibBridge.toString(m.getFloatOpt(AppSettings.MAX_VDOP), 2));
+        minNSAT.setText("" + m.getIntOpt(AppSettings.MIN_NSAT));
         c.setFilters();
     }
 

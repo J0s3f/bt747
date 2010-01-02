@@ -483,7 +483,7 @@ public class Controller implements ModelListener {
         final int sourceHeightReference = getHeightReference(lc.getType());
         String parameters = "";
 
-        switch (m.getHeightConversionMode()) {
+        switch (m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE)) {
         case AppSettings.HEIGHT_AUTOMATIC:
             if ((sourceHeightReference == BT747Constants.HEIGHT_MSL)
                     && (destinationHeightReference == BT747Constants.HEIGHT_WGS84)) {
@@ -1066,16 +1066,16 @@ public class Controller implements ModelListener {
         setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
                 | BT747Constants.RCR_ALL_APP_MASK);
         setBooleanOpt(AppSettings.ADVFILTACTIVE, false);
-        setFilterMinRecCount(0);
-        setFilterMaxRecCount(0);
-        setFilterMinSpeed(0);
-        setFilterMaxSpeed(0);
-        setFilterMinDist(0);
-        setFilterMaxDist(0);
-        setFilterMaxPDOP(0);
-        setFilterMaxHDOP(0);
-        setFilterMaxVDOP(0);
-        setFilterMinNSAT(0);
+        setIntOpt(AppSettings.MIN_RECCOUNT, 0);
+        setIntOpt(AppSettings.MAX_RECCOUNT, 0);
+        setFloatOpt(AppSettings.MIN_SPEED, 0);
+        setFloatOpt(AppSettings.MAX_SPEED, 0);
+        setFloatOpt(AppSettings.MIN_DISTANCE, 0);
+        setFloatOpt(AppSettings.MAX_DISTANCE, 0);
+        setFloatOpt(AppSettings.MAX_PDOP, 0);
+        setFloatOpt(AppSettings.MAX_HDOP,0);
+        setFloatOpt(AppSettings.MAX_VDOP, 0);
+        setIntOpt(AppSettings.MIN_NSAT, 0);
         setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, true);
         setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, true);
     }
@@ -1417,14 +1417,6 @@ public class Controller implements ModelListener {
         getGpsOldC().setGpsDecode(value);
     }
 
-    public final void setGpxTrkSegWhenBig(final boolean b) {
-        setBooleanOpt(AppSettings.GPXTRKSEGBIG, b);
-    }
-
-    public final void setGpxUTC0(final boolean b) {
-        setBooleanOpt(AppSettings.GPXUTC0, b);
-    }
-
     public final void setFilterEndTime(final int d) {
         m.setFilterEndTime(d);
     }
@@ -1483,63 +1475,23 @@ public class Controller implements ModelListener {
         setMtkDataNeeded(MtkModel.DATA_NMEA_OUTPUT_PERIODS);
     }
 
-    public final void setFilterMinRecCount(final int i) {
-        m.setFilterMinRecCount(i);
-    }
-
-    public final void setFilterMaxRecCount(final int i) {
-        m.setFilterMaxRecCount(i);
-    }
-
-    public final void setFilterMinSpeed(final float i) {
-        m.setFilterMinSpeed(i);
-    }
-
-    public final void setFilterMaxSpeed(final float i) {
-        m.setFilterMaxSpeed(i);
-    }
-
-    public final void setFilterMinDist(final float i) {
-        m.setFilterMinDist(i);
-    }
-
-    public final void setFilterMaxDist(final float i) {
-        m.setFilterMaxDist(i);
-    }
-
-    public final void setFilterMaxPDOP(final float i) {
-        m.setFilterMaxPDOP(i);
-    }
-
-    public final void setFilterMaxHDOP(final float i) {
-        m.setFilterMaxHDOP(i);
-    }
-
-    public final void setFilterMaxVDOP(final float i) {
-        m.setFilterMaxVDOP(i);
-    }
-
-    public final void setFilterMinNSAT(final int i) {
-        m.setFilterMinNSAT(i);
-    }
-
     public final void setFilters() {
         // TODO : Should schedule this after a while.
         for (int i = m.getLogFiltersAdv().length - 1; i >= 0; i--) {
             final GPSFilterAdvanced filter = m.getLogFiltersAdv()[i];
-            filter.setMinRecCount(m.getFilterMinRecCount());
-            filter.setMaxRecCount(m.getFilterMaxRecCount());
-            filter.setMinSpeed(m.getFilterMinSpeed());
-            filter.setMaxSpeed(m.getFilterMaxSpeed());
-            filter.setMinDist(m.getFilterMinDist());
-            filter.setMaxDist(m.getFilterMaxDist());
+            filter.setMinRecCount(m.getIntOpt(AppSettings.MIN_RECCOUNT));
+            filter.setMaxRecCount(m.getIntOpt(AppSettings.MAX_RECCOUNT));
+            filter.setMinSpeed(m.getFloatOpt(AppSettings.MIN_SPEED));
+            filter.setMaxSpeed(m.getFloatOpt(AppSettings.MAX_SPEED));
+            filter.setMinDist(m.getFloatOpt(AppSettings.MIN_DISTANCE));
+            filter.setMaxDist(m.getFloatOpt(AppSettings.MAX_DISTANCE));
             filter
-                    .setMaxPDOP((int) (m.getFilterMaxPDOP() * Controller.XDOP_FLOAT_TO_INT_100));
+                    .setMaxPDOP((int) (m.getFloatOpt(AppSettings.MAX_PDOP) * Controller.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxHDOP((int) (m.getFilterMaxHDOP() * Controller.XDOP_FLOAT_TO_INT_100));
+                    .setMaxHDOP((int) (m.getFloatOpt(AppSettings.MAX_HDOP) * Controller.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxVDOP((int) (m.getFilterMaxVDOP() * Controller.XDOP_FLOAT_TO_INT_100));
-            filter.setMinNSAT(m.getFilterMinNSAT());
+                    .setMaxVDOP((int) (m.getFloatOpt(AppSettings.MAX_VDOP) * Controller.XDOP_FLOAT_TO_INT_100));
+            filter.setMinNSAT(m.getIntOpt(AppSettings.MIN_NSAT));
         }
     }
 
@@ -1568,32 +1520,6 @@ public class Controller implements ModelListener {
     }
 
     /**
-     * The way we split the input data.
-     * 
-     * @param value
-     *            0=all data in one file;<br>
-     *            1=one file per day (split at midnight after time offset
-     *            calculation)<br>
-     *            2=one file per track (a track separation occurs when the
-     *            time between two log points is bigger than a given number.
-     */
-    public final void setOutputFileSplitType(final int value) {
-        m.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, value);
-    }
-
-    /**
-     * @param heightConversionMode
-     * 
-     *            When true the height (WGS84) will be converted to Mean Sea
-     *            Level. {@link Model#HEIGHT_AUTOMATIC}
-     *            {@link Model#HEIGHT_NOCHANGE}
-     *            {@link Model#HEIGHT_WGS84_TO_MSL}
-     */
-    public final void setHeightConversionMode(final int heightConversionMode) {
-        m.setHeightConversionMode(heightConversionMode);
-    }
-
-    /**
      * @return the lastError
      */
     public final int getLastError() {
@@ -1613,6 +1539,10 @@ public class Controller implements ModelListener {
 
     public void setIntOpt(final int param, final int value) {
         m.setIntOpt(param, value);
+    }
+
+    public void setFloatOpt(final int param, final float value) {
+        m.setFloatOpt(param, value);
     }
 
     public void setStringOpt(final int param, final String value) {
@@ -1697,7 +1627,7 @@ public class Controller implements ModelListener {
                 // the listeners we would not try to remove.
                 // Unfortunately there is no way in the implementation of
                 // Model
-                // to check for the existence of an Object in teh listeners.
+                // to check for the existence of an Object in th listeners.
                 // So
                 // we just try the removing and take any resulting Exception
                 // as sign that the Object to remove is not in teh listeners

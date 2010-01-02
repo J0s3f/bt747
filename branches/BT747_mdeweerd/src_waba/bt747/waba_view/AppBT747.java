@@ -563,11 +563,10 @@ public class AppBT747 extends MainWindow implements ModelListener {
                             miImperial.isChecked);
                     break;
                 case C_MENU_GPX_UTC0:
-                    c.setGpxUTC0(miGpxUTC0.isChecked);
+                    c.setBooleanOpt(AppSettings.GPXUTC0, miGpxUTC0.isChecked);
                     break;
                 case C_MENU_GPX_TRKSEG_BIGONLY:
-                    c
-                            .setGpxTrkSegWhenBig(miGpxTrkSegWhenBig.isChecked);
+                    c.setBooleanOpt(AppSettings.GPXTRKSEGBIG, miGpxTrkSegWhenBig.isChecked);
                     break;
                 case C_MENU_GPS_DECODE_ACTIVE:
                     c.setGpsDecode(miGpsDecode.isChecked);

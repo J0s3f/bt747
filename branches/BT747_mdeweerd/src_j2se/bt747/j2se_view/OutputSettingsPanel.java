@@ -142,7 +142,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     }
 
     private void adjustHeightCombo() {
-        switch (m.getHeightConversionMode()) {
+        switch (m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE)) {
         case Model.HEIGHT_AUTOMATIC:
             cbHeightOverMeanSeaLevel.setSelectedIndex(2);
             break;
@@ -965,7 +965,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             type = 0;
             break;
         }
-        c.setOutputFileSplitType(type);
+        c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, type);
     }//GEN-LAST:event_cbOneFilePerDayFocusLost
 
     private void cbRecordNumberInfoInLogFocusLost(
@@ -1051,16 +1051,16 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbHeightOverMeanSeaLevelFocusLost
         switch (cbHeightOverMeanSeaLevel.getSelectedIndex()) {
         case 0:
-            c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_NOCHANGE);
             break;
         case 1:
-            c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_WGS84_TO_MSL);
             break;
         case 2:
-            c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_AUTOMATIC);
             break;
         case 3:
-            c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_MSL_TO_WGS84);
             break;
         }
     }//GEN-LAST:event_cbHeightOverMeanSeaLevelFocusLost
