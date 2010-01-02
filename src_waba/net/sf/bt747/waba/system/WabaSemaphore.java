@@ -33,18 +33,13 @@ public final class WabaSemaphore implements BT747Semaphore {
     }
 
     public final synchronized void down() {
-        while (value <= 0) {
-            try {
-                wait();
-            } catch (final Exception e) {
-                Generic.debug("Semaphore exception", e);
-            }
+        if (value <= 0) {
+            Generic.debug("Semaphore blocking not supported on SuperWaba.");
         }
         --value;
     }
 
     public synchronized final void up() {
         ++value;
-        notifyAll();
     }
 }
