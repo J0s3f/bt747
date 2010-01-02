@@ -14,7 +14,7 @@ import javax.microedition.io.Connector;
 
 import org.j4me.logging.Log;
 
-import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747RAFile;
 
 /**
  * @author Mario De Weerd
@@ -22,7 +22,7 @@ import bt747.sys.interfaces.BT747File;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class J2MEFile implements BT747File {
+public final class J2MEFile implements BT747RAFile {
     private String path = null;
 
     public J2MEFile(final String path) {
