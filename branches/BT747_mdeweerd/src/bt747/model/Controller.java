@@ -14,18 +14,15 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import gps.ProtocolConstants;
-
-import net.sf.bt747.loc.LocationSender;
 import gps.BT747Constants;
 import gps.GpsEvent;
+import gps.ProtocolConstants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.TracksAndWayPoints;
-import gps.log.in.GPSFileConverterInterface;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.MultiLogConvert;
@@ -45,12 +42,10 @@ import gps.log.out.GPSPLTFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 import gps.mvc.CmdParam;
-import gps.mvc.WPController;
-import gps.mvc.HoluxController;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
-import gps.mvc.commands.GpsLinkNmeaCommand;
+import net.sf.bt747.loc.LocationSender;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -61,6 +56,7 @@ import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd
+ * @author Florian Unger for indicated parts.
  * 
  */
 public class Controller implements ModelListener {
@@ -608,7 +604,7 @@ public class Controller implements ModelListener {
             if (Generic.isDebug()) {
                 Generic.debug(parameters);
             }
-            gpsFile.initialiseFile(m.getPath(AppSettings.REPORTFILEBASEPATH), ext, m.getOutputFileSplitType());
+            gpsFile.initialiseFile(m.getPath(AppSettings.REPORTFILEBASEPATH), ext, m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE));
             m.logConversionStarted(logType);
             try {
                 lastError = lc.toGPSFile(m.getPath(AppSettings.LOGFILEPATH),
@@ -655,7 +651,7 @@ public class Controller implements ModelListener {
         gpsFile = (GPSArray) getOutFileHandler(Model.ARRAY_LOGTYPE);
         configureGpsFile(gpsFile);
 
-        gpsFile.initialiseFile(new BT747Path(""), "", m.getOutputFileSplitType());
+        gpsFile.initialiseFile(new BT747Path(""), "", m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE));
         m.logConversionStarted(Model.ARRAY_LOGTYPE);
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
@@ -690,10 +686,12 @@ public class Controller implements ModelListener {
 
     /**
      * Set the download method. <br>
-     * Possible values:<br>
-     * - {@link #DOWNLOAD_FILLED}<br>
-     * -{@link #DOWNLOAD_FULL}<br>
-     * - {@link #DOWNLOAD_SMART}
+     * Possible values:
+     * <ul>
+     * <li>{@link Model#DOWNLOAD_FILLED}</li>
+     * <li>{@link Model#DOWNLOAD_FULL}</li>
+     * <li>{@link Model#DOWNLOAD_SMART}</li>
+     * </ul>
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
@@ -786,7 +784,7 @@ public class Controller implements ModelListener {
         // Wonde Proud when appropriate.
         // Initialisation method and download start should change.
         getGpsC()
-                .getLog(m.getStringOpt(AppSettings.LOGFILEPATH), m.getIntOpt(AppSettings.CARD));
+                .getLog(m.getPath(AppSettings.LOGFILEPATH));
     }
 
     /**
@@ -1580,7 +1578,7 @@ public class Controller implements ModelListener {
      *            time between two log points is bigger than a given number.
      */
     public final void setOutputFileSplitType(final int value) {
-        m.setOutputFileSplitType(value);
+        m.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, value);
     }
 
     /**
@@ -1666,7 +1664,7 @@ public class Controller implements ModelListener {
      * interaction where a user activates position sending with pressing a
      * button.
      * 
-     * @author Florian Unger
+     * <br>author Florian Unger
      */
     public void startGPSPositionServing() {
         if (registeredLocSender == null) {
@@ -1686,7 +1684,7 @@ public class Controller implements ModelListener {
      * be used just the same way. For example the user might stop position
      * serving by pressing a push button.
      * 
-     * @author Florian Unger
+     * <br>author Florian Unger
      */
     public void stopGPSPositionServing() {
         if (registeredLocSender != null) {

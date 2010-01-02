@@ -293,7 +293,7 @@ public class GpsModel implements ProtocolConstants {
      * Get the number of Cmds that are still waiting to be sent and/or waiting
      * for acknowledgement.
      * 
-     * @return
+     * @return Number of commands still waiting to be sent.
      */
     public final int getOutStandingCmdsCount() {
         return handler.getOutStandingCmdsCount();

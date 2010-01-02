@@ -553,7 +553,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * Value provided by the logger indicating that the device needs to be
      * initialised/formatted.
      * 
-     * @return
+     * @return true if the logger needs formatting.
      */
     public final boolean isLoggerNeedsFormat() {
         return mtkModel().isLoggerNeedsFormat();
@@ -818,11 +818,12 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     }
 
     /**
-     * Indicates if the given data is available.
+     * Indicates if the given data is available. That means that a request was
+     * issued to the device and that the device responded with a value.
      * 
      * @param dataType
-     *                {@link MtkController#DATA_MEM_USED}
-     * @return
+     *            For example: {@link MtkModel#DATA_MEM_USED}.
+     * @return true if data is already available.
      */
     public final boolean isAvailable(final int dataType) {
         return mtkModel().isDataAvailable(dataType);

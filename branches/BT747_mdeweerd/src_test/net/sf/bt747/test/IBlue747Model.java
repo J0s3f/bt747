@@ -417,7 +417,7 @@ public class IBlue747Model {
      * Respond to log specific functionality (PMTK182).
      * 
      * @param p_nmea
-     * @return
+     * @return 0 if all went ok.
      */
     public int replyLogNmea(final String[] p_nmea) {
         try {

@@ -58,8 +58,7 @@ public class GPSPositionWaypoint extends Waypoint {
     }
 
     /**
-     * @param showTag
-     *                the selected to set
+     * Toggles the 'show tag' status.
      */
     public final void toggleShowTag() {
         setShowTag(!showTag);

@@ -1158,7 +1158,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         final int utcTimeSeconds,
                         final String proposedExtension,
                         final String proposedTimeSpec) {
-                    switch (m.getOutputFileSplitType()) {
+                    switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                     case 0:
                         return new BT747Path(baseName.getPath() + "_trk" + proposedExtension);
                     default:
@@ -1190,7 +1190,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         final int utcTimeSeconds,
                         final String proposedExtension,
                         final String proposedTimeSpec) {
-                    switch (m.getOutputFileSplitType()) {
+                    switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                     case 0:
                         return new BT747Path(baseName.getPath() + "_wpt" + proposedExtension);
                     default:
@@ -1248,7 +1248,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 final int utcTimeSeconds,
                                 final String proposedExtension,
                                 final String proposedTimeSpec) {
-                            switch (m.getOutputFileSplitType()) {
+                            switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                             case 0:
                                 return new BT747Path(baseName + proposedExtension);
                             default:

@@ -34,8 +34,8 @@ public class WPController extends MtkController implements
     /**
      * Fetches a log to the given filename.
      * 
-     * @param fileName
-     * @param card
+     * @param path
+     *            Path reference.
      */
     public void getLog(final BT747Path path) {
         WPLogDownloadHandler h = new WPLogDownloadHandler(this, m

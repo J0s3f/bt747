@@ -47,13 +47,13 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
     private static final int BUF_SIZE = 0x800;
 
     /**
-     * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFileConverterInterface, int)}
-     * is one of them.
+     * Read the input file and provides results to the output builder.
      * 
      * @param gpsFile
-     *                The object representing the output format.
+     *            The object representing the output format.
      * @return {@link BT747Constants#NO_ERROR} if no error (0)
-     * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.out.GPSFileConverterInterface)
+     * @see gps.log.in.GPSLogConvertInterface#parseFile(Object,
+     *      GPSFileConverterInterface).
      */
     public final int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {

@@ -80,7 +80,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * @param g
      * @param map
      * @param waypoint
-     * @return
+     * @return unknown meaning.
      */
     // @Override
     public boolean paintWaypoint(final Graphics2D g, final JXMapViewer map,
@@ -113,17 +113,16 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * @param g
      * @param map
      * @param waypoint
-     * @return
+     * @return Unknown meaning.
      */
     public boolean paintInfoWindow(final Graphics2D g, final JXMapViewer map,
             final Waypoint waypoint) {
         return false;
     }
 
-    /**
-     * @param pt
-     *                relative to position of waypoint.
-     * @return
+
+    /* (non-Javadoc)
+     * @see net.sf.bt747.j2se.app.map.BT747WaypointRenderer#contains(java.awt.Point)
      */
     public boolean contains(final Point pt) {
         return gp.contains(pt);

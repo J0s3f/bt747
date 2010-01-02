@@ -24,7 +24,7 @@ public final class DecoderStateFactory {
      * Gets an instance for the requested state. Currently a Singleton
      * instance.
      * 
-     * @param stateClass
+     * @param state
      * @return Instance for the state.
      */
     public final static DecoderStateInterface getInstance(final int state) {

@@ -189,10 +189,9 @@ public abstract class GPSFile implements GPSFileInterface {
      * @param fileSeparationFreq
      *            Indicates how the file must be separated.
      * 
-     * @see #FILE_SPLIT_NONE
-     * @see #FILE_SPLIT_ONE_FILE_PER_DAY
-     * @see #FILE_SPLIT_ONE_FILE_PER_TRACK_
-     * 
+     * @see bt747.model.Model#SPLIT_ONE_FILE
+     * @see bt747.model.Model#SPLIT_ONE_FILE_PER_DAY
+     * @see bt747.model.Model#SPLIT_ONE_FILE_PER_TRACK
      */
     public void initialiseFile(final BT747Path baseName,
             final String extension, final int fileSeparationFreq) {

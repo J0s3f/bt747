@@ -77,9 +77,12 @@ public final class WPLogConvert extends GPSLogConvertInterface {
         }
     }
 
-    /** Creates utc time value of Phototrackr specific format.
+    /**
+     * Creates utc time value of Phototrackr specific format.
+     * 
      * @param rawTime
-     * @return
+     *            Phototracker time representation.
+     * @return long type representing utc time.
      */
     public static final int longToUtcTime(final int rawTime) {
         final int seconds = rawTime & 0x3F;

@@ -73,7 +73,7 @@ public interface BT747File extends BT747InputStream, BT747OutputStream {
     /**
      * Error number of the last error that occurred.
      * 
-     * @return
+     * @return The last error type.
      */
     int getLastError();
 

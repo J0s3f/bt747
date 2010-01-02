@@ -6,9 +6,9 @@ package gps.mvc.commands;
 import gps.connection.GPSrxtx;
 
 /**
- * A {@link GPSLinkCommand} can be put on the command queue where the
- * {@link #execute(GpsLinkHandler)} method will be called with the
- * {@link GpsLinkHandler} context. This allows for improved flexibility in
+ * A {@link GpsLinkExecCommand} can be put on the command queue where the
+ * {@link #execute(GPSrxtx)} method will be called with the
+ * {@link GPSrxtx} context. This allows for improved flexibility in
  * extending the link interface protocol and managing link state changes.
  * 
  * Some concrete Commands can probably be implemented as Singletons in some
@@ -27,13 +27,18 @@ public interface GpsLinkExecCommand {
      */
     public void execute(final GPSrxtx context);
     
-    /** If true, no other commands can be waiting.
-     * @return
+    /**
+     * Indicates if the transmit queue must be entirely purged before this
+     * command is sent (or not).
+     * 
+     * @return true if queue must be purged.
      */
     public boolean mustBeFirstInQueue();
     
-    /** If true, requires acknowledge.
-     * @return
+    /**
+     * If true, requires acknowledge.
+     * 
+     * @return true if the command requires an acknowledgde.
      */
     public boolean hasAck();
 }

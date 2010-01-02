@@ -101,11 +101,11 @@ public final class J2SEDate implements BT747Date {
     }
 
     /**
-     * @param t
+     * Advance the time.
+     * 
+     * @param s
+     *            The number of seconds to advance.
      */
-    // public Date(Time t) {
-    // super(t);
-    // }
     public void advance(final int s) {
         cal.add(java.util.Calendar.SECOND, s);
 

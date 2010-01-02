@@ -64,7 +64,7 @@ public final class CommonOut {
      * Does not add http:// or file://, but only './' and '.wav'.
      * 
      * @param r
-     * @return
+     * @return URL to reference in GPSRecord if one.
      */
     public final static String getLink(final GPSRecord r,
             final boolean isToLower) {

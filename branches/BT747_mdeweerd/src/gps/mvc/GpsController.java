@@ -8,6 +8,7 @@ import gps.ProtocolConstants;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Exception;
+import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -92,7 +93,7 @@ public class GpsController implements BT747Thread, ProtocolConstants,
     /**
      * TODO: Should no longer exist after refactoring.
      * 
-     * @return
+     * @return MtkController instance.
      */
     public final MtkController getMtkController() {
         return (MtkController) mtkC;
@@ -105,10 +106,10 @@ public class GpsController implements BT747Thread, ProtocolConstants,
     }
 
     /**
-     * Check if the data is available and if it is not, requests it.
+     * Indicates that the application requires the given data.
+     * Checks if the data is available and if it is not, requests it.
      * 
      * @param dataType
-     * @return
      */
     public final void setDataNeeded(final int dataType) {
         if (handler.isConnected()) {
@@ -352,8 +353,8 @@ public class GpsController implements BT747Thread, ProtocolConstants,
      * 
      * @see gps.mvc.DeviceControllerIF#getLog(java.lang.String, int)
      */
-    public void getLog(String fileName, int card) {
-        mtkC.getLog(fileName, card);
+    public void getLog(final BT747Path log) {
+        mtkC.getLog(log);
     }
 
 }

@@ -55,13 +55,14 @@ public class OlympusMakerNotesDecorator extends ExifAttribute {
     private final static char[] header = "OLYMPUS\0II\3\0".toCharArray();
 
     /**
-     * Decorate the Attribute only if needed.
+     * Decorate the Attribute only if needed. (See Decorator pattern of Design
+     * Patterns).
      * 
      * @param makerNote
      * @param buffer
      * @param tiffHeaderStart
      * @param bigEndian
-     * @return
+     * @return Decorated attribute.
      */
     public final static ExifAttribute decorate(final ExifAttribute makerNote,
             final byte[] buffer, final int tiffHeaderStart,

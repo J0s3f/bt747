@@ -221,32 +221,40 @@ public final class BT747Constants { // dev as in device
      * <td>Logging is full.</td>
      * <td>
      * 
-     * @see {@link #PMTK_LOG_STATUS_LOGISFULL_MASK}</td>
-     *      </tr>
-     *      <tr>
-     *      <th>bit 10</th> <td>Logging needs initialisation (format).</td>
-     *      <td>
-     * @see {@link #PMTK_LOG_STATUS_LOGMUSTINIT_MASK} </td>
-     *      </tr>
-     *      <tr>
-     *      <th>bit 9 </th> <td>Logging is enabled.</td> <td>
-     * @see {@link #PMTK_LOG_STATUS_DISABLED_MASK}</td>
-     *      </tr>
-     *      <tr>
-     *      <th>bit 8</th> <td>Logging is enabled.</td> <td>
-     * @see {@link #PMTK_LOG_STATUS_LOGENABLED_MASK}</td>
-     *      </tr>
-     *      <tr>
-     *      <th>bit 2</th> <td>Logging is in stop or overwrite mode. </td> 
-     *      <td>
-     * @see {@link #PMTK_LOG_STATUS_LOGSTOP_OVER_MASK}</td>
-     *      </tr>
-     *      *
-     *      <tr>
-     *      <th>bit 2</th> <td>Logging is on/off</td> <td>
-     * @see {@link #PMTK_LOG_STATUS_LOGONOF_MASK}</td>
-     *      </tr>
-     *      </table>
+     * {@link #PMTK_LOG_STATUS_LOGISFULL_MASK}</td>
+     * </tr>
+     * <tr>
+     * <th>bit 10</th>
+     * <td>Logging needs initialisation (format).</td>
+     * <td>
+     * {@link #PMTK_LOG_STATUS_LOGMUSTINIT_MASK}</td>
+     * </tr>
+     * <tr>
+     * <th>bit 9</th>
+     * <td>Logging is enabled.</td>
+     * <td>
+     * {@link #PMTK_LOG_STATUS_LOGDISABLED_MASK}</td>
+     * </tr>
+     * <tr>
+     * <th>bit 8</th>
+     * <td>Logging is enabled.</td>
+     * <td>
+     * {@link #PMTK_LOG_STATUS_LOGENABLED_MASK}</td>
+     * </tr>
+     * <tr>
+     * <th>bit 2</th>
+     * <td>Logging is in stop or overwrite mode.</td>
+     * <td>
+     * {@link #PMTK_LOG_STATUS_LOGSTOP_OVER_MASK}</td>
+     * </tr>
+     **
+     * <tr>
+     * <th>bit 2</th>
+     * <td>Logging is on/off</td>
+     * <td>
+     * {@link #PMTK_LOG_STATUS_LOGONOF_MASK}</td>
+     * </tr>
+     * </table>
      * 
      * 
      */
@@ -570,9 +578,11 @@ public final class BT747Constants { // dev as in device
      * 
      * @param p_logFormat
      *            The log format of the device.
-     * @param holux
-     *            True when this must be calculated for a Holux M241 device.
-     * 
+     * @param gpsType
+     *            The type of the GPS for which this must be calculated.
+     * @see BT747Constants#GPS_TYPE_DEFAULT
+     * @see BT747Constants#GPS_TYPE_HOLUX_GR245
+     * @see BT747Constants#GPS_TYPE_HOLUX_M241
      * @return Size of the header
      */
     public static final int logRecordMinSize(final int p_logFormat,
@@ -625,9 +635,11 @@ public final class BT747Constants { // dev as in device
      * Calculate the log record size
      * 
      * @param logFormat
-     * @param holux
-     *            When true, then the log record size is calculated for a
-     *            Holux M241 device.
+     * @param gpsType
+     *            The type of the GPS for which this must be calculated.
+     * @see BT747Constants#GPS_TYPE_DEFAULT
+     * @see BT747Constants#GPS_TYPE_HOLUX_GR245
+     * @see BT747Constants#GPS_TYPE_HOLUX_M241
      * @param sats
      *            Estimated number of satellites per record.
      * @return The estimated record size.

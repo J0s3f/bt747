@@ -75,9 +75,9 @@ public class ExternalConversionDialog extends javax.swing.JDialog {
     
     
     /**
-     * The format can be {@link Model.GPX_LOGTYPE}, {@link Model.NMEA_LOGTYPE}
-     * , {@link Model.KML_LOGTYPE}, {@link Model.KMZ_LOGTYPE, {
-     * @link Model.CSV_LOGTYPE}
+     * The format can be {@link Model#GPX_LOGTYPE}, {@link Model#NMEA_LOGTYPE}
+     * , {@link Model#KML_LOGTYPE}, {@link Model#KMZ_LOGTYPE},
+     * {@link Model#CSV_LOGTYPE}.
      */
     public final void setIntermediateFormatType(final int fmt) {
         for(int i=0; i<intermediateFormats.length;i++) {

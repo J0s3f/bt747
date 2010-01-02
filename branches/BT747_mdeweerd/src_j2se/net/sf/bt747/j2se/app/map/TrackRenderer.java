@@ -9,6 +9,8 @@ import org.jdesktop.swingx.JXMapViewer;
 
 /**
  * An interface that draws tracks.
+ * 
+ * @author Mario De Weerd
  */
 public interface TrackRenderer {
     /**
@@ -16,10 +18,10 @@ public interface TrackRenderer {
      * 
      * @param g
      * @param map
-     * @param waypoint
-     * @return
+     * @param track
+     *            The track to render.
      */
-    public boolean paintTrack(Graphics2D g, JXMapViewer map,
+    public void paintTrack(Graphics2D g, JXMapViewer map,
             Collection<GPSRecord> track);
 
 }

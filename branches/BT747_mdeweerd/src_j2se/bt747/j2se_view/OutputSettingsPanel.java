@@ -100,7 +100,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         tfTrackSeparationDistance.setText(Integer.toString(m
                 .getIntOpt(AppSettings.SPLIT_DISTANCE)));
         int index = 0;
-        switch (m.getOutputFileSplitType()) {
+        switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
         case 0:
             index = 2;
             break;

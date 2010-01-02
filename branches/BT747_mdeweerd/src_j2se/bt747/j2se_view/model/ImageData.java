@@ -32,9 +32,6 @@ import bt747.sys.interfaces.BT747Time;
  * 
  */
 public class ImageData extends FileWaypoint {
-    /**
-     * @param r
-     */
     public ImageData() {
         super();
     }
