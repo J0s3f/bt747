@@ -138,7 +138,7 @@ public final class ConvertToScreen extends
             rbFiles.append("One file");
             rbFiles.append("One file/day");
             rbFiles.append("One file/track");
-            rbFiles.setSelectedIndex(m().getOutputFileSplitType());
+            rbFiles.setSelectedIndex(m().getIntOpt(AppSettings.OUTPUTFILESPLITTYPE));
             append(rbFiles);
 
             rbHeightCorrection = new RadioButton();
@@ -146,7 +146,8 @@ public final class ConvertToScreen extends
             rbHeightCorrection.append("Keep height");
             rbHeightCorrection.append("WGS84 to MSL");
             rbHeightCorrection.append("MSL to WGS84");
-            switch (m().getHeightConversionMode()) {
+            AppModel r = m();
+            switch (r.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE)) {
             case AppSettings.HEIGHT_AUTOMATIC:
                 rbFiles.setSelectedIndex(0);
                 break;
@@ -192,19 +193,19 @@ public final class ConvertToScreen extends
     protected void acceptNotify() {
         ConvertToProgressScreen progressScreen;
         c.getAppModel().setSelectedOutputFormat(getSelectedLogType());
-        c.setOutputFileSplitType(rbFiles.getSelectedIndex());
+        c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, rbFiles.getSelectedIndex());
         switch (rbHeightCorrection.getSelectedIndex()) {
         case 0:
-            c.setHeightConversionMode(AppSettings.HEIGHT_AUTOMATIC);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,AppSettings.HEIGHT_AUTOMATIC);
             break;
         case 1:
-            c.setHeightConversionMode(AppSettings.HEIGHT_NOCHANGE);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,AppSettings.HEIGHT_NOCHANGE);
             break;
         case 2:
-            c.setHeightConversionMode(AppSettings.HEIGHT_WGS84_TO_MSL);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,AppSettings.HEIGHT_WGS84_TO_MSL);
             break;
         case 3:
-            c.setHeightConversionMode(AppSettings.HEIGHT_MSL_TO_WGS84);
+            c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,AppSettings.HEIGHT_MSL_TO_WGS84);
             break;
         }
         c.setIntOpt(AppSettings.TRKSEP, Integer.parseInt(tbTrackSeparation

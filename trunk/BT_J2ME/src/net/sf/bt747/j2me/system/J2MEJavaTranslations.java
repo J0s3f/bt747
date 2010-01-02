@@ -20,6 +20,8 @@ import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747HttpSender;
+import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -55,33 +57,23 @@ public final class J2MEJavaTranslations implements JavaLibImplementation {
 		return new J2METime();
 	}
 
-	public final BT747File getFileInstance(final String path) {
-		return new J2MEFile(path);
-	}
+    public final BT747File getFileInstance(final BT747Path path) {
+        return new J2MEFile(path.getPath());
+    }
 
-	public final BT747File getFileInstance(final String path, final int mode,
-			final int card) {
-		return new J2MEFile(path, mode, card);
-	}
+    public final BT747File getFileInstance(final BT747Path path,
+            final int mode) {
+        return new J2MEFile(path.getPath(), mode);
+    }
 
-	public final BT747File getFileInstance(final String path, final int mode) {
-		return new J2MEFile(path, mode);
-	}
+    public final BT747RAFile getRAFileInstance(final BT747Path path) {
+        return new J2MEFile(path.getPath());
+    }
 
-	// Currently buffered files are the same as normal files.
-
-	public final BT747File getBufFileInstance(final String path) {
-		return new J2MEFile(path);
-	}
-
-	public final BT747File getBufFileInstance(final String path,
-			final int mode, final int card) {
-		return new J2MEFile(path, mode, card);
-	}
-
-	public BT747File getBufFileInstance(final String path, final int mode) {
-		return new J2MEFile(path, mode);
-	}
+    public final BT747RAFile getRAFileInstance(final BT747Path path,
+            final int mode) {
+        return new J2MEFile(path.getPath(), mode);
+    }
 
 	public final boolean isAvailable() {
 		return true;
