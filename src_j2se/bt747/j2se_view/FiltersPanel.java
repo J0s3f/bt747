@@ -40,23 +40,16 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbAdvancedActive.setSelected(m.getBooleanOpt(AppSettings.ADVFILTACTIVE));
         updateAdvancedFilter();
 
-        txtPDOPMax.setText(Utils.format( "%.2f", m
-                .getFilterMaxPDOP()));  // NOI18N
-        txtHDOPMax.setText(Utils.format("%.2f", m
-                .getFilterMaxHDOP())); // NOI18N
-        txtVDOPMax.setText(Utils.format("%.2f", m
-                .getFilterMaxVDOP())); // NOI18N
-        txtNSATMin.setText(Integer.toString(m.getFilterMinNSAT()));
-        txtRecCntMin.setText(Integer.toString(m.getFilterMinRecCount()));
-        txtRecCntMax.setText(Integer.toString(m.getFilterMaxRecCount()));
-        txtDistanceMin.setText(Utils.format("%.2f", m
-                .getFilterMinDist())); // NOI18N
-        txtDistanceMax.setText(Utils.format("%.2f", m
-                .getFilterMaxDist())); // NOI18N
-        txtSpeedMin.setText(Utils.format("%.2f", m
-                .getFilterMinSpeed())); // NOI18N
-        txtSpeedMax.setText(Utils.format("%.2f", m
-                .getFilterMaxSpeed())); // NOI18N
+        txtPDOPMax.setText(Utils.format( "%.2f", m.getFloatOpt(AppSettings.MAX_PDOP)));  // NOI18N
+        txtHDOPMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_HDOP))); // NOI18N
+        txtVDOPMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_VDOP))); // NOI18N
+        txtNSATMin.setText(Integer.toString(m.getIntOpt(AppSettings.MIN_NSAT)));
+        txtRecCntMin.setText(Integer.toString(m.getIntOpt(AppSettings.MIN_RECCOUNT)));
+        txtRecCntMax.setText(Integer.toString(m.getIntOpt(AppSettings.MAX_RECCOUNT)));
+        txtDistanceMin.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MIN_DISTANCE))); // NOI18N
+        txtDistanceMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_DISTANCE))); // NOI18N
+        txtSpeedMin.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MIN_SPEED))); // NOI18N
+        txtSpeedMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_SPEED))); // NOI18N
 
     }
 
@@ -1006,43 +999,43 @@ private void cbTrkUser1TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FI
 }//GEN-LAST:event_cbTrkUser1TrkRCRAction
 
     private void txtPDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPDOPMaxFocusLost
-        c.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
+        c.setFloatOpt(AppSettings.MAX_PDOP, Float.parseFloat(txtPDOPMax.getText()));
     }// GEN-LAST:event_txtPDOPMaxFocusLost
 
     private void txtHDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtHDOPMaxFocusLost
-        c.setFilterMaxHDOP(Float.parseFloat(txtHDOPMax.getText()));
+        c.setFloatOpt(AppSettings.MAX_HDOP,Float.parseFloat(txtHDOPMax.getText()));
     }// GEN-LAST:event_txtHDOPMaxFocusLost
 
     private void txtVDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtVDOPMaxFocusLost
-        c.setFilterMaxVDOP(Float.parseFloat(txtVDOPMax.getText()));
+        c.setFloatOpt(AppSettings.MAX_VDOP, Float.parseFloat(txtVDOPMax.getText()));
     }// GEN-LAST:event_txtVDOPMaxFocusLost
 
     private void txtRecCntMinFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtRecCntMinFocusLost
-        c.setFilterMinRecCount(Integer.parseInt(txtRecCntMin.getText()));
+        c.setIntOpt(AppSettings.MIN_RECCOUNT, Integer.parseInt(txtRecCntMin.getText()));
     }// GEN-LAST:event_txtRecCntMinFocusLost
 
     private void txtDistanceMinFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDistanceMinFocusLost
-        c.setFilterMinDist(Float.parseFloat(txtDistanceMin.getText()));
+        c.setFloatOpt(AppSettings.MIN_DISTANCE, Float.parseFloat(txtDistanceMin.getText()));
     }// GEN-LAST:event_txtDistanceMinFocusLost
 
     private void txtSpeedMinFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtSpeedMinFocusLost
-        c.setFilterMinSpeed(Float.parseFloat(txtSpeedMin.getText()));
+        c.setFloatOpt(AppSettings.MIN_SPEED, Float.parseFloat(txtSpeedMin.getText()));
     }// GEN-LAST:event_txtSpeedMinFocusLost
 
     private void txtNSATMinFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtNSATMinFocusLost
-        c.setFilterMinNSAT(Integer.parseInt(txtNSATMin.getText()));
+        c.setIntOpt(AppSettings.MIN_NSAT, Integer.parseInt(txtNSATMin.getText()));
     }// GEN-LAST:event_txtNSATMinFocusLost
 
     private void txtSpeedMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtSpeedMaxFocusLost
-        c.setFilterMaxSpeed(Float.parseFloat(txtSpeedMax.getText()));
+        c.setFloatOpt(AppSettings.MAX_SPEED, Float.parseFloat(txtSpeedMax.getText()));
     }// GEN-LAST:event_txtSpeedMaxFocusLost
 
     private void txtDistanceMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDistanceMaxFocusLost
-        c.setFilterMaxDist(Float.parseFloat(txtDistanceMax.getText()));
+        c.setFloatOpt(AppSettings.MAX_DISTANCE, Float.parseFloat(txtDistanceMax.getText()));
     }// GEN-LAST:event_txtDistanceMaxFocusLost
 
     private void txtRecCntMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtRecCntMaxInputMethodTextChanged
-        c.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
+        c.setIntOpt(AppSettings.MAX_RECCOUNT, Integer.parseInt(txtRecCntMax.getText()));
     }// GEN-LAST:event_txtRecCntMaxInputMethodTextChanged
 
     

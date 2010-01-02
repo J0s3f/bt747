@@ -207,12 +207,12 @@ public final class GPSLogGet extends Container implements ModelListener {
             mode = Model.HEIGHT_NOCHANGE;
             break;
         }
-        c.setHeightConversionMode(mode);
+        c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,mode);
     }
 
     private final void setHeightConversionModeFromSettings() {
         int idx;
-        switch (m.getHeightConversionMode()) {
+        switch (m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE)) {
         default:
         case Model.HEIGHT_AUTOMATIC:
             idx = 0;
@@ -292,7 +292,7 @@ public final class GPSLogGet extends Container implements ModelListener {
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
             } else if (event.target == cbFileSplitType) {
-                c.setOutputFileSplitType(cbFileSplitType.getSelectedIndex());
+                c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, cbFileSplitType.getSelectedIndex());
             } else if (event.target == cbHeightConversion) {
                 updateHeightConversionModeFromControl();
             } else if (event.target == btEndDate) {

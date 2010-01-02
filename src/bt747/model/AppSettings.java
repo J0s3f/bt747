@@ -70,7 +70,6 @@ public class AppSettings implements BT747Thread {
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 4000; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
 
-    
     // Parameter types
     //
     private static final int INT = 1;
@@ -236,8 +235,8 @@ public class AppSettings implements BT747Thread {
     public static final int MAPTYPE = 27;
 
     /**
-     * Parameter index to get the Google Map key.
-     * This is not a stored setting.
+     * Parameter index to get the Google Map key. This is not a stored
+     * setting.
      * 
      * Looks for the google map site key in a file called "gmapkey.txt" Will
      * look in the output dir first, then in the source dir, then in the
@@ -353,8 +352,8 @@ public class AppSettings implements BT747Thread {
     public final static int POS_SRV_PERIOD = 67;
     /**
      * The GPS time offset (UTC vs. local time) in quarters (15 minutes).
-     * Replaces {@link #GPSTIMEOFFSETHOURS_OBSOLETE} (used in adjusting the time in the
-     * output formats).
+     * Replaces {@link #GPSTIMEOFFSETHOURS_OBSOLETE} (used in adjusting the
+     * time in the output formats).
      */
     public static final int GPSTIMEOFFSETQUARTERS = 68;
 
@@ -382,10 +381,15 @@ public class AppSettings implements BT747Thread {
      */
     public final static int CARD = 72;
 
-    
-
+    /** All data in one file ({@link #OUTPUTFILESPLITTYPE}). */
     public static final int SPLIT_ONE_FILE = 0;
+    /** One file per day ({@link #OUTPUTFILESPLITTYPE}). */
     public static final int SPLIT_ONE_FILE_PER_DAY = 1;
+    /**
+     * One file per track (a track separation occurs when the time between two
+     * log points is bigger than a given time or other track split condition)
+     * ({@link #OUTPUTFILESPLITTYPE}).
+     */
     public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
 
     /**
@@ -402,6 +406,31 @@ public class AppSettings implements BT747Thread {
     private final static int PARAM_IDX = 1;
     private final static int START_IDX = 2;
     private final static int SIZE_IDX = 3;
+
+    public final static int MIN_SPEED = 74;
+    public final static int MAX_SPEED = 75;
+    public final static int MIN_NSAT = 76;
+    public final static int MIN_RECCOUNT = 77;
+    public final static int MAX_RECCOUNT = 78;
+    public final static int MIN_DISTANCE = 79;
+    public final static int MAX_VDOP = 80;
+    public final static int MAX_PDOP = 81;
+    public final static int MAX_HDOP = 82;
+    public final static int MAX_DISTANCE = 83;
+    /**
+     * Parameter index for Height Conversion Mode.
+     * 
+     * @see #HEIGHT_AUTOMATIC
+     * @see #HEIGHT_MSL_TO_WGS84
+     * @see #HEIGHT_WGS84_TO_MSL
+     * @see #HEIGHT_NOCHANGE
+     */
+    public final static int HEIGHT_CONVERSION_MODE = 84;
+
+    public final static int HEIGHT_NOCHANGE = 0;
+    public final static int HEIGHT_WGS84_TO_MSL = 1;
+    public final static int HEIGHT_AUTOMATIC = 2;
+    public final static int HEIGHT_MSL_TO_WGS84 = 3;
 
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
@@ -453,7 +482,7 @@ public class AppSettings implements BT747Thread {
             setIntOpt(AppSettings.PORTNBR, -1);
             setIntOpt(AppSettings.BAUDRATE, 115200);
             setLocalIntOpt(0, (-1), AppSettings.C_CARD_IDX,
-            AppSettings.C_CARD_SIZE);
+                    AppSettings.C_CARD_SIZE);
             setStringOpt(AppSettings.OUTPUTDIRPATH,
                     AppSettings.defaultBaseDirPath);
             setStringOpt(AppSettings.LOGFILERELPATH, "BT747log.bin");
@@ -470,7 +499,7 @@ public class AppSettings implements BT747Thread {
             setIntOpt(OUTPUTFILESPLITTYPE, 0);
             /* fall through */
         case 3:
-            setHeightConversionMode(AppSettings.HEIGHT_AUTOMATIC);
+            setIntOpt(HEIGHT_CONVERSION_MODE, AppSettings.HEIGHT_AUTOMATIC);
             /* fall through */
         case 4:
             setIntOpt(AppSettings.LOGAHEAD,
@@ -487,16 +516,16 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 8:
             setBooleanOpt(AppSettings.ADVFILTACTIVE, false);
-            setFilterMinRecCount(0);
-            setFilterMaxRecCount(0);
-            setFilterMinSpeed(0);
-            setFilterMaxSpeed(0);
-            setFilterMinDist(0);
-            setFilterMaxDist(0);
-            setFilterMaxPDOP(0);
-            setFilterMaxHDOP(0);
-            setFilterMaxVDOP(0);
-            setFilterMinNSAT(0);
+            setIntOpt(MIN_RECCOUNT, 0);
+            setIntOpt(MAX_RECCOUNT, 0);
+            setFloatOpt(MIN_SPEED, 0);
+            setFloatOpt(MAX_SPEED, 0);
+            setFloatOpt(MIN_DISTANCE, 0);
+            setFloatOpt(MAX_DISTANCE, 0);
+            setFloatOpt(MAX_PDOP, 0);
+            setFloatOpt(MAX_HDOP, 0);
+            setFloatOpt(MAX_VDOP, 0);
+            setIntOpt(MIN_NSAT, 0);
             /* fall through */
         case 9:
             setBooleanOpt(AppSettings.GPXTRKSEGBIG, true);
@@ -648,7 +677,7 @@ public class AppSettings implements BT747Thread {
             setStringOpt(EXTCOMMAND, "echo Sample command for %f");
             /* fall through */
         case 48:
-            setIntOpt(EXTTYPE, Model.GPX_LOGTYPE);  // Changed field size
+            setIntOpt(EXTTYPE, Model.GPX_LOGTYPE); // Changed field size
             setIntOpt(FONTSCALE, 100);
             setStringOpt(AppSettings.VERSION, "0.49");
             /* fall through */
@@ -841,7 +870,7 @@ public class AppSettings implements BT747Thread {
         }
         return card;
     }
-    
+
     public final int getWayPtRCR() {
         return getLocalIntOpt(AppSettings.C_WAYPT_RCR_IDX,
                 AppSettings.C_WAYPT_RCR_SIZE);
@@ -902,34 +931,6 @@ public class AppSettings implements BT747Thread {
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
-    public final static int HEIGHT_NOCHANGE = 0;
-    public final static int HEIGHT_WGS84_TO_MSL = 1;
-    public final static int HEIGHT_AUTOMATIC = 2;
-    public final static int HEIGHT_MSL_TO_WGS84 = 3;
-
-    /**
-     * 
-     * @return height conversion mode.
-     * @see #HEIGHT_AUTOMATIC
-     * @see #HEIGHT_MSL_TO_WGS84
-     * @see #HEIGHT_WGS84_TO_MSL
-     * @see #HEIGHT_NOCHANGE
-     */
-    public final int getHeightConversionMode() {
-        return getLocalIntOpt(AppSettings.C_WGS84_TO_MSL_IDX,
-                AppSettings.C_WGS84_TO_MSL_SIZE);
-    }
-
-    /**
-     * @param value
-     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the
-     *            WGS84 height to MSL height.
-     */
-    public final void setHeightConversionMode(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_WGS84_TO_MSL_IDX,
-                AppSettings.C_WGS84_TO_MSL_SIZE);
-    }
-
     /**
      * Gets the NMEA string types to write to the NMEA output file format.
      * 
@@ -981,176 +982,6 @@ public class AppSettings implements BT747Thread {
     }
 
     /**
-     * @return Returns the maxDist.
-     */
-    public final float getFilterMaxDist() {
-        return getFloatOpt(AppSettings.C_MAX_DISTANCE_IDX,
-                AppSettings.C_MAX_DISTANCE_SIZE);
-    }
-
-    /**
-     * @param maxDist
-     *            The maxDist to setFilter.
-     */
-    protected final void setFilterMaxDist(final float maxDist) {
-        setFloatOpt(0, maxDist, AppSettings.C_MAX_DISTANCE_IDX,
-                AppSettings.C_MAX_DISTANCE_SIZE);
-    }
-
-    /**
-     * @return Returns the maxHDOP.
-     */
-    public final float getFilterMaxHDOP() {
-        return getFloatOpt(AppSettings.C_maxHDOP_IDX,
-                AppSettings.C_maxHDOP_SIZE);
-    }
-
-    /**
-     * @param maxHDOP
-     *            The maxHDOP to setFilter.
-     */
-    protected final void setFilterMaxHDOP(final float maxHDOP) {
-        setFloatOpt(0, maxHDOP, AppSettings.C_maxHDOP_IDX,
-                AppSettings.C_maxHDOP_SIZE);
-    }
-
-    /**
-     * @return Returns the maxPDOP.
-     */
-    public final float getFilterMaxPDOP() {
-        return getFloatOpt(AppSettings.C_maxPDOP_IDX,
-                AppSettings.C_maxPDOP_SIZE);
-    }
-
-    /**
-     * @param maxPDOP
-     *            The maxPDOP to setFilter.
-     */
-    protected final void setFilterMaxPDOP(final float maxPDOP) {
-        setFloatOpt(0, maxPDOP, AppSettings.C_maxPDOP_IDX,
-                AppSettings.C_maxPDOP_SIZE);
-    }
-
-    /**
-     * @return Returns the maxRecCnt.
-     */
-    public final int getFilterMaxRecCount() {
-        return getLocalIntOpt(AppSettings.C_maxRecCount_IDX,
-                AppSettings.C_maxRecCount_SIZE);
-    }
-
-    /**
-     * @param maxRecCnt
-     *            The maxRecCnt to setFilter.
-     */
-    protected final void setFilterMaxRecCount(final int maxRecCnt) {
-        setLocalIntOpt(0, maxRecCnt, AppSettings.C_maxRecCount_IDX,
-                AppSettings.C_maxRecCount_SIZE);
-    }
-
-    /**
-     * @return Returns the maxSpeed.
-     */
-    public final float getFilterMaxSpeed() {
-        return getFloatOpt(AppSettings.C_maxSpeed_IDX,
-                AppSettings.C_maxSpeed_SIZE);
-    }
-
-    /**
-     * @param maxSpeed
-     *            The maxSpeed to setFilter.
-     */
-    protected final void setFilterMaxSpeed(final float maxSpeed) {
-        setFloatOpt(0, maxSpeed, AppSettings.C_maxSpeed_IDX,
-                AppSettings.C_maxSpeed_SIZE);
-    }
-
-    /**
-     * @return Returns the maxVDOP.
-     */
-    public final float getFilterMaxVDOP() {
-        return getFloatOpt(AppSettings.C_maxVDOP_IDX,
-                AppSettings.C_maxVDOP_SIZE);
-    }
-
-    /**
-     * @param maxVDOP
-     *            The maxVDOP to setFilter.
-     */
-    protected final void setFilterMaxVDOP(final float maxVDOP) {
-        setFloatOpt(0, maxVDOP, AppSettings.C_maxVDOP_IDX,
-                AppSettings.C_maxVDOP_SIZE);
-    }
-
-    /**
-     * @return Returns the minDist.
-     */
-    public final float getFilterMinDist() {
-        return getFloatOpt(AppSettings.C_minDist_IDX,
-                AppSettings.C_minDist_SIZE);
-    }
-
-    /**
-     * @param minDist
-     *            The minDist to setFilter.
-     */
-    protected final void setFilterMinDist(final float minDist) {
-        setFloatOpt(0, minDist, AppSettings.C_minDist_IDX,
-                AppSettings.C_minDist_SIZE);
-    }
-
-    /**
-     * @return Returns the minNSAT.
-     */
-    public final int getFilterMinNSAT() {
-        return getLocalIntOpt(AppSettings.C_minNSAT_IDX,
-                AppSettings.C_minNSAT_SIZE);
-    }
-
-    /**
-     * @param minNSAT
-     *            The minNSAT to setFilter.
-     */
-    protected final void setFilterMinNSAT(final int minNSAT) {
-        setLocalIntOpt(0, minNSAT, AppSettings.C_minNSAT_IDX,
-                AppSettings.C_minNSAT_SIZE);
-    }
-
-    /**
-     * @return Returns the minRecCnt.
-     */
-    public final int getFilterMinRecCount() {
-        return getLocalIntOpt(AppSettings.C_minRecCount_IDX,
-                AppSettings.C_minRecCount_SIZE);
-    }
-
-    /**
-     * @param minRecCnt
-     *            The minRecCnt to setFilter.
-     */
-    protected final void setFilterMinRecCount(final int minRecCnt) {
-        setLocalIntOpt(0, minRecCnt, AppSettings.C_minRecCount_IDX,
-                AppSettings.C_minRecCount_SIZE);
-    }
-
-    /**
-     * @return Returns the minSpeed.
-     */
-    public final float getFilterMinSpeed() {
-        return getFloatOpt(AppSettings.C_minSpeed_IDX,
-                AppSettings.C_minSpeed_SIZE);
-    }
-
-    /**
-     * @param minSpeed
-     *            The minSpeed to setFilter.
-     */
-    protected final void setFilterMinSpeed(final float minSpeed) {
-        setFloatOpt(0, minSpeed, AppSettings.C_minSpeed_IDX,
-                AppSettings.C_minSpeed_SIZE);
-    }
-
-    /**
      * @return Returns the solveMacLagProblem.
      */
     public final static boolean isSolveMacLagProblem() {
@@ -1191,10 +1022,11 @@ public class AppSettings implements BT747Thread {
                 // path = CONFIG_FILE_NAME;
                 // break;
             case 1:
-                path = new BT747Path(getStringOpt(AppSettings.OUTPUTDIRPATH) + "/");
+                BT747Path tmp = getPath(AppSettings.OUTPUTDIRPATH);
+                path = tmp.proto(tmp.getPath() + "/");
                 break;
             case 2:
-                path = new BT747Path(getStringOpt(AppSettings.LOGFILEPATH));
+                path = getPath(AppSettings.LOGFILEPATH);
                 break;
             case 3:
                 path = getPath(REPORTFILEBASEPATH);
@@ -1204,12 +1036,14 @@ public class AppSettings implements BT747Thread {
             }
             idx = path.getPath().lastIndexOf('/');
             if (idx != -1) {
-                path = path.proto(path.getPath().substring(0, path.getPath().lastIndexOf('/')));
+                path = path.proto(path.getPath().substring(0,
+                        path.getPath().lastIndexOf('/')));
             }
             try {
                 final BT747Path gmapPath = path.proto(path.getPath() + "/"
                         + AppSettings.C_GMAP_KEY_FILENAME);
-                //TODO: take into account BT747Path characteristics(card for instance.)
+                // TODO: take into account BT747Path characteristics(card for
+                // instance.)
                 if (new File(new BT747Path(gmapPath)).exists()) {
                     final File gmap = new File(gmapPath, File.READ_ONLY);
 
@@ -1336,15 +1170,40 @@ public class AppSettings implements BT747Thread {
         return Conv.hex2SignedInt(str);
     }
 
-    private final void setFloatOpt(final int eventType, final float src,
-            final int idx, final int size) {
+    private final void setLocalFloatOpt(final int eventType,
+            final float value, final int idx, final int size) {
         setOpt(eventType, JavaLibBridge.unsigned2hex(JavaLibBridge
-                .toIntBitwise(src), size), idx, size);
+                .toIntBitwise(value), size), idx, size);
     }
 
-    private final float getFloatOpt(final int idx, final int size) {
+    private final float getLocalFloatOpt(final int idx, final int size) {
         return JavaLibBridge.toFloatBitwise(Conv.hex2Int(getStringOpt(idx,
                 size)));
+    }
+
+    public final float getFloatOpt(final int param) {
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.FLOAT)) {
+            return getLocalFloatOpt(
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            Generic.debug("Invalid parameter index " + param);
+            return 0.0f;
+        }
+    }
+
+    protected final void setFloatOpt(final int param, final float value) {
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.BOOL)) {
+            setLocalFloatOpt(param, value,
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            Generic.debug("Invalid parameter index " + param);
+        }
     }
 
     private final String getStringOpt(final int idx, final int size) {
@@ -1404,8 +1263,7 @@ public class AppSettings implements BT747Thread {
             this.e = e;
         }
     }
-    
-    
+
     /**
      * Get a path. Introduced so that an override is possible on some systems
      * to take additional parameters into account like the card number.
@@ -1417,7 +1275,7 @@ public class AppSettings implements BT747Thread {
     public BT747Path getPath(final int pathType) {
         return new BT747Path(getStringOpt(pathType));
     }
-    
+
     /**
      * Indicates if there are changes to the listeners that are waiting in the
      * action list. Protected with listenerActionsSema.
@@ -1597,14 +1455,14 @@ public class AppSettings implements BT747Thread {
     private static final int C_TRKPT_VALID_IDX = AppSettings.C_TRKPT_RCR_IDX
             + AppSettings.C_TRKPT_RCR_SIZE;
     private static final int C_TRKPT_VALID_SIZE = 4;
-    private static final int C_ONEFILEPERDAY_IDX = AppSettings.C_TRKPT_VALID_IDX
+    private static final int C_OUTPUTFILESPLITTYPE_IDX = AppSettings.C_TRKPT_VALID_IDX
             + AppSettings.C_TRKPT_VALID_SIZE;
-    private static final int C_ONEFILEPERDAY_SIZE = 1;
-    private static final int C_WGS84_TO_MSL_IDX = AppSettings.C_ONEFILEPERDAY_IDX
-            + AppSettings.C_ONEFILEPERDAY_SIZE;
-    private static final int C_WGS84_TO_MSL_SIZE = 4;
-    private static final int C_LOGAHEAD_IDX = AppSettings.C_WGS84_TO_MSL_IDX
-            + AppSettings.C_WGS84_TO_MSL_SIZE;
+    private static final int C_OUTPUTFILESPLITTYPE_SIZE = 1;
+    private static final int C_HEIGHT_CONVERSION_MODE_IDX = AppSettings.C_OUTPUTFILESPLITTYPE_IDX
+            + AppSettings.C_OUTPUTFILESPLITTYPE_SIZE;
+    private static final int C_HEIGHT_CONVERSION_MODE_SIZE = 4;
+    private static final int C_LOGAHEAD_IDX = AppSettings.C_HEIGHT_CONVERSION_MODE_IDX
+            + AppSettings.C_HEIGHT_CONVERSION_MODE_SIZE;
     private static final int C_LOGAHEAD_SIZE = 1;
     private static final int C_NMEASET_IDX = AppSettings.C_LOGAHEAD_IDX
             + AppSettings.C_LOGAHEAD_SIZE;
@@ -2045,9 +1903,34 @@ public class AppSettings implements BT747Thread {
             { AppSettings.INT, AppSettings.CARD, AppSettings.C_CARD_IDX,
                     AppSettings.C_CARD_SIZE },
             { AppSettings.INT, AppSettings.OUTPUTFILESPLITTYPE,
-                    AppSettings.C_ONEFILEPERDAY_IDX,
-                    AppSettings.C_ONEFILEPERDAY_SIZE },
+                    AppSettings.C_OUTPUTFILESPLITTYPE_IDX,
+                    AppSettings.C_OUTPUTFILESPLITTYPE_SIZE },
+            { AppSettings.FLOAT, AppSettings.MIN_SPEED,
+                    AppSettings.C_minSpeed_IDX, AppSettings.C_minSpeed_SIZE },
+            { AppSettings.FLOAT, AppSettings.MAX_SPEED,
+                    AppSettings.C_maxSpeed_IDX, AppSettings.C_maxSpeed_SIZE },
+            { AppSettings.INT, AppSettings.MIN_NSAT,
+                    AppSettings.C_minNSAT_IDX, AppSettings.C_minNSAT_SIZE },
+            { AppSettings.INT, AppSettings.MIN_RECCOUNT,
+                    AppSettings.C_minRecCount_IDX,
+                    AppSettings.C_minRecCount_SIZE },
+            { AppSettings.INT, AppSettings.MAX_RECCOUNT,
+                    AppSettings.C_maxRecCount_IDX,
+                    AppSettings.C_maxRecCount_SIZE },
+            { AppSettings.FLOAT, AppSettings.MIN_DISTANCE,
+                    AppSettings.C_minDist_IDX, AppSettings.C_minDist_SIZE },
+            { AppSettings.FLOAT, AppSettings.MAX_VDOP,
+                    AppSettings.C_maxVDOP_IDX, AppSettings.C_maxVDOP_SIZE },
+            { AppSettings.FLOAT, AppSettings.MAX_PDOP,
+                    AppSettings.C_maxPDOP_IDX, AppSettings.C_maxPDOP_SIZE },
+            { AppSettings.FLOAT, AppSettings.MAX_HDOP,
+                    AppSettings.C_maxHDOP_IDX, AppSettings.C_maxHDOP_SIZE },
+            { AppSettings.FLOAT, AppSettings.MAX_DISTANCE,
+                    AppSettings.C_MAX_DISTANCE_IDX,
+                    AppSettings.C_MAX_DISTANCE_SIZE },
+            { AppSettings.INT, AppSettings.HEIGHT_CONVERSION_MODE,
+                    AppSettings.C_HEIGHT_CONVERSION_MODE_IDX,
+                    AppSettings.C_HEIGHT_CONVERSION_MODE_SIZE },
     // End of list
     };
-
 }
