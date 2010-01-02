@@ -26,9 +26,6 @@ import bt747.sys.interfaces.BT747Path;
  * 
  */
 public class FileWaypoint extends BT747Waypoint {
-    /**
-     * @param r
-     */
     public FileWaypoint() {
         super(GPSRecord.getLogFormatRecord(0));
         // TODO Auto-generated constructor stub

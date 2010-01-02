@@ -163,7 +163,7 @@ public class J2SEController extends Controller {
 
     /**
      * @param fpf
-     * @param w
+     * @param img
      * @throws IOException
      */
     public final static void tagImage(final TaggedFilePathFactory fpf,

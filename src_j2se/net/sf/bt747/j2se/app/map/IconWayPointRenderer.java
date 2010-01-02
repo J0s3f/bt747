@@ -96,7 +96,7 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
      * @param g
      * @param map
      * @param waypoint
-     * @return
+     * @return Unknown meaning.
      */
     // @Override
     public boolean paintWaypoint(final Graphics2D g, final JXMapViewer map,
@@ -132,7 +132,7 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
      * @param g
      * @param map
      * @param waypoint
-     * @return
+     * @return true if success.
      */
     public boolean paintInfoWindow(final Graphics2D g, final JXMapViewer map,
             final Waypoint waypoint) {
@@ -141,8 +141,8 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
 
     /**
      * @param pt
-     *                relative to position of waypoint.
-     * @return
+     *            relative to position of waypoint.
+     * @return true if pt is part of Waypoint representation.
      */
     public boolean contains(final Point pt) {
         return gp.contains(pt);

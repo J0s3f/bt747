@@ -32,10 +32,12 @@ public class BT747Path {
 
     /**
      * Create new path using this instance as a prototype. Must be overriden
-     * in derived classes.
+     * in derived classes. This helps to keep settings like the card number
+     * that is a separate value on SuperWaba systems.
      * 
      * @param path
-     * @return
+     * @return Instance which is a copy of the current one, except for the
+     *         path.
      */
     public BT747Path proto(final String path) {
         return new BT747Path(path);

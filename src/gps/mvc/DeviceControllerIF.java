@@ -3,6 +3,8 @@
  */
 package gps.mvc;
 
+import bt747.sys.interfaces.BT747Path;
+
 /**
  * @author Mario
  * 
@@ -35,13 +37,5 @@ public interface DeviceControllerIF {
      */
     public boolean cmd(final int cmd, final CmdParam param);
     
-    /**
-     * Check if the data is available and if it is not, requests it.
-     * 
-     * @param dataType
-     * @return
-     */
-    //public void setDataNeeded(final int dataType);
-    
-    public void getLog(final String fileName, final int card);
+    public void getLog(final BT747Path log);
 }

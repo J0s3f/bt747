@@ -25,7 +25,7 @@ public class TaggedFilePathFactory {
      *            Can be used in the future to use the object info (like a
      *            factory) to determine a better output path. For example, in
      *            the case of an image, use the description.
-     * @return
+     * @return Path to use for the tagged object.
      */
     public String getTaggedFilePath(final String currentPath,
             final Object refObject) {
@@ -39,7 +39,7 @@ public class TaggedFilePathFactory {
      *            Can be used in the future to use the object info (like a
      *            factory) to determine a better output path. For example, in
      *            the case of an image, use the description.
-     * @return
+     * @return The path poiting to the original location of the refObject.
      */
     public String getOrgFilePath(final String currentPath,
             final Object refObject) {
@@ -48,14 +48,14 @@ public class TaggedFilePathFactory {
 
     /**
      * @param template
-     *            The templacte used to determine the filename.
+     *            The template used to determine the filename.
      * @param currentPath
      *            Current path for the object.
      * @param refObject
      *            Can be used in the future to use the object info (like a
      *            factory) to determine a better output path. For example, in
      *            the case of an image, use the description.
-     * @return
+     * @return A path built using the template and the object information.
      */
     public static final String getFilePath(final String template,
             final String currentPath, final Object refObject) {

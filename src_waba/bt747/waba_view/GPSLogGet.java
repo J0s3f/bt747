@@ -163,7 +163,7 @@ public final class GPSLogGet extends Container implements ModelListener {
 
         // add(new Label("End"),BEFORE,SAME);
         add(cbFileSplitType = new ComboBox(fileStr), LEFT, AFTER + 2);
-        cbFileSplitType.select(m.getOutputFileSplitType());
+        cbFileSplitType.select(m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE));
         add(cbHeightConversion = new ComboBox(heightCorrectStr), RIGHT, SAME);//$NON-NLS-1$
         setHeightConversionModeFromSettings();
         add(btToCSV = new Button(Txt.getString(Txt.TO_CSV)), LEFT, AFTER + 5); //$NON-NLS-1$

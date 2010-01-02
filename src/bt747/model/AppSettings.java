@@ -206,11 +206,13 @@ public class AppSettings implements BT747Thread {
      * Set the gpsType used for log conversion and some other operations
      * (needed in cases where the type can not be automatically detected).
      * 
-     * @param gpsType
-     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br>
-     *            - {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br>
-     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br>
-     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     * The {@link #GPSTYPE} parameter is a value out of:
+     * <ul>
+     * <li>{@link BT747Constants#GPS_TYPE_DEFAULT}</li>
+     * <li>{@link BT747Constants#GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}</li>
+     * <li>{@link BT747Constants#GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}</li>
+     * <li>{@link BT747Constants#GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}</li>
+     * </ul>
      */
     public static final int GPSTYPE = 23;
     /**
@@ -234,11 +236,12 @@ public class AppSettings implements BT747Thread {
     public static final int MAPTYPE = 27;
 
     /**
-     * Look for the google map site key in a file called "gmapkey.txt" Will
+     * Parameter index to get the Google Map key.
+     * This is not a stored setting.
+     * 
+     * Looks for the google map site key in a file called "gmapkey.txt" Will
      * look in the output dir first, then in the source dir, then in the
      * settings dir.
-     * 
-     * @return The google map key
      */
     public static final int GOOGLEMAPKEY = 28;
 
@@ -268,11 +271,10 @@ public class AppSettings implements BT747Thread {
     public final static int TAGGEDFILE_TEMPLATE = 45;
     public final static int KML_ALTITUDEMODE = 46;
     /**
-     * Set the track separation time. When two positions are separated by this
-     * time or more, a track separation is inserted.
+     * Parameter index for the track separation time. When two positions are
+     * separated by this time or more, a track separation is inserted.
      * 
-     * @param value
-     *            Time in minutes for a track separation.
+     * The parameter indicates the time in minutes for a track separation.
      */
     public final static int TRKSEP = 47;
     /**
@@ -351,7 +353,7 @@ public class AppSettings implements BT747Thread {
     public final static int POS_SRV_PERIOD = 67;
     /**
      * The GPS time offset (UTC vs. local time) in quarters (15 minutes).
-     * Replaces {@link #GPSTIMEOFFSETHOURS} (used in adjusting the time in the
+     * Replaces {@link #GPSTIMEOFFSETHOURS_OBSOLETE} (used in adjusting the time in the
      * output formats).
      */
     public static final int GPSTIMEOFFSETQUARTERS = 68;
@@ -379,6 +381,22 @@ public class AppSettings implements BT747Thread {
      * is normally the card that can be inserted by the PDA user.
      */
     public final static int CARD = 72;
+
+    
+
+    public static final int SPLIT_ONE_FILE = 0;
+    public static final int SPLIT_ONE_FILE_PER_DAY = 1;
+    public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
+
+    /**
+     * The way we split the input track:
+     * <ul>
+     * <li>{@link #SPLIT_ONE_FILE}</li>
+     * <li>{@link #SPLIT_ONE_FILE_PER_DAY}</li>
+     * <li>{@link #SPLIT_ONE_FILE_PER_TRACK}</li>
+     * </ul>
+     */
+    public final static int OUTPUTFILESPLITTYPE = 73;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -449,7 +467,7 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 2:
             /* fall through */
-            setOutputFileSplitType(0);
+            setIntOpt(OUTPUTFILESPLITTYPE, 0);
             /* fall through */
         case 3:
             setHeightConversionMode(AppSettings.HEIGHT_AUTOMATIC);
@@ -884,33 +902,6 @@ public class AppSettings implements BT747Thread {
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
-    public static final int SPLIT_ONE_FILE = 0;
-    public static final int SPLIT_ONE_FILE_PER_DAY = 1;
-    public static final int SPLIT_ONE_FILE_PER_TRACK = 2;
-
-    /**
-     * The way we split the input track:<br> {@link #SPLIT_ONE_FILE}<br>
-     * {@link #SPLIT_ONE_FILE_PER_DAY}<br> {@link #SPLIT_ONE_FILE_PER_TRACK}
-     * 
-     * @return Current setting.
-     */
-    public final int getOutputFileSplitType() {
-        return getLocalIntOpt(AppSettings.C_ONEFILEPERDAY_IDX,
-                AppSettings.C_ONEFILEPERDAY_SIZE);
-    }
-
-    /**
-     * The way we split the input track:<br> {@link #SPLIT_ONE_FILE}<br>
-     * {@link #SPLIT_ONE_FILE_PER_DAY}<br> {@link #SPLIT_ONE_FILE_PER_TRACK}
-     * 
-     * @param value
-     *            New setting
-     */
-    protected final void setOutputFileSplitType(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_ONEFILEPERDAY_IDX,
-                AppSettings.C_ONEFILEPERDAY_SIZE);
-    }
-
     public final static int HEIGHT_NOCHANGE = 0;
     public final static int HEIGHT_WGS84_TO_MSL = 1;
     public final static int HEIGHT_AUTOMATIC = 2;
@@ -919,9 +910,9 @@ public class AppSettings implements BT747Thread {
     /**
      * 
      * @return height conversion mode.
-     * @see #HEIGHT_AUTOMATIC<br>
-     * @see #HEIGHT_MSL_TO_WGS84<br>
-     * @see #HEIGHT_WGS84_TO_MSL<br>
+     * @see #HEIGHT_AUTOMATIC
+     * @see #HEIGHT_MSL_TO_WGS84
+     * @see #HEIGHT_WGS84_TO_MSL
      * @see #HEIGHT_NOCHANGE
      */
     public final int getHeightConversionMode() {
@@ -1167,8 +1158,11 @@ public class AppSettings implements BT747Thread {
     }
 
     /**
-     * @param solveMacLagProblem
-     *            The solveMacLagProblem to set.
+     * Mac systems exhibit an issue and this parameters permits the
+     * application to detect that it has to be bypassed.
+     * 
+     * @param arg
+     *            When true, solve the lag problem (on Mac systems).
      */
     public final static void setSolveMacLagProblem(final boolean arg) {
         AppSettings.solveMacLagProblem = arg;
@@ -1413,15 +1407,17 @@ public class AppSettings implements BT747Thread {
     
     
     /**
-     * Get a path. Override on some systems to take additional parameters into
-     * account like the card number.
+     * Get a path. Introduced so that an override is possible on some systems
+     * to take additional parameters into account like the card number.
      * 
      * @param pathType
-     * @return
+     *            One of the parameter indexes corresponding to a path entry.
+     * @return returns the path for the given path type.
      */
     public BT747Path getPath(final int pathType) {
         return new BT747Path(getStringOpt(pathType));
     }
+    
     /**
      * Indicates if there are changes to the listeners that are waiting in the
      * action list. Protected with listenerActionsSema.
@@ -2046,8 +2042,11 @@ public class AppSettings implements BT747Thread {
                     AppSettings.EXTTYPE_SIZE },
             { AppSettings.INT, AppSettings.FONTSCALE,
                     AppSettings.FONTSCALE_IDX, AppSettings.FONTSCALE_SIZE },
-                    { AppSettings.INT, AppSettings.CARD,
-                        AppSettings.C_CARD_IDX, AppSettings.C_CARD_SIZE },
+            { AppSettings.INT, AppSettings.CARD, AppSettings.C_CARD_IDX,
+                    AppSettings.C_CARD_SIZE },
+            { AppSettings.INT, AppSettings.OUTPUTFILESPLITTYPE,
+                    AppSettings.C_ONEFILEPERDAY_IDX,
+                    AppSettings.C_ONEFILEPERDAY_SIZE },
     // End of list
     };
 

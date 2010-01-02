@@ -53,7 +53,7 @@ package net.iharder.dnd;
  * </p>
  * 
  * @author Robert.Harder
- * @copyright 2001
+ * <br>copyright 2001
  * @version 1.1
  */
 @SuppressWarnings("all")
@@ -153,7 +153,7 @@ public class TransferableObject implements java.awt.datatransfer.Transferable {
      * Returns a two- or three-element array containing first the custom data
      * flavor, if one was created in the constructors, second the default
      * {@link #DATA_FLAVOR} associated with {@link TransferableObject}, and
-     * third the {@link java.awt.datatransfer.DataFlavor.stringFlavor}.
+     * third the {@link java.awt.datatransfer.DataFlavor#stringFlavor}.
      * 
      * @return An array of supported data flavors
      * @since 1.1
@@ -241,7 +241,7 @@ public class TransferableObject implements java.awt.datatransfer.Transferable {
      * {@link #getObject getObject()} method will be called.
      * 
      * @author Robert Harder
-     * @copyright 2001
+     * <br>copyright 2001
      * @version 1.1
      * @since 1.1
      */

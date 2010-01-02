@@ -45,7 +45,7 @@ public final class MtkBinWriter {
      * 
      * TODO: check that the current state is indeed BIN mode.
      * 
-     * @param context
+     * @param gpsRxtx
      * @param baudrate
      */
     public final static void doSetNmeaMode(final GPSrxtx gpsRxtx,

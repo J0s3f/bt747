@@ -14,6 +14,11 @@
 // *** *********************************************************** ***
 package bt747.sys.interfaces;
 
+/**
+ * @author Mario De Weerd
+ * @author Florian Unger for indicated parts.
+ *
+ */
 public interface JavaLibImplementation {
 
     BT747Date getDateInstance();
@@ -159,7 +164,7 @@ public interface JavaLibImplementation {
      * System method to bitwise convert a float to an int. The int can then be
      * written to a byte array for example.
      * 
-     * @param l
+     * @param f
      *            The value to bitwise convert.
      * @return The float corresponding to the bitwise conversion.
      */
@@ -181,10 +186,10 @@ public interface JavaLibImplementation {
 
     /**
      * Obtain an implementation of the BT747HttpSender interface.
+     * <br>author Florian Unger
      * 
      * @return an instance of a class implementing the BT747HttpSender
      *         interface.
-     * @author Florian Unger
      * @throws BT747Exception
      */
     BT747HttpSender getHttpSenderInstance() throws BT747Exception;

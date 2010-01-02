@@ -25,7 +25,7 @@ public interface BT747FileName {
     /**
      * Build the filename from the provided parameters.
      * 
-     * @param baseName
+     * @param baseNamePath
      *                proposed baseName.
      * @param utcTimeSeconds
      *                Time of first record in file.
@@ -33,8 +33,9 @@ public interface BT747FileName {
      *                Proposed extension of file.
      * @param proposedTimeSpec
      *                Proposed extension to filename.
-     * @return
+     * @return The path for the output file.
      */
-    BT747Path getOutputFileName(final BT747Path baseNamePath, final int utcTimeSeconds,
-            final String proposedExtension, final String proposedTimeSpec);
+    BT747Path getOutputFileName(final BT747Path baseNamePath,
+            final int utcTimeSeconds, final String proposedExtension,
+            final String proposedTimeSpec);
 }

@@ -21,6 +21,7 @@ import gps.GpsEvent;
  * Defines some events for the gps package.
  * 
  * @author Mario De Weerd
+ * @author Florian Unger for indicated parts.
  */
 public class ModelEvent extends GpsEvent {
 	public static final int CONVERSION_STARTED = 256;
@@ -62,7 +63,7 @@ public class ModelEvent extends GpsEvent {
 	 * This kind of event is exclusively sent by instances of LocationSender and
 	 * should have the sending instance as second parameter.
 	 * 
-	 * @author Florian Unger
+	 * <br>author Florian Unger
 	 */
 	public static final int POS_SRV_FATAL_FAILURE = 274;
 	/**
@@ -71,7 +72,7 @@ public class ModelEvent extends GpsEvent {
 	 * This kind of event is exclusively sent by instances of LocationSender and
 	 * should have the sending instance as second parameter.
 	 * 
-	 * @author Florian Unger
+	 * <br>author Florian Unger
 	 */
 	public static final int POS_SRV_FAILURE = 275;
 	/**
@@ -79,7 +80,7 @@ public class ModelEvent extends GpsEvent {
 	 * This kind of event is exclusively sent by instances of LocationSender and
 	 * should have the sending instance as second parameter.
 	 * 
-	 * @author Florian Unger
+	 * <br>author Florian Unger
 	 */
 	public static final int POS_SRV_SUCCESS = 276;
 

@@ -164,9 +164,13 @@ public final class DataTypes {
         return Object.class;
     }
 
-    /** Provide sample data to determine the width of the column
+    /**
+     * Provide sample data to determine the width of the column.
+     * 
      * @param dataType
-     * @return
+     *            The data type for which to get a sample value.
+     * @return Sample data string (which is supposed to be the typical worst
+     *         case length.
      */
     public static final String getSampleData(final int dataType) {
         String sample = " ";

@@ -39,7 +39,7 @@ public class HlxController {
     /**
      * Check if the controller responds to the NMEA command.
      * 
-     * @return
+     * @return true if this controller can handle the command.
      */
     public final boolean handles(final String nmea0) {
         switch (mtkDeviceModel.mtkData.modelType) {

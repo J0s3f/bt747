@@ -6,7 +6,7 @@ package net.sf.bt747.j2se.app.map;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 /**
- * @author Mario
+ * @author Mario De Weerd
  * 
  */
 public interface BT747WaypointRenderer extends WaypointRenderer {
@@ -14,7 +14,7 @@ public interface BT747WaypointRenderer extends WaypointRenderer {
      * Returns true if this renderer knows how to render the object.
      * 
      * @param o
-     * @return
+     * @return true if this renderer can render the object.
      */
     public boolean isRendererOf(Object o);
 
@@ -23,7 +23,7 @@ public interface BT747WaypointRenderer extends WaypointRenderer {
      * rendering (for waypoint selection on mouse operation).
      * 
      * @param p
-     * @return
+     * @return true if the point (in GUI) is part of teh rendering.
      */
     public boolean contains(java.awt.Point p);
 }

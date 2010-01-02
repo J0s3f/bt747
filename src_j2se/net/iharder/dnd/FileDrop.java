@@ -117,7 +117,6 @@ public class FileDrop {
      * @param out
      *                PrintStream to record debugging info or null for no
      *                debugging.
-     * @param out
      * @param c
      *                Component on which files will be dropped.
      * @param listener
@@ -147,7 +146,6 @@ public class FileDrop {
      * @param out
      *                PrintStream to record debugging info or null for no
      *                debugging.
-     * @param out
      * @param c
      *                Component on which files will be dropped.
      * @param recursive

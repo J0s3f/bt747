@@ -214,8 +214,8 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
     }
 
     /**
-     * @param appSettings
-     *                the appSettings to set
+     * @param settings
+     *                the application settings to set
      */
     public final void setAppSettings(final String settings) {
         mySetAppSettings(settings);

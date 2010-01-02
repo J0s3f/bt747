@@ -91,7 +91,7 @@ public class MtkBinTransportMessageModel {
      * of message.
      * 
      * @param message
-     * @return
+     * @return true if the message is valid.
      */
     public boolean setMessage(byte[] message) {
         payload = null;

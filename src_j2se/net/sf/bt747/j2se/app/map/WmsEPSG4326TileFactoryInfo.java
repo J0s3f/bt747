@@ -182,10 +182,8 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
         return mapWidthInTilesAtZoom[zoomLevel];
     }
 
-    /**
-     * 
-     * @param zoom
-     * @return
+    /* (non-Javadoc)
+     * @see org.jdesktop.swingx.mapviewer.TileFactoryInfo#getMapHeightInTilesAtZoom(int)
      */
     public int getMapHeightInTilesAtZoom(final int zoom) {
         int h;

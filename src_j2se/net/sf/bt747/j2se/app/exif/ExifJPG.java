@@ -157,7 +157,8 @@ public class ExifJPG {
      * Get an exif attribute out of the App1 data.
      * 
      * @param tag
-     * @return
+     *            The tag to retrieve.
+     * @return Exif attribute for tag or null.
      */
     public final ExifAttribute getExifAttribute(final int tag) {
         if (exifApp1 != null) {
@@ -416,10 +417,11 @@ public class ExifJPG {
         }
     }
 
-    /** Copy original file with modified exif data to given path.
+    /**
+     * Copy original file with modified exif data to given path.
+     * 
      * @param path
-     * @param card
-     * @return
+     * @return true on success.
      */
     public final boolean copyTo(final BT747Path path) {
         File toFile = null;

@@ -26,13 +26,14 @@ public class CasioMakerNotesDecorator extends ExifAttribute {
     }
 
     /**
-     * Decorate the Attribute only if needed.
+     * Decorate the Attribute only if needed. Se Decorator pattern (Design
+     * Patterns) for information.
      * 
      * @param makerNote
      * @param buffer
      * @param tiffHeaderStart
      * @param bigEndian
-     * @return
+     * @return The decorated attribute.
      */
     public final static ExifAttribute decorate(final ExifAttribute makerNote,
             final byte[] buffer, final int tiffHeaderStart,

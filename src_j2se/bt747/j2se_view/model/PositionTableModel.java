@@ -51,14 +51,14 @@ public class PositionTableModel extends AbstractTableModel {
     }
 
     /**
-     * @param gpsData
-     *                the gpsData to set
+     * @param gpsRecords
+     *                List of GPSRecords to set as data values.
      */
-    public final void setGpsData(final GPSRecord[] gpsdata) {
+    public final void setGpsData(final GPSRecord[] gpsRecords) {
         final Vector<List<GPSRecord>> tmp = new Vector<List<GPSRecord>>(1);
         final Vector<GPSRecord> tmpList = new Vector<GPSRecord>(
-                gpsdata.length);
-        for (final GPSRecord g : gpsdata) {
+                gpsRecords.length);
+        for (final GPSRecord g : gpsRecords) {
             tmpList.add(g);
         }
         tmp.add(tmpList);
@@ -67,11 +67,11 @@ public class PositionTableModel extends AbstractTableModel {
     }
 
     /**
-     * @param gpsData
-     *                the gpsData to set
+     * @param records
+     *                The records to set as the position values.
      */
-    public final void setGpsData(final List<List<GPSRecord>> gpsdata) {
-        gpsData = gpsdata;
+    public void setGpsData(final List<List<GPSRecord>> records) {
+        gpsData = records;
         fireTableDataChanged();
     }
 

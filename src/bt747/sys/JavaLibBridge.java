@@ -36,6 +36,7 @@ import bt747.sys.interfaces.JavaLibImplementation;
  * For more information regarding a bridge, see "Design Patterns" theory.
  * 
  * @author Mario De Weerd
+ * @author Florian Unger for indicated parts.
  * 
  */
 public final class JavaLibBridge {
@@ -256,9 +257,8 @@ public final class JavaLibBridge {
     /**
      * Retrieve an platform specific instance of a class implementing the
      * BT747HttpSender interface.
-     * 
+     * <br>author Florian Unger
      * @return an instance of a class implementing BT747HttpSender
-     * @author Florian Unger
      * @throws BT747Exception
      */
     public static final BT747HttpSender getHttpSenderInstance()

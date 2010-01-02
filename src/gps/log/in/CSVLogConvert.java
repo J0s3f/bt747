@@ -70,13 +70,15 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
     private static final int BUF_SIZE = 0x800;
 
     /**
-     * JavaLibBridge the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFileConverterInterface, int)}
-     * is one of them.
+     * Parse the source file (here a CSV) and provide the records to gpsFile
+     * (the builder).
      * 
+     * @param file
+     *            Source file representation.
      * @param gpsFile
-     *                The object representing the output format.
+     *            The object representing the output builder.
      * @return {@link BT747Constants#NO_ERROR} if no error (0)
-     * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.out.GPSFileConverterInterface)
+     * @see gps.log.in.GPSFileConverterInterface
      */
     public final int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {

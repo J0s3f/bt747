@@ -57,7 +57,7 @@ public class BT747TrackRenderer implements TrackRenderer {
      * @see net.sf.bt747.j2se.map.TrackRenderer#paintWaypoint(java.awt.Graphics2D,
      *      org.jdesktop.swingx.JXMapViewer, java.util.Set)
      */
-    public boolean paintTrack(final Graphics2D g, final JXMapViewer map,
+    public void paintTrack(final Graphics2D g, final JXMapViewer map,
             final Collection<GPSRecord> track) {
         if (track.size() > 0) {
             final Rectangle viewportBounds = map.getViewportBounds();
@@ -177,7 +177,6 @@ public class BT747TrackRenderer implements TrackRenderer {
             g.draw(gp);
             g.setStroke(org);
         }
-        return false;
     }
 
     /**

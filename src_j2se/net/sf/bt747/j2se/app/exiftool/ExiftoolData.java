@@ -49,9 +49,6 @@ import bt747.sys.interfaces.BT747Time;
  * 
  */
 public class ExiftoolData extends FileWaypoint {
-    /**
-     * @param r
-     */
     public ExiftoolData() {
         super();
     }

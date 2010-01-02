@@ -26,14 +26,12 @@ public interface GPSFileConfInterface {
      * @param extension
      *            Extension of the output file. This value will be provided to
      *            the filename builder.
-     * @param fileCard
-     *            Card number used on certain devices like a Palm.
      * @param fileSeparationFreq
      *            Indicates how the file must be separated.
      * 
-     * @see #FILE_SPLIT_NONE
-     * @see #FILE_SPLIT_ONE_FILE_PER_DAY
-     * @see #FILE_SPLIT_ONE_FILE_PER_TRACK_
+     * @see bt747.model.Model#SPLIT_ONE_FILE
+     * @see bt747.model.Model#SPLIT_ONE_FILE_PER_DAY
+     * @see bt747.model.Model#SPLIT_ONE_FILE_PER_TRACK
      * 
      */
     public void initialiseFile(final BT747Path baseName, final String extension,
