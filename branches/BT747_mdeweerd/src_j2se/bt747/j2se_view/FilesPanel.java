@@ -22,6 +22,7 @@ import bt747.j2se_view.model.LogFileTableModel;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.model.Controller;
+import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
@@ -50,7 +51,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
         map.init(c);
         map.setZoomSliderVisible(false);
         map.setMiniMapVisible(false);
-        logFileModel.setLogfileInfos(Controller.logFiles);
+        logFileModel.setLogfileInfos(Model.logFiles);
         fileTablePanel.init(pC);
         tbLogFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         final FontMetrics fm = tbLogFile.getFontMetrics(tbLogFile.getFont());

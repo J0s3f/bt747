@@ -16,6 +16,7 @@ package bt747.model;
 
 import gps.BT747Constants;
 import gps.convert.Conv;
+import gps.log.LogFileInfo;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -716,7 +717,7 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]) == 1;
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not Boolean @" + param);
             return false;
         }
     }
@@ -729,7 +730,7 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not Boolean @" + param);
         }
     }
 
@@ -753,7 +754,7 @@ public class AppSettings implements BT747Thread {
             }
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter @ index " + param);
+            Generic.debug("Parameter is not Integer @" + param);
             return 0;
         }
     }
@@ -773,7 +774,7 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not Integer @" + param);
         }
     }
 
@@ -794,7 +795,7 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not String @" + param);
             return null;
         }
     }
@@ -807,7 +808,7 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not String @" + param);
         }
     }
 
@@ -1004,6 +1005,12 @@ public class AppSettings implements BT747Thread {
     }
 
     /**
+     * Vector of LogFileInfo.
+     */
+    public final static BT747Vector logFiles = JavaLibBridge
+            .getVectorInstance();
+
+    /**
      * Look for the google map site key in a file called "gmapkey.txt" Will
      * look in the output dir first, then in the source dir, then in the
      * settings dir.
@@ -1016,6 +1023,11 @@ public class AppSettings implements BT747Thread {
         int idx;
         boolean notok = true;
         int i = 3;
+        int fileIdx = logFiles.size();
+        if(fileIdx>0) {
+            i = 4; // Force to 4;
+            
+        }
         while (notok && (i >= 0)) {
             switch (i--) {
             case 0:
@@ -1031,6 +1043,13 @@ public class AppSettings implements BT747Thread {
             case 3:
                 path = getPath(REPORTFILEBASEPATH);
                 break;
+            case 4:
+                path = ((LogFileInfo) (logFiles.elementAt(--fileIdx)))
+                        .getPath();
+                if (fileIdx > 0) {
+                    i = 4; // Continue in this case of the switch.
+                }
+                break;
             default:
                 break;
             }
@@ -1039,12 +1058,17 @@ public class AppSettings implements BT747Thread {
                 path = path.proto(path.getPath().substring(0,
                         path.getPath().lastIndexOf('/')));
             }
+            idx = path.getPath().lastIndexOf('\\');
+            if (idx != -1) {
+                path = path.proto(path.getPath().substring(0,
+                        path.getPath().lastIndexOf('\\')));
+            }
             try {
                 final BT747Path gmapPath = path.proto(path.getPath() + "/"
                         + AppSettings.C_GMAP_KEY_FILENAME);
                 // TODO: take into account BT747Path characteristics(card for
                 // instance.)
-                if (new File(new BT747Path(gmapPath)).exists()) {
+                if (new File(gmapPath).exists()) {
                     final File gmap = new File(gmapPath, File.READ_ONLY);
 
                     if (gmap.isOpen()) {
@@ -1189,20 +1213,20 @@ public class AppSettings implements BT747Thread {
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not Float @" + param);
             return 0.0f;
         }
     }
 
     protected final void setFloatOpt(final int param, final float value) {
         if ((param < AppSettings.paramsList.length)
-                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.BOOL)) {
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.FLOAT)) {
             setLocalFloatOpt(param, value,
                     AppSettings.paramsList[param][AppSettings.START_IDX],
                     AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Parameter is not Float @" + param);
         }
     }
 

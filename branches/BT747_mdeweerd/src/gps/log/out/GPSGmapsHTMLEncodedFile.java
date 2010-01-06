@@ -132,7 +132,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "<meta name=\"description\" "
                         + "content=\"Tracks - Generated with BT747 V"
                         + Version.VERSION_NUMBER
-                        + " http://bt747.free.fr - powered by Google Maps\" />\n"
+                        + " http://www.bt747.org - powered by Google Maps\" />\n"
                         + "\n"
                         + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp");
         l_header.append(keyCode());

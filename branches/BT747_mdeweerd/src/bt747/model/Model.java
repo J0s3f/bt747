@@ -27,6 +27,7 @@ import gps.mvc.MtkModel;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * The model in the Model-View-Controller pattern. Information regarding the
@@ -131,6 +132,12 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * Call upon an external tool.
      */
     public static final int EXTERNAL_LOGTYPE = 16;
+    
+    /**
+     * Get static google map.
+     */
+    public static final int GOOGLE_MAP_STATIC_URL_LOGTYPE = 17;
+    
     
     /**
      * The number of seconds in a day.

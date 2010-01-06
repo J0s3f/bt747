@@ -24,6 +24,7 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.log.LogFileInfo;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 
@@ -131,7 +132,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     /**
      * 
      */
-    private static final String OPT_MACADDR = "mac_address";
+    private static final String OPT_MACADDR = "mac-address";
     /**
      * 
      */
@@ -559,12 +560,20 @@ public class BT747cmd implements bt747.model.ModelListener {
         int error = 0;
         System.out
                 .println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
+        if (Model.logFiles.size() != 0) {
+            for (int i = 0; i < Model.logFiles.size(); i++) {
+                LogFileInfo lfi = (LogFileInfo) Model.logFiles.elementAt(i);
+                System.out.println("Input file: "
+                        + lfi.getPath().getPath());
+            }
+        }
+            
         System.out.println("Output directory: "
                 + m.getStringOpt(Model.OUTPUTDIRPATH));
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
 
-        if (Controller.logFiles.size() != 0) {
+        if (Model.logFiles.size() != 0) {
             c.setStringOpt(Model.LOGFILEPATH, "");
         }
 
@@ -1228,6 +1237,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                     type = Model.PLT_LOGTYPE;
                 } else if (typeStr.equals("TRK")) {
                     type = Model.TRK_LOGTYPE;
+                } else if (typeStr.equals("GMAPURL")) {
+                    type = Model.GOOGLE_MAP_STATIC_URL_LOGTYPE;
                 } else {
                     System.err.println("Unknown outtype '" + typeStr + "'");
                 }

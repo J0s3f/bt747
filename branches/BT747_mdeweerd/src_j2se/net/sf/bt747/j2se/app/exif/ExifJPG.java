@@ -423,7 +423,7 @@ public class ExifJPG {
      * @param path
      * @return true on success.
      */
-    public final boolean copyTo(final BT747Path path) {
+    public final boolean copyTo(final BT747Path toPath) {
         File toFile = null;
         WindowedFile fromFile = null;
         int currentIdxInBuffer = 0;
@@ -449,7 +449,7 @@ public class ExifJPG {
                     // 1. Copy all data 'as is' up to the App1 Marker header included.
                     if(offsets.app1Marker>0) {
                         // TODO May have to delete the file first.
-                        toFile = new File(path, File.CREATE);
+                        toFile = new File(toPath, File.CREATE);
                         toFile.writeBytes(buffer, 0, offsets.app1Marker);
                     }
 
