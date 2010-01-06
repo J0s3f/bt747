@@ -36,6 +36,7 @@ import gps.log.out.GPSFileConfInterface;
 import gps.log.out.GPSFileInterface;
 import gps.log.out.GPSGPXFile;
 import gps.log.out.GPSGmapsHTMLEncodedFile;
+import gps.log.out.GPSGoogleStaticMapUrl;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
@@ -323,6 +324,9 @@ public class Controller implements ModelListener {
         case Model.ARRAY_LOGTYPE:
             gpsFile = new GPSArray();
             break;
+        case Model.GOOGLE_MAP_STATIC_URL_LOGTYPE:
+            gpsFile = new GPSGoogleStaticMapUrl();
+            break;
         default:
             lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
             lastErrorInfo = "" + logType;
@@ -472,9 +476,9 @@ public class Controller implements ModelListener {
 
     public GPSLogConvertInterface getInputConversionInstance(final int logType) {
         final GPSLogConvertInterface lc;
-        if (Controller.logFiles.size() != 0) {
+        if (Model.logFiles.size() != 0) {
             final MultiLogConvert mlc = new MultiLogConvert();
-            mlc.setLogFiles(Controller.logFiles);
+            mlc.setLogFiles(Model.logFiles);
             lc = mlc;
         } else {
             lc = getInputConversionInstance();
@@ -624,11 +628,6 @@ public class Controller implements ModelListener {
 
     private int lastError;
     private String lastErrorInfo = "";
-    /**
-     * Vector of LogFileInfo.
-     */
-    public final static BT747Vector logFiles = JavaLibBridge
-            .getVectorInstance();
 
     /**
      * Convert the log into an array of trackpoints.
@@ -1551,7 +1550,7 @@ public class Controller implements ModelListener {
 
     public final static void addLogFile(final BT747Path path) {
         final LogFileInfo loginfo = new LogFileInfo(path);
-        Controller.logFiles.addElement(loginfo);
+        Model.logFiles.addElement(loginfo);
     }
 
     public final void setAgpsData(final byte[] agpsData) {
