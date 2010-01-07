@@ -17,9 +17,13 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747HttpSender;
+import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747RAFile;
 import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
@@ -58,15 +62,27 @@ public final class IphoneJavaTranslations implements JavaLibImplementation {
         return new IphoneFile(path);
     }
 
-    public final BT747File getFileInstance(final String path, final int mode,
-            final int card) {
-        return new IphoneFile(path, mode, card);
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#getFileInstance(bt747.sys.interfaces.BT747Path)
+     */
+    public BT747File getFileInstance(BT747Path path) {
+        return new IphoneFile(path.getPath());
     }
 
-    public final BT747File getFileInstance(final String path, final int mode) {
-        return new IphoneFile(path, mode);
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#getRAFileInstance(bt747.sys.interfaces.BT747Path)
+     */
+    public BT747RAFile getRAFileInstance(BT747Path path) {
+        return new IphoneFile(path.getPath());
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#getRAFileInstance(bt747.sys.interfaces.BT747Path, int)
+     */
+    public BT747RAFile getRAFileInstance(BT747Path path, int mode) {
+        return new IphoneFile(path.getPath(), mode);
+    }
     public final boolean isAvailable() {
         return true;
     }
@@ -210,5 +226,22 @@ public final class IphoneJavaTranslations implements JavaLibImplementation {
     public final BT747HashSet getHashSetInstance() {
         return new IphoneHashSet();
     }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#getFileInstance(bt747.sys.interfaces.BT747Path, int)
+     */
+    public BT747File getFileInstance(BT747Path path, int mode) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#getHttpSenderInstance()
+     */
+    public BT747HttpSender getHttpSenderInstance() throws BT747Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 }

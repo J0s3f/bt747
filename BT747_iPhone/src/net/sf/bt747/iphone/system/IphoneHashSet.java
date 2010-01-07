@@ -30,4 +30,11 @@ public final class IphoneHashSet implements BT747HashSet {
         return iterator.next();
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747HashSet#count()
+     */
+    public int count() {
+        return hs.size();
+    }
+
 }
