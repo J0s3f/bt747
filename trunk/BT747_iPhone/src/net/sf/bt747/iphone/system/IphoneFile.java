@@ -17,14 +17,14 @@ package net.sf.bt747.iphone.system;
 import java.io.RandomAccessFile;
 
 import bt747.sys.Generic;
-import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747RAFile;
 
 /**
  * Implement the system interface of BT747File.
  * 
  * @author Mario De Weerd
  */
-public final class IphoneFile implements BT747File {
+public final class IphoneFile implements BT747RAFile {
 
     /**
      * Path corresponding to current file. The current file is not necessarily
