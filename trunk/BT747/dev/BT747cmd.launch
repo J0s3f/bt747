@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<stringAttribute key="bad_container_name" value="\BT747\dev\b"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/BT747/src_j2se/bt747/j2se_view/BT747cmd.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="Path" value="${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%"/>
+</mapAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="bt747.j2se_view.BT747cmd"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-UTC 2  --outtype CSV,GMAPURL -d 1 &quot;c:/bt747/test/test1.jpg&quot; -template &quot;%p%f%e&quot; C:\BT747\log_dumps\BT747log_HWL.bin C:\BT747\log_dumps\gpspassion.nmea"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT747"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.library.path=${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/${system_property:path.separator}${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/"/>
+</launchConfiguration>
