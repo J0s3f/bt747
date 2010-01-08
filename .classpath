@@ -24,7 +24,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jdic.jar" sourcepath="C:/Download/jdic-0.9.5-src.zip"/>
 	<classpathentry kind="lib" path="lib/jopt-simple-2.4.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/sanselan-0.97-incubator.jar" sourcepath="lib/sanselan-0.97-incubator-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
