@@ -135,6 +135,9 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
 
         lbNMEAFileMCHN
                 .setSelected((outFormat & (1 << BT747Constants.NMEA_SEN_MCHN_IDX)) != 0);
+
+        lbNMEAFileWPL
+                .setSelected((outFormat & (1 << BT747Constants.NMEA_SEN_WPL_IDX)) != 0);
     }
 
     void setNMEAOutFile() {
@@ -199,6 +202,9 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         if (lbNMEAFileMCHN.isSelected()) {
             outFormat |= (1 << BT747Constants.NMEA_SEN_MCHN_IDX);
         }
+        if (lbNMEAFileWPL.isSelected()) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_WPL_IDX);
+        }
 
         c.setNMEAset(outFormat);
     }
@@ -231,9 +237,10 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         lbNMEAFileType10 = new javax.swing.JCheckBox();
         lbNMEAFileZDA = new javax.swing.JCheckBox();
         lbNMEAFileType12 = new javax.swing.JCheckBox();
-        btSetNMEAFileOutput = new javax.swing.JButton();
         lbNMEAFileMDBG = new javax.swing.JCheckBox();
         lbNMEAFileMCHN = new javax.swing.JCheckBox();
+        lbNMEAFileWPL = new javax.swing.JCheckBox();
+        btSetNMEAFileOutput = new javax.swing.JButton();
         cbNotApplyUTCOffsetForNMEA = new javax.swing.JCheckBox();
         pnGPXFileSettings = new javax.swing.JPanel();
         cbNotApplyUTCOffset = new javax.swing.JCheckBox();
@@ -321,16 +328,19 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
 
         lbNMEAFileType12.setText(bundle.getString("BT747Main.lbNMEAFileType12.text")); // NOI18N
 
+        lbNMEAFileMDBG.setText(bundle.getString("BT747Main.lbNMEAFileMDBG.text")); // NOI18N
+
+        lbNMEAFileMCHN.setText(bundle.getString("BT747Main.lbNMEAFileMCHN.text")); // NOI18N
+
+        lbNMEAFileWPL.setText(bundle.getString("AdvancedFileSettingsPanel.lbNMEAFileWPL.text")); // NOI18N
+        lbNMEAFileWPL.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.lbNMEAFileWPL.toolTipText")); // NOI18N
+
         btSetNMEAFileOutput.setText(bundle.getString("BT747Main.btSetNMEAFileOutput.text")); // NOI18N
         btSetNMEAFileOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetNMEAFileOutputActionPerformed(evt);
             }
         });
-
-        lbNMEAFileMDBG.setText(bundle.getString("BT747Main.lbNMEAFileMDBG.text")); // NOI18N
-
-        lbNMEAFileMCHN.setText(bundle.getString("BT747Main.lbNMEAFileMCHN.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFileNMEAOutRightLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutRight);
         pnFileNMEAOutRight.setLayout(pnFileNMEAOutRightLayout);
@@ -347,10 +357,11 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                     .add(lbNMEAFileMDBG)
                     .add(lbNMEAFileZDA)
                     .add(lbNMEAFileMCHN)
+                    .add(lbNMEAFileWPL)
                     .add(pnFileNMEAOutRightLayout.createSequentialGroup()
-                        .add(21, 21, 21)
+                        .addContainerGap()
                         .add(btSetNMEAFileOutput)))
-                .addContainerGap())
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnFileNMEAOutRightLayout.setVerticalGroup(
             pnFileNMEAOutRightLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -373,8 +384,9 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbNMEAFileMCHN)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btSetNMEAFileOutput)
-                .add(0, 0, Short.MAX_VALUE))
+                .add(lbNMEAFileWPL)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(btSetNMEAFileOutput))
         );
 
         cbNotApplyUTCOffsetForNMEA.setText(bundle.getString("AdvancedFileSettingsPanel.cbNotApplyUTCOffsetForNMEA.text")); // NOI18N
@@ -400,7 +412,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         pnFileNMEAOutputLayout.setVerticalGroup(
             pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFileNMEAOutputLayout.createSequentialGroup()
-                .addContainerGap(0, Short.MAX_VALUE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(cbNotApplyUTCOffsetForNMEA)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -580,6 +592,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JCheckBox lbNMEAFileType8;
     private javax.swing.JCheckBox lbNMEAFileType9;
     private javax.swing.JCheckBox lbNMEAFileVTG;
+    private javax.swing.JCheckBox lbNMEAFileWPL;
     private javax.swing.JCheckBox lbNMEAFileZDA;
     private javax.swing.JPanel pnFileNMEAOutLeft;
     private javax.swing.JPanel pnFileNMEAOutRight;

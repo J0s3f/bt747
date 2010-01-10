@@ -589,12 +589,11 @@ public final class GPSNMEAFile extends GPSFile {
 
         // eg1. $GPWPL,4917.16,N,12310.64,W,003*65
 
-        if(r.hasPosition()) {
+        if (r.hasPosition()) {
             rec.setLength(0);
             rec.append("GPWPL,");
             appendLatLon(rec, r, selectedFileFields);
-            rec.append(
-            CommonOut.getRCRstr(r));
+            rec.append(CommonOut.getRCRstr(r));
             writeNMEA(rec.toString());
             rec.setLength(0);
         }
