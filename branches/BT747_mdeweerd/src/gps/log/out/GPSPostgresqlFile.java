@@ -30,22 +30,112 @@ public final class GPSPostgresqlFile extends GPSFile {
     /**
      * 
      */
+    private static final String LOGSPEED_FIELD = "logspeed";
+    /**
+     * 
+     */
+    private static final String LOGDISTANCE_FIELD = "logdistance";
+    /**
+     * 
+     */
+    private static final String LOGTIME_FIELD = "logtime";
+    /**
+     * 
+     */
+    private static final String VOX_FIELD = "vox";
+    /**
+     * 
+     */
+    private static final String SATINFO_FIELD = "satinfo";
+    /**
+     * 
+     */
+    private static final String DISTANCE_FIELD = "distance";
+    /**
+     * 
+     */
+    private static final String NSATVIEW_FIELD = "nsatview";
+    /**
+     * 
+     */
+    private static final String NSATUSED_FIELD = "nsatused";
+    /**
+     * 
+     */
+    private static final String VDOP_FIELD = "vdop";
+    /**
+     * 
+     */
+    private static final String HDOP_FIELD = "hdop";
+    /**
+     * 
+     */
+    private static final String PDOP_FIELD = "pdop";
+    /**
+     * 
+     */
+    private static final String DAGE_FIELD = "dage";
+    /**
+     * 
+     */
+    private static final String DSTA_FIELD = "dsta";
+    /**
+     * 
+     */
+    private static final String HEADING_FIELD = "heading";
+    /**
+     * 
+     */
+    private static final String SPEED_FIELD = "speed";
+    /**
+     * 
+     */
+    private static final String GEOID_FIELD = "geosep";
+    /**
+     * 
+     */
+    private static final String HEIGHT_FIELD = "height";
+    /**
+     * 
+     */
+    private static final String LATITUDE_FIELD = "latitude";
+    /**
+     * 
+     */
+    private static final String INDEX_FIELD = "idx";
+    /**
+     * 
+     */
+    private static final String TIME_FIELD = "time";
+    /**
+     * 
+     */
+    private static final String LONGITUDE_FIELD = "longitude";
+    /**
+     * 
+     */
+    private static final String VALID_FIELD = "valid";
+    /**
+     * 
+     */
+    private static final String RCR_FIELD = "rcr";
+    /**
+     * 
+     */
     private static final float METERS_TO_FEET = 3.28083989501312f;
     /**
      * Reused StringBuffer for output construction.
      */
     private final StringBuffer rec = new StringBuffer(1024);
-    /**
-     * CSV field separator - fixed now, but may become a parameter in the
-     * future.
-     */
-    private String fieldSep = ",";
+    private final StringBuffer recPost = new StringBuffer(1024);
     /**
      * Separator in the satellite field - for future parameterization.
      */
     private String satSeperator = ";";
 
-    private String tableName = "table";
+    private String tableName = "defaulttable";
+    private String dbName = "defaultdb";
+
     /*
      * (non-Javadoc)
      * 
@@ -55,9 +145,8 @@ public final class GPSPostgresqlFile extends GPSFile {
             final int oneFilePerDay) {
         super.initialiseFile(basename, ext, oneFilePerDay);
 
-        if (getParamObject().hasParam(
-                GPSConversionParameters.SQL_TABLE_NAME)) {
-            getParamObject().getStringParam(
+        if (getParamObject().hasParam(GPSConversionParameters.SQL_TABLE_NAME)) {
+            tableName = getParamObject().getStringParam(
                     GPSConversionParameters.SQL_TABLE_NAME);
         }
     }
@@ -68,86 +157,98 @@ public final class GPSPostgresqlFile extends GPSFile {
 
     protected final void writeFileHeader(final String Name) {
         rec.setLength(0);
+        recPost.setLength(0);
+
+        /** Create db with postgis. */
+        // rec.append("CREATE DATABASE my_spatial_db TEMPLATE=template_postgis ;\r\n");
+
+        /** DB is selected before executing SQL */
+        char separator = ' ';
         rec.append("CREATE TABLE ");
         rec.append(tableName);
-        rec.append(" ( ");
+        rec.append(" (");
+
         if ((selectedFileFields.hasUtc())) {
-            rec.append("  time TIMESTAMP PRIMARY KEY");
+            rec.append(separator);
+            rec.append(" " + TIME_FIELD + " TIMESTAMP PRIMARY KEY");
+            separator = ',';
         }
-        rec.append(", index INTEGER");
+        rec.append(separator);
+        rec.append(" " + INDEX_FIELD + " INTEGER");
+        separator = ',';
         if ((selectedFileFields.hasRcr())) {
-            rec.append(", rcr TEXT");
+            rec.append(", " + RCR_FIELD + " TEXT");
         }
         if ((selectedFileFields.hasValid())) {
-            rec.append(fieldSep + "VALID");
-            rec.append(", valid INTEGER");
+            rec.append(", " + VALID_FIELD + " INTEGER");
         }
         if ((selectedFileFields.hasLatitude())) {
-            rec.append(", longitude FLOAT");
+            rec.append(", " + LONGITUDE_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasLongitude())) {
-            rec.append(", latitude FLOAT");
+            rec.append(", " + LATITUDE_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasHeight())) {
-            rec.append(", height FLOAT");
+            rec.append(", " + HEIGHT_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasGeoid())) {
-            rec.append(", geosep FLOAT");
+            rec.append(", " + GEOID_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasSpeed())) {
-            rec.append(", speed FLOAT");
-            rec.append(" );\n");
+            rec.append(", " + SPEED_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasHeading())) {
-            rec.append(", heading FLOAT");
+            rec.append(", " + HEADING_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasDsta())) {
-            rec.append(", dsta INTEGER");
+            rec.append(", " + DSTA_FIELD + " INTEGER");
         }
         if ((selectedFileFields.hasDage())) {
-            rec.append(", dage INTEGER");
+            rec.append(", " + DAGE_FIELD + " INTEGER");
         }
         if ((selectedFileFields.hasPdop())) {
-            rec.append(", pdop FLOAT");
+            rec.append(", " + PDOP_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasHdop())) {
-            rec.append(", hdop FLOAT");
+            rec.append(", " + HDOP_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasVdop())) {
-            rec.append(", vdop FLOAT");
+            rec.append(", " + VDOP_FIELD + " FLOAT");
         }
         if ((selectedFileFields.hasNsat())) {
-            rec.append(", nsatused INTEGER");
-            rec.append(", nsatview INTEGER");
+            rec.append(", " + NSATUSED_FIELD + " INTEGER");
+            rec.append(", " + NSATVIEW_FIELD + " INTEGER");
         }
         // SAT INFO NOT HANDLED
         if ((selectedFileFields.hasDistance())) {
-            rec.append(", distance FLOAT");
+            rec.append(", " + DISTANCE_FIELD + " FLOAT");
         }
 
         if ((selectedFileFields.hasSid())) {
-            rec.append(", satinfo TEXT");
-//            rec.append(fieldSep + "SAT INFO (SID");
-//            if ((selectedFileFields.hasEle())) {
-//                rec.append("-ELE");
-//            }
-//            if ((selectedFileFields.hasAzi())) {
-//                rec.append("-AZI");
-//            }
-//            if ((selectedFileFields.hasSnr())) {
-//                rec.append("-SNR");
-//            }
-//            rec.append(")");
+            rec.append(", " + SATINFO_FIELD + " TEXT");
+            // rec.append(fieldSep + "SAT INFO (SID");
+            // if ((selectedFileFields.hasEle())) {
+            // rec.append("-ELE");
+            // }
+            // if ((selectedFileFields.hasAzi())) {
+            // rec.append("-AZI");
+            // }
+            // if ((selectedFileFields.hasSnr())) {
+            // rec.append("-SNR");
+            // }
+            // rec.append(")");
         }
         if (selectedFileFields.hasVoxStr()) {
-            rec.append(", vox TEXT");
+            rec.append(", " + VOX_FIELD + " TEXT");
         }
         if (addLogConditionInfo) {
-            rec.append(", logtime FLOAT");
-            rec.append(", logdistance FLOAT");
-            rec.append(", logspeed FLOAT");
+            rec.append(", " + LOGTIME_FIELD + " FLOAT");
+            rec.append(", " + LOGDISTANCE_FIELD + " FLOAT");
+            rec.append(", " + LOGSPEED_FIELD + " FLOAT");
         }
         rec.append(" );\r\n");
+        rec.append("CREATE INDEX " + tableName + "_" + INDEX_FIELD
+                + "_index ON " + tableName + "(" + INDEX_FIELD + ");\r\n");
         writeTxt(rec.toString());
         rec.setLength(0);
     }
@@ -177,92 +278,83 @@ public final class GPSPostgresqlFile extends GPSFile {
         super.writeRecord(r);
 
         if (cachedRecordIsNeeded(r)) {
+            /** The rows are filled while using named fields */
             rec.setLength(0);
+            recPost.setLength(0);
 
             rec.append("INSERT INTO ");
             rec.append(tableName);
-            rec.append(" VALUES ( ");
-            
-           
- 
+            rec.append(" (");
+            recPost.append(" VALUES (");
+            char separator = ' ';
+
             /* DATE , TIME */
             if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
-                //'%4d-%02d-%02d %02d:%02d:%02d' 
-                //$year, $month, $day, $hour, $minute, $second,
-                rec.append(fieldSep + CommonOut.getDateNumStr(t) + fieldSep
+                rec.append(TIME_FIELD);
+                separator = ',';
+                // '%4d-%02d-%02d %02d:%02d:%02d'
+                // $year, $month, $day, $hour, $minute, $second,
+                // rec.append(b)
+                recPost.append(',' + CommonOut.getDateNumStr(t) + ','
                         + CommonOut.getTimeStr(t));
                 if (r.hasMillisecond()) {
-                    rec.append('.');
+                    recPost.append('.');
                     if (r.milisecond < 100) {
-                        rec.append('0');
+                        recPost.append('0');
                     }
                     if (r.milisecond < 10) {
-                        rec.append('0');
+                        recPost.append('0');
                     }
-                    rec.append(r.milisecond);
+                    recPost.append(r.milisecond);
                 }
-            } else if ((selectedFileFields.hasUtc())) {
-                rec.append(fieldSep);
-                rec.append(fieldSep);
             }
+
             if (r.hasRecCount()) {
-                rec.append(r.getRecCount());
+                rec.append(separator);
+                rec.append(INDEX_FIELD);
+                recPost.append(separator);
+                recPost.append(r.getRecCount());
             }
             if ((selectedFileFields.hasRcr())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(RCR_FIELD);
+                recPost.append(',');
+                recPost.append('"');
                 if (r.hasRcr()) {
-                    rec.append(CommonOut.getRCRstr(r));
+                    recPost.append(CommonOut.getRCRstr(r));
                 }
+                recPost.append('"');
             }
- 
+
             if ((r.hasValid()) && (selectedFileFields.hasValid())) {
-                rec.append(fieldSep);
-                rec.append(CommonOut.getFixText(r.getValid()));
-            } else if ((selectedFileFields.hasValid())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(VALID_FIELD);
+                recPost.append(',');
+                recPost.append(CommonOut.getFixText(r.getValid()));
             }
 
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
-                if (r.getLatitude() >= 0) {
-                    rec.append(fieldSep + "N");
-                } else {
-                    rec.append(fieldSep + "S");
-                }
-            } else if ((selectedFileFields.hasLatitude())) {
-                rec.append(fieldSep);
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(LATITUDE_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge.toString(r.getLatitude(), 6));
             }
             if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
-                if (r.getLongitude() >= 0) {
-                    rec.append(fieldSep + "E");
-                } else {
-                    rec.append(fieldSep + "W");
-                }
-            } else if ((selectedFileFields.hasLongitude())) {
-                rec.append(fieldSep);
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(LONGITUDE_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge.toString(r.getLongitude(), 6));
             }
             if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(HEIGHT_FIELD);
+                recPost.append(',');
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                    recPost.append(JavaLibBridge.toString(r.getHeight(), 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(r.getHeight()
+                    recPost.append(JavaLibBridge.toString(r.getHeight()
                             * METERS_TO_FEET, 3));
                 }
-
-                // Add field concerning geoid separation.
-                // if(r.latitude!=0 && r.longitude!=0) {
-                // rec.append(fieldSep);
-                // rec.append(JavaLibBridge.toString(gps.convert.Conv.wgs84_separation(s.latitude,s.longitude),3));
-                // }
-
-            } else if ((selectedFileFields.hasHeight())) {
-                rec.append(fieldSep);
             }
             if (selectedFileFields.hasGeoid()) {
                 if (r.hasPosition()) {
@@ -276,126 +368,137 @@ public final class GPSPostgresqlFile extends GPSFile {
                     if (imperial) {
                         separation *= METERS_TO_FEET;
                     }
-                    rec.append(JavaLibBridge.toString(separation, 1));
                     rec.append(',');
-                } else {
-                    rec.append(',');
+                    rec.append(GEOID_FIELD);
+                    recPost.append(',');
+                    recPost.append(JavaLibBridge.toString(separation, 1));
                 }
             }
-            
+
             if ((r.hasSpeed()) && (selectedFileFields.hasSpeed())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(SPEED_FIELD);
+                recPost.append(',');
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.getSpeed(), 3));
+                    recPost.append(JavaLibBridge.toString(r.getSpeed(), 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(
+                    recPost.append(JavaLibBridge.toString(
                             r.getSpeed() * 0.621371192237334f, 3));
                 }
-            } else if ((selectedFileFields.hasSpeed())) {
-                rec.append(fieldSep);
             }
             if ((r.hasHeading()) && (selectedFileFields.hasHeading())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getHeading(), 6));
-            } else if ((selectedFileFields.hasHeading())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(HEADING_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge.toString(r.getHeading(), 6));
             }
             if ((r.hasDsta()) && (selectedFileFields.hasDsta())) {
-                rec.append(fieldSep);
-                rec.append(r.getDsta());
-            } else if ((selectedFileFields.hasDsta())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(DSTA_FIELD);
+                recPost.append(',');
+                recPost.append(r.getDsta());
             }
             if ((r.hasDage()) && (selectedFileFields.hasDage())) {
-                rec.append(fieldSep);
-                rec.append(r.getDage());
+                rec.append(',');
+                rec.append(DAGE_FIELD);
+                recPost.append(',');
+                recPost.append(r.getDage());
             } else if ((selectedFileFields.hasDage())) {
-                rec.append(fieldSep);
+                recPost.append(',');
             }
             if ((r.hasPdop()) && (selectedFileFields.hasPdop())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getPdop() / 100.0f, 2));
-            } else if ((selectedFileFields.hasPdop())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(PDOP_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge
+                        .toString(r.getPdop() / 100.0f, 2));
             }
             if ((r.hasHdop()) && (selectedFileFields.hasHdop())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getHdop() / 100.0f, 2));
-            } else if ((selectedFileFields.hasHdop())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(HDOP_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge
+                        .toString(r.getHdop() / 100.0f, 2));
             }
             if ((r.hasVdop()) && (selectedFileFields.hasVdop())) {
-                rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getVdop() / 100.0f, 2));
-            } else if ((selectedFileFields.hasVdop())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(VDOP_FIELD);
+                recPost.append(',');
+                recPost.append(JavaLibBridge
+                        .toString(r.getVdop() / 100.0f, 2));
             }
             if ((r.hasNsat()) && (selectedFileFields.hasNsat())) {
-                rec.append(fieldSep);
-                rec.append((r.getNsat() & 0xFF00) >> 8);
-                rec.append("(" + (r.getNsat() & 0xFF) + ")");
-            } else if ((selectedFileFields.hasNsat())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(NSATVIEW_FIELD);
+                rec.append(',');
+                rec.append(NSATUSED_FIELD);
+                recPost.append(',');
+                recPost.append((r.getNsat() & 0xFF00) >> 8);
+                recPost.append(',');
+                recPost.append(r.getNsat() & 0xFF);
             }
             if ((r.hasDistance()) && (selectedFileFields.hasDistance())) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(DISTANCE_FIELD);
+                recPost.append(',');
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.distance, 2));
+                    recPost.append(JavaLibBridge.toString(r.distance, 2));
                 } else {
-                    rec.append(JavaLibBridge.toString(
+                    recPost.append(JavaLibBridge.toString(
                             r.distance * 3.28083989501312, 2));
                 }
-            } else if ((selectedFileFields.hasDistance())) {
-                rec.append(fieldSep);
             }
             if ((selectedFileFields.hasSid())) {
                 int j = 0;
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(SATINFO_FIELD);
+                recPost.append(",\"");
                 if (r.hasSid()) {
                     for (int i = r.sid.length - 1; i >= 0; i--) {
                         if (j != 0) {
-                            rec.append(satSeperator);
+                            recPost.append(satSeperator);
                         }
                         if (r.sidinuse[j]) {
-                            rec.append('#');
+                            recPost.append('#');
                         }
                         if (r.sid[j] < 10) {
-                            rec.append('0');
+                            recPost.append('0');
                         }
-                        rec.append(r.sid[j]);
+                        recPost.append(r.sid[j]);
                         if ((selectedFileFields.hasEle())) {
-                            rec.append('-');
+                            recPost.append('-');
                             if (r.hasEle()) {
                                 if (r.ele[j] < 10) {
-                                    rec.append('0');
+                                    recPost.append('0');
                                 }
-                                rec.append(r.ele[j]);
+                                recPost.append(r.ele[j]);
                             }
                         }
                         if ((selectedFileFields.hasAzi())) {
-                            rec.append('-');
+                            recPost.append('-');
                             if (r.hasAzi()) {
                                 // if(s.azi[j]<100) {
-                                // rec.append('0');
+                                // fields_val.append('0');
                                 if (r.azi[j] < 10) {
-                                    rec.append('0');
+                                    recPost.append('0');
                                 }
                                 // }
-                                rec.append(r.azi[j]);
+                                recPost.append(r.azi[j]);
                             }
                         }
                         if ((selectedFileFields.hasSnr())) {
-                            rec.append('-');
+                            recPost.append('-');
                             if (r.hasSnr()) {
                                 if (r.snr[j] < 10) {
-                                    rec.append('0');
+                                    recPost.append('0');
                                 }
-                                rec.append(r.snr[j]);
+                                recPost.append(r.snr[j]);
                             }
                         }
                         j++;
                     }
                 }
+                recPost.append('"');
             }
             // if(r.utc!=0 &&
             // r.longitude!=0 && r.latitude!=0) {
@@ -413,43 +516,57 @@ public final class GPSPostgresqlFile extends GPSFile {
             // } else {
             // speed=0.000;
             // }
-            // rec.append(","+JavaLibBridge.toString(speed,3)+","+distance);
+            // fields_val.append(","+JavaLibBridge.toString(speed,3)+","+distance);
             // }
             // prevRecord=new GPSRecord(s);
             // }
 
             if (selectedFileFields.hasVoxStr()) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(VOX_FIELD);
+                recPost.append(",\"");
                 if (r.voxStr != null) {
-                    rec.append(r.voxStr);
+                    recPost.append(r.voxStr);
                 }
+                recPost.append('"');
             }
 
             if (addLogConditionInfo) {
-                rec.append(fieldSep);
+                rec.append(',');
+                rec.append(LOGTIME_FIELD);
+                rec.append(',');
+                rec.append(LOGDISTANCE_FIELD);
+                rec.append(',');
+                rec.append(LOGSPEED_FIELD);
+                recPost.append(',');
                 if (r.logPeriod % 10 == 0) {
-                    rec.append(r.logPeriod / 10);
+                    recPost.append(r.logPeriod / 10);
                 } else {
-                    rec.append(JavaLibBridge.toString(r.logPeriod / 10.0, 1));
+                    recPost.append(JavaLibBridge.toString(r.logPeriod / 10.0,
+                            1));
                 }
-                rec.append(fieldSep);
+                recPost.append(',');
                 if (r.logDistance % 10 == 0) {
-                    rec.append(r.logDistance / 10);
+                    recPost.append(r.logDistance / 10);
                 } else {
-                    rec.append(JavaLibBridge
-                            .toString(r.logDistance / 10.0, 1));
+                    recPost.append(JavaLibBridge.toString(
+                            r.logDistance / 10.0, 1));
                 }
-                rec.append(fieldSep);
+                recPost.append(',');
                 if (r.logSpeed % 10 == 0) {
-                    rec.append(r.logSpeed / 10);
+                    recPost.append(r.logSpeed / 10);
                 } else {
-                    rec.append(JavaLibBridge.toString(r.logSpeed / 10.0, 1));
+                    recPost.append(JavaLibBridge.toString(r.logSpeed / 10.0,
+                            1));
                 }
             }
 
-            rec.append(fieldSep);
+            rec.append(" ) ");
+            recPost.append(" )");
 
-            rec.append("\r\n");
+            recPost.append(";\r\n");
+            rec.append(recPost);
+            recPost.setLength(0);
             writeTxt(rec.toString());
             rec.setLength(0);
         } // activeFields!=null
