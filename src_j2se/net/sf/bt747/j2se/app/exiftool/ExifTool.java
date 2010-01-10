@@ -69,7 +69,7 @@ public final class ExifTool {
      * @throws IOException
      * @throws InterruptedException
      */
-    private static byte[] execExifTool(String[] args) throws IOException,
+    public static byte[] execExifTool(String[] args) throws IOException,
             InterruptedException {
         final ArrayList<String> argsList = new ArrayList<String>();
 
