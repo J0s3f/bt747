@@ -5,6 +5,7 @@ package net.sf.bt747.j2se.app.app.exiftool.test;
 
 import gps.log.GPSRecord;
 import gps.log.out.AllWayPointStyles;
+import net.sf.bt747.j2se.app.exiftool.ExifTool;
 import net.sf.bt747.j2se.app.exiftool.ExiftoolData;
 import net.sf.bt747.test.TestUtils;
 
@@ -71,6 +72,45 @@ public class TestExifToolTest extends TestCase {
         ed.writeImage(new BT747Path(imgTestPath));
 
         ImageData id = new ImageData();
+        id.setFilePath(new BT747Path(imgTestPath));
+        GPSRecord r = id.getGpsRecord();
+
+        ref.tagutc -= 100;
+        ref.rcr = AllWayPointStyles.GEOTAG_PICTURE_KEY;
+        TestUtils.assertEquals(imgPath, ref, r);
+
+        (new File(new BT747Path(imgTestPath))).delete();
+    }
+
+    
+    @Test
+    public void testJpexExifWriteExifToolRead() throws Exception {
+        String imgPath = TestUtils.getTestResourcePath("IMG_0307_Tagged.jpg");
+        String imgTestPath = imgPath + "javatst.jpg";
+        ImageData ed = new ImageData();
+        ed.setFilePath(new BT747Path(imgPath));
+        GPSRecord ref = ed.getGpsRecord();
+
+        ref.latitude += 10;
+        ref.longitude -= 10;
+        ref.tagutc += 100;
+        ref.rcr ^= 0x3;
+        ref.height += 10;
+
+        ed.setGpsRec(ref);
+
+        (new File(new BT747Path(imgTestPath))).delete();
+        ed.writeImage(new BT747Path(imgTestPath));
+
+        
+        (new File(new BT747Path(imgPath+".html"))).delete();
+        (new File(new BT747Path(imgTestPath+".html"))).delete();
+        String[] p = {"-htmldump","-w","%d%f.%e.html",imgPath,imgTestPath};
+        byte[] result;
+        result = ExifTool.execExifTool(p);
+        System.out.write(result);
+        
+        ExiftoolData id = new ExiftoolData();
         id.setFilePath(new BT747Path(imgTestPath));
         GPSRecord r = id.getGpsRecord();
 
