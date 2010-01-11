@@ -89,15 +89,17 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     
     private void updateGuiData() {
         cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("DEFAULT_DEVICE"), HOLUX_M241,
-                "iTrackU-Nemerix", "PhotoTrackr", "iTrackU-SIRFIII", HOLUX_GR245 }));
+                getString("DEFAULT_DEVICE"), HOLUX_M241, "iTrackU-Nemerix",
+                "PhotoTrackr", "iTrackU-SIRFIII", HOLUX_GR245 }));
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("TABLE_Description"), getString("GPX_Description"),
                 getString("GPX_ForOSMDescription"),
                 getString("GMAP_Description"), getString("CSV_Description"),
                 getString("KML_Description"), getString("KMZ_Description"),
                 getString("NMEA_Description"), getString("OZI_Description"),
-                getString("Compe_Description") }));
+                getString("Compe_Description"), getString("SQL_Description"),
+                getString("GoogleStaticURL_Description"),
+                getString("POSTGIS_Description"), }));
         cbDownloadMethod.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { getString("DOWNLOAD_INCREMENTAL"),
                         getString("DOWNLOAD_FULL"),
@@ -1183,6 +1185,12 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             selectedFormat = Model.KMZ_LOGTYPE;
         } else if (selected.equals(getString("TABLE_Description"))) {
             selectedFormat = Model.ARRAY_LOGTYPE;
+        } else if (selected.equals(getString("POSTGIS_Description"))) {
+            selectedFormat = Model.POSTGIS_LOGTYPE;
+        } else if (selected.equals(getString("SQL_Description"))) {
+            selectedFormat = Model.SQL_LOGTYPE;
+        } else if (selected.equals(getString("GoogleStaticURL_Description"))) {
+            selectedFormat = Model.GOOGLE_MAP_STATIC_URL_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
         }

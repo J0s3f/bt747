@@ -26,7 +26,7 @@ import bt747.sys.interfaces.BT747Path;
  * 
  * @author Mario De Weerd
  */
-public final class GPSPostgresqlFile extends GPSFile {
+public final class GPSSqlFile extends GPSFile {
     /**
      * 
      */
@@ -110,6 +110,10 @@ public final class GPSPostgresqlFile extends GPSFile {
     /**
      * 
      */
+    private static final String MILLISEC_FIELD = "millisecond";
+    /**
+     * 
+     */
     private static final String LONGITUDE_FIELD = "longitude";
     /**
      * 
@@ -170,7 +174,14 @@ public final class GPSPostgresqlFile extends GPSFile {
 
         if ((selectedFileFields.hasUtc())) {
             rec.append(separator);
-            rec.append(" " + TIME_FIELD + " TIMESTAMP PRIMARY KEY");
+            // TODO: Maybe define field as TIMESTAMP WITH TIME ZONE
+            rec.append(" " + TIME_FIELD + " TIMESTAMP");
+            separator = ',';
+        }
+        if (selectedFileFields.hasMillisecond()) {
+            rec.append(separator);
+            // TODO: Maybe define field as TIMESTAMP WITH TIME ZONE
+            rec.append(" " + MILLISEC_FIELD + " INTEGER");
             separator = ',';
         }
         rec.append(separator);
@@ -295,18 +306,23 @@ public final class GPSPostgresqlFile extends GPSFile {
                 // '%4d-%02d-%02d %02d:%02d:%02d'
                 // $year, $month, $day, $hour, $minute, $second,
                 // rec.append(b)
-                recPost.append(',' + CommonOut.getDateNumStr(t) + ','
-                        + CommonOut.getTimeStr(t));
-                if (r.hasMillisecond()) {
-                    recPost.append('.');
-                    if (r.milisecond < 100) {
-                        recPost.append('0');
-                    }
-                    if (r.milisecond < 10) {
-                        recPost.append('0');
-                    }
-                    recPost.append(r.milisecond);
-                }
+                
+                // TODO: Maybe define field as TIMESTAMP WITH TIME ZONE
+                recPost.append("TIMESTAMP '");
+                recPost.append(CommonOut.getDateTimeISO8601(t, r
+                        .hasMillisecond() ? r.milisecond : 0));
+                recPost.append("'");
+            }
+            if ((r.hasMillisecond()) && (selectedFileFields.hasMillisecond())) {
+                rec.append(separator);
+                rec.append(MILLISEC_FIELD);
+                separator = ',';
+                // '%4d-%02d-%02d %02d:%02d:%02d'
+                // $year, $month, $day, $hour, $minute, $second,
+                // rec.append(b)
+                
+                recPost.append(separator);
+                recPost.append(r.getMilisecond());
             }
 
             if (r.hasRecCount()) {
@@ -330,7 +346,8 @@ public final class GPSPostgresqlFile extends GPSFile {
                 rec.append(',');
                 rec.append(VALID_FIELD);
                 recPost.append(',');
-                recPost.append(CommonOut.getFixText(r.getValid()));
+                //recPost.append(CommonOut.getFixText(r.getValid()));
+              recPost.append(r.getValid());
             }
 
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {

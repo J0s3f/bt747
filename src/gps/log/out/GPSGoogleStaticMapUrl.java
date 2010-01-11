@@ -127,6 +127,12 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
         }
         String tmp;
         tmp = (String) res.get("encodedPoints");
+        //tmp = PolylineEncoder.replace(tmp, "?", "%3D");
+        tmp = PolylineEncoder.replace(tmp, "|", "%7C");
+        tmp = PolylineEncoder.replace(tmp, "\\\\", "\\");
+        //tmp = PolylineEncoder.replace(tmp, "{", "%7B");
+        //tmp = PolylineEncoder.replace(tmp, "}", "%7D");
+        //tmp = PolylineEncoder.replace(tmp, "`", "%60");
 
         if (tmp.length() >= 2) {
             rec.setLength(0);
@@ -369,6 +375,10 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
      */
     public final void finaliseFile() {
         if (isOpen()) {
+            for(int i = 0; i < urls.size(); i++) {
+                writeTxt((String)urls.elementAt(i));
+                writeTxt("\r\n");
+            }
             writeDataFooter();
         }
         super.finaliseFile();

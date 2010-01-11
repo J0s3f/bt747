@@ -349,6 +349,24 @@ public final class CommonOut {
                 % 100;
     }
 
+    public final static String getDateTimeISO8601(final BT747Time time, final int milisecond) {
+        return time.getYear() + "-"
+        // Month
+                + ((time.getMonth() < 10) ? "0" : "") + time.getMonth() + "-"
+                // Day
+                + ((time.getDay() < 10) ? "0" : "") + time.getDay()
+                + " "
+                + ((time.getHour() < 10) ? "0" : "") + time.getHour() + ":"
+                // Minute
+                + ((time.getMinute() < 10) ? "0" : "")
+                + time.getMinute() // +":"
+                + ":" + ((time.getSecond() < 10) ? "0" : "")
+                + time.getSecond() // +":";
+                + ((milisecond != 0) ? ("." + (milisecond < 100 ? "0" : "")
+                        + (milisecond < 10 ? "0" : "") + milisecond) : "")
+                ;
+    }
+    
     public final static String getDateNumStr(final BT747Time time) {
         return time.getYear() + "/"
         // Month

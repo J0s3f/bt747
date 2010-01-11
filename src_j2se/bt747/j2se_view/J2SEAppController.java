@@ -310,6 +310,9 @@ public final class J2SEAppController extends J2SEController {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      * @see Model#OSM_UPLOAD_LOGTYPE
+     * @see Model#POSTGIS_LOGTYPE
+     * @see Model#GOOGLE_MAP_STATIC_URL_LOGTYPE
+     * @see Model#SQL_LOGTYPE
      */
 
     public final void convertLog(final int logType) {

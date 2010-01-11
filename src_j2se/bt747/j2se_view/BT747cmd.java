@@ -1239,6 +1239,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                     type = Model.TRK_LOGTYPE;
                 } else if (typeStr.equals("GMAPURL")) {
                     type = Model.GOOGLE_MAP_STATIC_URL_LOGTYPE;
+                } else if (typeStr.equals("SQL")) {
+                    type = Model.SQL_LOGTYPE;
+                } else if (typeStr.equals("POSTGIS")) {
+                    type = Model.POSTGIS_LOGTYPE;
                 } else {
                     System.err.println("Unknown outtype '" + typeStr + "'");
                 }

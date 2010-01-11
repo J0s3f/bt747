@@ -40,6 +40,7 @@ import gps.log.out.GPSGoogleStaticMapUrl;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
+import gps.log.out.GPSSqlFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 import gps.mvc.CmdParam;
@@ -327,6 +328,10 @@ public class Controller implements ModelListener {
         case Model.GOOGLE_MAP_STATIC_URL_LOGTYPE:
             gpsFile = new GPSGoogleStaticMapUrl();
             break;
+        case Model.POSTGIS_LOGTYPE:
+        case Model.SQL_LOGTYPE:
+            gpsFile = new GPSSqlFile();
+            break;
         default:
             lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
             lastErrorInfo = "" + logType;
@@ -442,6 +447,16 @@ public class Controller implements ModelListener {
         case Model.GMAP_LOGTYPE:
             ext = ".html";
             break;
+        case Model.GOOGLE_MAP_STATIC_URL_LOGTYPE:
+            ext = ".txt";
+            break;
+        case Model.SQL_LOGTYPE:
+            ext = ".sql";
+            break;
+        case Model.POSTGIS_LOGTYPE:
+            ext = ".postgissql";
+            break;
+
         default:
             ext = "";
         }
