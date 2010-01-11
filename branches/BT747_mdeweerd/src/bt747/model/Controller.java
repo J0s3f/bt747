@@ -40,6 +40,7 @@ import gps.log.out.GPSGoogleStaticMapUrl;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
+import gps.log.out.GPSPostGISFile;
 import gps.log.out.GPSSqlFile;
 import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
@@ -329,6 +330,8 @@ public class Controller implements ModelListener {
             gpsFile = new GPSGoogleStaticMapUrl();
             break;
         case Model.POSTGIS_LOGTYPE:
+            gpsFile = new GPSPostGISFile();
+            break;
         case Model.SQL_LOGTYPE:
             gpsFile = new GPSSqlFile();
             break;

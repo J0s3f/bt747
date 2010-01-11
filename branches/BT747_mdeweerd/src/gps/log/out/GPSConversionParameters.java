@@ -40,7 +40,12 @@ public final class GPSConversionParameters {
      * Defines the table name for Postgresql.
      */
     public final static String SQL_TABLE_NAME = "sql-table";
-    
+
+    /**
+     * Defines the table name for Postgresql.
+     */
+    public final static String POSTGIS_TABLE_NAME = "postgis-table";
+
     /**
      * OSM login (string).
      */
