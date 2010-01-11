@@ -15,15 +15,7 @@ import gps.log.in.CSVLogConvert;
 public class CSVInputConversionTest extends TestConvertInBase {
     
     public static final String TEST_HDOP_FILE = "logfiles/testHDOP.csv";
-    
-    
-    public String getResourcePath(String rsc) {
-        return getClass()
-        .getResource(rsc).getPath(); // getClass().getResource("test1.csv")
-    }
         
-    
-    
     public void testCsvConversionSimple() throws Exception {
         TracksAndWayPoints result;
         setInputConverter(new CSVLogConvert());

@@ -1,18 +1,18 @@
 /**
  * 
  */
-package net.sf.bt747.gps.log.in.test;
+package net.sf.bt747.gps.log.out.test;
 
 import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
-import gps.log.TracksAndWayPoints;
+import gps.log.in.CSVLogConvert;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSConversionParameters;
+import gps.log.out.GPSFile;
 import gps.log.out.GPSKMLFile;
 
-import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Path;
@@ -22,7 +22,7 @@ import bt747.sys.interfaces.JavaLibImplementation;
  * @author Mario
  * 
  */
-public class TestConvertInBase extends junit.framework.TestCase {
+public class TestConvertOutBase extends junit.framework.TestCase {
 
     /**
      * Initialize the bridge to the platform. Required for BT747 that runs on
@@ -39,8 +39,8 @@ public class TestConvertInBase extends junit.framework.TestCase {
 
     GPSLogConvertInterface lc;
     GPSArray gpsFile; // A GPS file that we can access in the test.
-
     GPSFilter[] logFilters = { new GPSFilter(), new GPSFilter() };
+    BT747Path logSource;
 
     /**
      * Get a path to a resource.
@@ -61,7 +61,12 @@ public class TestConvertInBase extends junit.framework.TestCase {
         this.lc = inputConverter;
     }
 
-    public void configureGpsArray(GPSArray gpsFile) {
+    /**
+     * A number of default configurations for the gpsFile.
+     * 
+     * @param gpsFile
+     */
+    public void configureGpsFile(GPSFile gpsFile) {
         gpsFile.setWayPointTimeCorrection(0);
         gpsFile.setMaxDiff(300);
         gpsFile.setOverridePreviousTag(true);
@@ -106,6 +111,8 @@ public class TestConvertInBase extends junit.framework.TestCase {
                 GPSConversionParameters.GOOGLEMAPKEY_STRING, "");
         gpsFile.getParamObject().setIntParam(
                 GPSConversionParameters.NMEA_OUTFIELDS, 0xFF);
+        gpsFile.getParamObject().setParam(
+                GPSConversionParameters.SQL_TABLE_NAME,"PosTable");
         // altMode = GPSKMLFile.CLAMPED_HEIGHT;
         // altMode = GPSKMLFile.RELATIVE_HEIGHT;
         String altMode = GPSKMLFile.ABSOLUTE_HEIGHT;
@@ -119,30 +126,31 @@ public class TestConvertInBase extends junit.framework.TestCase {
     public void converterSetup() {
         lc.setConvertWGS84ToMSL(+1);
         lc.setLoggerType(BT747Constants.GPS_TYPE_DEFAULT);
-
-        gpsFile = new GPSArray();
-
-        configureGpsArray(gpsFile);
-
-        gpsFile.initialiseFile(new BT747Path(""), "", Model.SPLIT_ONE_FILE);
     }
 
-    public TracksAndWayPoints doConvert(String path) {
+    /**
+     * Setup the log source using the CSV test file.
+     */
+    public static final String TEST_HDOP_FILE = "files/testHDOP.csv";
+
+    /**
+     * Set up a CSV file as the source for the testcase.
+     * 
+     * @throws Exception
+     */
+    public void setupCsvInputConverter() throws Exception {
+        setInputConverter(new CSVLogConvert());
+        converterSetup();
+        /* Any settings changing from test defaults */
+        logSource = new BT747Path(getResourcePath(TEST_HDOP_FILE));
+    }
+
+    public void doConversionTest(GPSFile gpsFile) throws Exception {
         int error = -1;
-        TracksAndWayPoints result;
         try {
-            error = lc.toGPSFile(new BT747Path(path), gpsFile);
+            error = lc.toGPSFile(logSource, gpsFile);
         } catch (final Throwable e) {
             Generic.debug("During conversion", e);
         }
-
-        if (error != 0) {
-            // lastError = error;
-            // lastErrorInfo = lc.getErrorInfo();
-            result = null;
-        } else {
-            result = gpsFile.getResult();
-        }
-        return result;
     }
 }
