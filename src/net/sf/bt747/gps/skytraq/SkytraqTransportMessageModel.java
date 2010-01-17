@@ -33,9 +33,13 @@ public class SkytraqTransportMessageModel {
         }
     }
 
-    public SkytraqTransportMessageModel(byte messageID, byte[] messageBody) {
+    public SkytraqTransportMessageModel(final byte messageID, final byte[] messageBody) {
         this.messageID = messageID;
-        messageBody = messageBody.clone();
+        this.messageBody = new byte[messageBody.length];
+        
+        for(int i=0; i<messageBody.length;i++) {
+            this.messageBody[i] = messageBody[i];
+        }
     }
 
     /**
