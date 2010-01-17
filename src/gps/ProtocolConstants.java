@@ -41,4 +41,9 @@ public interface ProtocolConstants {
      * The SIRFIII protocol. This one can also have flavors.
      */
     public final static int PROTOCOL_SIRFIII = 3;
+    
+    /**
+     * The Skytraq protocol. This one can also have flavors.
+     */
+    public final static int PROTOCOL_SKYTRAQ = 4;
 }

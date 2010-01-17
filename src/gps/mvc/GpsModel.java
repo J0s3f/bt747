@@ -76,6 +76,9 @@ public class GpsModel implements ProtocolConstants {
             case PROTOCOL_HOLUX_PHLX:
                 mtkModel = new HoluxModel(this, handler);
                 break;
+            case PROTOCOL_SKYTRAQ:
+                mtkModel = new SkytraqModel(this, handler);
+                break;
             default:
                 // TODO: This should probably be handled through an exception
                 mtkModel = null;

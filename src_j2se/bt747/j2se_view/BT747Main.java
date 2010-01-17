@@ -508,6 +508,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miMTKProtocol.setSelected(type == BT747Constants.PROTOCOL_MTK);
         miSirfIIIProtocol.setSelected(type == BT747Constants.PROTOCOL_WONDE_PROUD);
         miPHLXProtocol.setSelected(type == BT747Constants.PROTOCOL_PHLX);
+        miSkyTraqProtocol.setSelected(type == BT747Constants.PROTOCOL_SKYTRAQ);
     }
 
     public void modelEvent(final ModelEvent e) {
@@ -751,6 +752,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
         miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
         miPHLXProtocol = new javax.swing.JRadioButtonMenuItem();
+        miSkyTraqProtocol = new javax.swing.JRadioButtonMenuItem();
         miUsePreciseGeoid = new javax.swing.JCheckBoxMenuItem();
         InfoMenu = new javax.swing.JMenu();
         AboutBT747 = new javax.swing.JMenuItem();
@@ -1248,6 +1250,15 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miDownloadDevice.add(miPHLXProtocol);
 
+        miSkyTraqProtocol.setText(bundle.getString("BT747Main.miSkyTraqProtocol.text")); // NOI18N
+        miSkyTraqProtocol.setToolTipText(bundle.getString("BT747Main.miSkyTraqProtocol.toolTipText")); // NOI18N
+        miSkyTraqProtocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSkyTraqProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miSkyTraqProtocol);
+
         SettingsMenu.add(miDownloadDevice);
 
         miUsePreciseGeoid.setSelected(true);
@@ -1647,6 +1658,10 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.CycleThunderFlames.ordinal());
 }//GEN-LAST:event_miCycleThunderflameActionPerformed
 
+    private void miSkyTraqProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSkyTraqProtocolActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miSkyTraqProtocolActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -1702,6 +1717,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
     private javax.swing.JMenuItem miPopulateSerialPorts;
     private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;
+    private javax.swing.JRadioButtonMenuItem miSkyTraqProtocol;
     private javax.swing.JCheckBoxMenuItem miUsePreciseGeoid;
     private javax.swing.JMenuItem mnSiteLink;
     private javax.swing.JPanel pnBottomInformation;

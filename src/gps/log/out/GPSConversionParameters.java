@@ -91,6 +91,12 @@ public final class GPSConversionParameters {
      * Indicates if a new track is needed when the logger is switched on.
      */
     public final static String SPLIT_DISTANCE = "split-d";
+    
+    /**
+     * Indicates the mode to use for distance values.
+     */
+    
+    public final static String DISTANCE_CALC_MODE = "dist-calc";
 
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);
