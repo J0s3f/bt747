@@ -258,13 +258,13 @@ public abstract class GPSFile implements GPSFileInterface {
     public final void setActiveFileFields(
             final GPSRecord activeFileFieldsFormat) {
         // TODO: Take into account the waypoints.
-        activeFileFields = activeFileFieldsFormat.cloneRecord();
         boolean willHaveDistanceInRecord;
         willHaveDistanceInRecord = (distCalcMode == AppSettings.DISTANCE_CALC_MODE_ALWAYS)
                 || (distCalcMode == AppSettings.DISTANCE_CALC_MODE_WHEN_MISSING);
         if (willHaveDistanceInRecord) {
-            activeFileFieldsFormat.setDistance(1);
+            activeFileFieldsFormat.setDistance(0);
         }
+        activeFileFields = activeFileFieldsFormat.cloneRecord();
 
         updateFields();
     }
