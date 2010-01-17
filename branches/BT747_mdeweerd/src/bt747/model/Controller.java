@@ -404,6 +404,9 @@ public class Controller implements ModelListener {
             gpsFile.getParamObject().setIntParam(
                     GPSConversionParameters.SPLIT_DISTANCE,
                     m.getIntOpt(AppSettings.SPLIT_DISTANCE));
+            gpsFile.getParamObject().setIntParam(
+                    GPSConversionParameters.DISTANCE_CALC_MODE,
+                    m.getIntOpt(AppSettings.DISTANCE_CALCULATION_MODE));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:
@@ -736,6 +739,8 @@ public class Controller implements ModelListener {
             break;
         case ProtocolConstants.PROTOCOL_WONDEPROUD:
             startWPDownload();
+            break;
+        case ProtocolConstants.PROTOCOL_SKYTRAQ:
             break;
         }
     }

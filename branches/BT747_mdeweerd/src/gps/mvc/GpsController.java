@@ -82,6 +82,8 @@ public class GpsController implements BT747Thread, ProtocolConstants,
         case PROTOCOL_WONDEPROUD:
             mtkC = new WPController(this, mtkM);
             break;
+        case PROTOCOL_SKYTRAQ:
+            mtkC = new SkytraqController(this, mtkM);
         }
 
     }

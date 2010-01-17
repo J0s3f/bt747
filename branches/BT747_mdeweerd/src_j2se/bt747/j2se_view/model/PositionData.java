@@ -540,7 +540,7 @@ public class PositionData extends AbstractBean {
                 return Integer.valueOf(g.milisecond);
             }
             break;
-        case DataTypes.DISTANCE:
+        case DataTypes.DISTANCE_METERS:
             if (g.hasDistance()) {
                 return Double.valueOf(g.distance);
             }
@@ -619,7 +619,7 @@ public class PositionData extends AbstractBean {
                 break;
             case DataTypes.MILLISECOND:
                 break;
-            case DataTypes.DISTANCE:
+            case DataTypes.DISTANCE_METERS:
                 break;
             case DataTypes.DISTANCE_FEET:
                 break;

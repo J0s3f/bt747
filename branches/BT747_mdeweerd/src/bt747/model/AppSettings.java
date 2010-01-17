@@ -432,6 +432,12 @@ public class AppSettings implements BT747Thread {
     public final static int HEIGHT_WGS84_TO_MSL = 1;
     public final static int HEIGHT_AUTOMATIC = 2;
     public final static int HEIGHT_MSL_TO_WGS84 = 3;
+    
+    
+    public final static int DISTANCE_CALCULATION_MODE = 85;
+    public final static int DISTANCE_CALC_MODE_NONE = 0;
+    public final static int DISTANCE_CALC_MODE_WHEN_MISSING = 1;
+    public final static int DISTANCE_CALC_MODE_ALWAYS = 2;
 
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
@@ -680,7 +686,10 @@ public class AppSettings implements BT747Thread {
         case 48:
             setIntOpt(EXTTYPE, Model.GPX_LOGTYPE); // Changed field size
             setIntOpt(FONTSCALE, 100);
-            setStringOpt(AppSettings.VERSION, "0.49");
+            /* fall through */
+        case 49:
+            setIntOpt(DISTANCE_CALCULATION_MODE, DISTANCE_CALC_MODE_NONE);
+            setStringOpt(AppSettings.VERSION, "0.50");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1716,8 +1725,11 @@ public class AppSettings implements BT747Thread {
     private static final int FONTSCALE_IDX = AppSettings.EXTTYPE_IDX
             + AppSettings.EXTTYPE_SIZE;
     private static final int FONTSCALE_SIZE = 2;
-    private static final int C_NEXT_IDX = AppSettings.FONTSCALE_IDX
+    private static final int DISTANCE_CALC_MODE_IDX = AppSettings.FONTSCALE_IDX
             + AppSettings.FONTSCALE_SIZE;
+    private static final int DISTANCE_CALC_MODE_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.DISTANCE_CALC_MODE_IDX
+            + AppSettings.DISTANCE_CALC_MODE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1955,6 +1967,9 @@ public class AppSettings implements BT747Thread {
             { AppSettings.INT, AppSettings.HEIGHT_CONVERSION_MODE,
                     AppSettings.C_HEIGHT_CONVERSION_MODE_IDX,
                     AppSettings.C_HEIGHT_CONVERSION_MODE_SIZE },
+            { AppSettings.INT, AppSettings.DISTANCE_CALCULATION_MODE,
+                    AppSettings.DISTANCE_CALC_MODE_IDX,
+                    AppSettings.DISTANCE_CALC_MODE_SIZE }
     // End of list
     };
 }

@@ -376,10 +376,19 @@ public final class Conv {
                 * Math.cos(Conv.rad2deg(90 - lat1));
         final double z2 = Conv.calcR(lat2)
                 * Math.cos(Conv.rad2deg(90 - lat2));
+        final double powArg = Conv.calcR((lat1 + lat2) / 2);
+        final double div = powArg*powArg;
+        double a_acosArg = ((x1 * x2) + (y1 * y2) + (z1 * z2))
+                / div;
+        // Due to roundings, argument could exceed 1,0 limits slightly.
+        // Bring within limits to avoid NaN !!
+        if (a_acosArg > 1.0) {
+            a_acosArg = 1.0;
+        } else if (a_acosArg < -1.0) {
+            a_acosArg = -1.0;
+        }
         final double a = bt747.sys.Generic
-                .acos(((x1 * x2) + (y1 * y2) + (z1 * z2))
-                        / bt747.sys.Generic.pow(
-                                Conv.calcR((lat1 + lat2) / 2), 2));
+                .acos(a_acosArg);
 
         return Conv.calcR((lat1 + lat2) / 2) * a;
     }

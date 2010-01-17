@@ -20,6 +20,7 @@ import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.model.AppSettings;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -115,8 +116,6 @@ public abstract class GPSFile implements GPSFileInterface {
 
     private double previousLat = 0;
     private double previousLon = 0;
-    private double nextPreviousLat = 0;
-    private double nextPreviousLon = 0;
 
     /**
      * When two points are more than this time apart, a new track segment is
@@ -173,6 +172,7 @@ public abstract class GPSFile implements GPSFileInterface {
     private boolean calcDistance = false;
     private int splitDistance = 0;
     protected double distanceWithPrevious;
+    private int distCalcMode;
 
     private final BT747HashSet filenames = JavaLibBridge.getHashSetInstance();
 
@@ -226,7 +226,13 @@ public abstract class GPSFile implements GPSFileInterface {
         } else {
             splitDistance = 0;
         }
-        if (splitDistance != 0) {
+        if (getParamObject().hasParam(GPSConversionParameters.DISTANCE_CALC_MODE)) {
+            distCalcMode = getParamObject().getIntParam(
+                    GPSConversionParameters.DISTANCE_CALC_MODE);
+        } else {
+            distCalcMode = AppSettings.DISTANCE_CALC_MODE_NONE;
+        }
+        if (splitDistance != 0 || distCalcMode==AppSettings.DISTANCE_CALC_MODE_ALWAYS) {
             // When splitting according to distance, we need to calculate
             // the distance between positions.
             calcDistance = true;
@@ -252,7 +258,14 @@ public abstract class GPSFile implements GPSFileInterface {
     public final void setActiveFileFields(
             final GPSRecord activeFileFieldsFormat) {
         // TODO: Take into account the waypoints.
-        activeFileFields = activeFileFieldsFormat;
+        activeFileFields = activeFileFieldsFormat.cloneRecord();
+        boolean willHaveDistanceInRecord;
+        willHaveDistanceInRecord = (distCalcMode == AppSettings.DISTANCE_CALC_MODE_ALWAYS)
+                || (distCalcMode == AppSettings.DISTANCE_CALC_MODE_WHEN_MISSING);
+        if (willHaveDistanceInRecord) {
+            activeFileFieldsFormat.setDistance(1);
+        }
+
         updateFields();
     }
 
@@ -581,38 +594,8 @@ public abstract class GPSFile implements GPSFileInterface {
         int dateref = 0;
         previousTime = nextPreviousTime;
         needsToSplitTrack = (logOn && isTrackSplitOnLogOn);
+        boolean firstRecordForDistance = firstRecord;
 
-        if (calcDistance) {
-            if (cachedRecordIsNeeded(r) && r.hasPosition()) {
-                previousLat = nextPreviousLat;
-                previousLon = nextPreviousLon;
-                nextPreviousLat = r.getLatitude();
-                nextPreviousLon = r.getLongitude();
-                if (!firstRecord) {
-                    distanceWithPrevious = Conv.earthDistance(previousLat,
-                            previousLon, nextPreviousLat, nextPreviousLon);
-                    if (splitDistance != 0) {
-                        needsToSplitTrack |= (splitDistance <= distanceWithPrevious);
-                        // if ((splitDistance <= distanceWithPrevious)) {
-                        //
-                        // Generic.debug(r.getRecCount()
-                        // + ":"
-                        // + previousLat
-                        // + " "
-                        // + previousLon
-                        // + " "
-                        // + nextPreviousLat
-                        // + " "
-                        // + nextPreviousLon
-                        // + " = "
-                        // + Conv.earthDistance(previousLat,
-                        // previousLon, nextPreviousLat,
-                        // nextPreviousLon));
-                        // }
-                    }
-                }
-            }
-        }
         // bt747.sys.Generic.debug("Adding\n"+r.toString());
 
         if (r.hasUtc()) {
@@ -700,8 +683,53 @@ public abstract class GPSFile implements GPSFileInterface {
             }
         }
 
-        if ((r.hasUtc()) && recordIsNeeded(r)) {
-            nextPreviousTime = r.utc;
+        boolean updateDistanceInRecord;
+        updateDistanceInRecord =
+            !(distCalcMode==AppSettings.DISTANCE_CALC_MODE_NONE) && (
+                    (distCalcMode==AppSettings.DISTANCE_CALC_MODE_ALWAYS) ||
+            (!r.hasDistance() && distCalcMode == AppSettings.DISTANCE_CALC_MODE_WHEN_MISSING)
+            );
+        if (calcDistance
+                || updateDistanceInRecord) {
+            if (cachedRecordIsNeeded(r) && r.hasPosition()) {
+                if (!firstRecordForDistance) {
+                    distanceWithPrevious = Conv.earthDistance(
+                            r.getLatitude(), r.getLongitude(), previousLat,
+                            previousLon);
+                    if (splitDistance != 0) {
+                        needsToSplitTrack |= (splitDistance <= distanceWithPrevious);
+                        // if ((splitDistance <= distanceWithPrevious)) {
+                        //
+                        // Generic.debug(r.getRecCount()
+                        // + ":"
+                        // + previousLat
+                        // + " "
+                        // + previousLon
+                        // + " "
+                        // + nextPreviousLat
+                        // + " "
+                        // + nextPreviousLon
+                        // + " = "
+                        // + Conv.earthDistance(previousLat,
+                        // previousLon, nextPreviousLat,
+                        // nextPreviousLon));
+                        // }
+                    }
+                    if(updateDistanceInRecord) {
+                        r.setDistance(distanceWithPrevious);
+                    }
+                }
+            }
+        }
+
+        if (cachedRecordIsNeeded(r)) {
+            if(r.hasPosition()) {
+                previousLat = r.getLatitude();
+                previousLon = r.getLongitude();
+            }
+            if ((r.hasUtc())) {
+                nextPreviousTime = r.utc;
+            }
         }
     };
 
@@ -757,8 +785,6 @@ public abstract class GPSFile implements GPSFileInterface {
         nextPreviousTime = 0;
         previousLat = 0;
         previousLon = 0;
-        nextPreviousLat = 0;
-        nextPreviousLon = 0;
         firstRecord = true;
         initWayPointUserListSetup();
         prevRecord = null;

@@ -33,7 +33,7 @@ public final class DataTypes {
     public static final int SNR = 16;
     public static final int RCR = 17;
     public static final int MILLISECOND = 18;
-    public static final int DISTANCE = 19;
+    public static final int DISTANCE_METERS = 19;
     public static final int LOGDIST = 20;
     public static final int LOGSPD = 21;
     public static final int LOGTIME = 22;
@@ -147,7 +147,7 @@ public final class DataTypes {
             return String.class;
         case MILLISECOND:
             return Integer.class;
-        case DISTANCE:
+        case DISTANCE_METERS:
             return Float.class;
         case DISTANCE_FEET:
             return Float.class;
@@ -280,7 +280,7 @@ public final class DataTypes {
         case MILLISECOND:
             sample = "000";
             break;
-        case DISTANCE:
+        case DISTANCE_METERS:
         case DISTANCE_FEET:
             sample = "000000";
             break;
@@ -424,7 +424,7 @@ public final class DataTypes {
         case MILLISECOND:
             label = "TAB_TITLE_MS";
             break;
-        case DISTANCE:
+        case DISTANCE_METERS:
             label = "TAB_TITLE_Distance_m";
             break;
         case DISTANCE_FEET:
