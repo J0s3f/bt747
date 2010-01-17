@@ -143,6 +143,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbNewTrackWhenLogOn.setSelected(m.getBooleanOpt(Model.IS_NEW_TRACK_WHEN_LOG_ON));
         updateFileFormatData();
         updateColorButtons();
+        updateDistanceCombo();
     }
 
     private void adjustHeightCombo() {
@@ -196,6 +197,22 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
 
+        jPanel4 = new javax.swing.JPanel();
+        pnGUISettings = new javax.swing.JPanel();
+        lbFontScale = new javax.swing.JLabel();
+        spScale = new javax.swing.JSpinner();
+        pnLanguage = new javax.swing.JPanel();
+        cbLanguageChooser = new com.toedter.components.JLocaleChooser();
+        cbLanguage = new javax.swing.JComboBox();
+        lbCode = new javax.swing.JLabel();
+        pnSeparation = new javax.swing.JPanel();
+        lbNewTrackAfter = new javax.swing.JLabel();
+        tfTrackSeparationTime = new javax.swing.JTextField();
+        lbMinPause = new javax.swing.JLabel();
+        cbNewTrackWhenLogOn = new javax.swing.JCheckBox();
+        lbNewTrackAfterDistance = new javax.swing.JLabel();
+        tfTrackSeparationDistance = new javax.swing.JTextField();
+        lbMetersAfter = new javax.swing.JLabel();
         pnVarious = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         cbUTCOffset = new javax.swing.JComboBox();
@@ -211,14 +228,6 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbNoFixColor = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         cbDistanceCalculation = new javax.swing.JComboBox();
-        pnSeparation = new javax.swing.JPanel();
-        lbNewTrackAfter = new javax.swing.JLabel();
-        tfTrackSeparationTime = new javax.swing.JTextField();
-        lbMinPause = new javax.swing.JLabel();
-        cbNewTrackWhenLogOn = new javax.swing.JCheckBox();
-        lbNewTrackAfterDistance = new javax.swing.JLabel();
-        tfTrackSeparationDistance = new javax.swing.JTextField();
-        lbMetersAfter = new javax.swing.JLabel();
         pnFileOutputFields = new javax.swing.JPanel();
         pnFileOutputFieldInner = new javax.swing.JPanel();
         pnFileReason = new javax.swing.JPanel();
@@ -250,15 +259,153 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         pnTrackPoints = new javax.swing.JPanel();
         cbAddTrackPointComment = new javax.swing.JCheckBox();
         cbAddTrackPointName = new javax.swing.JCheckBox();
-        pnLanguage = new javax.swing.JPanel();
-        cbLanguageChooser = new com.toedter.components.JLocaleChooser();
-        cbLanguage = new javax.swing.JComboBox();
-        lbCode = new javax.swing.JLabel();
-        pnGUISettings = new javax.swing.JPanel();
-        lbFontScale = new javax.swing.JLabel();
-        spScale = new javax.swing.JSpinner();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        pnGUISettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnGUISettings.border.title"))); // NOI18N
+
+        lbFontScale.setText(bundle.getString("OutputSettingsPanel.lbFontScale.text")); // NOI18N
+
+        spScale.setModel(new javax.swing.SpinnerNumberModel(100, 50, 200, 1));
+        spScale.setInputVerifier(J2SEAppController.IntVerifier);
+        spScale.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spScaleStateChanged(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnGUISettingsLayout = new org.jdesktop.layout.GroupLayout(pnGUISettings);
+        pnGUISettings.setLayout(pnGUISettingsLayout);
+        pnGUISettingsLayout.setHorizontalGroup(
+            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(lbFontScale)
+            .add(spScale, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        );
+        pnGUISettingsLayout.setVerticalGroup(
+            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGUISettingsLayout.createSequentialGroup()
+                .add(lbFontScale)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spScale, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+
+        pnLanguage.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLanguage.border.title_1"))); // NOI18N
+
+        cbLanguageChooser.setToolTipText(bundle.getString("OutputSettingsPanel.cbLanguageChooser.toolTipText")); // NOI18N
+        cbLanguageChooser.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbLanguageChooserItemStateChanged(evt);
+            }
+        });
+        cbLanguageChooser.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbLanguageChooserFocusLost(evt);
+            }
+        });
+
+        cbLanguage.setEditable(true);
+        cbLanguage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "en", "nl", "fr", "ru" }));
+        cbLanguage.setToolTipText(bundle.getString("OutputSettingsPanel.cbLanguage.toolTipText")); // NOI18N
+        cbLanguage.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbLanguageItemStateChanged(evt);
+            }
+        });
+
+        lbCode.setText(bundle.getString("OutputSettingsPanel.lbCode.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnLanguageLayout = new org.jdesktop.layout.GroupLayout(pnLanguage);
+        pnLanguage.setLayout(pnLanguageLayout);
+        pnLanguageLayout.setHorizontalGroup(
+            pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnLanguageLayout.createSequentialGroup()
+                .add(cbLanguageChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbCode)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+        pnLanguageLayout.setVerticalGroup(
+            pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(cbLanguageChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbCode)
+                .add(cbLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+
+        pnSeparation.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSeparation.border.title"))); // NOI18N
+        pnSeparation.setMaximumSize(new java.awt.Dimension(300, 32767));
+        pnSeparation.setOpaque(false);
+
+        lbNewTrackAfter.setText(bundle.getString("BT747Main.lbNewTrackAfter.text")); // NOI18N
+
+        tfTrackSeparationTime.setText(bundle.getString("BT747Main.tfTrackSeparationTime.text")); // NOI18N
+        tfTrackSeparationTime.setToolTipText(bundle.getString("BT747Main.tfTrackSeparationTime.toolTipText")); // NOI18N
+        tfTrackSeparationTime.setInputVerifier(c.IntVerifier);
+        tfTrackSeparationTime.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfTrackSeparationTimeFocusLost(evt);
+            }
+        });
+
+        lbMinPause.setText(bundle.getString("BT747Main.lbMinPause.text")); // NOI18N
+
+        cbNewTrackWhenLogOn.setText(bundle.getString("OutputSettingsPanel.cbNewTrackWhenLogOn.text")); // NOI18N
+        cbNewTrackWhenLogOn.setToolTipText(bundle.getString("OutputSettingsPanel.cbNewTrackWhenLogOn.toolTipText")); // NOI18N
+        cbNewTrackWhenLogOn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbNewTrackWhenLogOnItemStateChanged(evt);
+            }
+        });
+
+        lbNewTrackAfterDistance.setText(bundle.getString("OutputSettingsPanel.lbNewTrackAfterDistance.text")); // NOI18N
+        lbNewTrackAfterDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+
+        tfTrackSeparationDistance.setText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.text")); // NOI18N
+        tfTrackSeparationDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+        tfTrackSeparationDistance.setInputVerifier(c.IntVerifier);
+        tfTrackSeparationDistance.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfTrackSeparationDistanceFocusLost(evt);
+            }
+        });
+
+        lbMetersAfter.setText(bundle.getString("OutputSettingsPanel.lbMetersAfter.text")); // NOI18N
+        lbMetersAfter.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnSeparationLayout = new org.jdesktop.layout.GroupLayout(pnSeparation);
+        pnSeparation.setLayout(pnSeparationLayout);
+        pnSeparationLayout.setHorizontalGroup(
+            pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnSeparationLayout.createSequentialGroup()
+                .add(lbNewTrackAfter)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbMinPause))
+            .add(pnSeparationLayout.createSequentialGroup()
+                .add(lbNewTrackAfterDistance)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbMetersAfter))
+            .add(cbNewTrackWhenLogOn)
+        );
+        pnSeparationLayout.setVerticalGroup(
+            pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnSeparationLayout.createSequentialGroup()
+                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbNewTrackAfter)
+                    .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbMinPause))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbNewTrackAfterDistance)
+                    .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbMetersAfter))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbNewTrackWhenLogOn))
+        );
+
         pnVarious.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnVarious.border.title"))); // NOI18N
 
         cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7", "UTC -6", "UTC -5", "UTC -4", "UTC -3", "UTC -2", "UTC -1", "UTC +0", "UTC +1", "UTC +2", "UTC +3", "UTC +4", "UTC +5", "UTC +6", "UTC +7", "UTC +8", "UTC +9", "UTC +10", "UTC +11", "UTC +12" }));
@@ -414,7 +561,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         pnVariousLayout.setVerticalGroup(
             pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -426,78 +573,29 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        pnSeparation.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSeparation.border.title"))); // NOI18N
-        pnSeparation.setMaximumSize(new java.awt.Dimension(300, 32767));
-        pnSeparation.setOpaque(false);
-
-        lbNewTrackAfter.setText(bundle.getString("BT747Main.lbNewTrackAfter.text")); // NOI18N
-
-        tfTrackSeparationTime.setText(bundle.getString("BT747Main.tfTrackSeparationTime.text")); // NOI18N
-        tfTrackSeparationTime.setToolTipText(bundle.getString("BT747Main.tfTrackSeparationTime.toolTipText")); // NOI18N
-        tfTrackSeparationTime.setInputVerifier(c.IntVerifier);
-        tfTrackSeparationTime.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfTrackSeparationTimeFocusLost(evt);
-            }
-        });
-
-        lbMinPause.setText(bundle.getString("BT747Main.lbMinPause.text")); // NOI18N
-
-        cbNewTrackWhenLogOn.setText(bundle.getString("OutputSettingsPanel.cbNewTrackWhenLogOn.text")); // NOI18N
-        cbNewTrackWhenLogOn.setToolTipText(bundle.getString("OutputSettingsPanel.cbNewTrackWhenLogOn.toolTipText")); // NOI18N
-        cbNewTrackWhenLogOn.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbNewTrackWhenLogOnItemStateChanged(evt);
-            }
-        });
-
-        lbNewTrackAfterDistance.setText(bundle.getString("OutputSettingsPanel.lbNewTrackAfterDistance.text")); // NOI18N
-        lbNewTrackAfterDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
-
-        tfTrackSeparationDistance.setText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.text")); // NOI18N
-        tfTrackSeparationDistance.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
-        tfTrackSeparationDistance.setInputVerifier(c.IntVerifier);
-        tfTrackSeparationDistance.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfTrackSeparationDistanceFocusLost(evt);
-            }
-        });
-
-        lbMetersAfter.setText(bundle.getString("OutputSettingsPanel.lbMetersAfter.text")); // NOI18N
-        lbMetersAfter.setToolTipText(bundle.getString("OutputSettingsPanel.tfTrackSeparationDistance.toolTipText")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout pnSeparationLayout = new org.jdesktop.layout.GroupLayout(pnSeparation);
-        pnSeparation.setLayout(pnSeparationLayout);
-        pnSeparationLayout.setHorizontalGroup(
-            pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSeparationLayout.createSequentialGroup()
-                .add(lbNewTrackAfter)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lbMinPause))
-            .add(pnSeparationLayout.createSequentialGroup()
-                .add(lbNewTrackAfterDistance)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lbMetersAfter))
-            .add(cbNewTrackWhenLogOn)
+        org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
-        pnSeparationLayout.setVerticalGroup(
-            pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSeparationLayout.createSequentialGroup()
-                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbNewTrackAfter)
-                    .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbMinPause))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbNewTrackAfterDistance)
-                    .add(tfTrackSeparationDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbMetersAfter))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbNewTrackWhenLogOn))
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(0, 0, 0)
+                .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         pnFileOutputFields.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileOutputFields.border.title"))); // NOI18N
@@ -859,103 +957,19 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .add(0, 0, 0))
         );
 
-        pnLanguage.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLanguage.border.title_1"))); // NOI18N
-
-        cbLanguageChooser.setToolTipText(bundle.getString("OutputSettingsPanel.cbLanguageChooser.toolTipText")); // NOI18N
-        cbLanguageChooser.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbLanguageChooserItemStateChanged(evt);
-            }
-        });
-        cbLanguageChooser.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbLanguageChooserFocusLost(evt);
-            }
-        });
-
-        cbLanguage.setEditable(true);
-        cbLanguage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "en", "nl", "fr", "ru" }));
-        cbLanguage.setToolTipText(bundle.getString("OutputSettingsPanel.cbLanguage.toolTipText")); // NOI18N
-        cbLanguage.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbLanguageItemStateChanged(evt);
-            }
-        });
-
-        lbCode.setText(bundle.getString("OutputSettingsPanel.lbCode.text")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout pnLanguageLayout = new org.jdesktop.layout.GroupLayout(pnLanguage);
-        pnLanguage.setLayout(pnLanguageLayout);
-        pnLanguageLayout.setHorizontalGroup(
-            pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLanguageLayout.createSequentialGroup()
-                .add(cbLanguageChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lbCode)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-        pnLanguageLayout.setVerticalGroup(
-            pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLanguageLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(cbLanguageChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(lbCode)
-                .add(cbLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
-        pnGUISettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnGUISettings.border.title"))); // NOI18N
-
-        lbFontScale.setText(bundle.getString("OutputSettingsPanel.lbFontScale.text")); // NOI18N
-
-        spScale.setModel(new javax.swing.SpinnerNumberModel(100, 50, 200, 1));
-        spScale.setInputVerifier(J2SEAppController.IntVerifier);
-        spScale.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                spScaleStateChanged(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnGUISettingsLayout = new org.jdesktop.layout.GroupLayout(pnGUISettings);
-        pnGUISettings.setLayout(pnGUISettingsLayout);
-        pnGUISettingsLayout.setHorizontalGroup(
-            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(lbFontScale)
-            .add(spScale, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        );
-        pnGUISettingsLayout.setVerticalGroup(
-            pnGUISettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnGUISettingsLayout.createSequentialGroup()
-                .add(lbFontScale)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(spScale, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(3, 3, 3)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(layout.createSequentialGroup()
-                        .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnGUISettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLanguage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
     }//GEN-END:initComponents
@@ -1375,6 +1389,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lbCode;
     private javax.swing.JLabel lbFontScale;
     private javax.swing.JLabel lbMetersAfter;
