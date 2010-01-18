@@ -369,6 +369,13 @@ public class BT747cmd implements bt747.model.ModelListener {
             case ModelEvent.LOG_DOWNLOAD_SUCCESS:
                 downloadIsSuccessFull = true;
                 break;
+            case ModelEvent.EXCEPTION:
+                // TODO: better handling of exception in J2SEAGPS.java through
+                // specialisation of exception
+                if(!agpsUploadDone) {
+                    agpsUploadDone = true;
+                }
+                break;
             case ModelEvent.AGPS_UPLOAD_DONE:
                 agpsProgressBarDone();
                 break;
