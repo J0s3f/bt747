@@ -6,7 +6,7 @@ public interface BT747Date {
      * Advance the time.
      * 
      * @param s
-     *                The number of seconds to advance.
+     *                The number of days to advance.
      */
     void advance(final int s);
 

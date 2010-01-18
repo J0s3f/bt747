@@ -9,8 +9,11 @@ import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.out.GPSArray;
+import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSConversionParameters;
+import gps.log.out.GPSFile;
 import gps.log.out.GPSKMLFile;
+import gps.log.out.GPSPostGISFile;
 
 import bt747.model.Model;
 import bt747.sys.Generic;
@@ -38,7 +41,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
     }
 
     GPSLogConvertInterface lc;
-    GPSArray gpsFile; // A GPS file that we can access in the test.
+    GPSFile gpsFile; // A GPS file that we can access in the test.
 
     GPSFilter[] logFilters = { new GPSFilter(), new GPSFilter() };
 
@@ -61,7 +64,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
         this.lc = inputConverter;
     }
 
-    public void configureGpsArray(GPSArray gpsFile) {
+    public void configureGpsArray(GPSFile gpsFile) {
         gpsFile.setWayPointTimeCorrection(0);
         gpsFile.setMaxDiff(300);
         gpsFile.setOverridePreviousTag(true);
@@ -122,9 +125,17 @@ public class TestConvertInBase extends junit.framework.TestCase {
 
         gpsFile = new GPSArray();
 
-        configureGpsArray(gpsFile);
+        configureGpsArray((GPSArray)gpsFile);
 
         gpsFile.initialiseFile(new BT747Path(""), "", Model.SPLIT_ONE_FILE);
+    }
+    
+    public void csvConverterSetup(BT747Path path) {
+        gpsFile = new GPSCSVFile();
+        configureGpsArray(gpsFile);
+        gpsFile.initialiseFile(
+                path, "",
+                Model.SPLIT_ONE_FILE);
     }
 
     public TracksAndWayPoints doConvert(String path) {
@@ -141,7 +152,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
             // lastErrorInfo = lc.getErrorInfo();
             result = null;
         } else {
-            result = gpsFile.getResult();
+            result = ((GPSArray)gpsFile).getResult();
         }
         return result;
     }

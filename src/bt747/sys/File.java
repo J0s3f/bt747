@@ -54,11 +54,11 @@ public class File {
     }
     
     public File(final BT747Path path) {
-        file = JavaLibBridge.getRAFileInstance(path);
+        file = JavaLibBridge.getFileInstance(path);
     }
 
     public File(final BT747Path path, final int mode) {
-        file = JavaLibBridge.getRAFileInstance(path, mode);
+        file = JavaLibBridge.getFileInstance(path, mode);
     }
 
     public final int getSize() {
