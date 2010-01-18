@@ -291,8 +291,8 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         final double zo = (b * b * Z) / (a * V);
 
         final float h = (float) (U * (1 - b * b / (a * V)));
-        final double phi = Math.atan((Z + ep2 * zo) / r);
-        final double lambda = Math.atan2(Y, X);
+        final double phi = JavaLibBridge.atan((Z + ep2 * zo) / r);
+        final double lambda = JavaLibBridge.atan2(Y, X);
 
         rRec.setLongitude(lambda * 180 / Math.PI);
         rRec.setLatitude(phi * 180 / Math.PI);

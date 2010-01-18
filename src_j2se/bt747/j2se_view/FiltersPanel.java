@@ -57,20 +57,24 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         // TODO Auto-generated method stub
         int type = e.getType();
         switch (type) {
-        case ModelEvent.TRK_VALID_CHANGE:
-        case ModelEvent.TRK_RCR_CHANGE:
-        case ModelEvent.WAY_VALID_CHANGE:
-        case ModelEvent.WAY_RCR_CHANGE:
-            updateGuiLogFilterSettings();
-            break;
+        case ModelEvent.SETTING_CHANGE:
+            final int arg = Integer.valueOf((String) e.getArg());
+            switch (arg) {
+            case Model.TRKPT_VALID:
+            case Model.TRKPT_RCR:
+            case Model.WAYPT_VALID:
+            case Model.WAYPT_RCR:
+                updateGuiLogFilterSettings();
+                break;
+            }
         }
     }
 
     void updateGuiLogFilterSettings() {
-        int trkRCR = m.getTrkPtRCR();
-        int trkValid = m.getTrkPtValid();
-        int wayRCR = m.getWayPtRCR();
-        int wayValid = m.getWayPtValid();
+        int trkRCR = m.getIntOpt(AppSettings.TRKPT_RCR);
+        int trkValid = m.getIntOpt(AppSettings.TRKPT_VALID);
+        int wayRCR = m.getIntOpt(AppSettings.WAYPT_RCR);
+        int wayValid = m.getIntOpt(AppSettings.WAYPT_VALID);
 
         cbTrkNoFix
                 .setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
@@ -144,7 +148,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         if (cbTrkRTK.isSelected()) {
             trkValid |= BT747Constants.VALID_RTK_MASK;
         }
-        c.setTrkPtValid(trkValid);
+        c.setIntOpt(AppSettings.TRKPT_VALID, trkValid);
     }
 
     void setWayValidFilterSettings() {
@@ -177,7 +181,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         if (cbWayRTK.isSelected()) {
             wayValid |= BT747Constants.VALID_RTK_MASK;
         }
-        c.setWayPtValid(wayValid);
+        c.setIntOpt(AppSettings.WAYPT_VALID,wayValid);
     }
 
     void setTrkRCRFilterSettings() {
@@ -197,7 +201,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         if (cbTrkUser1.isSelected()) {
             trkRCR |= BT747Constants.RCR_ALL_APP_MASK;
         }
-        c.setTrkPtRCR(trkRCR);
+        c.setIntOpt(AppSettings.TRKPT_RCR, trkRCR);
     }
 
     void setWayRCRFilterSettings() {
@@ -217,7 +221,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         if (cbWayUser1.isSelected()) {
             wayRCR |= BT747Constants.RCR_ALL_APP_MASK;
         }
-        c.setWayPtRCR(wayRCR);
+        c.setIntOpt(AppSettings.WAYPT_RCR,wayRCR);
     }
     
     

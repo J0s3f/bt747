@@ -29,6 +29,7 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -208,10 +209,10 @@ public final class GPSLogFilter extends Container implements ModelListener {
                 if (z_updated) {
                     switch (currentLogFilter) {
                     case GPSFilter.TRKPT:
-                        c.setTrkPtValid(getValid());
+                        c.setIntOpt(AppSettings.TRKPT_VALID, getValid());
                         break;
                     case GPSFilter.WAYPT:
-                        c.setWayPtValid(getValid());
+                        c.setIntOpt(AppSettings.WAYPT_VALID,getValid());
                         break;
                         default:
                             break;
@@ -226,10 +227,10 @@ public final class GPSLogFilter extends Container implements ModelListener {
                 if (z_updated) {
                     switch (currentLogFilter) {
                     case GPSFilter.TRKPT:
-                        c.setTrkPtRCR(getRCR());
+                        c.setIntOpt(AppSettings.TRKPT_RCR, getRCR());
                         break;
                     case GPSFilter.WAYPT:
-                        c.setWayPtRCR(getRCR());
+                        c.setIntOpt(AppSettings.WAYPT_RCR,getRCR());
                         break;
                         default:
                             break;

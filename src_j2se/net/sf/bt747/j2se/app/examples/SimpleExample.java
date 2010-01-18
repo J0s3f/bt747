@@ -177,16 +177,12 @@ public class SimpleExample implements bt747.model.ModelListener {
         // We select all positions that do not have an invalid fix or
         // estimated
         // fix.
-        c
-                .setTrkPtValid(
-
-                0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-        c
-                .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+        c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+        c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
         // Waypoints only when button pressed.
-        c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
+        c.setIntOpt(AppSettings.WAYPT_RCR,BT747Constants.RCR_BUTTON_MASK);
         // Trackpoints : anything
-        c.setTrkPtRCR(BT747Constants.RCR_BUTTON_MASK);
+        c.setIntOpt(AppSettings.TRKPT_RCR, BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
         c.setIntOpt(Model.FILEFIELDFORMAT,
                 (1 << BT747Constants.FMT_LATITUDE_IDX)
@@ -250,11 +246,16 @@ public class SimpleExample implements bt747.model.ModelListener {
                 // // getWorkDirPath();
             } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
                 // getIncremental();
-            } else if (type == ModelEvent.TRK_VALID_CHANGE
-                    || type == ModelEvent.TRK_RCR_CHANGE
-                    || type == ModelEvent.WAY_VALID_CHANGE
-                    || type == ModelEvent.WAY_RCR_CHANGE) {
-                // updateGuiLogFilterSettings();
+            } else if (type ==  ModelEvent.SETTING_CHANGE) {
+                final int arg = Integer.valueOf((String) e.getArg());
+                switch (arg) {
+                case Model.TRKPT_VALID:
+                case Model.TRKPT_RCR:
+                case Model.WAYPT_VALID:
+                case Model.WAYPT_RCR:
+                    //updateGuiLogFilterSettings();
+                    break;
+                }
             } else if (type == ModelEvent.CONVERSION_STARTED) {
                 // conversionStartTime = System.currentTimeMillis();
             } else if (type == ModelEvent.CONVERSION_ENDED) {

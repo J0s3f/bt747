@@ -1082,11 +1082,11 @@ public class Controller implements ModelListener {
     }
 
     public final void resetFilters() {
-        setTrkPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-        setTrkPtRCR(0xFFFFFFFF);
-        setWayPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-        setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                | BT747Constants.RCR_ALL_APP_MASK);
+        setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK))));
+        setIntOpt(AppSettings.TRKPT_RCR, 0xFFFFFFFF);
+        setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK))));
+        setIntOpt(AppSettings.WAYPT_RCR,(BT747Constants.RCR_BUTTON_MASK
+        | BT747Constants.RCR_ALL_APP_MASK));
         setBooleanOpt(AppSettings.ADVFILTACTIVE, false);
         setIntOpt(AppSettings.MIN_RECCOUNT, 0);
         setIntOpt(AppSettings.MAX_RECCOUNT, 0);
@@ -1101,104 +1101,6 @@ public class Controller implements ModelListener {
         setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, true);
         setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, true);
     }
-
-    /**
-     * Sets the trackpoint RCR mask for the active filter.
-     * 
-     * @param rcrMask
-     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
-     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
-     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
-     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
-     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
-     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
-     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
-     */
-    public final void setTrkPtRCR(final int rcrMask) {
-        m.setTrkPtRCR(rcrMask);
-    }
-
-    /**
-     * Sets the waypoint RCR mask for the active filter.
-     * 
-     * @param rcrMask
-     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
-     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
-     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
-     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
-     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
-     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
-     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
-     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
-     */
-    public final void setWayPtRCR(final int rcrMask) {
-        m.setWayPtRCR(rcrMask);
-    }
-
-    /**
-     * Sets the 'Valid' filter mask for the current track filter.
-     * 
-     * @param validMask
-     *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br>
-     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
-     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
-     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
-     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
-     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
-     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
-     *            -
-     * 
-     */
-    public final void setTrkPtValid(final int validMask) {
-        m.setTrkPtValid(validMask);
-    }
-
-    /**
-     * Sets the 'Valid' filter mask for the current waypoint filter.
-     * 
-     * @param validMask
-     *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br>
-     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
-     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
-     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
-     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
-     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
-     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
-     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
-     *            -
-     * 
-     */
-    public final void setWayPtValid(final int validMask) {
-        m.setWayPtValid(validMask);
-    }
-
-    // The way logfilters are handled should be reviewed.
 
     /**
      * This sets MTK specific settings into its flash.<br>

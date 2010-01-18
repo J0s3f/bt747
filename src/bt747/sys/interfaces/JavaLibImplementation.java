@@ -49,6 +49,10 @@ public interface JavaLibImplementation {
 
     double acos(final double x);
 
+    double atan2(final double x, final double y);
+
+    double atan(final double x);
+
     void addThread(final BT747Thread t, final boolean b);
 
     void removeThread(final BT747Thread t);
