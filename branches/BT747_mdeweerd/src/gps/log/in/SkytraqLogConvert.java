@@ -22,9 +22,8 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
-import bt747.sys.RAFile;
+import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Path;
-import bt747.sys.interfaces.BT747RAFile;
 
 /**
  * Conversion of Wonde Proud logs (Phototrackr, ...) This class is used to
@@ -38,18 +37,31 @@ import bt747.sys.interfaces.BT747RAFile;
 public final class SkytraqLogConvert extends GPSLogConvertInterface {
     private static final int X_FF = 0xFF;
     private int recordSize = 16;
-    private int logFormat;
-    protected boolean passToFindFieldsActivatedInLog = false;
-    protected int activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
+    private static final int logFormat = (1 << BT747Constants.FMT_UTC_IDX)
             | (1 << BT747Constants.FMT_LATITUDE_IDX)
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-            | (1 << BT747Constants.FMT_HEIGHT_IDX);
+            | (1 << BT747Constants.FMT_LONGITUDE_IDX
+                    | (1 << BT747Constants.FMT_SPEED_IDX)
+                    | (1 << BT747Constants.FMT_HEIGHT_IDX) | (1 << BT747Constants.FMT_RCR_IDX));;
+    protected boolean passToFindFieldsActivatedInLog = false;
+    protected int activeFileFields =  (1 << BT747Constants.FMT_UTC_IDX)
+    | (1 << BT747Constants.FMT_LATITUDE_IDX)
+    | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+    | (1 << BT747Constants.FMT_LONGITUDE_IDX
+            | (1 << BT747Constants.FMT_SPEED_IDX)
+            | (1 << BT747Constants.FMT_HEIGHT_IDX) | (1 << BT747Constants.FMT_RCR_IDX));;
+;
 
     // static final int ITRACKU_NUMERIX = 0;
     // static final int PHOTOTRACKR = 1;
     // static final int ITRACKU_SIRFIII = 2;
 
     // private int logType = WPLogConvert.ITRACKU_NUMERIX;
+
+    /**
+     * The size of the file read buffer
+     */
+    private static final int BUF_SIZE = 4096;
 
     public SkytraqLogConvert() {
         super();
@@ -101,14 +113,15 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
     public int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
-            final BT747RAFile inFile = (BT747RAFile) file;
+            final WindowedFile inFile = (WindowedFile) file;
             GPSRecord r = GPSRecord.getLogFormatRecord(0);
             final int C_BUF_SIZE = 4096; // block size is 4096
-            final byte[] bytes = new byte[C_BUF_SIZE];
+            byte[] bytes;
             int sizeToRead;
             int nextAddrToRead;
             int recCount;
             int fileSize;
+            SkytraqPositionRecord previousR = new SkytraqPositionRecord();
 
             if (!passToFindFieldsActivatedInLog) {
                 gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
@@ -117,30 +130,31 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
             // recordSize = 15;
 
             recCount = 0;
-            logFormat = 0;
             nextAddrToRead = 0;
             fileSize = inFile.getSize();
-            while (!stop && (nextAddrToRead + recordSize + 1 < fileSize)) {
+            while (!stop && (nextAddrToRead + 8 + 1 < fileSize)) {
                 sizeToRead = C_BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = fileSize - nextAddrToRead;
                 }
 
                 /* Read the bytes from the file */
-                int readResult;
                 int offsetInBuffer = 0;
 
-                inFile.setPos(nextAddrToRead);
+                try {
+                    bytes = inFile.fillBuffer(nextAddrToRead);
+                } catch (final Exception e) {
+                    // TODO: Should check sizeToRead vs fill in buffer.
+                    Generic.debug("Problem reading file", e);
+                    bytes = null;
+                }
+                if (bytes == null) {
+                    Generic.debug("fillBuffer failed", null);
 
-                /*************************************************************
-                 * Not reading header - reading data.
-                 */
-                readResult = inFile.readBytes(bytes, 0, sizeToRead);
-                if (readResult != sizeToRead) {
-                    errorInfo = inFile.getPath() + "|"
-                            + inFile.getLastError();
+                    errorInfo = inFile.getPath() + "|" + inFile.getLastError();
                     return BT747Constants.ERROR_READING_FILE;
                 }
+
                 nextAddrToRead += sizeToRead;
 
                 /*************************************************************
@@ -150,17 +164,45 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
                 while (!stop && offsetInBuffer < sizeToRead) {
                     int recType = 0x7 & (bytes[offsetInBuffer] >> 5);
                     switch (recType) {
-                    case 0x3:
+                    case 0x7:
                         /* Empty storage. Skip */
                         offsetInBuffer += 2;
                         break;
                     case 0x2: /* Fix full */
-                        getFull(bytes, offsetInBuffer);
-                        offsetInBuffer += 18;
+                    case 0x3: /* Fix POI */
+                        if (offsetInBuffer + 18 <= sizeToRead) {
+                            previousR = getFull(bytes, offsetInBuffer);
+                            r = toGpsRecord(previousR);
+                            r.rcr = BT747Constants.RCR_TIME_MASK;
+                            if (recType == 2) {
+                                r.rcr = BT747Constants.RCR_TIME_MASK;
+                            } else {
+                                r.rcr = BT747Constants.RCR_BUTTON_MASK;
+                            }
+                            r.recCount = ++recCount;
+                            gpsFile.addLogRecord(r);
+                            offsetInBuffer += 18;
+                        } else {
+                            nextAddrToRead += offsetInBuffer-sizeToRead;
+                            sizeToRead = offsetInBuffer;
+                        }
                         break;
                     case 0x4:
-                        /* Fix compact */
-                        offsetInBuffer += 8;
+                        if (offsetInBuffer + 8 <= sizeToRead) {
+                            /* Fix compact */
+                            previousR = getCompact(previousR, bytes,
+                                    offsetInBuffer);
+                            r = toGpsRecord(previousR);
+                            r.rcr = BT747Constants.RCR_TIME_MASK;
+                            r.recCount = ++recCount;
+                            gpsFile.addLogRecord(r);
+                            offsetInBuffer += 8;
+                        } else {
+                            nextAddrToRead += offsetInBuffer-sizeToRead;
+                            sizeToRead = offsetInBuffer;
+                        }
+                        break;
+
                     default:
                         /* Fix full POI. */
                         offsetInBuffer += 18;
@@ -168,161 +210,6 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
                     }
                 }
 
-                // A block of bytes has been read, read the records
-                while (sizeToRead > offsetInBuffer + recordSize) {
-                    // As long as record may fit in data still to read.
-                    int indexInBuffer = offsetInBuffer;
-                    // int checkSum = 0;
-                    //
-                    // while ((indexInBuffer < recordSize + offsetInBuffer)
-                    // && (indexInBuffer < sizeToRead - 1)) {
-                    // checkSum ^= bytes[indexInBuffer++];
-                    // }
-                    //
-                    // indexInBuffer += 1;
-
-                    indexInBuffer += recordSize;
-                    int recIdx = offsetInBuffer;
-                    offsetInBuffer = indexInBuffer;
-
-                    recCount++;
-
-                    if (true) { // (((checkSum & 0xFF) == (0xFF &
-                        // bytes[indexInBuffer - 1]))) {
-                        /*****************************************************
-                         * Get all the information in the record.
-                         */
-                        r.recCount = recCount;
-                        if (!passToFindFieldsActivatedInLog) {
-
-                            // if (( lc( $o{'i'} ) eq lc( 'iTrackU-Nemerix' )
-                            // )
-                            // or
-                            // parse the record, this trick took me one
-                            // whole
-                            // day...
-                            // ($lon, $lat, $year, $month, $day, $hour,
-                            // minute, $second, $speed, $tag) =
-                            // 
-                            // unpack( " V V C C C C C C C C", $_ );
-                            // _Longitude_ _Latitude__ YY MM DD HH MM SS
-                            // SpdTag
-                            // ef f3 b7 00 d1 df 02 03 07 09 1d 06 01 2a 00
-                            // ff
-
-                            // elsif (( lc( $o{'i'} ) eq lc( 'PhotoTrackr' ) )
-                            // or
-                            // ( lc( $o{'i'} ) eq 'p' ) or
-                            // ( lc( $o{'i'} ) eq lc( 'iTrackU-SIRFIII' ) ) or
-                            // ( lc( $o{'i'} ) eq 's' ) ) {
-                            // ($lon, $lat, $date, $altitude, $speed, $tag) =
-                            // unpack( " V V V s C C", $_ );
-                            // _Longitude_ _Latitude__ ___Date____ _Alt_
-                            // SpdTag
-                            // bd 49 90 00 09 0c 1d 03 b4 eb a8 1e 3b 00 02
-                            // 63
-
-                            int longitude;
-                            int latitude;
-                            int year;
-                            int month;
-                            int day;
-                            int hour;
-                            int minutes;
-                            int seconds;
-                            int speed;
-                            int tag;
-                            int altitude;
-
-                            int rawTime;
-
-                            switch (getLoggerType()) {
-                            case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
-                            case BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
-                                // case
-                                // BT747Constants.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
-                                // NEMERIX
-                                // Get information from log file
-                                longitude = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 24;
-                                latitude = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 24;
-                                rawTime = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 24;
-                                altitude = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8;
-                                r.height = altitude;
-                                CommonIn
-                                        .convertHeight(r,
-                                                factorConversionWGS84ToMSL,
-                                                logFormat);
-                                speed = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                tag = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                r.utc = longToUtcTime(rawTime);
-                                break;
-                            default:
-                                // NEMERIX
-                                // Get information from log file
-                                longitude = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 24;
-                                latitude = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 8
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 16
-                                        | (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 24;
-                                year = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                month = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                day = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                hour = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                minutes = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                seconds = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                speed = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                tag = (SkytraqLogConvert.X_FF & bytes[recIdx++]) << 0;
-                                r.utc = (JavaLibBridge.getDateInstance(day,
-                                        month, year + 2000))
-                                        .dateToUTCepoch1970();
-                                r.utc += 3600 * hour + 60 * minutes + seconds;
-                                break;
-                            }
-
-                            if (latitude == 0xFFFFFFFF) {
-                                // TODO : cleaner exit
-                                return BT747Constants.NO_ERROR;
-                            }
-                            if ((longitude & 0x80000000) != 0) {
-                                longitude = -(longitude & 0x7FFFFFFF);
-                            }
-                            if ((latitude & 0x80000000) != 0) {
-                                latitude = -(latitude & 0x7FFFFFFF);
-                            }
-
-                            // Convert information to log record
-                            // The next lines explicitly use an integer
-                            // division
-                            // on longitude to get an integer result!
-                            // The objective is to get the first digits
-                            // of the number.
-                            r.longitude = (((longitude / 1000000)))
-                                    + ((longitude % 1000000) / 600000.0);
-                            r.latitude = (((latitude / 1000000)))
-                                    + ((latitude % 1000000) / 600000.0);
-                            r.speed = speed * 1.852f;
-
-                            r.valid = 0xFFFF;
-                            r.rcr = 0x0001; // For filter
-                            gpsFile.addLogRecord(r);
-                            r = GPSRecord.getLogFormatRecord(0);
-                        }
-                    }
-                } /* ContinueInBuffer */
-                nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
         } catch (final Exception e) {
             Generic.debug("", e);
@@ -330,22 +217,107 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         return BT747Constants.NO_ERROR;
     }
 
+    private final static GPSRecord toGpsRecord(SkytraqPositionRecord sRec) {
+        GPSRecord rRec = new GPSRecord();
+
+        /**
+         * Convert Earth-Centered Earth-Fixed coordinates into longitude,
+         * latitude and height.
+         */
+
+        ecef2WGS84(rRec, sRec.x, sRec.y, sRec.z);
+        BT747Date d = JavaLibBridge.getDateInstance(1,1,1970);
+        d.advance( 10825+sRec.wn*7);
+        rRec.setUtc(d.dateToUTCepoch1970() + sRec.tow);
+        rRec.setSpeed(sRec.speed);
+        return rRec;
+    }
+
+    /**
+     * See http://www.colorado.edu/geography/gcraft/notes/datum/edlist.html
+     * for instance for numbers.
+     * 
+     * 
+     * See http://www.colorado.edu/geography/gcraft/notes/datum/gif/xyzllh.gif
+     * for calculation from ECEF to Datum.
+     * 
+     * 
+     * See
+     * http://www.colorado.edu/geography/gcraft/notes/datum/gif/molodens.gif
+     * for Datum transform without ECEF knowledge.
+     * 
+     * Code converted from SkyTraq GPS data logger download. Distributed under
+     * GPL by Jesper Zedlitz, jesper@zedlitz.de
+     * 
+     * @param rRec
+     * @param X
+     * @param Y
+     * @param Z
+     */
+    private final static double SEMI_MAJOR_AXIS_WGS84 = 6378137.0;
+    private final static double FLATTENING_WGS84 = 298.257223563;
+
+    private static void ecef2WGS84(GPSRecord rRec, final double X,
+            final double Y, final double Z) {
+        /** Semi-major earth axis. */
+        final double a = SEMI_MAJOR_AXIS_WGS84;
+        /** Flattening. */
+        final double f = 1 / FLATTENING_WGS84; /* reciprocal flattening */
+        /** Semi-minor earch axis. [f = (a-b)/a => b = ...] */
+        final double b = a * (1 - f);
+        /** Squared excentricity. */
+        final double e_2 = 2 * f - f * f;
+        /** Second squared excentircity. */
+        final double ep2 = f * (2 - f) / ((1 - f) * (1 - f));
+        final double E2 = a * a - b * b;
+
+        final double r2 = X * X + Y * Y;
+        final double F = 54 * b * b * Z * Z;
+        final double r = Math.sqrt(r2);
+        final double G = r2 + (1 - e_2) * Z * Z - e_2 * E2;
+        final double c = (e_2 * e_2 * F * r2) / (G * G * G);
+        final double s = bt747.sys.Generic.pow((1 + c + Math.sqrt(c * c + 2
+                * c)), 1 / 3.);
+        final double P = F / (3 * (s + 1 / s + 1) * (s + 1 / s + 1) * G * G);
+        final double Q = Math.sqrt(1 + 2 * e_2 * e_2 * P);
+        final double ro = -(e_2 * P * r)
+                / (1 + Q)
+                + Math.sqrt((a * a / 2) * (1 + 1 / Q)
+                        - ((1 - e_2) * P * Z * Z) / (Q * (1 + Q)) - P * r2
+                        / 2);
+        final double tmp = (r - e_2 * ro) * (r - e_2 * ro);
+        final double U = Math.sqrt(tmp + Z * Z);
+        final double V = Math.sqrt(tmp + (1 - e_2) * Z * Z);
+        final double zo = (b * b * Z) / (a * V);
+
+        final float h = (float) (U * (1 - b * b / (a * V)));
+        final double phi = Math.atan((Z + ep2 * zo) / r);
+        final double lambda = Math.atan2(Y, X);
+
+        rRec.setLongitude(lambda * 180 / Math.PI);
+        rRec.setLatitude(phi * 180 / Math.PI);
+        rRec.setHeight(h);
+    }
+
     static private class SkytraqPositionRecord {
-        public long tow;
+        public int tow;
         public int wn;
         public long x;
         public long y;
         public long z;
         public int speed;
-        
+
     };
+
     private SkytraqPositionRecord getFull(byte[] bytes, int recIdx) {
         final SkytraqPositionRecord r = new SkytraqPositionRecord();
-        r.speed = (bytes[recIdx] & 0x3) << 8 + (bytes[recIdx + 1] & SkytraqLogConvert.X_FF);
-        r.tow = ((bytes[recIdx + 4] & 0xFFL) << 16)
-                & ((bytes[recIdx + 5] & 0xFFL) << 8)
+        r.speed = ((bytes[recIdx] & 0x3) << 8)
+                + (bytes[recIdx + 1] & SkytraqLogConvert.X_FF);
+        r.tow = ((bytes[recIdx + 4] & 0xFF) << 12)
+                + ((bytes[recIdx + 5] & 0xFF) << 4)
                 + ((bytes[recIdx + 2] >> 4) & 0x0F);
-        r.wn = (bytes[recIdx + 2] & 0x3) << 8 + (bytes[recIdx + 2] & SkytraqLogConvert.X_FF);
+        r.wn = ((bytes[recIdx + 2] & 0x3) << 8)
+                + (bytes[recIdx + 3] & SkytraqLogConvert.X_FF);
         r.x = ((bytes[recIdx + 6] & 0xFFL) << 8)
                 + ((bytes[recIdx + 7] & 0xFFL))
                 + ((bytes[recIdx + 8] & 0xFFL) << 24)
@@ -353,7 +325,7 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         r.y = ((bytes[recIdx + 10] & 0xFFL) << 8)
                 + ((bytes[recIdx + 11] & 0xFFL))
                 + ((bytes[recIdx + 12] & 0xFFL) << 24)
-                + ((bytes[recIdx + 3] & 0xFFL) << 16);
+                + ((bytes[recIdx + 13] & 0xFFL) << 16);
         r.z = ((bytes[recIdx + 14] & 0xFFL) << 8)
                 + ((bytes[recIdx + 15] & 0xFFL))
                 + ((bytes[recIdx + 16] & 0xFFL) << 24)
@@ -361,27 +333,37 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         return r;
     }
 
-    private SkytraqPositionRecord getCompact(SkytraqPositionRecord previous, byte[] bytes, int recIdx) {
-        final SkytraqPositionRecord r = new SkytraqPositionRecord();
-        r.speed = previous.speed;
-        r.tow = previous.tow;
+    private SkytraqPositionRecord getCompact(SkytraqPositionRecord previous,
+            byte[] bytes, int recIdx) {
+        final SkytraqPositionRecord r = previous;
+        // r.tow = previous.tow;
+        // r.x = previous.x;
+        // r.y = previous.y;
+        // r.z = previous.z;
+
         r.speed = (bytes[recIdx] & 0x3) << 8 + (bytes[recIdx + 1] & SkytraqLogConvert.X_FF);
-        r.tow = ((bytes[recIdx + 4] & 0xFFL) << 16)
-                & ((bytes[recIdx + 5] & 0xFFL) << 8)
-                + ((bytes[recIdx + 2] >> 4) & 0x0F);
-        r.wn = (bytes[recIdx + 2] & 0x3) << 8 + (bytes[recIdx + 2] & SkytraqLogConvert.X_FF);
-        r.x = ((bytes[recIdx + 6] & 0xFFL) << 8)
-                + ((bytes[recIdx + 7] & 0xFFL))
-                + ((bytes[recIdx + 8] & 0xFFL) << 24)
-                + ((bytes[recIdx + 9] & 0xFFL) << 16);
-        r.y = ((bytes[recIdx + 10] & 0xFFL) << 8)
-                + ((bytes[recIdx + 11] & 0xFFL))
-                + ((bytes[recIdx + 12] & 0xFFL) << 24)
-                + ((bytes[recIdx + 3] & 0xFFL) << 16);
-        r.z = ((bytes[recIdx + 14] & 0xFFL) << 8)
-                + ((bytes[recIdx + 15] & 0xFFL))
-                + ((bytes[recIdx + 16] & 0xFFL) << 24)
-                + ((bytes[recIdx + 17] & 0xFFL) << 16);
+        int delta_tow = ((bytes[recIdx + 2] & 0xFF) << 8)
+                + ((bytes[recIdx + 3] & 0xFF));
+        int delta_x = ((bytes[recIdx + 4] & 0xFF) << 2)
+                + ((bytes[recIdx + 5] & 0xC0) >> 6);
+        int delta_y = ((bytes[recIdx + 5] & 0x3F) << 4)
+                + ((bytes[recIdx + 6] & 0xF0) >> 4);
+        int delta_z = ((bytes[recIdx + 6] & 0x03) << 8)
+                + ((bytes[recIdx + 7] & 0xFF));
+
+        if ((delta_x & 0x200) != 0) {
+            delta_x = 0x1FF - delta_x;
+        }
+        if ((delta_y & 0x200) != 0) {
+            delta_y = 0x1FF - delta_y;
+        }
+        if ((delta_z & 0x200) != 0) {
+            delta_z = 0x1FF - delta_z;
+        }
+        r.tow += delta_tow;
+        r.x += delta_x;
+        r.y += delta_y;
+        r.z += delta_z;
         return r;
     }
 
@@ -392,18 +374,26 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(final BT747Path fileName) {
-        File inFile = null;
-
+    protected Object getFileObject(final BT747Path path) {
+        WindowedFile mFile = null;
         if (File.isAvailable()) {
-            inFile = new File(fileName, File.READ_ONLY);
-            if (!inFile.isOpen()) {
-                errorInfo = fileName + "|" + inFile.getLastError();
+            try {
+                mFile = new WindowedFile(path, File.READ_ONLY);
+                mFile.setBufferSize(BUF_SIZE);
+                errorInfo = path.toString() + "|" + mFile.getLastError();
+            } catch (final Exception e) {
+                Generic.debug("Error during initial open", e);
+            }
+            if ((mFile == null) || !mFile.isOpen()) {
+                errorInfo = path.toString();
+                if (mFile != null) {
+                    errorInfo += "|" + mFile.getLastError();
+                }
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
-                inFile = null;
+                mFile = null;
             }
         }
-        return inFile;
+        return mFile;
     }
 
     /*
@@ -413,7 +403,7 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
      * gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
     protected void closeFileObject(final Object o) {
-        ((File) o).close();
+        ((WindowedFile) o).close();
     }
 
     public int toGPSFile(final BT747Path path,

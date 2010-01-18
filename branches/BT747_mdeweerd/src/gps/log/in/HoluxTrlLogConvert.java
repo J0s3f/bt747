@@ -21,6 +21,7 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import bt747.sys.RAFile;
 import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747RAFile;
 
@@ -169,7 +170,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
         File inFile = null;
 
         if (File.isAvailable()) {
-            inFile = new File(path, File.READ_ONLY);
+            inFile = new RAFile(path, File.READ_ONLY);
             if (!inFile.isOpen()) {
                 errorInfo = path + "|" + inFile.getLastError();
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;

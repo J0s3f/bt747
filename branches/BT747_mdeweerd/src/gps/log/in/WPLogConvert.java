@@ -316,10 +316,10 @@ public final class WPLogConvert extends GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
     protected Object getFileObject(final BT747Path fileName) {
-        File inFile = null;
-
+        RAFile inFile = null;
+        
         if (File.isAvailable()) {
-            inFile = new File(fileName, File.READ_ONLY);
+            inFile = new RAFile(fileName, File.READ_ONLY);
             if (!inFile.isOpen()) {
                 errorInfo = fileName + "|" + inFile.getLastError();
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
