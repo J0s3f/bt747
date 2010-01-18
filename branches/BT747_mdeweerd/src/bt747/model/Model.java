@@ -301,9 +301,9 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     public final int getValidMask(final int logFilterType) {
         switch (logFilterType) {
         case GPSFilter.WAYPT:
-            return getWayPtValid();
+            return getIntOpt(AppSettings.WAYPT_VALID);
         case GPSFilter.TRKPT:
-            return getTrkPtValid();
+            return getIntOpt(TRKPT_VALID);
         default:
             return 0;
         }
@@ -322,9 +322,9 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     public final int getRcrMask(final int logFilterType) {
         switch (logFilterType) {
         case GPSFilter.WAYPT:
-            return getWayPtRCR();
+            return getIntOpt(WAYPT_RCR);
         case GPSFilter.TRKPT:
-            return getTrkPtRCR();
+            return getIntOpt(TRKPT_RCR);
         default:
             return 0;
         }
@@ -346,10 +346,10 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     private static final int XDOP_FLOAT_TO_INT_100 = 100;
 
     private void setupBasicSettingsFilter(final GPSFilter[] logFilters) {
-        logFilters[GPSFilter.TRKPT].setRcrMask(getTrkPtRCR());
-        logFilters[GPSFilter.TRKPT].setValidMask(getTrkPtValid());
-        logFilters[GPSFilter.WAYPT].setRcrMask(getWayPtRCR());
-        logFilters[GPSFilter.WAYPT].setValidMask(getWayPtValid());
+        logFilters[GPSFilter.TRKPT].setRcrMask(getIntOpt(TRKPT_RCR));
+        logFilters[GPSFilter.TRKPT].setValidMask(getIntOpt(TRKPT_VALID));
+        logFilters[GPSFilter.WAYPT].setRcrMask(getIntOpt(WAYPT_RCR));
+        logFilters[GPSFilter.WAYPT].setValidMask(getIntOpt(WAYPT_VALID));
     };
 
     /**

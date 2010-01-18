@@ -1160,14 +1160,10 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_CREATE_GPX_TRACKS)) {
             System.out.println("Converting to GPX (trackpoints)");
-            c
-                    .setTrkPtValid(
-
-                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c
-                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c.setWayPtRCR(0);
-            c.setTrkPtRCR(0xFFFFFFFF);
+            c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c.setIntOpt(AppSettings.WAYPT_RCR,0);
+            c.setIntOpt(AppSettings.TRKPT_RCR, 0xFFFFFFFF);
             // The output filename does not depend on the time.
             c.setFileNameBuilder(new BT747FileName() {
                 public BT747Path getOutputFileName(final BT747Path baseName,
@@ -1192,15 +1188,11 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_CREATE_GPX_WAYPOINTS)) {
             System.out.println("Converting to GPX (waypoints)");
-            c
-                    .setTrkPtValid(
-
-                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c
-                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                    | BT747Constants.RCR_ALL_APP_MASK);
-            c.setTrkPtRCR(0);
+            c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c.setIntOpt(AppSettings.WAYPT_RCR,(BT747Constants.RCR_BUTTON_MASK
+            | BT747Constants.RCR_ALL_APP_MASK));
+            c.setIntOpt(AppSettings.TRKPT_RCR, 0);
             c.setFileNameBuilder(new BT747FileName() {
                 public BT747Path getOutputFileName(final BT747Path baseName,
                         final int utcTimeSeconds,
@@ -1255,15 +1247,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                 }
                 if (type != Model.NO_LOG_LOGTYPE) {
                     System.out.println("Converting to " + typeStr);
-                    c
-                            .setTrkPtValid(
-
-                            0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                    c
-                            .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                    c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                            | BT747Constants.RCR_ALL_APP_MASK);
-                    c.setTrkPtRCR(0xFFFFFFFF);
+                    c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+                    c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+                    c.setIntOpt(AppSettings.WAYPT_RCR,(BT747Constants.RCR_BUTTON_MASK
+                    | BT747Constants.RCR_ALL_APP_MASK));
+                    c.setIntOpt(AppSettings.TRKPT_RCR, 0xFFFFFFFF);
                     c.setFileNameBuilder(new BT747FileName() {
                         public BT747Path getOutputFileName(
                                 final BT747Path baseName,

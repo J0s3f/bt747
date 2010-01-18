@@ -33,10 +33,10 @@ public class ModelEvent extends GpsEvent {
 	 * @deprecated Use {@link #DOWNLOAD_METHOD_CHANGE} instead.
 	 */
 	public static final int INCREMENTAL_CHANGE = 261;
-	public static final int TRK_VALID_CHANGE = 262;
-	public static final int TRK_RCR_CHANGE = 263;
-	public static final int WAY_VALID_CHANGE = 264;
-	public static final int WAY_RCR_CHANGE = 265;
+//	public static final int TRK_VALID_CHANGE = 262;
+//	public static final int TRK_RCR_CHANGE = 263;
+//	public static final int WAY_VALID_CHANGE = 264;
+//	public static final int WAY_RCR_CHANGE = 265;
 	public static final int CONNECTED = 266;
 	public static final int DISCONNECTED = 267;
 	public static final int FILE_LOG_FORMAT_UPDATE = 268;

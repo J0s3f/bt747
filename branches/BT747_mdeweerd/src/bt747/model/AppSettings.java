@@ -432,12 +432,90 @@ public class AppSettings implements BT747Thread {
     public final static int HEIGHT_WGS84_TO_MSL = 1;
     public final static int HEIGHT_AUTOMATIC = 2;
     public final static int HEIGHT_MSL_TO_WGS84 = 3;
-    
-    
+
     public final static int DISTANCE_CALCULATION_MODE = 85;
     public final static int DISTANCE_CALC_MODE_NONE = 0;
     public final static int DISTANCE_CALC_MODE_WHEN_MISSING = 1;
     public final static int DISTANCE_CALC_MODE_ALWAYS = 2;
+
+    /**
+     * Sets the 'Valid' filter mask for the current waypoint filter.
+     * 
+     * The filter mask to set for the validity filter. Use the following
+     * constants:<br>
+     * - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     * - {@link BT747Constants#VALID_SPS_MASK} <br>
+     * - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     * - {@link BT747Constants#VALID_PPS_MASK} <br>
+     * - {@link BT747Constants#VALID_RTK_MASK} <br>
+     * - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     * - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     * - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     * - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     */
+    public final static int WAYPT_VALID = 86;
+    /**
+     * The trackpoint RCR mask for the active filter.
+     * 
+     * - {@link BT747Constants#RCR_TIME_MASK}<br>
+     * - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     * - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     * - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     * - {@link BT747Constants#RCR_APP0_MASK}<br>
+     * - {@link BT747Constants#RCR_APP1_MASK}<br>
+     * - {@link BT747Constants#RCR_APP2_MASK}<br>
+     * - {@link BT747Constants#RCR_APP3_MASK}<br>
+     * - {@link BT747Constants#RCR_APP4_MASK}<br>
+     * - {@link BT747Constants#RCR_APP5_MASK}<br>
+     * - {@link BT747Constants#RCR_APP6_MASK}<br>
+     * - {@link BT747Constants#RCR_APP7_MASK}<br>
+     * - {@link BT747Constants#RCR_APP8_MASK}<br>
+     * - {@link BT747Constants#RCR_APP9_MASK}<br>
+     * - {@link BT747Constants#RCR_APPY_MASK}<br>
+     * - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     * - {@link BT747Constants#RCR_ALL_APP_MASK}
+     */
+    public final static int TRKPT_RCR = 87;
+    /**
+     * The 'Valid' filter mask for the current track filter.
+     * 
+     * The filter mask to set for the validity filter. Use the following
+     * constants:<br>
+     * - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     * - {@link BT747Constants#VALID_SPS_MASK} <br>
+     * - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     * - {@link BT747Constants#VALID_PPS_MASK} <br>
+     * - {@link BT747Constants#VALID_RTK_MASK} <br>
+     * - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     * - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     * - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     * - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     * -
+     * 
+     */
+    public final static int TRKPT_VALID = 88;
+    /**
+     * The waypoint RCR mask for the active filter.
+     * 
+     * - {@link BT747Constants#RCR_TIME_MASK}<br>
+     * - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     * - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     * - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     * - {@link BT747Constants#RCR_APP0_MASK}<br>
+     * - {@link BT747Constants#RCR_APP1_MASK}<br>
+     * - {@link BT747Constants#RCR_APP2_MASK}<br>
+     * - {@link BT747Constants#RCR_APP3_MASK}<br>
+     * - {@link BT747Constants#RCR_APP4_MASK}<br>
+     * - {@link BT747Constants#RCR_APP5_MASK}<br>
+     * - {@link BT747Constants#RCR_APP6_MASK}<br>
+     * - {@link BT747Constants#RCR_APP7_MASK}<br>
+     * - {@link BT747Constants#RCR_APP8_MASK}<br>
+     * - {@link BT747Constants#RCR_APP9_MASK}<br>
+     * - {@link BT747Constants#RCR_APPY_MASK}<br>
+     * - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     * - {@link BT747Constants#RCR_ALL_APP_MASK}
+     */
+    public final static int WAYPT_RCR = 89;
 
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
@@ -881,66 +959,6 @@ public class AppSettings implements BT747Thread {
         return card;
     }
 
-    public final int getWayPtRCR() {
-        return getLocalIntOpt(AppSettings.C_WAYPT_RCR_IDX,
-                AppSettings.C_WAYPT_RCR_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    protected final void setWayPtRCR(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_WAYPT_RCR_IDX,
-                AppSettings.C_WAYPT_RCR_SIZE);
-        postEvent(ModelEvent.WAY_RCR_CHANGE);
-    }
-
-    public final int getWayPtValid() {
-        return getLocalIntOpt(AppSettings.C_WAYPT_VALID_IDX,
-                AppSettings.C_WAYPT_VALID_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    protected final void setWayPtValid(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_WAYPT_VALID_IDX,
-                AppSettings.C_WAYPT_VALID_SIZE);
-        postEvent(ModelEvent.WAY_VALID_CHANGE);
-    }
-
-    public final int getTrkPtRCR() {
-        return getLocalIntOpt(AppSettings.C_TRKPT_RCR_IDX,
-                AppSettings.C_TRKPT_RCR_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    protected final void setTrkPtRCR(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_TRKPT_RCR_IDX,
-                AppSettings.C_TRKPT_RCR_SIZE);
-        postEvent(ModelEvent.TRK_RCR_CHANGE);
-    }
-
-    public final int getTrkPtValid() {
-        return getLocalIntOpt(AppSettings.C_TRKPT_VALID_IDX,
-                AppSettings.C_TRKPT_VALID_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    protected final void setTrkPtValid(final int value) {
-        setLocalIntOpt(0, value, AppSettings.C_TRKPT_VALID_IDX,
-                AppSettings.C_TRKPT_VALID_SIZE);
-        postEvent(ModelEvent.TRK_VALID_CHANGE);
-    }
-
     /**
      * Gets the NMEA string types to write to the NMEA output file format.
      * 
@@ -1033,9 +1051,9 @@ public class AppSettings implements BT747Thread {
         boolean notok = true;
         int i = 3;
         int fileIdx = logFiles.size();
-        if(fileIdx>0) {
+        if (fileIdx > 0) {
             i = 4; // Force to 4;
-            
+
         }
         while (notok && (i >= 0)) {
             switch (i--) {
@@ -1153,11 +1171,16 @@ public class AppSettings implements BT747Thread {
     }
 
     private void setFilterDefaults() {
-        setTrkPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-        setTrkPtRCR(0xFFFFFFFF);
-        setWayPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-        setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                | BT747Constants.RCR_ALL_APP_MASK);
+        setIntOpt(
+                TRKPT_VALID,
+                (0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK))));
+        setIntOpt(TRKPT_RCR, 0xFFFFFFFF);
+        setIntOpt(
+                WAYPT_VALID,
+                (0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK))));
+        setIntOpt(
+                WAYPT_RCR,
+                (BT747Constants.RCR_BUTTON_MASK | BT747Constants.RCR_ALL_APP_MASK));
     }
 
     private final void setOpt(final int eventType, final String src,
@@ -1969,7 +1992,18 @@ public class AppSettings implements BT747Thread {
                     AppSettings.C_HEIGHT_CONVERSION_MODE_SIZE },
             { AppSettings.INT, AppSettings.DISTANCE_CALCULATION_MODE,
                     AppSettings.DISTANCE_CALC_MODE_IDX,
-                    AppSettings.DISTANCE_CALC_MODE_SIZE }
+                    AppSettings.DISTANCE_CALC_MODE_SIZE },
+            { AppSettings.INT, AppSettings.WAYPT_VALID,
+                    AppSettings.C_WAYPT_VALID_IDX,
+                    AppSettings.C_WAYPT_VALID_SIZE },
+            { AppSettings.INT, AppSettings.TRKPT_RCR,
+                    AppSettings.C_TRKPT_RCR_IDX, AppSettings.C_TRKPT_RCR_SIZE },
+            { AppSettings.INT, AppSettings.TRKPT_VALID,
+                    AppSettings.C_TRKPT_VALID_IDX,
+                    AppSettings.C_TRKPT_VALID_SIZE },
+            { AppSettings.INT, AppSettings.WAYPT_RCR,
+                    AppSettings.C_WAYPT_RCR_IDX, AppSettings.C_WAYPT_RCR_SIZE },
+
     // End of list
     };
 }

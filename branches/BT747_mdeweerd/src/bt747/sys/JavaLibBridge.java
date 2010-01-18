@@ -143,6 +143,30 @@ public final class JavaLibBridge {
     }
 
     /**
+     * Calculate inverse tangent
+     * 
+     * @param x
+     *            x.
+     * 
+     * @return acos(x)
+     */
+    public static final double atan2(final double x, final double y) {
+        return JavaLibBridge.imp.atan2(x, y);
+    }
+
+    /**
+     * Calculate inverse tangent
+     * 
+     * @param x
+     *            x.
+     * 
+     * @return acos(x)
+     */
+    public static final double atan(final double x) {
+        return JavaLibBridge.imp.atan(x);
+    }
+
+    /**
      * Calculate x^^y. (x to the power of y)
      * 
      * @param x

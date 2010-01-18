@@ -381,11 +381,16 @@ public class TestDevice implements bt747.model.ModelListener {
             // // getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             // getIncremental();
-        } else if (type == ModelEvent.TRK_VALID_CHANGE
-                || type == ModelEvent.TRK_RCR_CHANGE
-                || type == ModelEvent.WAY_VALID_CHANGE
-                || type == ModelEvent.WAY_RCR_CHANGE) {
-            // updateGuiLogFilterSettings();
+        } else if (type ==  ModelEvent.SETTING_CHANGE) {
+            final int arg = Integer.valueOf((String) e.getArg());
+            switch (arg) {
+            case Model.TRKPT_VALID:
+            case Model.TRKPT_RCR:
+            case Model.WAYPT_VALID:
+            case Model.WAYPT_RCR:
+                //updateGuiLogFilterSettings();
+                break;
+            }
         } else if (type == ModelEvent.CONVERSION_STARTED) {
             // conversionStartTime = System.currentTimeMillis();
         } else if (type == ModelEvent.CONVERSION_ENDED) {

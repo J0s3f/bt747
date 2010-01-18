@@ -238,4 +238,22 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
         throw new BT747Exception(
                 "This feature is not implemented in this platform!");
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.sys.interfaces.JavaLibImplementation#atan(double)
+     */
+    public double atan(double x) {
+        return Math.atan(x);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.sys.interfaces.JavaLibImplementation#atan2(double, double)
+     */
+    public double atan2(double x, double y) {
+        return Math.atan2(x, y);
+    }
 }
