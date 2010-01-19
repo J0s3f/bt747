@@ -77,7 +77,8 @@ public final class GPSNMEAFile extends GPSFile {
      */
     public final void writeRecord(final GPSRecord r) {
         super.writeRecord(r);
-        if (ptFilters[GPSFilter.TRKPT].doFilter(r)) {
+        if (cachedRecordIsNeeded(r)) {
+//                ptFilters[GPSFilter.TRKPT].doFilter(r)) {
             final String timeStr = getTimeStr(t, r, selectedFileFields);
 
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
@@ -96,7 +97,9 @@ public final class GPSNMEAFile extends GPSFile {
                 writeGSV(r, timeStr);
             }
             if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_WPL_IDX)) != 0) {
-                writeWPL(r);
+                if(ptFilters[GPSFilter.WAYPT].doFilter(r)) {
+                    writeWPL(r);
+                }
             }
         }
     }
