@@ -802,6 +802,7 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     
     private final int getCurrentGpsType() {
         if(isHolux() && gpsRxTx.isConnected()) {
+            // TODO: check type in more detail.
             return BT747Constants.GPS_TYPE_HOLUX_M241;
         }
         return getIntOpt(AppSettings.GPSTYPE);

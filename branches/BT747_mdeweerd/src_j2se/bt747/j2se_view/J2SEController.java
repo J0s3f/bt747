@@ -105,12 +105,12 @@ public class J2SEController extends Controller {
          */
         @Override
         public final GPSLogConvertInterface getInputConversionInstance(
-                final BT747Path logFile) {
+                final BT747Path logFile, final int loggerType) {
             final String logFileLC = logFile.getPath().toLowerCase();
             if (logFileLC.endsWith(".gpx")) {
                 return new GPXLogConvert();
             } else {
-                return super.getInputConversionInstance(logFile);
+                return super.getInputConversionInstance(logFile, loggerType);
             }
         }
     }

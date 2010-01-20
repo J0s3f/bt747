@@ -3,6 +3,8 @@
  */
 package gps.log.in;
 
+import gps.BT747Constants;
+
 import bt747.sys.interfaces.BT747Path;
 
 /**
@@ -30,9 +32,9 @@ public class GPSInputConversionFactory {
      * @return conversion instance.
      */
     public GPSLogConvertInterface getInputConversionInstance(
-            final BT747Path logFile) {
+            final BT747Path logFile, final int loggerType) {
         if (next != null) {
-            return next.getInputConversionInstance(logFile);
+            return next.getInputConversionInstance(logFile, loggerType);
         } else {
             return null;
         }
@@ -50,7 +52,7 @@ public class GPSInputConversionFactory {
     }
 
     /**
-     * Default handling class to provide input handler.
+     * Default Factory to provide input handler.
      * 
      * @author Mario De Weerd.
      * 
@@ -59,7 +61,7 @@ public class GPSInputConversionFactory {
             GPSInputConversionFactory {
 
         public final GPSLogConvertInterface getInputConversionInstance(
-                final BT747Path logFile) {
+                final BT747Path logFile, final int inLoggerType) {
 
             final String logFileLC = logFile.getPath().toLowerCase();
             if (logFileLC.endsWith(".trl")) {
@@ -69,13 +71,22 @@ public class GPSInputConversionFactory {
             } else if (logFileLC.endsWith(".nmea")
                     || logFileLC.endsWith(".nme")
                     || logFileLC.endsWith(".nma")
-                    || logFileLC.endsWith(".txt")
-                    || logFileLC.endsWith(".log")) {
+                    || logFileLC.endsWith(".txt")) {
                 return new NMEALogConvert();
+            } else if (logFileLC.endsWith(".log")) {
+                if (inLoggerType == BT747Constants.GPS_TYPE_SKYTRAQ) {
+                    return new SkytraqLogConvert();
+                } else {
+                    return new NMEALogConvert();
+                }
             } else if (logFileLC.endsWith(".sr")) {
                 return new WPLogConvert();
             } else {
-                return new BT747LogConvert();
+                if (inLoggerType == BT747Constants.GPS_TYPE_SKYTRAQ) {
+                    return new SkytraqLogConvert();
+                } else {
+                    return new BT747LogConvert();
+                }
             }
         }
     }

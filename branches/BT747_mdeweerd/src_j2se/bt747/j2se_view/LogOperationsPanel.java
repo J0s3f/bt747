@@ -86,11 +86,12 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
     private final static String HOLUX_M241 = "Holux M-241";
     private final static String HOLUX_GR245 = "Holux GR-245";
+    private final static String SKYTRAQ = "Skytraq";
     
     private void updateGuiData() {
         cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("DEFAULT_DEVICE"), HOLUX_M241, "iTrackU-Nemerix",
-                "PhotoTrackr", "iTrackU-SIRFIII", HOLUX_GR245 }));
+                "PhotoTrackr", "iTrackU-SIRFIII", HOLUX_GR245, SKYTRAQ }));
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("TABLE_Description"), getString("GPX_Description"),
                 getString("GPX_ForOSMDescription"),
@@ -1014,6 +1015,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case 5:
             type = BT747Constants.GPS_TYPE_HOLUX_GR245;
             break;
+        case 6:
+            type = BT747Constants.GPS_TYPE_SKYTRAQ;
+            break;
         case 0:
         default:
             type = BT747Constants.GPS_TYPE_DEFAULT;
@@ -1039,7 +1043,13 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case BT747Constants.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             index = 4;
             break;
-        }
+        case BT747Constants.GPS_TYPE_HOLUX_GR245:
+            index = 5;
+            break;
+        case BT747Constants.GPS_TYPE_SKYTRAQ:
+            index = 6;
+            break;        
+            }
         cbGPSType.setSelectedIndex(index);
     }
 

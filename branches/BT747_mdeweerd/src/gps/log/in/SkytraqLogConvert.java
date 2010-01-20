@@ -24,6 +24,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * Conversion of Wonde Proud logs (Phototrackr, ...) This class is used to
@@ -217,6 +218,96 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         return BT747Constants.NO_ERROR;
     }
 
+    /** Leap second information from http://hpiers.obspm.fr/eop-pc/earthor/utc/UTC-offsets_tab.html */
+    final static private int[] totalLeapSecond = {
+        0, /* 1980 Jan. */
+        1, /* 1981 Jul. */
+        2, /* 1982 Jul. */
+        3, /* 1983 Jul. */
+        4, /* 1984 */
+        4, /* 1985 Jul. */
+        5, /* 1986 */
+        5, /* 1987 */
+        5, /* 1988 Jan. */
+        6, /* 1989 */
+        6, /* 1990 Jan. */
+        7, /* 1991 Jan. */
+        8, /* 1992 Jul. */
+        9, /* 1993 Jul. */
+        10, /* 1994 Jul. */
+        11, /* 1995 */
+        11, /* 1996 Jan. */
+        12, /* 1997 Jul. */
+        13, /* 1998 */
+        13, /* 1999 Jan. */
+        14, /* 2000 */
+        14, /* 2001 */
+        14, /* 2002 */
+        14, /* 2003 */
+        14, /* 2004 */
+        14, /* 2005 */
+        14, /* 2006 Jan. */
+        15, /* 2007 */
+        15, /* 2008 */
+        15, /* 2009 Jan. */
+        16, /* 2010 */
+};
+    /* First year = 1980 */
+final static private int[] leapMonth = {
+        1, /* 1980 Jan.*/
+        7, /* 1981 Jul. */
+        7, /* 1982 Jul. */
+        7, /* 1983 Jul. */
+        100, /* 1984 */
+        7, /* 1985 Jul. */
+        100, /* 1986 */
+        100, /* 1987 */
+        1, /* 1988 Jan. */
+        100, /* 1989 */
+        1, /* 1990 Jan. */
+        1, /* 1991 Jan. */
+        7, /* 1992 Jul. */
+        7, /* 1993 Jul. */
+        7, /* 1994 Jul. */
+        100, /* 1995 */
+        1, /* 1996 Jan. */
+        7, /* 1997 Jul. */
+        100, /* 1998 */
+        1, /* 1999 Jan. */
+        100, /* 2000 */
+        100, /* 2001 */
+        100, /* 2002 */
+        100, /* 2003 */
+        100, /* 2004 */
+        100, /* 2005 */
+        1, /* 2006 Jan. */
+        100, /* 2007 */
+        100, /* 2008 */
+        1, /* 2009 Jan. */
+        100, /* 2010 */
+        /* Last in table must not be a leap second year for algorithm to work, if not, add one year. */
+};
+
+
+    private static final int getLeapSecondsSince1980(final int year, final int month) {
+        int index = year -1980;
+        int leapSeconds;
+        if(index>0) {
+            if(index < totalLeapSecond.length) {
+                leapSeconds = totalLeapSecond[index];
+                if(month>=leapMonth[index]) {
+                    leapSeconds+=1;
+                }
+            } else {
+                leapSeconds = totalLeapSecond[index];
+            }
+        } else {
+            leapSeconds = 0;
+        }
+        return leapSeconds;
+    }
+    
+//    private static long prevX=0, prevY=0, prevZ=0;
     private final static GPSRecord toGpsRecord(SkytraqPositionRecord sRec) {
         GPSRecord rRec = new GPSRecord();
 
@@ -228,8 +319,36 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         ecef2WGS84(rRec, sRec.x, sRec.y, sRec.z);
         BT747Date d = JavaLibBridge.getDateInstance(1,1,1970);
         d.advance( 10825+sRec.wn*7);
-        rRec.setUtc(d.dateToUTCepoch1970() + sRec.tow);
+        /* First year = 1980.  Leap second at start of year - before leap. */
+        BT747Time t = JavaLibBridge.getTimeInstance();
+        
+        int utc = (10825*24*3600)+sRec.wn*7*24*3600+
+                +sRec.tow;
+                t.setUTCTime(utc);
+                utc-=getLeapSecondsSince1980(t.getYear(), t.getMonth());
+        rRec.setUtc(utc);
+        
         rRec.setSpeed(sRec.speed);
+//        if(sRec.wn<=542 && sRec.tow<=589475) {
+//        System.out.println(""+(1024+sRec.wn)+" "+sRec.tow+" "+t.getHour()+":"+t.getMinute()+":"+t.getSecond()+ " " 
+//                + t.getMonth()
+//                +"/"+t.getDay()+"/"+t.getYear()+" "
+//                +(sRec.x-prevX)+" "
+//                +(sRec.y-prevY)+" "
+//                +(sRec.z-prevZ)+" "
+//                +(sRec.x)+" "
+//                +(sRec.y)+" "
+//                +(sRec.z)+" "
+//                +sRec.speed+" "
+//                +JavaLibBridge.toString(rRec.getLongitude(), 6)+" "
+//                +JavaLibBridge.toString(rRec.getLatitude(), 6)+" "
+//                +JavaLibBridge.toString(rRec.getHeight(), 6)
+//                );
+//        }
+//        prevX = sRec.x;
+//        prevY= sRec.y;
+//        prevZ = sRec.z;
+        //System.out.println("Full at "+r.recCount);
         return rRec;
     }
 
@@ -341,13 +460,13 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
         // r.y = previous.y;
         // r.z = previous.z;
 
-        r.speed = (bytes[recIdx] & 0x3) << 8 + (bytes[recIdx + 1] & SkytraqLogConvert.X_FF);
+        r.speed = ((bytes[recIdx] & 0x3) << 8) + (bytes[recIdx + 1] & SkytraqLogConvert.X_FF);
         int delta_tow = ((bytes[recIdx + 2] & 0xFF) << 8)
                 + ((bytes[recIdx + 3] & 0xFF));
         int delta_x = ((bytes[recIdx + 4] & 0xFF) << 2)
                 + ((bytes[recIdx + 5] & 0xC0) >> 6);
-        int delta_y = ((bytes[recIdx + 5] & 0x3F) << 4)
-                + ((bytes[recIdx + 6] & 0xF0) >> 4);
+        int delta_y = ((bytes[recIdx + 5] & 0x3F))
+                + ((bytes[recIdx + 6] & 0xF0) << 2);
         int delta_z = ((bytes[recIdx + 6] & 0x03) << 8)
                 + ((bytes[recIdx + 7] & 0xFF));
 
