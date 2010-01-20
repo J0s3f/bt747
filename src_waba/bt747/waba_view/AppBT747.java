@@ -165,6 +165,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
             .getString(Txt.S_GISTEQTYPE3), false);
     private final MenuItem miHolux = new MenuItem("Holux M241", false);
     private final MenuItem miHolux245 = new MenuItem("Holux 245", false);
+    private final MenuItem miSkytraq = new MenuItem("Skytraq", false);
 
     private final MenuItem miInfo = new MenuItem(Txt.getString(Txt.S_INFO));
     private final MenuItem miAboutBT747 = new MenuItem(Txt
@@ -464,6 +465,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miGisteqType3.isChecked = false;
         miHolux.isChecked = false;
         miHolux245.isChecked = false;
+        miSkytraq.isChecked = false;
         switch (m.getIntOpt(AppSettings.GPSTYPE)) {
         case BT747Constants.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
@@ -482,6 +484,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
             break;
         case BT747Constants.GPS_TYPE_HOLUX_M241:
             miHolux.isChecked = true;
+        case BT747Constants.GPS_TYPE_SKYTRAQ:
+            miSkytraq.isChecked = true;
         default:
             break;
         }

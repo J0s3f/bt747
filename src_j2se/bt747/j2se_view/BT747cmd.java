@@ -818,6 +818,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 deviceType = BT747Constants.GPS_TYPE_DEFAULT;
             } else if (arg.equals("holux245")) {
                 deviceType = BT747Constants.GPS_TYPE_HOLUX_GR245;
+            } else if (arg.equals("skytraq")) {
+                deviceType = BT747Constants.GPS_TYPE_SKYTRAQ;
             }
 
             c.setIntOpt(Model.GPSTYPE, deviceType);
@@ -1361,7 +1363,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 Integer.class);
                 accepts(
                         OPT_DEVICETYPE,
-                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245).")
+                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245, SKYTRAQ).")
                         .withRequiredArg().describedAs("DEVICE");
                 accepts(OPT_MACADDR,
                     "Report the BT Mac Address.  Can be used for unique identification.");

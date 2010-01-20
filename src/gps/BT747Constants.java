@@ -560,9 +560,13 @@ public final class BT747Constants { // dev as in device
     public static final int GPS_TYPE_HOLUX_GR245 = 4;
     /**
      * Specific Holux type.
-     * 
      */
     public static final int GPS_TYPE_HOLUX_M241 = 5;
+
+    /**
+     * Skytraq log type
+     */
+    public static final int GPS_TYPE_SKYTRAQ = 6;
 
     /**
      * Holux type.

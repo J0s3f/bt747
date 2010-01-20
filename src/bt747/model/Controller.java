@@ -495,7 +495,7 @@ public class Controller implements ModelListener {
         return BT747Constants.getHeightReference(logType);
     }
 
-    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
+    public GPSLogConvertInterface getInputConversionInstance(final int logOutType) {
         final GPSLogConvertInterface lc;
         if (Model.logFiles.size() != 0) {
             final MultiLogConvert mlc = new MultiLogConvert();
@@ -504,7 +504,7 @@ public class Controller implements ModelListener {
         } else {
             lc = getInputConversionInstance();
         }
-        final int destinationHeightReference = getHeightReference(logType);
+        final int destinationHeightReference = getHeightReference(logOutType);
         final int sourceHeightReference = getHeightReference(lc.getType());
         String parameters = "";
 
@@ -545,7 +545,7 @@ public class Controller implements ModelListener {
     public final GPSLogConvertInterface getInputConversionInstance() {
         return GPSInputConversionFactory.getHandler()
                 .getInputConversionInstance(
-                        m.getPath(AppSettings.LOGFILEPATH));
+                        m.getPath(AppSettings.LOGFILEPATH), m.getIntOpt(AppSettings.GPSTYPE));
     }
 
     public final GPSFilter[] getLogFiltersToUse() {
@@ -592,7 +592,7 @@ public class Controller implements ModelListener {
         return userWayPoints;
     }
 
-    public final int doConvertLog(final int logType,
+    public final int doConvertLog(final int logOutType,
             final GPSFileInterface gpsFile, final String ext) {
         int result;
         final String parameters = ""; // For debug
@@ -600,7 +600,7 @@ public class Controller implements ModelListener {
         result = 0;
         configureGpsFile(gpsFile);
 
-        if (logType == Model.OSM_LOGTYPE) {
+        if (logOutType == Model.OSM_LOGTYPE) {
             // For OSM output, we optimize the output file.
             gpsFile.setIncludeTrkComment(false);
             gpsFile.setIncludeTrkName(false);
@@ -618,7 +618,7 @@ public class Controller implements ModelListener {
             Generic.debug("Converting with parameters:\n");
         }
 
-        lc = getInputConversionInstance(logType);
+        lc = getInputConversionInstance(logOutType);
 
         if (gpsFile != null) {
             if (filenameBuilder != null) {
@@ -630,7 +630,7 @@ public class Controller implements ModelListener {
                 Generic.debug(parameters);
             }
             gpsFile.initialiseFile(m.getPath(AppSettings.REPORTFILEBASEPATH), ext, m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE));
-            m.logConversionStarted(logType);
+            m.logConversionStarted(logOutType);
             try {
                 lastError = lc.toGPSFile(m.getPath(AppSettings.LOGFILEPATH),
                         gpsFile);
@@ -643,7 +643,7 @@ public class Controller implements ModelListener {
         } else {
             // TODO report error
         }
-        m.logConversionEnded(logType);
+        m.logConversionEnded(logOutType);
         return result;
     }
 
