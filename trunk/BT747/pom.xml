@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>BT747</groupId>
+  <artifactId>BT747</artifactId>
+  <name>BT747</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>MTK Datalogger Control</description>
+  <repositories>
+  </repositories>
+  <dependencies>
+  </dependencies>
+</project>
