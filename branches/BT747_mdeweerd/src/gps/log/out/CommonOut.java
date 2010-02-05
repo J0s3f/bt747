@@ -89,9 +89,9 @@ public final class CommonOut {
     }
 
     public final static void getHtml(final StringBuffer rec,
-            final GPSRecord s,
-            final GPSRecord selectedFields, final BT747Time t,
-            final boolean recordNbrInLogs, final boolean imperial) {
+            final GPSRecord s, final GPSRecord selectedFields,
+            final BT747Time t, final boolean recordNbrInLogs,
+            final boolean imperial) {
 
         // Need lowercase ;-(.
         final boolean convertToLower = true;
@@ -100,7 +100,9 @@ public final class CommonOut {
         style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
         rec.append("<table width=400>");
         if (s.voxStr != null) {
-            rec.append("<tr><td colspan=2 align=\"center\">"); // Table row and first column
+            rec.append("<tr><td colspan=2 align=\"center\">"); // Table row
+            // and first
+            // column
             // start
             // rec.append("</td><td>"); // Column split (span 2 so skipped)
             final String upperVox = s.voxStr.toUpperCase();
@@ -348,24 +350,6 @@ public final class CommonOut {
                 + (((time.getYear() % 100)) < 10 ? "0" : "") + time.getYear()
                 % 100;
     }
-
-    public final static String getDateTimeISO8601(final BT747Time time, final int milisecond) {
-        return time.getYear() + "-"
-        // Month
-                + ((time.getMonth() < 10) ? "0" : "") + time.getMonth() + "-"
-                // Day
-                + ((time.getDay() < 10) ? "0" : "") + time.getDay()
-                + " "
-                + ((time.getHour() < 10) ? "0" : "") + time.getHour() + ":"
-                // Minute
-                + ((time.getMinute() < 10) ? "0" : "")
-                + time.getMinute() // +":"
-                + ":" + ((time.getSecond() < 10) ? "0" : "")
-                + time.getSecond() // +":";
-                + ((milisecond != 0) ? ("." + (milisecond < 100 ? "0" : "")
-                        + (milisecond < 10 ? "0" : "") + milisecond) : "")
-                ;
-    }
     
     public final static String getDateNumStr(final BT747Time time) {
         return time.getYear() + "/"
@@ -378,6 +362,62 @@ public final class CommonOut {
     public final static String getDateTimeStr(final BT747Time time) {
         return CommonOut.getDateTxtStr(time) + " "
                 + CommonOut.getTimeStr(time);
+    }
+
+    public final static String getDateTimeISO8601(final BT747Time t,
+            final int milisecond) {
+        return getDateTimeISO8601(t, milisecond, "Z");
+    }
+    /**
+     * @param t
+     * @param milisecond
+     *            if miliseconds is negative, miliseconds are not added.
+     * @return
+     */
+    public final static String getDateTimeISO8601(final BT747Time t,
+            final int milisecond, final String timezone) {
+        final StringBuffer timeStr = new StringBuffer(20);
+        timeStr.append(t.getYear());
+        timeStr.append('-');
+        if (t.getMonth() < 10) {
+            timeStr.append('0');
+        }
+        timeStr.append(t.getMonth());
+        timeStr.append('-');
+        if (t.getDay() < 10) {
+            timeStr.append('0');
+        }
+        timeStr.append(t.getDay());
+        timeStr.append('T');
+        if (t.getHour() < 10) {
+            timeStr.append('0');
+        }
+        timeStr.append(t.getHour());
+        timeStr.append(':');
+        if (t.getMinute() < 10) {
+            timeStr.append('0');
+        }
+        timeStr.append(t.getMinute());
+        timeStr.append(':');
+
+        if (t.getSecond() < 10) {
+            timeStr.append('0');
+        }
+        timeStr.append(t.getSecond());
+
+        if (milisecond >= 0 && milisecond < 1000) {
+            timeStr.append('.');
+            if (milisecond < 100) {
+                timeStr.append('0');
+                if (milisecond < 10) {
+                    timeStr.append('0');
+                }
+            }
+            timeStr.append(milisecond);
+        }
+        timeStr.append(timezone);
+
+        return timeStr.toString();
     }
 
     public final static String getRCRtype(final GPSRecord s) {
@@ -517,7 +557,7 @@ public final class CommonOut {
 
     /**
      * @param wayPointStyles
-     *                the wayPointStyles to set
+     *            the wayPointStyles to set
      */
     public static final void setWayPointStyles(
             final WayPointStyleSet wayPointStyles) {
