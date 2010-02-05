@@ -310,7 +310,7 @@ public final class GPSSqlFile extends GPSFile {
                 // TODO: Maybe define field as TIMESTAMP WITH TIME ZONE
                 recPost.append("TIMESTAMP '");
                 recPost.append(CommonOut.getDateTimeISO8601(t, r
-                        .hasMillisecond() ? r.milisecond : 0));
+                        .hasMillisecond() ? r.milisecond : -1));
                 recPost.append("'");
             }
             if ((r.hasMillisecond()) && (selectedFileFields.hasMillisecond())) {

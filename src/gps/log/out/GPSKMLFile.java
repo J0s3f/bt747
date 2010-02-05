@@ -21,6 +21,7 @@ import gps.log.GPSRecord;
 import bt747.Version;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * Class to write a KML file.
@@ -46,12 +47,17 @@ public class GPSKMLFile extends GPSFile {
     private int altitudeMode = 0; // 0 = altitude.
     private String altitudeModeIfHeight = GPSKMLFile.ABSOLUTE_HEIGHT;
 
+    private int fileStartTime;
+    private int lastTime;
+
     /**
      * 
      */
     public GPSKMLFile() {
         super();
         numberOfPasses = 3; // Three passes are needed.
+        fileStartTime = 0;
+        lastTime = 0;
     }
 
     /*
@@ -109,6 +115,23 @@ public class GPSKMLFile extends GPSFile {
         }
     }
 
+    private final void addLookAt(final StringBuffer s, final int startTime,
+            final int endTime) {
+        final BT747Time time = JavaLibBridge.getTimeInstance();
+        s.append("<LookAt>\r\n");
+        s.append(" <gx:TimeSpan>\r\n");
+        s.append("  <begin>");
+        time.setUTCTime(startTime);
+        s.append(CommonOut.getDateTimeISO8601(time, -1));
+        s.append("</begin>\r\n");
+        s.append("  <end>");
+        time.setUTCTime(endTime);
+        s.append(CommonOut.getDateTimeISO8601(time, -1));
+        s.append("</end>\r\n");
+        s.append(" </gx:TimeSpan>\r\n");
+        s.append("</LookAt>\r\n");
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -119,7 +142,12 @@ public class GPSKMLFile extends GPSFile {
         header.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
                 // + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
                 // opengis was not understood by google maps
-                + "<kml xmlns=\"http://earth.google.com/kml/2.2\"" + " >\r\n"
+                // + "<kml xmlns=\"http://earth.google.com/kml/2.2\"" +
+                // " >\r\n"
+                + "<kml xmlns=\"http://www.opengis.net/kml/2.2\""
+                + " xmlns:gx=\"http://www.google.com/kml/ext/2.2\""
+                + " xmlns:kml=\"http://www.opengis.net/kml/2.2\""
+                + " xmlns:atom=\"http://www.w3.org/2005/Atom\">"
                 + "<Document"
                 + " xmlns:atom=\"http://www.w3.org/2005/Atom\" >\r\n"
                 + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
@@ -278,6 +306,12 @@ public class GPSKMLFile extends GPSFile {
                 dateString = t.getYear() + "-"
                         + (t.getMonth() < 10 ? "0" : "") + t.getMonth() + "-"
                         + (t.getDay() < 10 ? "0" : "") + t.getDay();
+                if (r.getUtc() > lastTime) {
+                    lastTime = r.getUtc();
+                    if (fileStartTime == 0) {
+                        fileStartTime = lastTime;
+                    }
+                }
             }
 
             if (isWayType
@@ -328,21 +362,8 @@ public class GPSKMLFile extends GPSFile {
 
                 if (((r.hasUtc()) && (selectedFileFields.hasUtc()))) {
                     rec.append("<TimeStamp><when>");
-                    if ((r.hasUtc()) && (selectedFileFields.hasUtc())) {
-                        rec.append(dateString + "T"
-                                + (t.getHour() < 10 ? "0" : "") + t.getHour()
-                                + ":" + (t.getMinute() < 10 ? "0" : "")
-                                + t.getMinute() + ":"
-                                + (t.getSecond() < 10 ? "0" : ""));
-                        if (r.milisecond == 0) {
-                            rec.append(t.getSecond());
-                        } else {
-                            rec.append(JavaLibBridge.toString((float) t
-                                    .getSecond()
-                                    + r.milisecond / 1000.0, 3));
-                        }
-                        rec.append("Z");
-                    }
+                    rec.append(CommonOut.getDateTimeISO8601(t, r
+                            .hasMillisecond() ? r.getMilisecond() : -1));
                     rec.append("</when></TimeStamp>\r\n");
                 }
 
@@ -472,10 +493,13 @@ public class GPSKMLFile extends GPSFile {
      */
     public void finaliseFile() {
         if (isOpen()) {
-            String footer;
             writeDataFooter();
-            footer = "</Document>\r\n" + "</kml>";
-            writeTxt(footer);
+            rec.setLength(0);
+            if (fileStartTime != 0) {
+                //addLookAt(rec, fileStartTime, lastTime);
+            }
+            rec.append("</Document>\r\n</kml>");
+            writeTxt(rec.toString());
         }
         super.finaliseFile();
     }

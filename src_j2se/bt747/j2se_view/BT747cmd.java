@@ -25,6 +25,7 @@ import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
+import gps.log.out.CommonOut;
 import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 
@@ -183,6 +184,8 @@ public class BT747cmd implements bt747.model.ModelListener {
     private static final String OPT_AGPS_URL = "agps-url";
     /** Request a clear of the AGPS data. */
     private static final String OPT_AGPS_CLEAR = "agps-clear";
+    /** Request the status of the AGPS data. */
+    private static final String OPT_AGPS_STATUS = "agps-status";
     /** Request AGPS upload from the default URL. */
     private static final String OPT_AGPS = "agps";
     /** Perform a cold, warm, hot start or factory reset */
@@ -372,7 +375,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             case ModelEvent.EXCEPTION:
                 // TODO: better handling of exception in J2SEAGPS.java through
                 // specialisation of exception
-                if(!agpsUploadDone) {
+                if (!agpsUploadDone) {
                     agpsUploadDone = true;
                 }
                 break;
@@ -532,7 +535,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 // Do nothing
             }
         }
-        if(eraseOngoing) {
+        if (eraseOngoing) {
             return "WARNING: Waiting for end of erase timed out";
         } else {
             return null;
@@ -570,11 +573,10 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (Model.logFiles.size() != 0) {
             for (int i = 0; i < Model.logFiles.size(); i++) {
                 LogFileInfo lfi = (LogFileInfo) Model.logFiles.elementAt(i);
-                System.out.println("Input file: "
-                        + lfi.getPath().getPath());
+                System.out.println("Input file: " + lfi.getPath().getPath());
             }
         }
-            
+
         System.out.println("Output directory: "
                 + m.getStringOpt(Model.OUTPUTDIRPATH));
         System.out.println("Output basename: "
@@ -628,7 +630,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
         c.setIntOpt(AppSettings.OUTPUTFILESPLITTYPE, 0);
-        c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_AUTOMATIC);
+        c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,
+                Model.HEIGHT_AUTOMATIC);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -709,13 +712,17 @@ public class BT747cmd implements bt747.model.ModelListener {
             String heightOpt;
             heightOpt = ((String) options.valueOf(OPT_HEIGHT)).toUpperCase();
             if (heightOpt.equals("AUTOMATIC")) {
-                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_AUTOMATIC);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,
+                        Model.HEIGHT_AUTOMATIC);
             } else if (heightOpt.equals("MSL_TO_WGS84")) {
-                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_MSL_TO_WGS84);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,
+                        Model.HEIGHT_MSL_TO_WGS84);
             } else if (heightOpt.equals("WGS84_TO_MSL")) {
-                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_WGS84_TO_MSL);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,
+                        Model.HEIGHT_WGS84_TO_MSL);
             } else if (heightOpt.equals("KEEP")) {
-                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,Model.HEIGHT_NOCHANGE);
+                c.setIntOpt(AppSettings.HEIGHT_CONVERSION_MODE,
+                        Model.HEIGHT_NOCHANGE);
             } else {
                 System.err.println("Height parameter (" + heightOpt
                         + "unknown");
@@ -799,7 +806,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 || options.has(OPT_SET_LOG_FIELDS)
                 || options.has(OPT_RECOVER_LOGGER)
                 || options.has(OPT_AGPS_CLEAR) || options.has(OPT_AGPS)
-                || options.has(OPT_AGPS_URL)) {
+                || options.has(OPT_AGPS_STATUS) || options.has(OPT_AGPS_URL)) {
             c.connectGPS();
         }
 
@@ -877,7 +884,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setMtkDataNeeded(MtkModel.DATA_LOG_SPEED_INTERVAL);
             c.setMtkDataNeeded(MtkModel.DATA_INITIAL_LOG);
 
-            if(options.has(OPT_MACADDR)) {
+            if (options.has(OPT_MACADDR)) {
                 c.setMtkDataNeeded(MtkModel.DATA_BT_MAC_ADDR);
             }
             // c.req
@@ -892,8 +899,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                             + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
                                     .getMainVersion())
                                     : ""));
-            if(options.has(OPT_MACADDR)) {
-                System.out.println("Bluetooth Mac Addr:"+ m.getBTAddr());
+            if (options.has(OPT_MACADDR)) {
+                System.out.println("Bluetooth Mac Addr:" + m.getBTAddr());
             }
             System.out.println(Utils.format(
                     "Log Conditions: Time:%.1f Distance:%.1f Speed:%d", m
@@ -964,6 +971,33 @@ public class BT747cmd implements bt747.model.ModelListener {
                     }
                 }
 
+            }
+
+            if (options.has(OPT_AGPS_STATUS)) {
+                MtkModel mtk = m.mtkModel();
+                if (!mtk.hasAgps()) {
+                    System.out.println("AGPS STATUS: Not supported\n");
+                } else {
+                    System.out.println(">> Getting AGPS status\n");
+                    c.setMtkDataNeeded(MtkModel.DATA_AGPS_STORED_RANGE);
+                    flushOutstandingCmds();
+                    if (mtk.hasAgps()) {
+                        final String text1 = Utils
+                                .format("AGPS Range 1: %S blocks.  From %s to %S.",mtk
+                                        .getAgpsDataCount(), CommonOut
+                                        .getDateTimeStr(mtk
+                                                .getAgpsStartTime()),
+                                        CommonOut.getDateTimeStr(mtk
+                                                .getAgpsEndTime()));
+                        final String text2 = Utils.format("AGPS Range 2: %s and %s (unknown meaning)",
+                                CommonOut.getDateTimeStr(mtk
+                                        .getAgpsStart2Time()),
+                                CommonOut.getDateTimeStr(mtk
+                                        .getAgpsEnd2Time()));
+                        System.out.println(text1);
+                        System.out.println(text2);
+                    }
+                }
             }
 
             if (options.has(OPT_SET_LOG_CRITERIA)) {
@@ -1162,9 +1196,15 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_CREATE_GPX_TRACKS)) {
             System.out.println("Converting to GPX (trackpoints)");
-            c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-            c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-            c.setIntOpt(AppSettings.WAYPT_RCR,0);
+            c
+                    .setIntOpt(
+                            AppSettings.TRKPT_VALID,
+                            (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c
+                    .setIntOpt(
+                            AppSettings.WAYPT_VALID,
+                            (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c.setIntOpt(AppSettings.WAYPT_RCR, 0);
             c.setIntOpt(AppSettings.TRKPT_RCR, 0xFFFFFFFF);
             // The output filename does not depend on the time.
             c.setFileNameBuilder(new BT747FileName() {
@@ -1174,9 +1214,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                         final String proposedTimeSpec) {
                     switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                     case 0:
-                        return new BT747Path(baseName.getPath() + "_trk" + proposedExtension);
+                        return new BT747Path(baseName.getPath() + "_trk"
+                                + proposedExtension);
                     default:
-                        return new BT747Path(baseName.getPath() + proposedTimeSpec + "_trk"
+                        return new BT747Path(baseName.getPath()
+                                + proposedTimeSpec + "_trk"
                                 + proposedExtension);
                     }
                 }
@@ -1190,10 +1232,18 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_CREATE_GPX_WAYPOINTS)) {
             System.out.println("Converting to GPX (waypoints)");
-            c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-            c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-            c.setIntOpt(AppSettings.WAYPT_RCR,(BT747Constants.RCR_BUTTON_MASK
-            | BT747Constants.RCR_ALL_APP_MASK));
+            c
+                    .setIntOpt(
+                            AppSettings.TRKPT_VALID,
+                            (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c
+                    .setIntOpt(
+                            AppSettings.WAYPT_VALID,
+                            (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+            c
+                    .setIntOpt(
+                            AppSettings.WAYPT_RCR,
+                            (BT747Constants.RCR_BUTTON_MASK | BT747Constants.RCR_ALL_APP_MASK));
             c.setIntOpt(AppSettings.TRKPT_RCR, 0);
             c.setFileNameBuilder(new BT747FileName() {
                 public BT747Path getOutputFileName(final BT747Path baseName,
@@ -1202,9 +1252,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                         final String proposedTimeSpec) {
                     switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                     case 0:
-                        return new BT747Path(baseName.getPath() + "_wpt" + proposedExtension);
+                        return new BT747Path(baseName.getPath() + "_wpt"
+                                + proposedExtension);
                     default:
-                        return new BT747Path(baseName.getPath() + proposedTimeSpec + "_wpt"
+                        return new BT747Path(baseName.getPath()
+                                + proposedTimeSpec + "_wpt"
                                 + proposedExtension);
                     }
                 }
@@ -1249,10 +1301,18 @@ public class BT747cmd implements bt747.model.ModelListener {
                 }
                 if (type != Model.NO_LOG_LOGTYPE) {
                     System.out.println("Converting to " + typeStr);
-                    c.setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-                    c.setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
-                    c.setIntOpt(AppSettings.WAYPT_RCR,(BT747Constants.RCR_BUTTON_MASK
-                    | BT747Constants.RCR_ALL_APP_MASK));
+                    c
+                            .setIntOpt(
+                                    AppSettings.TRKPT_VALID,
+                                    (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+                    c
+                            .setIntOpt(
+                                    AppSettings.WAYPT_VALID,
+                                    (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+                    c
+                            .setIntOpt(
+                                    AppSettings.WAYPT_RCR,
+                                    (BT747Constants.RCR_BUTTON_MASK | BT747Constants.RCR_ALL_APP_MASK));
                     c.setIntOpt(AppSettings.TRKPT_RCR, 0xFFFFFFFF);
                     c.setFileNameBuilder(new BT747FileName() {
                         public BT747Path getOutputFileName(
@@ -1260,11 +1320,14 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 final int utcTimeSeconds,
                                 final String proposedExtension,
                                 final String proposedTimeSpec) {
-                            switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
+                            switch (m
+                                    .getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
                             case 0:
-                                return new BT747Path(baseName + proposedExtension);
+                                return new BT747Path(baseName
+                                        + proposedExtension);
                             default:
-                                return new BT747Path(baseName + proposedTimeSpec
+                                return new BT747Path(baseName
+                                        + proposedTimeSpec
                                         + proposedExtension);
                             }
                         }
@@ -1366,7 +1429,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX, HOLUX245, SKYTRAQ).")
                         .withRequiredArg().describedAs("DEVICE");
                 accepts(OPT_MACADDR,
-                    "Report the BT Mac Address.  Can be used for unique identification.");
+                        "Report the BT Mac Address.  Can be used for unique identification.");
                 accepts(OPT_TRKPTINFO,
                         "Add record information for each trackpoint.");
                 accepts(OPT_TRKPTNAME,
@@ -1428,6 +1491,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts(OPT_AGPS_CLEAR,
                         "Clears the AGPS data in the device (done before the upload.");
                 accepts(
+                        OPT_AGPS_STATUS,
+                        "Returns the status of APGS data in the device after the APGS upload (if any).");
+                accepts(
                         OPT_AGPS,
                         "Upload APGS data using the default URL (or the provided url when available).");
                 accepts(OPT_START,
@@ -1460,8 +1526,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                             filesToTag.add(f);
                         }
                     } else {
-                        System.err.println("File not found: "
-                                + f.getCanonicalPath());
+                        System.err.println("File not found: " + arg);
                         success = false;
                     }
                 }
