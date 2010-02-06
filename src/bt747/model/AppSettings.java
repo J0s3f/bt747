@@ -517,6 +517,13 @@ public class AppSettings implements BT747Thread {
      */
     public final static int WAYPT_RCR = 89;
 
+    /** Field separation character for CSV output file. */
+    public final static int CSV_FIELD_SEP = 90;
+    /** Decimal point character for CSV output file. */
+    public final static int CSV_DECIMAL = 91;
+    /** Satellite field separation character for CSV output file. */
+    public final static int CSV_SAT_SEP = 92;
+
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
 
@@ -767,7 +774,14 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 49:
             setIntOpt(DISTANCE_CALCULATION_MODE, DISTANCE_CALC_MODE_NONE);
-            setStringOpt(AppSettings.VERSION, "0.50");
+            /* fall through */
+        case 50:
+            setStringOpt(CSV_FIELD_SEP, ",");
+            setStringOpt(CSV_DECIMAL, ".");
+            setStringOpt(CSV_SAT_SEP, ";");
+
+            setStringOpt(AppSettings.VERSION, "0.51");
+
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -1751,8 +1765,17 @@ public class AppSettings implements BT747Thread {
     private static final int DISTANCE_CALC_MODE_IDX = AppSettings.FONTSCALE_IDX
             + AppSettings.FONTSCALE_SIZE;
     private static final int DISTANCE_CALC_MODE_SIZE = 4;
-    private static final int C_NEXT_IDX = AppSettings.DISTANCE_CALC_MODE_IDX
+    private static final int CSV_FIELD_SEP_IDX = AppSettings.DISTANCE_CALC_MODE_IDX
             + AppSettings.DISTANCE_CALC_MODE_SIZE;
+    private static final int CSV_FIELD_SEP_SIZE = 1;
+    private static final int CSV_DECIMAL_IDX = AppSettings.CSV_FIELD_SEP_IDX
+            + AppSettings.CSV_FIELD_SEP_SIZE;
+    private static final int CSV_DECIMAL_SIZE = 1;
+    private static final int CSV_SAT_SEP_IDX = AppSettings.CSV_DECIMAL_IDX
+            + AppSettings.CSV_DECIMAL_SIZE;
+    private static final int CSV_SAT_SEP_SIZE = 1;
+    private static final int C_NEXT_IDX = AppSettings.CSV_SAT_SEP_IDX
+            + AppSettings.CSV_SAT_SEP_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -2003,7 +2026,13 @@ public class AppSettings implements BT747Thread {
                     AppSettings.C_TRKPT_VALID_SIZE },
             { AppSettings.INT, AppSettings.WAYPT_RCR,
                     AppSettings.C_WAYPT_RCR_IDX, AppSettings.C_WAYPT_RCR_SIZE },
-
+            { AppSettings.STRING, AppSettings.CSV_FIELD_SEP,
+                    AppSettings.CSV_FIELD_SEP_IDX,
+                    AppSettings.CSV_FIELD_SEP_SIZE },
+            { AppSettings.STRING, AppSettings.CSV_DECIMAL,
+                    AppSettings.CSV_DECIMAL_IDX, AppSettings.CSV_DECIMAL_SIZE },
+            { AppSettings.STRING, AppSettings.CSV_SAT_SEP,
+                    AppSettings.CSV_SAT_SEP_IDX, AppSettings.CSV_SAT_SEP_SIZE },
     // End of list
     };
 }

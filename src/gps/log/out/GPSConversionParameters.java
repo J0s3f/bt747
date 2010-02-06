@@ -29,6 +29,10 @@ public final class GPSConversionParameters {
      */
     public final static String CSV_FIELD_SEP_STRING = "csv-fieldsep";
     /**
+     * Defines the CSV field decimal point..
+     */
+    public final static String CSV_DECIMALPOINT_STRING = "csv-decimal";
+    /**
      * Defines the CSV field seperation character.
      */
     public final static String CSV_SAT_SEP_STRING = "csv-satsep";

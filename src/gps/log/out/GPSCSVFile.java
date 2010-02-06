@@ -35,15 +35,19 @@ public final class GPSCSVFile extends GPSFile {
      * Reused StringBuffer for output construction.
      */
     private final StringBuffer rec = new StringBuffer(1024);
+    
+    private static final char defaultDecimalPoint = '.';
+    
+    private static char decimalPoint = defaultDecimalPoint;
     /**
      * CSV field separator - fixed now, but may become a parameter in the
      * future.
      */
-    private String fieldSep = ",";
+    private char fieldSep = ',';
     /**
      * Separator in the satellite field - for future parameterization.
      */
-    private String satSeperator = ";";
+    private char satSeperator = ';';
 
     /*
      * (non-Javadoc)
@@ -59,16 +63,23 @@ public final class GPSCSVFile extends GPSFile {
             getParamObject().getIntParam(
                     GPSConversionParameters.CSV_DATE_FORMAT_INT);
         }
+
+        final String ds = getParamObject().getStringParam(
+                GPSConversionParameters.CSV_DECIMALPOINT_STRING);
+        if (ds != null) {
+            decimalPoint = ds.charAt(0);
+        }
+
         final String fs = getParamObject().getStringParam(
                 GPSConversionParameters.CSV_FIELD_SEP_STRING);
         if (fs != null) {
-            fieldSep = fs;
+            fieldSep = fs.charAt(0);
         }
 
         final String ss = getParamObject().getStringParam(
                 GPSConversionParameters.CSV_SAT_SEP_STRING);
         if (ss != null) {
-            satSeperator = ss;
+            satSeperator = ss.charAt(0);
         }
 
     }
@@ -183,6 +194,16 @@ public final class GPSCSVFile extends GPSFile {
                 || ptFilters[GPSFilter.WAYPT].doFilter(s);
     }
 
+    private final void appendNumber(final StringBuffer r, final String a) {
+        if (decimalPoint == defaultDecimalPoint) {
+            r.append(a);
+        } else {
+            final String newDecimalPointString = a.replace(
+                    defaultDecimalPoint, decimalPoint);
+            r.append(newDecimalPointString);
+        }
+    }
+    
     // private GPSRecord prevRecord=null;
     /*
      * (non-Javadoc)
@@ -213,7 +234,7 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep + CommonOut.getDateNumStr(t) + fieldSep
                         + CommonOut.getTimeStr(t));
                 if (r.hasMillisecond()) {
-                    rec.append('.');
+                    rec.append(decimalPoint);
                     if (r.milisecond < 100) {
                         rec.append('0');
                     }
@@ -236,7 +257,7 @@ public final class GPSCSVFile extends GPSFile {
 
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                appendNumber(rec, JavaLibBridge.toString(r.getLatitude(), 6));
                 if (r.getLatitude() >= 0) {
                     rec.append(fieldSep + "N");
                 } else {
@@ -248,7 +269,7 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                appendNumber(rec, JavaLibBridge.toString(r.getLongitude(), 6));
                 if (r.getLongitude() >= 0) {
                     rec.append(fieldSep + "E");
                 } else {
@@ -261,9 +282,9 @@ public final class GPSCSVFile extends GPSFile {
             if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                    appendNumber(rec, JavaLibBridge.toString(r.getHeight(), 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(r.getHeight()
+                    appendNumber(rec, JavaLibBridge.toString(r.getHeight()
                             * METERS_TO_FEET, 3));
                 }
 
@@ -288,19 +309,19 @@ public final class GPSCSVFile extends GPSFile {
                     if (imperial) {
                         separation *= METERS_TO_FEET;
                     }
-                    rec.append(JavaLibBridge.toString(separation, 1));
-                    rec.append(',');
+                    appendNumber(rec, JavaLibBridge.toString(separation, 1));
+                    rec.append(fieldSep);
                 } else {
-                    rec.append(',');
+                    rec.append(fieldSep);
                 }
             }
             
             if ((r.hasSpeed()) && (selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.getSpeed(), 3));
+                    appendNumber(rec, JavaLibBridge.toString(r.getSpeed(), 3));
                 } else {
-                    rec.append(JavaLibBridge.toString(
+                    appendNumber(rec, JavaLibBridge.toString(
                             r.getSpeed() * 0.621371192237334f, 3));
                 }
             } else if ((selectedFileFields.hasSpeed())) {
@@ -308,7 +329,7 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((r.hasHeading()) && (selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getHeading(), 6));
+                appendNumber(rec, JavaLibBridge.toString(r.getHeading(), 6));
             } else if ((selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
             }
@@ -326,19 +347,19 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((r.hasPdop()) && (selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getPdop() / 100.0f, 2));
+                appendNumber(rec, JavaLibBridge.toString(r.getPdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
             }
             if ((r.hasHdop()) && (selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getHdop() / 100.0f, 2));
+                appendNumber(rec, JavaLibBridge.toString(r.getHdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
             }
             if ((r.hasVdop()) && (selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
-                rec.append(JavaLibBridge.toString(r.getVdop() / 100.0f, 2));
+                appendNumber(rec, JavaLibBridge.toString(r.getVdop() / 100.0f, 2));
             } else if ((selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
             }
@@ -352,9 +373,9 @@ public final class GPSCSVFile extends GPSFile {
             if ((r.hasDistance()) && (selectedFileFields.hasDistance())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    rec.append(JavaLibBridge.toString(r.distance, 2));
+                    appendNumber(rec, JavaLibBridge.toString(r.distance, 2));
                 } else {
-                    rec.append(JavaLibBridge.toString(
+                    appendNumber(rec, JavaLibBridge.toString(
                             r.distance * 3.28083989501312, 2));
                 }
             } else if ((selectedFileFields.hasDistance())) {
@@ -442,20 +463,20 @@ public final class GPSCSVFile extends GPSFile {
                 if (r.logPeriod % 10 == 0) {
                     rec.append(r.logPeriod / 10);
                 } else {
-                    rec.append(JavaLibBridge.toString(r.logPeriod / 10.0, 1));
+                    appendNumber(rec, JavaLibBridge.toString(r.logPeriod / 10.0, 1));
                 }
                 rec.append(fieldSep);
                 if (r.logDistance % 10 == 0) {
                     rec.append(r.logDistance / 10);
                 } else {
-                    rec.append(JavaLibBridge
+                    appendNumber(rec, JavaLibBridge
                             .toString(r.logDistance / 10.0, 1));
                 }
                 rec.append(fieldSep);
                 if (r.logSpeed % 10 == 0) {
                     rec.append(r.logSpeed / 10);
                 } else {
-                    rec.append(JavaLibBridge.toString(r.logSpeed / 10.0, 1));
+                    appendNumber(rec, JavaLibBridge.toString(r.logSpeed / 10.0, 1));
                 }
             }
 
