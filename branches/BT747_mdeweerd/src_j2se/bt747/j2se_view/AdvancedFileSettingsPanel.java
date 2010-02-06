@@ -64,6 +64,10 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         }
         cbGPXAddLink.setSelected(m.getBooleanOpt(AppSettings.GPX_LINK_INFO));
         cbGPX_1_1.setSelected(m.getBooleanOpt(AppSettings.IS_GPX_1_1));
+        
+        cbDecimalPoint.setSelectedItem(m.getStringOpt(AppSettings.CSV_DECIMAL));
+        cbFieldSep.setSelectedItem(m.getStringOpt(AppSettings.CSV_FIELD_SEP));
+        cbSatInfoSeparator.setSelectedItem(m.getStringOpt(AppSettings.CSV_SAT_SEP));
         getNMEAOutFile();
     }
 
@@ -250,6 +254,13 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         pnKMLFileSettings = new javax.swing.JPanel();
         lbAltitudeMode = new javax.swing.JLabel();
         cbAltitudeMode = new javax.swing.JComboBox();
+        pnCSVFileSettings = new javax.swing.JPanel();
+        lbFieldSep = new javax.swing.JLabel();
+        lbDecimalPoint = new javax.swing.JLabel();
+        lbSatInfoSeparator = new javax.swing.JLabel();
+        cbFieldSep = new javax.swing.JComboBox();
+        cbDecimalPoint = new javax.swing.JComboBox();
+        cbSatInfoSeparator = new javax.swing.JComboBox();
 
         pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
@@ -482,6 +493,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         pnKMLFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedFileSettingsPanel.pnKMLFileSettings.border.title"))); // NOI18N
         pnKMLFileSettings.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.pnKMLFileSettings.toolTipText")); // NOI18N
 
+        lbAltitudeMode.setLabelFor(cbAltitudeMode);
         lbAltitudeMode.setText(bundle.getString("AdvancedFileSettingsPanel.lbAltitudeMode.text")); // NOI18N
 
         cbAltitudeMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Clamp To Ground", "Relative", "Absolute" }));
@@ -497,6 +509,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         pnKMLFileSettingsLayout.setHorizontalGroup(
             pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnKMLFileSettingsLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(lbAltitudeMode)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbAltitudeMode, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -506,8 +519,80 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
             pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnKMLFileSettingsLayout.createSequentialGroup()
                 .add(pnKMLFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbAltitudeMode)
-                    .add(cbAltitudeMode, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(cbAltitudeMode, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbAltitudeMode))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnCSVFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedFileSettingsPanel.pnCSVFileSettings.border.title"))); // NOI18N
+        pnCSVFileSettings.setToolTipText(bundle.getString("AdvancedFileSettingsPanel.pnCSVFileSettings.toolTipText")); // NOI18N
+
+        lbFieldSep.setLabelFor(cbFieldSep);
+        lbFieldSep.setText(bundle.getString("AdvancedFileSettingsPanel.lbFieldSep.text")); // NOI18N
+
+        lbDecimalPoint.setLabelFor(cbDecimalPoint);
+        lbDecimalPoint.setText(bundle.getString("AdvancedFileSettingsPanel.lbDecimalPoint.text")); // NOI18N
+
+        lbSatInfoSeparator.setLabelFor(cbSatInfoSeparator);
+        lbSatInfoSeparator.setText(bundle.getString("AdvancedFileSettingsPanel.lbSatInfoSeparator.text")); // NOI18N
+
+        cbFieldSep.setEditable(true);
+        cbFieldSep.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ";", ",", " " }));
+        cbFieldSep.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbFieldSepItemStateChanged(evt);
+            }
+        });
+
+        cbDecimalPoint.setEditable(true);
+        cbDecimalPoint.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ".", "," }));
+        cbDecimalPoint.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbDecimalPointItemStateChanged(evt);
+            }
+        });
+
+        cbSatInfoSeparator.setEditable(true);
+        cbSatInfoSeparator.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ";", ":" }));
+        cbSatInfoSeparator.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbSatInfoSeparatorItemStateChanged(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnCSVFileSettingsLayout = new org.jdesktop.layout.GroupLayout(pnCSVFileSettings);
+        pnCSVFileSettings.setLayout(pnCSVFileSettingsLayout);
+        pnCSVFileSettingsLayout.setHorizontalGroup(
+            pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnCSVFileSettingsLayout.createSequentialGroup()
+                .add(10, 10, 10)
+                .add(pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lbSatInfoSeparator)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lbDecimalPoint)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lbFieldSep))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(cbDecimalPoint, 0, 40, Short.MAX_VALUE)
+                    .add(cbSatInfoSeparator, 0, 40, Short.MAX_VALUE)
+                    .add(cbFieldSep, 0, 40, Short.MAX_VALUE)))
+        );
+
+        pnCSVFileSettingsLayout.linkSize(new java.awt.Component[] {cbDecimalPoint, cbFieldSep, cbSatInfoSeparator}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
+        pnCSVFileSettingsLayout.setVerticalGroup(
+            pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnCSVFileSettingsLayout.createSequentialGroup()
+                .add(pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbFieldSep)
+                    .add(cbFieldSep, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbDecimalPoint)
+                    .add(cbDecimalPoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnCSVFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(cbSatInfoSeparator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbSatInfoSeparator))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -519,6 +604,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                 .add(pnFileNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnCSVFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnKMLFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
@@ -527,7 +613,9 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
             .add(layout.createSequentialGroup()
                 .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnKMLFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnKMLFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnCSVFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(pnFileNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
     }//GEN-END:initComponents
@@ -565,15 +653,32 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         c.setBooleanOpt(AppSettings.NMEAUTC0, cbNotApplyUTCOffsetForNMEA.isSelected());
 }//GEN-LAST:event_cbNotApplyUTCOffsetForNMEAStateChanged
 
+    private void cbFieldSepItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFieldSepItemStateChanged
+        c.setStringOpt(AppSettings.CSV_FIELD_SEP, cbFieldSep.getSelectedItem().toString());
+    }//GEN-LAST:event_cbFieldSepItemStateChanged
+
+    private void cbDecimalPointItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDecimalPointItemStateChanged
+                c.setStringOpt(AppSettings.CSV_DECIMAL, cbDecimalPoint.getSelectedItem().toString());
+    }//GEN-LAST:event_cbDecimalPointItemStateChanged
+
+    private void cbSatInfoSeparatorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSatInfoSeparatorItemStateChanged
+        c.setStringOpt(AppSettings.CSV_SAT_SEP, cbSatInfoSeparator.getSelectedItem().toString());
+    }//GEN-LAST:event_cbSatInfoSeparatorItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSetNMEAFileOutput;
     private javax.swing.JComboBox cbAltitudeMode;
+    private javax.swing.JComboBox cbDecimalPoint;
+    private javax.swing.JComboBox cbFieldSep;
     private javax.swing.JCheckBox cbGPXAddLink;
     private javax.swing.JCheckBox cbGPXTrkSegWhenSmall;
     private javax.swing.JCheckBox cbGPX_1_1;
     private javax.swing.JCheckBox cbNotApplyUTCOffset;
     private javax.swing.JCheckBox cbNotApplyUTCOffsetForNMEA;
+    private javax.swing.JComboBox cbSatInfoSeparator;
     private javax.swing.JLabel lbAltitudeMode;
+    private javax.swing.JLabel lbDecimalPoint;
+    private javax.swing.JLabel lbFieldSep;
     private javax.swing.JCheckBox lbNMEAFileGGA;
     private javax.swing.JCheckBox lbNMEAFileGLL;
     private javax.swing.JCheckBox lbNMEAFileGRS;
@@ -594,6 +699,8 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JCheckBox lbNMEAFileVTG;
     private javax.swing.JCheckBox lbNMEAFileWPL;
     private javax.swing.JCheckBox lbNMEAFileZDA;
+    private javax.swing.JLabel lbSatInfoSeparator;
+    private javax.swing.JPanel pnCSVFileSettings;
     private javax.swing.JPanel pnFileNMEAOutLeft;
     private javax.swing.JPanel pnFileNMEAOutRight;
     private javax.swing.JPanel pnFileNMEAOutput;

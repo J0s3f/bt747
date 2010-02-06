@@ -20,7 +20,6 @@ import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
 import gps.mvc.commands.GpsLinkExecCommand;
-import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
 import gps.ProtocolConstants;
 
 import bt747.sys.Generic;

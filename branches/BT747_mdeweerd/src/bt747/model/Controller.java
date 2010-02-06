@@ -407,6 +407,15 @@ public class Controller implements ModelListener {
             gpsFile.getParamObject().setIntParam(
                     GPSConversionParameters.DISTANCE_CALC_MODE,
                     m.getIntOpt(AppSettings.DISTANCE_CALCULATION_MODE));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.CSV_DECIMALPOINT_STRING,
+                    m.getStringOpt(AppSettings.CSV_DECIMAL));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.CSV_FIELD_SEP_STRING,
+                    m.getStringOpt(AppSettings.CSV_FIELD_SEP));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.CSV_SAT_SEP_STRING,
+                    m.getStringOpt(AppSettings.CSV_SAT_SEP));
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:
