@@ -316,7 +316,7 @@ public final class J2SEAppController extends J2SEController {
      */
 
     public final void convertLog(final int logType) {
-        c.setUserWayPoints(m.getPositionData().getSortedGPSRecords());
+        c.setUserWayPoints(m.getPositionData().getSortedWaypointGPSRecords());
         switch (logType) {
         case Model.KMZ_LOGTYPE:
             if (doConvertLog(logType, new GPSKMZFile(), ".kmz") != 0) {
@@ -395,7 +395,7 @@ public final class J2SEAppController extends J2SEController {
      */
     public final TracksAndWayPoints convertLogToTrackAndWayPoints() {
         TracksAndWayPoints result;
-        c.setUserWayPoints(m.getPositionData().getSortedGPSRecords());
+        c.setUserWayPoints(m.getPositionData().getSortedWaypointGPSRecords());
         result = c.doConvertLogToTracksAndWayPoints();
         if (result == null) {
             reportError(c.getLastError(), c.getLastErrorInfo());

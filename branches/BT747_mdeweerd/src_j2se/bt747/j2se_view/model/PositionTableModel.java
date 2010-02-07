@@ -144,7 +144,7 @@ public class PositionTableModel extends AbstractTableModel {
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         final GPSRecord g = getRecordValueAt(rowIndex);
         if (g != null) {
-            return PositionData.getValue(g, columnToType(columnIndex));
+            return GPSRecordUtils.getValue(g, columnToType(columnIndex));
         }
         return null;
     }
@@ -169,7 +169,7 @@ public class PositionTableModel extends AbstractTableModel {
             final int columnIndex) {
         final GPSRecord g = getRecordValueAt(rowIndex);
         if (g != null) {
-            PositionData.setValue(value, g, columnToType(columnIndex));
+            GPSRecordUtils.setValue(value, g, columnToType(columnIndex));
         }
     }
 

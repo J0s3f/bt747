@@ -37,6 +37,10 @@ import javax.swing.JScrollPane;
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
+import net.sf.bt747.j2se.app.trackgraph.GPSRecordArrayDataProvider;
+import net.sf.bt747.j2se.app.trackgraph.GPSRecordDataProvider;
+import net.sf.bt747.j2se.app.trackgraph.GPSRecordListDataProvider;
+import net.sf.bt747.j2se.app.trackgraph.GraphUtils;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.app.utils.Utils;
 import net.sf.bt747.j2se.system.J2SEGeneric;
@@ -729,7 +733,7 @@ public class BT747Main extends javax.swing.JFrame implements
         InfoPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoTextArea = new javax.swing.JTextArea();
-        jMenuBar = new javax.swing.JMenuBar();
+        BT747MenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         miPopulateSerialPorts = new javax.swing.JMenuItem();
         miFindSerialPort = new javax.swing.JMenuItem();
@@ -737,6 +741,8 @@ public class BT747Main extends javax.swing.JFrame implements
         miClearCache = new javax.swing.JMenuItem();
         jSep = new javax.swing.JSeparator();
         miExit = new javax.swing.JMenuItem();
+        ViewMenu = new javax.swing.JMenu();
+        cbSpeedHeightGraph = new javax.swing.JMenuItem();
         SettingsMenu = new javax.swing.JMenu();
         btGPSDebug = new javax.swing.JRadioButtonMenuItem();
         btGPSConnectDebug = new javax.swing.JRadioButtonMenuItem();
@@ -755,9 +761,10 @@ public class BT747Main extends javax.swing.JFrame implements
         miSkyTraqProtocol = new javax.swing.JRadioButtonMenuItem();
         miUsePreciseGeoid = new javax.swing.JCheckBoxMenuItem();
         InfoMenu = new javax.swing.JMenu();
-        AboutBT747 = new javax.swing.JMenuItem();
-        Info = new javax.swing.JMenuItem();
+        mnDocumentationLink = new javax.swing.JMenuItem();
         mnSiteLink = new javax.swing.JMenuItem();
+        Info = new javax.swing.JMenuItem();
+        AboutBT747 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
@@ -1139,7 +1146,19 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         FileMenu.add(miExit);
 
-        jMenuBar.add(FileMenu);
+        BT747MenuBar.add(FileMenu);
+
+        ViewMenu.setText(bundle.getString("BT747Main.ViewMenu.text")); // NOI18N
+
+        cbSpeedHeightGraph.setText(bundle.getString("BT747Main.cbSpeedHeightGraph.text")); // NOI18N
+        cbSpeedHeightGraph.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSpeedHeightGraphActionPerformed(evt);
+            }
+        });
+        ViewMenu.add(cbSpeedHeightGraph);
+
+        BT747MenuBar.add(ViewMenu);
 
         SettingsMenu.setText(bundle.getString("BT747Main.SettingsMenu.text")); // NOI18N
 
@@ -1270,15 +1289,17 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         SettingsMenu.add(miUsePreciseGeoid);
 
-        jMenuBar.add(SettingsMenu);
+        BT747MenuBar.add(SettingsMenu);
 
         InfoMenu.setText(bundle.getString("BT747Main.InfoMenu.text")); // NOI18N
 
-        AboutBT747.setText(bundle.getString("BT747Main.AboutBT747.text")); // NOI18N
-        InfoMenu.add(AboutBT747);
-
-        Info.setText(bundle.getString("BT747Main.Info.text")); // NOI18N
-        InfoMenu.add(Info);
+        mnDocumentationLink.setText(bundle.getString("BT747Main.mnDocumentationLink.text")); // NOI18N
+        mnDocumentationLink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnDocumentationLinkActionPerformed(evt);
+            }
+        });
+        InfoMenu.add(mnDocumentationLink);
 
         mnSiteLink.setText(bundle.getString("BT747Main.mnSiteLink.text")); // NOI18N
         mnSiteLink.addActionListener(new java.awt.event.ActionListener() {
@@ -1288,9 +1309,15 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         InfoMenu.add(mnSiteLink);
 
-        jMenuBar.add(InfoMenu);
+        Info.setText(bundle.getString("BT747Main.Info.text")); // NOI18N
+        InfoMenu.add(Info);
 
-        setJMenuBar(jMenuBar);
+        AboutBT747.setText(bundle.getString("BT747Main.AboutBT747.text")); // NOI18N
+        InfoMenu.add(AboutBT747);
+
+        BT747MenuBar.add(InfoMenu);
+
+        setJMenuBar(BT747MenuBar);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1659,8 +1686,28 @@ public class BT747Main extends javax.swing.JFrame implements
 }//GEN-LAST:event_miCycleThunderflameActionPerformed
 
     private void miSkyTraqProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSkyTraqProtocolActionPerformed
-        // TODO add your handling code here:
+        c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_SKYTRAQ);
     }//GEN-LAST:event_miSkyTraqProtocolActionPerformed
+
+    private void cbSpeedHeightGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSpeedHeightGraphActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see java.lang.Runnable#run()
+             */
+            public void run() {
+                GPSRecordDataProvider p = new GPSRecordListDataProvider(
+                        m.getPositionData().getTracks());
+                GraphUtils.showGraphFrame(p);
+            }
+        });
+
+    }//GEN-LAST:event_cbSpeedHeightGraphActionPerformed
+
+    private void mnDocumentationLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnDocumentationLinkActionPerformed
+        BareBonesBrowserLaunch.openURL("http://www.bt747.org/book/desktop-application");
+    }//GEN-LAST:event_mnDocumentationLinkActionPerformed
 
     // public static void main(String args) {
     // main((String[])null);
@@ -1668,6 +1715,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
+    private javax.swing.JMenuBar BT747MenuBar;
     private javax.swing.JProgressBar DownloadProgressBar;
     private javax.swing.JLabel DownloadProgressLabel;
     private javax.swing.JMenu FileMenu;
@@ -1675,6 +1723,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JMenu InfoMenu;
     private javax.swing.JPanel InfoPanel;
     private javax.swing.JMenu SettingsMenu;
+    private javax.swing.JMenu ViewMenu;
     private javax.swing.JButton btConnect;
     private javax.swing.JRadioButtonMenuItem btGPSConnectDebug;
     private javax.swing.JRadioButtonMenuItem btGPSDebug;
@@ -1692,8 +1741,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JButton btToolWaypoints;
     private javax.swing.JComboBox cbPortName;
     private javax.swing.JComboBox cbSerialSpeed;
+    private javax.swing.JMenuItem cbSpeedHeightGraph;
     private javax.swing.JTextArea infoTextArea;
-    private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1719,6 +1768,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;
     private javax.swing.JRadioButtonMenuItem miSkyTraqProtocol;
     private javax.swing.JCheckBoxMenuItem miUsePreciseGeoid;
+    private javax.swing.JMenuItem mnDocumentationLink;
     private javax.swing.JMenuItem mnSiteLink;
     private javax.swing.JPanel pnBottomInformation;
     private javax.swing.JTabbedPane tabbedPanelAll;
