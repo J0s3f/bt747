@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>BT747</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+            <!-- Do not use Project Properties customizer when editing this file manually. -->
+            <name>BT747</name>
+            <properties>
+                <property-file>local.properties</property-file>
+                <property-file>build.properties</property-file>
+                <property-file>default.properties</property-file>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>BT747</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src</label>
+                    <type>java</type>
+                    <location>src</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src_j2se</label>
+                    <type>java</type>
+                    <location>src_j2se</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src_rxtx</label>
+                    <type>java</type>
+                    <location>src_rxtx</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src_waba</label>
+                    <type>java</type>
+                    <location>src_waba</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>all</target>
+                </action>
+                <action name="clean">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>clean</target>
+                </action>
+                <action name="rebuild">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>clean</target>
+                    <target>all</target>
+                </action>
+                <action name="run">
+                    <target>run.j2se</target>
+                </action>
+                <action name="compile.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>compile-selected-files-in-src_j2se</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src_j2se</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+                <action name="compile.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>compile-selected-files-in-src_j2se</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src_j2se</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+                <action name="compile.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>compile-selected-files-in-src_j2se</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src_j2se</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+                <action name="compile.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>compile-selected-files-in-src_j2se</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src_j2se</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+            </ide-actions>
+            <export>
+                <type>folder</type>
+                <location>build</location>
+                <script>nbproject/nbjdk.xml</script>
+                <build-target>all</build-target>
+            </export>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>src</label>
+                        <location>src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src_j2se</label>
+                        <location>src_j2se</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src_rxtx</label>
+                        <location>src_rxtx</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src_waba</label>
+                        <location>src_waba</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="run"/>
+                    <action>
+                        <label>Run Waba (RXTX)</label>
+                        <target>run.rxtx</target>
+                    </action>
+                    <action>
+                        <label>Run Waba and J2SE (RXTX)</label>
+                        <target>run.j2sewaba</target>
+                    </action>
+                    <action>
+                        <label>Run J2SE (RXTX)</label>
+                        <target>run.j2se</target>
+                    </action>
+                    <action>
+                        <label>Build J2SE</label>
+                        <target>dist.j2se</target>
+                    </action>
+                </context-menu>
+            </view>
+            <subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
+            <compilation-unit>
+                <package-root>src</package-root>
+                <package-root>src_j2se</package-root>
+                <package-root>src_rxtx</package-root>
+                <package-root>src_waba</package-root>
+                <classpath mode="compile">lib/win32comm.jar;lib/RXTXcomm.jar;lib/jcalendar-1.3.2.jar;lib/swing-layout-1.0.3.jar;lib/jopt-simple-2.4.1.jar;lib/swingx.jar;lib/swingx-ws.jar;lib/collections-superwaba.jar;lib/Waba_only.jar;lib/sanselan-0.97-incubator.jar</classpath>
+                <built-to>build</built-to>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+        </java-data>
+        <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
+            <module name="org-netbeans-modules-editor-indent">
+                <node name="CodeStyle">
+                    <property name="usedProfile" value="default"/>
+                    <node name="project">
+                        <property name="tab-size" value="8"/>
+                        <property name="text-limit-width" value="80"/>
+                    </node>
+                </node>
+                <node name="text">
+                    <node name="x-java">
+                        <node name="CodeStyle">
+                            <node name="project"/>
+                        </node>
+                    </node>
+                </node>
+            </module>
+        </preferences>
+    </configuration>
+</project>
