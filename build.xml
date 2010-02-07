@@ -35,6 +35,7 @@
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
 	<property name="sanselan.jar" value="${lib.dir}/sanselan-0.97-incubator.jar" />
+	<property name="jchart.jar" value="${lib.dir}/jchart2d-3.1.0.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
@@ -275,6 +276,7 @@
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
         <pathelement location="${sanselan.jar}" />
+		<pathelement location="${jchart.jar}" />
 	</path>
 
 
@@ -359,7 +361,7 @@
 			           value="${full.build.version}"
 			/>
 			<attribute name="Class-Path"
-			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar"
+			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar"
 			/>
 		</manifest>
 		<!-- It might be possible to read the version in the application:
@@ -425,6 +427,7 @@
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${jopt-simple.jar}" />
+			<libraryjar file="${jchart.jar}" />
 			<libraryjar file="${jcalendar.jar}" />
 			<libraryjar file="${swingx.jar}" />
 			<libraryjar file="${swingx-ws.jar}" />
