@@ -1812,6 +1812,7 @@
 	      failonerror="false"
 	>
 		<arg line="-n -c" />
+		<env key="LANG" value=""/>
 		<redirector>
 			<outputfilterchain>
 				<tokenfilter>
@@ -1829,6 +1830,7 @@
 	      failonerror="false"
 	>
 		<arg line="info" />
+        <env key="LANG" value=""/>
 		<redirector>
 			<outputfilterchain>
 				<linecontainsregexp>
