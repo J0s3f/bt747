@@ -9,6 +9,7 @@ which javaw >/dev/null 2>&1 && JAVA=javaw
 
 # Start setting the class path.
 export CLASSPATH
+CLASSPATH="${ROOT_DIR}/lib/jchart2d-3.1.0.jar:$CLASSPATH"
 CLASSPATH="${ROOT_DIR}/lib/jopt-simple-2.4.1.jar:$CLASSPATH"
 CLASSPATH="${ROOT_DIR}/lib/jcalendar-1.3.2.jar:$CLASSPATH"
 CLASSPATH="${ROOT_DIR}/lib/swing-layout-1.0.3.jar:$CLASSPATH"

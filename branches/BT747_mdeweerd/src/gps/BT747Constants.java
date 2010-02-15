@@ -748,7 +748,7 @@ public final class BT747Constants { // dev as in device
             mdStr = "Holux M-241/QT-1000P";
             break;
         case 0x0007:
-            mdStr = "Just Mobile� Bluecard";
+            mdStr = "Just Mobile(r) Bluecard";
             break;
         case 0x0011: // Seen in FCC OUP940760101
         case 0x001B:
@@ -762,6 +762,7 @@ public final class BT747Constants { // dev as in device
             mdStr = "Holux M-241";
             break;
         case 0x0035:
+        case 0x0050:
             mdStr = "Holux M1000C";
             break;
         case 0x0131:

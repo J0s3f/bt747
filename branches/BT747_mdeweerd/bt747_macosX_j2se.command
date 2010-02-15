@@ -30,7 +30,7 @@ else
  RXTX_BIN_PATH="${RXTX_PATH}/Mac_OS_X"
 fi
 
-CLASSPATH="${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:${ROOT_DIR}/lib/jcalendar-1.3.2.jar:.:$CLASSPATH"
+CLASSPATH="${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:${ROOT_DIR}/lib/jchart-3.1.0.jar:${ROOT_DIR}/lib/jcalendar-1.3.2.jar:${ROOT_DIR}/lib/jopt-simple-2.4.1.jar:.:$CLASSPATH"
 export CLASSPATH
 
 MEM_OPTION=-Xmx192m

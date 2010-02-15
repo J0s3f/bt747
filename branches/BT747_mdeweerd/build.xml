@@ -697,8 +697,13 @@
 		<attribute name="main-class" />
 		<attribute name="main-class-args" />
 		<attribute name="suffix" default="_waba_j2se" />
+		<attribute name="build.j2se" default="yes" />
 		<sequential>
-			<build.rxtx suffix="@{suffix}" build.j2se="@{suffix}" />
+			<build.rxtx suffix="@{suffix}"
+				build.j2se="@{build.j2se}"
+                no.waba="@{build.j2se}"
+			    build.lib="no"
+			/>
 
 			<!--
 	        <antcall target="rxtxjar">
@@ -712,6 +717,8 @@
 			<java classname="@{main-class}" fork="true" spawn="false">
 				<classpath>
 					<pathelement path="${rxtxcomm.jar}" />
+				    <pathelement path="${swingx.jar}" />
+                    <pathelement path="${swingx-ws.jar}" />
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
@@ -969,6 +976,7 @@
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
+                <include name="${src_j2se.dir}/**/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/bt747/*view/**" if="is.lib" />
 				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**"
@@ -1121,6 +1129,13 @@
 		     compress="true"
 		>
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class" />
+	         <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
+            <fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
+            <fileset dir="${src_j2se.dir}"
+                     includes="**/BT747base*.properties"
+            />
+            <fileset dir="${src_j2se.dir}" includes="**/resources/*" />
+
 		</jar>
 		<copy tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
 		      file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"

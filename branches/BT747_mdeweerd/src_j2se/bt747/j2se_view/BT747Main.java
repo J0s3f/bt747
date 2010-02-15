@@ -1690,7 +1690,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_miSkyTraqProtocolActionPerformed
 
     private void cbSpeedHeightGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSpeedHeightGraphActionPerformed
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
             /*
              * (non-Javadoc)
              *
