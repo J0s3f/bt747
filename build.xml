@@ -24,8 +24,16 @@
 
 	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
 	<property name="wabalang.jar" value="${lib.dir}/wabalang.jar" />
+	<property name="rxtxcomm.base.dir"
+	value ="${lib.dir}/rxtx-2.1-7-bins-r2" />
+	<property name="rxtxcomm.os.subdir" value="Windows/i368-mingw32" />
+	<property name="rxtxcomm.system.dir"
+    value ="${rxtxcomm.base.dir}/${rxtxcomm.os.subdir}" />
+	<!-- How to make a separation between full paths, not inside the path -->
+	<property name="system.paths.sep" value=";" />
+
 	<property name="rxtxcomm.jar"
-	          value="${lib.dir}/rxtx-2.1-7-bins-r2/RXTXcomm.jar"
+	          value="${rxtxcomm.base.dir}/RXTXcomm.jar"
 	/>
 	<property name="swinglayout.jar"
 	          value="${lib.dir}/swing-layout-1.0.3.jar"
@@ -275,7 +283,7 @@
 		<pathelement location="${jopt-simple.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
-        <pathelement location="${sanselan.jar}" />
+		<pathelement location="${sanselan.jar}" />
 		<pathelement location="${jchart.jar}" />
 	</path>
 
@@ -383,9 +391,6 @@
 			<fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
 			<fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
 			<fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
-			<fileset dir="${src_j2se.dir}"
-			         includes="**/BT747base*.properties"
-			/>
 			<fileset dir="${src_j2se.dir}" includes="**/resources/*" />
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 		</jar>
@@ -673,6 +678,13 @@
 	</target>
 
 
+	<!-- dist.libj2Se
+	Distribute J2SE library:
+    1. Build the libary
+    2. Optimize the library
+    3. Distribute the library.
+    4. Sign the library.
+	-->
 	<target name="dist.libj2se" unless="libj2se.uptodate">
 		<!-- First build normal target -->
 		<build.rxtx suffix="${libtmp_suffix}"
@@ -681,11 +693,15 @@
 		            build.lib="yes"
 		/>
 
+		<!-- Optimise the library -->
 		<antcall target="proguard.lib" />
+
+		<!-- Distribute the library -->
 		<copy file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 		      tofile="${dist}/lib${ant.project.name}.jar"
 		/>
 
+		<!-- Sign the library -->
 		<antcall target="sign">
 			<param name="jar.tosign"
 			       value="${dist}/lib${ant.project.name}.jar"
@@ -713,18 +729,22 @@
 	        -->
 
 			<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
+                <env key="PATH" value="${env.PATH}${system.paths.sep}${rxtxcomm.dir}"/>
 	        -->
-			<java classname="@{main-class}" fork="true" spawn="false">
+			<java classname="@{main-class}" fork="true" spawn="false"
+				>
+				<jvmarg value="-Djava.library.path=${rxtxcomm.system.dir}" />
 				<classpath>
 					<pathelement path="${rxtxcomm.jar}" />
-				    <pathelement path="${swingx.jar}" />
-                    <pathelement path="${swingx-ws.jar}" />
+					<pathelement path="${swingx.jar}" />
+					<pathelement path="${swingx-ws.jar}" />
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar"
 					/>
 				</classpath>
+
 				<arg line="@{main-class-args}" />
 			</java>
 		</sequential>
@@ -957,7 +977,6 @@
 			<isfalse value="${build.j2se}" />
 		</condition>
 
-
 		<echoproperties prefix="exclude.waba">
 		</echoproperties>
 		<echoproperties prefix="is.">
@@ -976,7 +995,7 @@
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
-                <include name="${src_j2se.dir}/**/j2se_view/BT747.java" if="exclude.waba" />
+				<include name="${src_j2se.dir}/**/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/bt747/*view/**" if="is.lib" />
 				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**"
@@ -985,6 +1004,10 @@
 				<include name="${src_j2se.dir}/net/iharder/dnd/**"
 				         if="is.lib"
 				/>
+				<include name="${src_j2se.dir}/**/Bundle*.properties" if="is.lib"/>
+				<include name="${src_j2se.dir}/**/geoid1DEG.bin" if="is.lib"/>
+				<include name="${src_j2se.dir}/**/BT747base*.properties" if="is.lib"/>
+				<include name="${src_j2se.dir}/**/resources/*" if="is.lib"/>
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -1123,19 +1146,32 @@
 		</manifest>
 		<!-- It might be possible to read the version in the application:
              TheMainClass.class.getPackage().getImplementationVersion() ); -->
+		<!--
+        <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties"/>
+        <fileset dir="${src_j2se.dir}"
+                 includes="**/BT747base*.properties"
+            <fileset dir="${src_j2se.dir}" >
+                <include name="**/Bundle*.properties" unless="${build.lib}" />
+                <include name="**/BT747base*.properties"
+                         unless="${build.lib}"
+                />
+            </fileset> 
+                   -->
+	    <echoproperties prefix="build.lib"/>
 
 		<jar manifest="MANIFEST.MF"
 		     jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
 		     compress="true"
 		>
+			<fileset dir="${src_j2se.dir}">
+				<include name="**/Bundle*.properties" unless="${build.lib}" />
+				<include name="**/BT747base*.properties"
+				         unless="${build.lib}"
+				/>
+				<include name="**/resources/*" unless="${build.lib}" />
+				<include name="**/geoid1DEG.bin" unless="${build.lib}" />
+			</fileset>
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class" />
-	         <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
-            <fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
-            <fileset dir="${src_j2se.dir}"
-                     includes="**/BT747base*.properties"
-            />
-            <fileset dir="${src_j2se.dir}" includes="**/resources/*" />
-
 		</jar>
 		<copy tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
 		      file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
@@ -1845,7 +1881,7 @@
 	      failonerror="false"
 	>
 		<arg line="info" />
-        <env key="LANG" value=""/>
+		<env key="LANG" value=""/>
 		<redirector>
 			<outputfilterchain>
 				<linecontainsregexp>
