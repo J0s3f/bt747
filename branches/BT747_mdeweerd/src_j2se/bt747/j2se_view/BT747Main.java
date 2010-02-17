@@ -1467,6 +1467,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
             return;
         }
+        System.out.println(java.lang.System.getProperty("java.library.path"));
+        System.out.println("PATH = "+ java.lang.System.getenv("PATH"));
         J2SEAppController.initAppSettings();
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
