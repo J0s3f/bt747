@@ -1,7 +1,0 @@
-Exception: STATUS_ACCESS_VIOLATION at eip=610C27B5
-eax=00000000 ebx=00000000 ecx=00000000 edx=000000DA esi=00DECCF4 edi=00000000
-ebp=00DECD00 esp=00DECB24 program=c:\cygwin\bin\svn.exe, pid 1812, thread unknown (0x4D0)
-cs=001B ds=0023 es=0023 fs=003B gs=0000 ss=0023
-Stack trace:
-Frame     Function  Args
-00DECD00  610C27B5  (6BB07900, 6BA40000, 00000003
