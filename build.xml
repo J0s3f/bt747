@@ -1320,7 +1320,7 @@
 
 	<!-- Execute WARP -->
 	<target name="warp" depends="proguard">
-
+	    <echoproperties prefix="skip" />
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Warp"
 		      fork="true"
