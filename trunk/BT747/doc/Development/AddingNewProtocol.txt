@@ -1,0 +1,6 @@
+Adding a protocol.
+
+In gps.mvc.Model.setProtocol -> add model creation
+In gps.mvc.Controller.setProtocol -> add controller creation.
+
+Create LogDownloadHandler which extends DeviceOperationHandlerIF.
