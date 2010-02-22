@@ -127,13 +127,13 @@ public final class GPSRxTxPort extends GPSPort {
             }
             CommPortIdentifier portIdentifier;
             portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
-            if (portIdentifier.isCurrentlyOwned()) {
-                Generic.debug("Error: Port " + portStr
-                        + "is currently in use", null);
-            } else {
+
                 final CommPort commPort = portIdentifier.open(
                         "BT747 " + Version.VERSION_NUMBER + " "
                                 + getClass().getName(), 2000);
+                if (Generic.isDebug()) {
+                    Generic.debug("Info: Opened port, setting parameters", null);
+                }
                 if (commPort instanceof SerialPort) {
                     final SerialPort serialPort = (SerialPort) commPort;
                     sp = serialPort;
@@ -146,7 +146,7 @@ public final class GPSRxTxPort extends GPSPort {
                         serialPort.setSerialPortParams(baud, databits,
                                 stopbits, parity);
                         parametersSet = true;
-                    } catch (UnsupportedCommOperationException e) {
+                    } catch (Throwable e) {
                         Generic.debug("Issue when setting parameters:" + baud
                                 + " " + databits + " " + stopbits + " "
                                 + parity, e);
@@ -158,7 +158,7 @@ public final class GPSRxTxPort extends GPSPort {
                             serialPort.setSerialPortParams(baud, databits,
                                     stopbits, parity);
                             parametersSet = true;
-                        } catch (UnsupportedCommOperationException e) {
+                        } catch (Throwable e) {
                             Generic.debug("Issue when setting parameters:" + baud
                                     + " " + databits + " " + stopbits + " "
                                     + parity, e);
@@ -174,7 +174,6 @@ public final class GPSRxTxPort extends GPSPort {
                     System.out
                             .println("Error: Only serial ports are handled.");
                 }
-            }
         } catch (final NoSuchPortException e) {
             Generic.debug("", e);
             Generic.debug("\nListing known ports:");
@@ -212,7 +211,8 @@ public final class GPSRxTxPort extends GPSPort {
 
             }
         } catch (final PortInUseException e) {
-            Generic.debug("", e);
+            Generic.debug("Error: Port " + portStr
+                    + "is currently in use", e);
 //        } catch (final UnsupportedCommOperationException e) {
 //            Generic.debug("", e);
         } catch (final IOException e) {
