@@ -134,11 +134,11 @@ public final class GPSRxTxPort extends GPSPort {
                 if (Generic.isDebug()) {
                     Generic.debug("Info: Opened port, setting parameters", null);
                 }
-                in = sp.getInputStream();
-                ds = sp.getOutputStream();
                 if (commPort instanceof SerialPort) {
                     final SerialPort serialPort = (SerialPort) commPort;
                     sp = serialPort;
+                    in = sp.getInputStream();
+                    ds = sp.getOutputStream();
                     final int baud = getSpeed();
                     final int databits = SerialPort.DATABITS_8;
                     int stopbits = SerialPort.STOPBITS_1;
