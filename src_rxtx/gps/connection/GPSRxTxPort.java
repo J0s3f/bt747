@@ -44,6 +44,7 @@ public final class GPSRxTxPort extends GPSPort {
     private boolean hasPortNbr = true;
     public static final String os_name = java.lang.System
             .getProperty("os.name");
+    public static boolean dubiousTried = false;
 
     /**
      * 
@@ -53,9 +54,11 @@ public final class GPSRxTxPort extends GPSPort {
 
         if (os_name.startsWith("Windows")) {
             portPrefix = "COM";
+            dubiousTried = true; // Dubious not needed on Win
         } else if (os_name.startsWith("Linux")) {
             portPrefix = "/dev/ttyUSB";
         } else if (os_name.startsWith("Mac")) {
+            dubiousTried = true; // Dubious not needed on Mac
             setUSB();
             setBlueTooth();
             // portPrefix="/dev/tty.iBt-GPS-SPPslave-";
@@ -104,6 +107,24 @@ public final class GPSRxTxPort extends GPSPort {
         }
     }
 
+    private final void openDubiousPortAsWorkaroundOnLinux() {
+        if (!dubiousTried) {
+            dubiousTried = true;
+            try {
+                CommPortIdentifier portIdentifier;
+                portIdentifier = CommPortIdentifier
+                        .getPortIdentifier("/dev/dubiousport");
+
+                final CommPort commPort = portIdentifier.open(
+                        "BT747 " + Version.VERSION_NUMBER + " "
+                                + getClass().getName(), 2000);
+                commPort.close();
+            } catch (Throwable e) {
+                // Do nothing, this is expected.
+            }
+
+        }
+    }
     /**
      * Open a connection.
      * 
@@ -121,6 +142,8 @@ public final class GPSRxTxPort extends GPSPort {
 
         closePort();
 
+        openDubiousPortAsWorkaroundOnLinux();
+        
         try {
             if (Generic.isDebug()) {
                 Generic.debug("Info: trying to open '" + portStr + "'", null);
