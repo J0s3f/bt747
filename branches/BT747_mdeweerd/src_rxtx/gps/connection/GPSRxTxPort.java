@@ -348,6 +348,15 @@ public final class GPSRxTxPort extends GPSPort {
             setFreeTextPort("/dev/cu.usbmodem1d10");
             portFound = isValidPort(getFreeTextPort());
         }
+        if (!portFound) {
+            setFreeTextPort("/dev/cu.usbmodem3a20");
+            portFound = isValidPort(getFreeTextPort());
+        }
+        if (!portFound) {
+            setFreeTextPort("/dev/cu.iBTAGPS-SPPslave");
+            portFound = isValidPort(getFreeTextPort());
+        }
+
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
             portFound = setPortFromPrefixes(linUsbPortPrefixes,
                     MAX_USBPORT_SEARCH_IDX);
