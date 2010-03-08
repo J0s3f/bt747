@@ -24,6 +24,17 @@ public class J2SEAGPS {
     private final static String TRANS_AGPS_14d = TRANS_FTP_SITE + "MTK14.EPO";
     private final static String TRANS_AGPS_7d = TRANS_FTP_SITE + "MTK7d.EPO";
 
+    private static int timeout = 60000;
+
+    static {
+        try {
+            timeout = Integer.valueOf(java.lang.System.getProperty(
+                    "agpsTimeOut", "60000"));
+        } catch (Throwable e) {
+            // Do nothing.
+        }
+    }
+
     public static final byte[] getAGPS7d() throws BT747Exception {
         return getBytesFromUrl(TRANS_AGPS_7d);
     }
@@ -34,8 +45,8 @@ public class J2SEAGPS {
         try {
             final URL url = new URL(urlString);
             final URLConnection urlc = url.openConnection();
-            urlc.setConnectTimeout(15000);
-            urlc.setReadTimeout(15000);
+            urlc.setConnectTimeout(timeout);
+            urlc.setReadTimeout(timeout);
             final InputStream ins = urlc.getInputStream(); // To download
             // OutputStream os = urlc.getOutputStream(); // To upload
             final ByteArrayOutputStream bout = new ByteArrayOutputStream(
