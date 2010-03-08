@@ -34,8 +34,8 @@ public class J2SEAGPS {
         try {
             final URL url = new URL(urlString);
             final URLConnection urlc = url.openConnection();
-            urlc.setConnectTimeout(5000);
-            urlc.setReadTimeout(5000);
+            urlc.setConnectTimeout(15000);
+            urlc.setReadTimeout(15000);
             final InputStream ins = urlc.getInputStream(); // To download
             // OutputStream os = urlc.getOutputStream(); // To upload
             final ByteArrayOutputStream bout = new ByteArrayOutputStream(
