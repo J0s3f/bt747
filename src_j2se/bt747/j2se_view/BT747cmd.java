@@ -820,9 +820,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             int deviceType = BT747Constants.GPS_TYPE_DEFAULT;
             if (arg.equals("default")) {
-                deviceType = BT747Constants.GPS_TYPE_HOLUX_M241;
+            	deviceType = BT747Constants.GPS_TYPE_DEFAULT;
             } else if (arg.equals("holux")) {
-                deviceType = BT747Constants.GPS_TYPE_DEFAULT;
+            	deviceType = BT747Constants.GPS_TYPE_HOLUX_M241;                
             } else if (arg.equals("holux245")) {
                 deviceType = BT747Constants.GPS_TYPE_HOLUX_GR245;
             } else if (arg.equals("skytraq")) {
