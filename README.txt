@@ -22,7 +22,7 @@ It runs on many systems which might seem logical because it is 'Java', but
 it is not!  The Java Platforms are: J2SE, J2ME and SuperWaba.
 The Systems are: Palm, WinCE (PocketPC), Java Phones, Windows, MacOSX, Linux.
 **************************************************************************
-You can also have a look at http://bt747.free.fr
+You can also have a look at http://www.bt747.org
 **************************************************************************
 
 **************************************************************************
@@ -44,7 +44,7 @@ To run BT747 on your desktop system, the following generic steps are required.
     - MacOSX : bt747_maxosX.command
     - Linux  : run_rxtx.sh
 
- Step 3 can also be done directly from the web: http://bt747.free.fr
+ Step 3 can also be done directly from the web: http://www.bt747.org
 
 If step 1 and step 2 are done, this should run out of the box.  If it does not,
 please contact the author.  The author has Windows XP, Palm and a Java
@@ -58,7 +58,7 @@ To install BT747 on your Java Phone, download the BT_J2ME version.
 **************************************************************************
 If you have suggestions to improve this README, leave a message on the forum or
 a tracker at sourceforge: http://sf.net/projects/bt747,
-or http://bt747.free.fr .
+or http://www.bt747.org .
 
 
 Here is a small list of devices BT747 is known to work with:
