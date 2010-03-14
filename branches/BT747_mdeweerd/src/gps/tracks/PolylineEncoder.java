@@ -84,8 +84,8 @@ public final class PolylineEncoder {
     public final BT747Hashtable dpEncode(final Track track) {
         int i, maxLoc = 0;
         final BT747Vector stack = JavaLibBridge.getVectorInstance();
-        final double[] dists = new double[track.getTrackpoints().size()];
-        double maxDist, absMaxDist = 0.0;
+        final float[] dists = new float[track.getTrackpoints().size()];
+        float maxDist, absMaxDist = 0.0f;
         int[] current;
         String encodedPoints, encodedLevels;
 
@@ -99,7 +99,7 @@ public final class PolylineEncoder {
                 maxDist = 0;
 
                 for (i = current[0] + 1; i < current[1]; i++) {
-                    final double temp = PolylineEncoder.distance(
+                    final float temp = (float) PolylineEncoder.distance(
                             (Trackpoint) track.getTrackpoints().elementAt(i),
                             (Trackpoint) track.getTrackpoints().elementAt(
                                     current[0]), (Trackpoint) track
@@ -308,7 +308,7 @@ public final class PolylineEncoder {
      * distance (in dists) is undefined.
      */
     private final String encodeLevels(final Track points,
-            final double[] dists, final double absMaxDist) {
+            final float[] dists, final float absMaxDist) {
         int i;
         final StringBuffer encodedLevels = new StringBuffer();
 
@@ -354,7 +354,7 @@ public final class PolylineEncoder {
         return lev;
     }
 
-    private String createEncodings(final Track points, final double[] dists) {
+    private String createEncodings(final Track points, final float[] dists) {
         final StringBuffer encodedPoints = new StringBuffer();
 
         double maxlat = 0, minlat = 0, maxlon = 0, minlon = 0;
