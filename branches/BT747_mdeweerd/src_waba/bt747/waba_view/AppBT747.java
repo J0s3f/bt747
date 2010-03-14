@@ -603,9 +603,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     break;
                 case C_MENU_HOLUX_241:
                     c.setIntOpt(AppSettings.GPSTYPE, BT747Constants.GPS_TYPE_HOLUX_M241);
+                    gpsType();
                     break;
                 case C_MENU_HOLUX_245:
                     c.setIntOpt(AppSettings.GPSTYPE, BT747Constants.GPS_TYPE_HOLUX_GR245);
+                    gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE1:
                     c.setIntOpt(AppSettings.GPSTYPE,
