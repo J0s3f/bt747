@@ -141,13 +141,17 @@ public class PositionTableModel extends AbstractTableModel {
      * 
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
-    public Object getValueAt(final int rowIndex, final int columnIndex) {
-        final GPSRecord g = getRecordValueAt(rowIndex);
-        if (g != null) {
-            return GPSRecordUtils.getValue(g, columnToType(columnIndex));
-        }
-        return null;
-    }
+	public Object getValueAt(final int rowIndex, final int columnIndex) {
+		final GPSRecord g = getRecordValueAt(rowIndex);
+		if (g != null) {
+			Object o = GPSRecordUtils.getValue(g, columnToType(columnIndex));
+			if (o instanceof String) {
+				o = "<html>" + ((String) o);
+			}
+			return o;
+		}
+		return null;
+	}
 
     /*
      * (non-Javadoc)

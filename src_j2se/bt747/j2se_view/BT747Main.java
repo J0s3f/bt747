@@ -361,6 +361,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // infoTextArea.append("\n"); // NOI18N
         Generic.debug(java.lang.System.getProperty("java.version")); // NOI18N
         // infoTextArea.append("\n"); // NOI18N
+        Generic.debug(java.lang.System.getProperty("sun.arch.data.model")); // NOI18N
         Generic.debug(J2SEAppController.lookAndFeelMsg);
 
         progressBarUpdate();
