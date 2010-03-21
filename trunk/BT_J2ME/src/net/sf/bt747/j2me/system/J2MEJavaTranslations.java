@@ -274,4 +274,22 @@ public final class J2MEJavaTranslations implements JavaLibImplementation {
 		return httpSenderInstance;
 	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.sys.interfaces.JavaLibImplementation#atan(double)
+     */
+    public double atan(double x) {
+        return Float11.atan(x);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.sys.interfaces.JavaLibImplementation#atan2(double, double)
+     */
+    public double atan2(double x, double y) {
+        return Float11.atan2(x, y);
+    }
+
 }

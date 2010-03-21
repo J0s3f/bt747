@@ -196,15 +196,15 @@ public class AppController extends Controller {
         setDebug(true);
         setDebugConn(false);
 
-        setTrkPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-        setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+        setIntOpt(AppSettings.TRKPT_VALID, (0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+        setIntOpt(AppSettings.WAYPT_VALID,(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
         // Waypoints only when button pressed.
-        setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
+        setIntOpt(AppSettings.WAYPT_RCR,BT747Constants.RCR_BUTTON_MASK);
         // Trackpoints : anything
-        setTrkPtRCR(BT747Constants.RCR_TIME_MASK
-                | BT747Constants.RCR_DISTANCE_MASK
-                | BT747Constants.RCR_SPEED_MASK
-                | BT747Constants.RCR_BUTTON_MASK);
+        setIntOpt(AppSettings.TRKPT_RCR, (BT747Constants.RCR_TIME_MASK
+        | BT747Constants.RCR_DISTANCE_MASK
+        | BT747Constants.RCR_SPEED_MASK
+        | BT747Constants.RCR_BUTTON_MASK));
         // To limit the output data, we only select lat,lon and height.
         // setIntOpt(Model.FILEFIELDFORMAT, (1 <<
         // BT747Constants.FMT_LATITUDE_IDX)

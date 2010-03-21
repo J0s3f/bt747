@@ -393,7 +393,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                 deleteAll();
                 final Label[] tmpLabels = new Label[12];
                 append(tmpLabels[0] = new Label("0. Took a picture"));
-                append(tmpLabels[1] = new Label("1. Gaz station"));
+                append(tmpLabels[1] = new Label("1. Gas station"));
                 append(tmpLabels[2] = new Label("2. Phone booth"));
                 append(tmpLabels[3] = new Label("3. ATM"));
                 append(tmpLabels[4] = new Label("4. Bus stop"));
