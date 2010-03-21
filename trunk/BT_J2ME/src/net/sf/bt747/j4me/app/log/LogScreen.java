@@ -50,27 +50,34 @@ public class LogScreen extends Dialog {
         // Add the log messages.
         LogStatement item = null;
         final LogMessage[] logs = Log.getLogMessages();
+        int index = -1;
 
         try {
             for (int i = 0; i < logs.length; i++) {
                 // Add a horizontal rule to demarkate it from the last.
                 if (i != 0) {
                     append(line);
+                    index ++;
                 }
 
                 // Add a log statement component.
                 item = new LogStatement(logs[i]);
                 append(item);
+                index ++;
             }
+            // Scroll to the last log statement.
+            if (index>=0) {
+                try {
+                    setSelected(index);
+                } catch (Exception e) {
+                    setSelected(index);
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
         } catch (Exception e) {
             Log.debug("Exception during LogScreen", e);
-        }
-
-        // Scroll to the last log statement.
-        if (item != null) {
-            final int last = logs.length - 1;
-            final int position = last * 2; // Account for horizontal rules
-            setSelected(position);
         }
     }
 

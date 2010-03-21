@@ -11,8 +11,8 @@ import org.j4me.util.MathFunc;
 /**
  * The <code>Dialog</code> class is a base class for any screen that accepts
  * user input using standard components like the text box. It is similar to
- * the MIDP <code>Form</code> class except that it uses the J4ME control
- * flow and has an OK and Cancel button built in.
+ * the MIDP <code>Form</code> class except that it uses the J4ME control flow
+ * and has an OK and Cancel button built in.
  * <p>
  * Form classes can only have component objects, like the text box or label,
  * placed on them. The class handles layout, painting, and management of the
@@ -29,12 +29,12 @@ public abstract class Dialog extends DeviceScreen {
     private Vector components = new Vector();
 
     /**
-     * The index of <code>component</code> the user currently has
-     * highlighted. If this is not an index of <code>component</code>
-     * nothing is highlighted. Any component can be highlighted; it does not
-     * have to accept user input (<code>Component.acceptsInput()</code>).
-     * It is up the component itself to decide if it should be painted
-     * differently when highlighted.
+     * The index of <code>component</code> the user currently has highlighted.
+     * If this is not an index of <code>component</code> nothing is
+     * highlighted. Any component can be highlighted; it does not have to
+     * accept user input (<code>Component.acceptsInput()</code>). It is up the
+     * component itself to decide if it should be painted differently when
+     * highlighted.
      */
     private int highlightedComponent = -1;
 
@@ -95,7 +95,7 @@ public abstract class Dialog extends DeviceScreen {
      * flag to <code>true</code> many times instead. Then do just a single
      * layout calculation at the end.
      */
-    boolean invalidated;
+    private boolean invalidated;
 
     /**
      * Implicitly called by derived classes to setup a new J4ME form.
@@ -135,7 +135,7 @@ public abstract class Dialog extends DeviceScreen {
      * Adds the <code>component</code> to the end of this form.
      * 
      * @param component
-     *                is the UI component to add to the bottom of the form.
+     *            is the UI component to add to the bottom of the form.
      */
     public void append(final Component component) {
         invalidate();
@@ -144,18 +144,18 @@ public abstract class Dialog extends DeviceScreen {
 
     /**
      * Inserts the <code>component</code> in this form at the specified
-     * <code>index</code>. Each component on this form with an index
-     * greater or equal to the specified <code>index</code> is shifted
-     * upward to have an index one greater than the value it had previously.
+     * <code>index</code>. Each component on this form with an index greater
+     * or equal to the specified <code>index</code> is shifted upward to have
+     * an index one greater than the value it had previously.
      * 
      * @param component
-     *                is the UI component to insert.
+     *            is the UI component to insert.
      * @param index
-     *                is where to insert <code>component</code> on the form.
-     *                It must greater than or equal to 0 and less than or
-     *                equal to the number of components already on the form.
+     *            is where to insert <code>component</code> on the form. It
+     *            must greater than or equal to 0 and less than or equal to
+     *            the number of components already on the form.
      * @throws ArrayIndexOutOfBoundsException
-     *                 if the index was invalid.
+     *             if the index was invalid.
      */
     public void insert(final Component component, final int index) {
         invalidate();
@@ -168,13 +168,13 @@ public abstract class Dialog extends DeviceScreen {
      * discarded.
      * 
      * @param component
-     *                is the UI component to set to.
+     *            is the UI component to set to.
      * @param index
-     *                is where to set <code>component</code> on the form. It
-     *                must greater than or equal to 0 and less than the number
-     *                of components already on the form.
+     *            is where to set <code>component</code> on the form. It must
+     *            greater than or equal to 0 and less than the number of
+     *            components already on the form.
      * @throws ArrayIndexOutOfBoundsException
-     *                 if the index was invalid.
+     *             if the index was invalid.
      */
     public void set(final Component component, final int index) {
         invalidate();
@@ -185,11 +185,11 @@ public abstract class Dialog extends DeviceScreen {
      * Removes the first occurrence of the <code>component</code> from this
      * form. If <code>component</code> is found on this form, each component
      * on the form with an index greater or equal to the
-     * <code>component</code>'s index is shifted downward to have an index
-     * one smaller than the value it had previously.
+     * <code>component</code>'s index is shifted downward to have an index one
+     * smaller than the value it had previously.
      * 
      * @param component
-     *                is the UI component to remove.
+     *            is the UI component to remove.
      */
     public void delete(final Component component) {
         final int index = components.indexOf(component);
@@ -197,17 +197,17 @@ public abstract class Dialog extends DeviceScreen {
     }
 
     /**
-     * Deletes the <code>component</code> at the specified
-     * <code>index</code>. Each component in this vector with an index
-     * greater or equal to the specified index is shifted downward to have an
-     * index one smaller than the value it had previously.
+     * Deletes the <code>component</code> at the specified <code>index</code>.
+     * Each component in this vector with an index greater or equal to the
+     * specified index is shifted downward to have an index one smaller than
+     * the value it had previously.
      * 
      * @param index
-     *                is the index of the component to remove. It must be a
-     *                value greater than or equal to 0 and less than the
-     *                current number of components on the form.
+     *            is the index of the component to remove. It must be a value
+     *            greater than or equal to 0 and less than the current number
+     *            of components on the form.
      * @throws ArrayIndexOutOfBoundsException
-     *                 if the index was invalid.
+     *             if the index was invalid.
      */
     public void delete(final int index) {
         if (index >= 0) {
@@ -254,9 +254,9 @@ public abstract class Dialog extends DeviceScreen {
      * Returns the component at the specified index.
      * 
      * @param index
-     *                is the value into the component list to get.
-     * @return The component at <code>index</code> or <code>null</code> if
-     *         the index is invalid.
+     *            is the value into the component list to get.
+     * @return The component at <code>index</code> or <code>null</code> if the
+     *         index is invalid.
      */
     public Component get(final int index) {
         Component c = null;
@@ -292,12 +292,12 @@ public abstract class Dialog extends DeviceScreen {
      * not address the title bar, menu bar, or a scroll bar.
      * 
      * @param x
-     *                is the X-coordinate of the pixel on the form.
+     *            is the X-coordinate of the pixel on the form.
      * @param y
-     *                is the Y-coordinate of the pixel on the form.
-     * @return The index of the component containing the pixel (<code>x</code>,
-     *         <code>y</code>) or <code>-1</code> if no component
-     *         contains it.
+     *            is the Y-coordinate of the pixel on the form.
+     * @return The index of the component containing the pixel (<code>x</code>
+     *         , <code>y</code>) or <code>-1</code> if no component contains
+     *         it.
      */
     private synchronized int getAt(final int x, final int y) {
         int matched = -1;
@@ -331,24 +331,35 @@ public abstract class Dialog extends DeviceScreen {
         return matched;
     }
 
+    
+    /**
+     * @return true if layout was just recalculated.
+     */
+    private final void calcLayout(final boolean hasVerticalScrollBar) {
+        int formWidth = super.getWidth() - 2 * margin;
+        if(hasVerticalScrollBar) {
+            formWidth -= UIManager.getTheme().getVerticalScrollbarWidth();
+        }
+            calculateLayout(UIManager.getTheme(), formWidth, getHeight());
+    }
+    
     /**
      * Sets the selected component. It is the one the user can input data into
      * and that the screen is scrolled to.
      * 
      * @param index
-     *                is the new selected component.
+     *            is the new selected component.
      */
     public synchronized void setSelected(final int index) {
         if ((index < 0) || (index >= components.size())) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
+            throw new IndexOutOfBoundsException(String.valueOf(index)
+                    + " Max:" + components.size());
         }
 
         highlightedComponent = index;
 
         // Scroll screen to this component.
-        if (absoluteHeights == null) {
-            calculateLayout(UIManager.getTheme(), getWidth(), getHeight());
-        }
+        checkLayout();
 
         // Set the top of the screen.
         if (index == 0) {
@@ -378,8 +389,8 @@ public abstract class Dialog extends DeviceScreen {
      * and that the screen is scrolled to.
      * 
      * @param component
-     *                is the new selected component. If it is not on the form
-     *                this has no effect.
+     *            is the new selected component. If it is not on the form this
+     *            has no effect.
      */
     public void setSelected(final Component component) {
         int index = 0;
@@ -409,13 +420,12 @@ public abstract class Dialog extends DeviceScreen {
      * components and their order.
      * 
      * @param g
-     *                is the <code>Graphics</code> object to paint with.
+     *            is the <code>Graphics</code> object to paint with.
      */
     protected synchronized void paint(final Graphics g) {
         // Have we determined the layout?
         if (invalidated) {
             layout();
-            invalidated = false;
         }
 
         // Get the height of the screen.
@@ -426,7 +436,7 @@ public abstract class Dialog extends DeviceScreen {
         if (hasVerticalScrollbar()) {
             // Paint the scrollbar.
             final int width = super.getWidth(); // Exclude the margins and
-                                                // scrollbar
+            // scrollbar
             final int heightOfAllComponents = absoluteHeights[absoluteHeights.length - 1];
             paintVerticalScrollbar(g, 0, 0, width, height, topOfScreen,
                     heightOfAllComponents);
@@ -480,21 +490,21 @@ public abstract class Dialog extends DeviceScreen {
      * area to draw components in.
      * 
      * @param g
-     *                is the <code>Graphics</code> object to paint with.
+     *            is the <code>Graphics</code> object to paint with.
      * @param x
-     *                is the top-left X-coordinate pixel of the form area.
+     *            is the top-left X-coordinate pixel of the form area.
      * @param y
-     *                is the top-left Y-coordinate pixel of the form area.
+     *            is the top-left Y-coordinate pixel of the form area.
      * @param width
-     *                is the width of the form area in pixels.
+     *            is the width of the form area in pixels.
      * @param height
-     *                is the height of the form area in pixels.
+     *            is the height of the form area in pixels.
      * @param offset
-     *                is the vertical scrolling position of the top pixel to
-     *                show on the form area.
+     *            is the vertical scrolling position of the top pixel to show
+     *            on the form area.
      * @param formHeight
-     *                is the total height of all the components on the form.
-     *                This is bigger than <code>height</code>.
+     *            is the total height of all the components on the form. This
+     *            is bigger than <code>height</code>.
      */
     protected void paintVerticalScrollbar(final Graphics g, final int x,
             final int y, final int width, final int height, final int offset,
@@ -521,8 +531,8 @@ public abstract class Dialog extends DeviceScreen {
      * appear at the very top and bottom of the screen.
      * 
      * @param margin
-     *                is the number of pixels between components and the edges
-     *                of the screen. Values less than 0 are ignored.
+     *            is the number of pixels between components and the edges of
+     *            the screen. Values less than 0 are ignored.
      */
     public void setMargin(final int margin) {
         if ((margin >= 0) && (this.margin != margin)) {
@@ -546,8 +556,8 @@ public abstract class Dialog extends DeviceScreen {
      * Sets the vertical spacing between components.
      * 
      * @param spacing
-     *                is the number of pixels that vertically separates
-     *                components. Values less than 0 are be ignored.
+     *            is the number of pixels that vertically separates
+     *            components. Values less than 0 are be ignored.
      */
     public synchronized void setSpacing(final int spacing) {
         if ((spacing >= 0) && (this.spacing != spacing)) {
@@ -578,6 +588,18 @@ public abstract class Dialog extends DeviceScreen {
         return formWidth;
     }
 
+    private void checkLayout() {
+        final int screenHeight = getHeight();
+        if(invalidated || absoluteHeights == null) {
+            // Have to recalculate everything.
+            calcLayout(false);
+            // Are all the components taller than the screen?
+            if((absoluteHeights[absoluteHeights.length - 1] > screenHeight)) {
+                calcLayout(true);
+            }
+        }
+    }
+
     /**
      * Determines if the height of all the components is greater than the
      * height of the screen. If so a veritical scrollbar will be drawn on the
@@ -587,31 +609,10 @@ public abstract class Dialog extends DeviceScreen {
      *         <code>false</code> if it does not.
      */
     public synchronized boolean hasVerticalScrollbar() {
-        final int screenHeight = getHeight();
-        int formWidth = super.getWidth() - 2 * margin;
-
-        boolean layoutJustCalculated = false;
-        final Theme theme = UIManager.getTheme();
-
-        // Have we determined the layout?
-        if (invalidated || (absoluteHeights == null)) {
-            calculateLayout(theme, formWidth, screenHeight);
-            layoutJustCalculated = true;
-        }
+        checkLayout();
 
         // Are all the components taller than the screen?
-        if (absoluteHeights[absoluteHeights.length - 1] > screenHeight) {
-            if (layoutJustCalculated) {
-                // Recalculate the layout now that we're adding a vertical
-                // scrollbar.
-                formWidth -= theme.getVerticalScrollbarWidth();
-                calculateLayout(theme, formWidth, screenHeight);
-            }
-
-            return true;
-        } else {
-            return false;
-        }
+        return (absoluteHeights[absoluteHeights.length - 1] > getHeight());
     }
 
     /**
@@ -628,6 +629,7 @@ public abstract class Dialog extends DeviceScreen {
      * position so the user sees the same components after being called.
      */
     private synchronized void layout() {
+        invalidated = false;
         // Record the current screen position.
         int component = 0, delta = 0;
 
@@ -636,6 +638,9 @@ public abstract class Dialog extends DeviceScreen {
                 component = highlightedComponent;
             }
 
+            if(absoluteHeights.length<=component) {
+                component = 0;
+            }
             delta = absoluteHeights[component] - topOfScreen;
         }
 
@@ -660,21 +665,21 @@ public abstract class Dialog extends DeviceScreen {
      * is set in the <code>height</code> member variable.
      * 
      * @param theme
-     *                is the application's current <code>Theme</code>.
+     *            is the application's current <code>Theme</code>.
      * @param widht
-     *                is the number of pixels wide the screen is.
+     *            is the number of pixels wide the screen is.
      * @param height
-     *                is the number of pixels high the screen is.
+     *            is the number of pixels high the screen is.
      */
     private synchronized void calculateLayout(final Theme theme,
             final int width, final int height) {
         componentWidths = new int[components.size() + 1]; // Dummy element
-                                                            // at bottom for
-                                                            // end of
-                                                            // components
+        // at bottom for
+        // end of
+        // components
         absoluteHeights = new int[componentWidths.length];
         int componentY = margin; // First component is "margin" from the
-                                    // top
+        // top
 
         // Scroll through the components determining the vertical position of
         // each one.
@@ -707,8 +712,8 @@ public abstract class Dialog extends DeviceScreen {
      * <ol>
      * <li>If two adjacent components accept user input, then that next
      * component would be returned.
-     * <li>If two components that accept user input are separated by ones
-     * that do not, then we'd still skip to that next one that does.
+     * <li>If two components that accept user input are separated by ones that
+     * do not, then we'd still skip to that next one that does.
      * <li>The exception is when there are enough components that accept user
      * input between the two that more than a screen's height is between them.
      * In that case we need to set one of the intermediate components so the
@@ -716,13 +721,13 @@ public abstract class Dialog extends DeviceScreen {
      * </ol>
      * 
      * @param down
-     *                when <code>true</code> means the next component with a
-     *                higher index; when <code>false</code> means the next
-     *                with a lower.
+     *            when <code>true</code> means the next component with a
+     *            higher index; when <code>false</code> means the next with a
+     *            lower.
      * @param maxScroll
-     *                is the maximum number of pixels that can be scrolled to
-     *                get to the next component. For example it may be 90% the
-     *                height of the screen.
+     *            is the maximum number of pixels that can be scrolled to get
+     *            to the next component. For example it may be 90% the height
+     *            of the screen.
      * @return The index of the next component to highlight.
      */
     private int nextHighlightableComponent(final boolean down,
@@ -820,8 +825,8 @@ public abstract class Dialog extends DeviceScreen {
      * are taller than the screen they will be partially scrolled.
      * 
      * @param down
-     *                is <code>true</code> when the form should scroll down
-     *                and <code>false</code> when it should scroll up.
+     *            is <code>true</code> when the form should scroll down and
+     *            <code>false</code> when it should scroll up.
      */
     private void scroll(final boolean down) {
         // Safety checks.
@@ -939,9 +944,8 @@ public abstract class Dialog extends DeviceScreen {
      * Shows or hides the menu bar at the bottom of the screen.
      * 
      * @param mode
-     *                is <code>true</code> if the <code>DeviceScreen</code>
-     *                is to be in full screen mode, <code>false</code>
-     *                otherwise.
+     *            is <code>true</code> if the <code>DeviceScreen</code> is to
+     *            be in full screen mode, <code>false</code> otherwise.
      */
     public void setFullScreenMode(final boolean mode) {
         super.setFullScreenMode(mode);
@@ -955,15 +959,15 @@ public abstract class Dialog extends DeviceScreen {
      * done with the <code>setFullScreenMode</code> method.
      * 
      * @param left
-     *                is the text for the negative menu option or
-     *                <code>null</code> to remove the button. Negative menu
-     *                options are things like canceling a form and moving back
-     *                to a previous screen.
+     *            is the text for the negative menu option or
+     *            <code>null</code> to remove the button. Negative menu
+     *            options are things like canceling a form and moving back to
+     *            a previous screen.
      * @param right
-     *                is the text for the positive menu option or
-     *                <code>null</code> to remove the button. Positive menu
-     *                options are things like accepting a form, advancing to
-     *                the next screen, or displaying a menu.
+     *            is the text for the positive menu option or
+     *            <code>null</code> to remove the button. Positive menu
+     *            options are things like accepting a form, advancing to the
+     *            next screen, or displaying a menu.
      * @see #declineNotify()
      * @see #acceptNotify()
      */
@@ -973,14 +977,14 @@ public abstract class Dialog extends DeviceScreen {
     }
 
     /**
-     * Sets the title of this screen. The default is <code>null</code>
-     * meaning no title.
+     * Sets the title of this screen. The default is <code>null</code> meaning
+     * no title.
      * <p>
      * For the title to be visible full screen mode must be off. This can be
      * done with the <code>setFullScreenMode</code> method.
      * 
      * @param title
-     *                is the new title for the screen.
+     *            is the new title for the screen.
      */
     public void setTitle(final String title) {
         super.setTitle(title);
@@ -992,7 +996,7 @@ public abstract class Dialog extends DeviceScreen {
      * defined in this class.
      * 
      * @param keyCode
-     *                is the key code of the key that was pressed.
+     *            is the key code of the key that was pressed.
      */
     protected void keyPressed(final int keyCode) {
         // Forward the event to the current component.
@@ -1022,7 +1026,7 @@ public abstract class Dialog extends DeviceScreen {
      * the constants defined in this class.
      * 
      * @param keyCode
-     *                is the key code of the key that was held down.
+     *            is the key code of the key that was held down.
      */
     protected void keyRepeated(final int keyCode) {
         // Forward the event to the current component.
@@ -1043,7 +1047,7 @@ public abstract class Dialog extends DeviceScreen {
      * defined in this class.
      * 
      * @param keyCode
-     *                is the key code of the key that was released.
+     *            is the key code of the key that was released.
      */
     protected void keyReleased(final int keyCode) {
         // Forward the event to the current component.
@@ -1061,10 +1065,9 @@ public abstract class Dialog extends DeviceScreen {
      * Called when the pointer is pressed.
      * 
      * @param x
-     *                is the horizontal location where the pointer was
-     *                pressed.
+     *            is the horizontal location where the pointer was pressed.
      * @param y
-     *                is the vertical location where the pointer was pressed.
+     *            is the vertical location where the pointer was pressed.
      */
     protected synchronized void pointerPressed(final int x, final int y) {
         // Is this event moving the scrollbar?
@@ -1139,10 +1142,9 @@ public abstract class Dialog extends DeviceScreen {
      * Called when the pointer is dragged.
      * 
      * @param x
-     *                is the horizontal location where the pointer was
-     *                dragged.
+     *            is the horizontal location where the pointer was dragged.
      * @param y
-     *                is the vertical location where the pointer was dragged.
+     *            is the vertical location where the pointer was dragged.
      */
     protected synchronized void pointerDragged(final int x, final int y) {
         // Forward the event to the current component.
@@ -1160,10 +1162,9 @@ public abstract class Dialog extends DeviceScreen {
      * Called when the pointer is released.
      * 
      * @param x
-     *                is the horizontal location where the pointer was
-     *                released.
+     *            is the horizontal location where the pointer was released.
      * @param y
-     *                is the vertical location where the pointer was released.
+     *            is the vertical location where the pointer was released.
      */
     protected void pointerReleased(final int x, final int y) {
         // Forward the event to the current component.
