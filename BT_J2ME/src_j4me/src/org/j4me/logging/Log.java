@@ -351,7 +351,7 @@ public class Log {
         String text = message;
 
         if (throwable != null) {
-            text += "\n" + throwable.toString();
+            text += "\n(" + throwable.toString() + ")";
         }
 
         // Write the error to the console.
@@ -360,10 +360,9 @@ public class Log {
         System.err.print("[");
         System.err.print(level);
         System.err.print("] ");
-        System.err.println(message);
+        System.err.println(text);
 
         if (throwable != null) {
-            System.err.println(throwable.getMessage());
             throwable.printStackTrace();
         }
 
@@ -372,10 +371,7 @@ public class Log {
                 Log.os.print("[");
                 Log.os.print(level);
                 Log.os.print("] ");
-                Log.os.println(message);
-                if (throwable != null) {
-                    Log.os.println(throwable.getMessage());
-                }
+                Log.os.println(text);
                 Log.os.flush();
             } catch (final Exception e) {
                 Log.os = null;

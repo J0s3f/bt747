@@ -71,6 +71,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      */
     public final void onCancel() {
         Log.info("Canceling Bluetooth device discovery.");
+        Log.info("Going to "+previous.getTitle());
         previous.show();
     }
 
@@ -167,6 +168,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
                 }
             }
 
+            Log.info("Returning "+next.getTitle());
             return next;
         }
     }

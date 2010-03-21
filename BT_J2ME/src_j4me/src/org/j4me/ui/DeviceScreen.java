@@ -1736,9 +1736,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             }
         } catch (final Throwable t) {
             // Unhandled exception in paint() will crash an application and
-            // not
-            // tell you why. This lets the programmer know what caused the
-            // problem.
+            // not tell you why. This lets the programmer know what caused
+            // the problem.
             Log.warn("Unhandled exception in paint for " + master, t);
         }
     }

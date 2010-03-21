@@ -292,4 +292,11 @@ public final class J2MEJavaTranslations implements JavaLibImplementation {
         return Float11.atan2(x, y);
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#convertHTMLtoUTF8(java.lang.String)
+     */
+    public String convertHTMLtoUTF8(String s) {
+        return s;
+    }
+
 }
