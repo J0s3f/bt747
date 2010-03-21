@@ -238,8 +238,7 @@ public final class WPLogConvert extends GPSLogConvertInterface {
                                 r.height = altitude;
                                 CommonIn
                                         .convertHeight(r,
-                                                factorConversionWGS84ToMSL,
-                                                logFormat);
+                                                factorConversionWGS84ToMSL);
                                 speed = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
                                 tag = (WPLogConvert.X_FF & bytes[recIdx++]) << 0;
                                 r.utc = longToUtcTime(rawTime);
