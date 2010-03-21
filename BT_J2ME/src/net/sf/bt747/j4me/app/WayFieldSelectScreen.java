@@ -22,6 +22,8 @@ import net.sf.bt747.j4me.app.screens.BT747Dialog;
 import org.j4me.logging.Log;
 import org.j4me.ui.components.CheckBox;
 
+import bt747.model.AppSettings;
+
 public final class WayFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21;
@@ -67,7 +69,8 @@ public final class WayFieldSelectScreen extends BT747Dialog {
 
     public void showNotify() {
         setupScreen();
-        updateLogFormat(m().getWayPtRCR());        
+        AppModel r = m();
+        updateLogFormat(r.getIntOpt(AppSettings.WAYPT_RCR));        
     }
 
     protected void acceptNotify() {

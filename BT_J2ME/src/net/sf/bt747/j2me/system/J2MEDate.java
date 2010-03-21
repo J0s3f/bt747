@@ -185,10 +185,14 @@ public final class J2MEDate implements BT747Date {
     /**
      * @see bt747.util.BT747Date#advance(int)
      * @param s
-     *                number of seconds to advance the time.
+     *                number of days to advance.
      */
     public final void advance(final int s) {
-        date.setTime(date.getTime() + s * J2MEDate.MILLISECONDS_PER_SECOND);
+//        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
+//        cal.setTime(date);
+//        return cal.get(Calendar.YEAR);
+        // TODO : ADVANCE THIS CORRECTLY !!!  LEAP SECONDS !!!
+        date.setTime(date.getTime() + s * J2MEDate.MILLISECONDS_PER_SECOND*24*3600);
     }
 
     /**
