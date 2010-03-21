@@ -45,7 +45,7 @@ public final class GPSRxTxPort extends GPSPort {
     public static final String os_name = java.lang.System
             .getProperty("os.name");
     public static boolean dubiousTried = false;
-
+  
     /**
      * 
      */

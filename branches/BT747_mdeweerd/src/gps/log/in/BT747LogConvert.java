@@ -891,8 +891,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
          */
         if (r.hasHeight()) {
             if (valid) {
-                CommonIn.convertHeight(r, factorConversionWGS84ToMSL,
-                        logFormat);
+                CommonIn.convertHeight(r, factorConversionWGS84ToMSL);
             }
             if (((r.valid & 0x0001) != 1) // record has a fix
                     && ((r.height < -3000.) || (r.height > 15000.))) {

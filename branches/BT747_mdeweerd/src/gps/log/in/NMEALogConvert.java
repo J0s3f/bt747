@@ -250,7 +250,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
 
     private void finalizeRecord(final GPSFileConverterInterface gpsFile,
             final GPSRecord r, final int curLogFormat) {
-        CommonIn.convertHeight(r, factorConversionWGS84ToMSL, curLogFormat);
+        CommonIn.convertHeight(r, factorConversionWGS84ToMSL);
 
         if (curLogFormat != logFormat) {
             updateLogFormat(gpsFile, curLogFormat);

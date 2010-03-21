@@ -144,8 +144,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                                     | (0xFF & bytes[recIdx++]) << 24;
                             r.height = JavaLibBridge.toFloatBitwise(height);
                             CommonIn.convertHeight(r,
-                                    factorConversionWGS84ToMSL,
-                                    HoluxTrlLogConvert.logFormat);
+                                    factorConversionWGS84ToMSL);
                             gpsFile.addLogRecord(r);
                             r = GPSRecord.getLogFormatRecord(0);
                         }
