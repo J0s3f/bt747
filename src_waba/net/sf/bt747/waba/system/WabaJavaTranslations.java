@@ -256,4 +256,11 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
     public double atan2(double x, double y) {
         return Math.atan2(x, y);
     }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.JavaLibImplementation#convertHTMLtoUTF8(java.lang.String)
+     */
+    public final String convertHTMLtoUTF8(final String s) {
+        return s;
+    }
 }
