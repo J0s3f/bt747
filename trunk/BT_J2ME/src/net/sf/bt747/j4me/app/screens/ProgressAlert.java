@@ -94,7 +94,8 @@ public abstract class ProgressAlert extends Dialog implements Runnable {
         // Start the worker thread.
         final Thread worker = new Thread(this);
         worker.start();
-
+        canceled = false;
+        
         // Continue processing the event.
         super.showNotify();
     }
