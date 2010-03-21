@@ -14,6 +14,9 @@
 // *** *********************************************************** ***
 package bt747.sys;
 
+import net.sf.bt747.j2se.system.J2SEJavaTranslations;
+import net.sf.bt747.j2se.system.NRCDecoder;
+
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747File;
@@ -288,5 +291,9 @@ public final class JavaLibBridge {
     public static final BT747HttpSender getHttpSenderInstance()
             throws BT747Exception {
         return JavaLibBridge.imp.getHttpSenderInstance();
+    }
+    
+    public static final String convertHTMLtoUTF8(final String s) {
+        return NRCDecoder.decode(s);
     }
 }

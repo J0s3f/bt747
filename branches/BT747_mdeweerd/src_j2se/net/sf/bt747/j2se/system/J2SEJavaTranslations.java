@@ -16,7 +16,6 @@ package net.sf.bt747.j2se.system;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
@@ -33,9 +32,9 @@ import bt747.sys.interfaces.JavaLibImplementation;
 
 public final class J2SEJavaTranslations implements JavaLibImplementation {
     private static J2SEJavaTranslations singleton;
-    
+
     private J2SEJavaTranslations() {
-        
+
     };
 
     public static final J2SEJavaTranslations getInstance() {
@@ -75,10 +74,10 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
         return new J2SERAFile(path.getPath());
     }
 
-    public final BT747RAFile getRAFileInstance(final BT747Path filePath, final int mode) {
+    public final BT747RAFile getRAFileInstance(final BT747Path filePath,
+            final int mode) {
         return new J2SERAFile(filePath.getPath(), mode);
     }
-    
 
     public final BT747File getFileInstance(final BT747Path path) {
         return new J2SERAFile(path.getPath());
@@ -88,7 +87,6 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
             final int mode) {
         return getRAFileInstance(path, mode);
     }
-
 
     public final boolean isAvailable() {
         return true;
@@ -208,14 +206,14 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
     public final String getAppSettings() {
         return appSettings;
     }
-    
+
     private final static void mySetAppSettings(final String settings) {
         appSettings = settings;
     }
 
     /**
      * @param settings
-     *                the application settings to set
+     *            the application settings to set
      */
     public final void setAppSettings(final String settings) {
         mySetAppSettings(settings);
@@ -236,25 +234,34 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
 
     private BT747HttpSender httpSenderInstance = null;
 
-	public BT747HttpSender getHttpSenderInstance() {
-		if (httpSenderInstance == null) {
-			httpSenderInstance = new J2SEHttpSenderImpl();
-		}
-		return httpSenderInstance;
-	}
+    public BT747HttpSender getHttpSenderInstance() {
+        if (httpSenderInstance == null) {
+            httpSenderInstance = new J2SEHttpSenderImpl();
+        }
+        return httpSenderInstance;
+    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.JavaLibImplementation#atan(double)
      */
     public double atan(double x) {
         return Math.atan(x);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.JavaLibImplementation#atan2(double, double)
      */
     public double atan2(double x, double y) {
         return Math.atan2(x, y);
     }
 
+    public String convertHTMLtoUTF8(final String s) {
+        String out;
+        out = NRCDecoder.decode(s);
+        return out;
+    }
 }

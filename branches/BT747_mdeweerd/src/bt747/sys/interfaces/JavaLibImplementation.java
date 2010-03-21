@@ -197,4 +197,11 @@ public interface JavaLibImplementation {
      * @throws BT747Exception
      */
     BT747HttpSender getHttpSenderInstance() throws BT747Exception;
+
+    /** Convert html encoded string to UTF8
+     * @param s
+     * @return
+     */
+    String convertHTMLtoUTF8(final String s);
+
 }

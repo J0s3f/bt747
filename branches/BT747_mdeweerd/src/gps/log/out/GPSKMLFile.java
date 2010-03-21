@@ -237,7 +237,7 @@ public class GPSKMLFile extends GPSFile {
         } else {
             color = "FFFFFF";
         }
-        text = "<Placemark>" + "<name>" + name + "</name>" + "\r\n"
+        text = "<Placemark>" + "<name>" + JavaLibBridge.convertHTMLtoUTF8(name) + "</name>" + "\r\n"
                 + "    <Style>\r\n" + "      <LineStyle>\r\n"
                 + "        <color>ff" + color + "</color>\r\n"
                 + "        <width>3.0</width>\r\n" + "      </LineStyle>\r\n"
