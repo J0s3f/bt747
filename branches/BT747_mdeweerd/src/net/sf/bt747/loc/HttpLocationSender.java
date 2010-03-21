@@ -132,13 +132,13 @@ public class HttpLocationSender extends LocationSender {
 	 */
 	private BT747Hashtable prepareDataToSend() {
 		BT747Hashtable data = JavaLibBridge.getHashtableInstance(6);
-		data.put(PAR_NAME_DIR, JavaLibBridge.toString(this.heading));
-		data.put(PAR_NAME_LATITUDE, JavaLibBridge.toString(this.latitude));
-		data.put(PAR_NAME_LONGITUDE, JavaLibBridge.toString(this.longitude));
-                data.put(PAR_NAME_POSITION, JavaLibBridge.toString(this.longitude)+","+JavaLibBridge.toString(this.latitude));
-		data.put(PAR_NAME_SPEED, JavaLibBridge.toString(this.speed));
-		data.put(PAR_NAME_HDOP, JavaLibBridge.toString(this.hdop));
-		data.put(PAR_NAME_ALTITUDE, JavaLibBridge.toString(this.altitude));
+		data.put(PAR_NAME_DIR, JavaLibBridge.toString(this.heading,0));
+		data.put(PAR_NAME_LATITUDE, JavaLibBridge.toString(this.latitude,5));
+		data.put(PAR_NAME_LONGITUDE, JavaLibBridge.toString(this.longitude,5));
+                data.put(PAR_NAME_POSITION, JavaLibBridge.toString(this.longitude,5)+","+JavaLibBridge.toString(this.latitude,5));
+		data.put(PAR_NAME_SPEED, JavaLibBridge.toString(this.speed,1));
+		data.put(PAR_NAME_HDOP, JavaLibBridge.toString(this.hdop,2));
+		data.put(PAR_NAME_ALTITUDE, JavaLibBridge.toString(this.altitude,1));
 		// TODO correct extraction of data from this nsat field
 		data.put(PAR_NAME_NSAT, JavaLibBridge.toString(this.nsat));
 		data.put(PAR_NAME_BT_ADDR, this.bluetoothAdress);
