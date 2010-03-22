@@ -24,12 +24,12 @@ public class J2SEAGPS {
     private final static String TRANS_AGPS_14d = TRANS_FTP_SITE + "MTK14.EPO";
     private final static String TRANS_AGPS_7d = TRANS_FTP_SITE + "MTK7d.EPO";
 
-    private static int timeout = 60000;
+    private static int timeout = 3*60000;
 
     static {
         try {
             timeout = Integer.valueOf(java.lang.System.getProperty(
-                    "agpsTimeOut", "60000"));
+                    "agpsTimeOut", String.valueOf(timeout)));
         } catch (Throwable e) {
             // Do nothing.
         }
