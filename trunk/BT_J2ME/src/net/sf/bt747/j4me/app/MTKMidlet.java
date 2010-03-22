@@ -124,6 +124,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // Change the theme.
             // Show the first screen.
 
+            Log.info("Version "+getAppProperty("MIDlet-Version"));
             Log.info("Before main.show");
             // FindingGPSDevicesAlert creates a list of devices, then calls
             // SelectGPSScreen which will in turn call
