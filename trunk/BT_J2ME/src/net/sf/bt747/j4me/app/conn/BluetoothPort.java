@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.io.file.ConnectionClosedException;
 
 import org.j4me.logging.Log;
 
@@ -304,6 +305,9 @@ public class BluetoothPort extends gps.connection.GPSPort{
                 Log.error("readCheck on closed stream");
                 return 0;
             }
+        } catch (final javax.bluetooth.BluetoothConnectionException e) {
+            Log.error("readCheck",e);
+            return 0;
         } catch (final IOException e) {
             Log.error("readCheck", e);
             // reconnectPort();

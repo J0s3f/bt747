@@ -410,7 +410,7 @@ public final class BluetoothGPSOrgPort extends gps.connection.GPSPort {
 
         // Add the "btspp://" prefix (if not already there).
         if (deviceBluetoothAddress.substring(0,
-                BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL.length()).equalsIgnoreCase(
+                BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL.length()).toLowerCase().equals(
                 BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL) == false) {
             url.append(BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL);
         }

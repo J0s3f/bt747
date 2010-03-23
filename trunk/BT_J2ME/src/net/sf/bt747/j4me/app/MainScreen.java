@@ -752,6 +752,9 @@ public final class MainScreen extends Dialog implements ModelListener {
     }
 
     private DeviceScreen interruptedScreen = null;
+    
+    private final static int DEFAULT_RECONNECT_TRIALS = 5;
+    private int reconnectTrialsToGo = 0;
 
     /**
      * Call back from the GPS Model to provide data.
@@ -766,6 +769,10 @@ public final class MainScreen extends Dialog implements ModelListener {
         case ModelEvent.DISCONNECTED:
             // Display.getDisplay(this).flashBacklight(500);
             Display.getDisplay(midlet).vibrate(200);
+            if(reconnectTrialsToGo>0) {
+                reconnectTrialsToGo--;
+                c.reconnectGpsAfterDisconnect();
+            }
             // com.nokia.mid.ui.DeviceControl
             break;
         case GpsEvent.ERASE_DONE_REMOVE_POPUP:
@@ -777,6 +784,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             setupScreen();
             break;
         case ModelEvent.CONNECTED:
+            reconnectTrialsToGo = DEFAULT_RECONNECT_TRIALS;
             c.setMtkDataNeeded(MtkModel.DATA_LOG_FORMAT);
             c.setMtkDataNeeded(MtkModel.DATA_LOG_STATUS);
             break;

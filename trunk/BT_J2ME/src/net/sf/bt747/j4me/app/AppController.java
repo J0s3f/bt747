@@ -158,6 +158,23 @@ public class AppController extends Controller {
         }
     }
 
+   private boolean isSupposedConnected = false;
+    
+    public void connectGPS() {
+        isSupposedConnected = true;
+        super.connectGPS();
+    }
+    public void closeGPS() {
+        isSupposedConnected = false;
+        super.closeGPS();
+    }
+    
+    public void reconnectGpsAfterDisconnect() {
+        if(isSupposedConnected) {
+            connectGPS();
+        }
+    }
+    
     public final void setPaths() {
         setStringOpt(AppSettings.LOGFILEPATH, m
                 .getStringOpt(AppSettings.OUTPUTDIRPATH)
