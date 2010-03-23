@@ -20,4 +20,14 @@ $MYLIEU_WHO="X";
 // http://code.google.com/intl/fr/apis/maps/signup.html .
 $GMAP_KEY="GOOGLEMAPKEY";
 
+// If not 0, debug is active
+$MYLIEU_DEBUG=0;
+
+// Subdirectory for the logs (for instance 'log/')
+// Must include the '/', otherwise it is a prefix.
+$MYLIEU_LOGDIRECTORY="./";
+
+// Filename for the debug log.
+$MYLIEU_DEBUGLOG=$MYLIEU_LOGDIRECTORY."debug.log";
+
 ?>

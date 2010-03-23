@@ -1,4 +1,5 @@
 <?php 
+include "defaults.php";
 
 /*
  * setUserPosition.php
@@ -8,6 +9,9 @@
  * 
  * Storing data as trackpoints.
  * Karl Linne, 05.06.2009
+ * 
+ * Updates by Mario De Weerd
+ * Updates by Fabian Schonack to add fields and debug log.
  * 
  * This file is used to tell a webserver position data of a person.
  * You need to call this with the parameters:
@@ -24,8 +28,34 @@
  * 
  */
 
+
 // show every warning, error, info
 error_reporting(E_ALL);
+if($MYLIEU_DEBUG!=0) {
+  debugLog();
+}
+  
+function debugLog() {
+//*************DEBUG-LOG
+// write the string send to the server into an logfile
+
+$now=getdate(date("U"));
+
+//print("$now[weekday], $now[month] $now[mday], $now[year]");
+//echo $_SERVER['QUERY_STRING'];
+
+$fh = fopen($MYLIEU_DEBUGLOG, 'a') or die("can't open file $MYLIEU_DEBUGLOG");
+
+$stringData = ("[$now[year]-$now[month]-$now[mday] $now[hours]:$now[minutes]:$now[seconds]] ");
+ fwrite($fh, $stringData);
+$stringData = $_SERVER['QUERY_STRING'];
+ fwrite($fh, $stringData);
+$stringData = "\n";
+ fwrite($fh, $stringData);
+fclose($fh);
+}
+
+//DEBUG-LOG*************/
 
 // check, if we got a client, which can not convert into decimal format.
 if (isset($_GET['longitude_raw']))
@@ -104,22 +134,53 @@ else
 {
 	$myDirection = "0.0";
 }
-
+if (isset($_GET['numsat']))
+{
+	$myNumsat = $_GET['numsat'];
+}
+else
+{
+	$myNumsat = "0";
+}
+if (isset($_GET['hdop']))
+{
+	$myHdop = $_GET['hdop'];
+}
+else
+{
+	$myHdop = "0.0";
+}
+if (isset($_GET['user']))
+{
+	$myUser = $_GET['user'];
+}
+else
+{
+	$myUser = "unknown";
+}
+if (isset($_GET['btaddr']))
+{
+	$myBt_addr = $_GET['btaddr'];
+}
+else
+{
+	$myBt_addr = "00:00:00:00:00";
+}
 
 
 // add an entry in an single-node xml-file
-$myFile = 'geodata.xml';
+$myFile = $MYLIEU_LOGDIRECTORY.'geodata.xml';
 
 $myDayString = date("Y_m_d");
 
 // the dayfile should be in the format 2009_03_23_geodata.xml
-$myDayFile = $myDayString.'_geodata.xml';
-$myDayFileGPX = $myDayString.'_geodata.gpx';
+$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_geodata.xml';
+$myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_geodata.gpx';
 
 // create both file-entries
-writeXMLfile(false, $myFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection);
-writeGPXfile(true, $myDayFileGPX, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection);
-writeXMLfile(true, $myDayFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection);
+writeXMLfile(false, $myFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
+writeGPXfile(true, $myDayFileGPX, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop);
+writeXMLfile(true, $myDayFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
 
 
 
@@ -147,7 +208,11 @@ function writeXMLfile($bAppend,
 					  $aLongitude, 
 					  $aSpeed, 
 					  $anAltitude, 
-					  $aDirection)
+					  $aDirection,
+					  $aNumsat,
+					  $aHdop,
+					  $aBt_addr,
+					  $aUser)
 {
 	$doc = new DomDocument("1.0", "iso-8859-1");
 
@@ -226,6 +291,10 @@ function writeXMLfile($bAppend,
 	$element->setAttribute('speed', $aSpeed);
 	$element->setAttribute('alt', $anAltitude);
 	$element->setAttribute('dir', $aDirection);
+	$element->setAttribute('sat', $aNumsat);
+	$element->setAttribute('hdop', $aHdop);
+	$element->setAttribute('Bt_addr', $aBt_addr);
+	$element->setAttribute('user', $aUser);
 	$root->appendChild($element);
 
 	// save it
@@ -256,7 +325,9 @@ function writeGPXfile($bAppend,
 					  $aLongitude, 
 					  $aSpeed, 
 					  $anAltitude, 
-					  $aDirection)
+					  $aDirection,
+					  $aNumsat,
+					  $aHdop)
 {
 	$doc = new DomDocument("1.0", "UTF-8");
 
@@ -361,6 +432,14 @@ function writeGPXfile($bAppend,
 	$subElement = $doc->createElement('time', $myTime);
 	$element->appendChild($subElement);
 	$subElement = $doc->createElement('ele', $anAltitude);
+	$element->appendChild($subElement);
+	$subElement = $doc->createElement('speed', $aSpeed);
+	$element->appendChild($subElement);
+	$subElement = $doc->createElement('course', $aDirection);
+	$element->appendChild($subElement);
+	$subElement = $doc->createElement('hdop', $aHdop);
+	$element->appendChild($subElement);
+	$subElement = $doc->createElement('sat', $aNumsat);
 	$element->appendChild($subElement);
 	
 
