@@ -8,8 +8,8 @@
       <configuration active="true" name="DefaultCldcPhone2">
          <device group="Java(TM) Platform Micro Edition SDK 3.0" name="DefaultCldcPhone2"/>
          <symbolSet name="DefaultCldcPhone2">
-            <symbol name="screen.isColor" value="true"/>
             <symbol name="MMAPI" value="1.1"/>
+            <symbol name="screen.isColor" value="true"/>
             <symbol name="descriptor" value="CLDC emulator"/>
             <symbol name="screen.bitDepth" value="16"/>
             <symbol name="JSR82" value="1.1"/>

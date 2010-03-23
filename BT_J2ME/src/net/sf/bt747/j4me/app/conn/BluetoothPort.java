@@ -1,7 +1,5 @@
 package net.sf.bt747.j4me.app.conn;
 
-import gps.connection.GPSPort;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,7 +13,7 @@ import bt747.model.Controller;
  * Maps the communications with a Bluetooth GPS device to the
  * <code>LocationProvider</code> interface.
  */
-public class BluetoothPort extends GPSPort {
+public class BluetoothPort extends gps.connection.GPSPort{
 
     /**
      * The protocol portion of the URL for Bluetooth addresses.
