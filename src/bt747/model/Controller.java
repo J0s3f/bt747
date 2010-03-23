@@ -923,7 +923,7 @@ public class Controller implements ModelListener {
     /**
      * Connect to the GPS (open the serial connection).
      */
-    public final void connectGPS() {
+    public void connectGPS() {
         closeGPS();
         Generic.debug("Freeport is "
                 + m.getStringOpt(AppSettings.FREETEXTPORT));
@@ -940,11 +940,9 @@ public class Controller implements ModelListener {
     /**
      * Close the GPS connection.
      */
-    public final void closeGPS() {
+    public void closeGPS() {
         if (m.isConnected()) {
             m.gpsRxTx().closePort();
-            // TODO Move event posting to appropriate place (in model)
-            m.postEvent(ModelEvent.DISCONNECTED);
         }
     }
 
