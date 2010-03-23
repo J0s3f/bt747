@@ -29,7 +29,7 @@ import org.j4me.logging.Log;
  * Looks for Bluetooth devices (within 10 meters) and returns their names and
  * addresses.
  */
-class BluetoothDeviceDiscovery implements DiscoveryListener {
+class BT747BluetoothDeviceDiscovery implements DiscoveryListener {
 
     /**
      * Indicates device discovery is in progress
@@ -56,6 +56,8 @@ class BluetoothDeviceDiscovery implements DiscoveryListener {
      * The list of discovered services for the selected device
      */
     private Vector services = new Vector();
+    
+    private BT747DiscoveryListener parentDiscoveryListener = null;
 
     /**
      * The result of the inquiry. When the inquiry is done this result will be
@@ -70,6 +72,13 @@ class BluetoothDeviceDiscovery implements DiscoveryListener {
      * {@link #INQUIRY_IN_PROGRESS}
      */
     private int deviceDiscoveryResult = -1;
+    
+    /**
+     * 
+     */
+    public BT747BluetoothDeviceDiscovery(BT747DiscoveryListener l) {
+        parentDiscoveryListener = l;
+    }
 
     /**
      * The result of the service search. When the inquiry is done this result
@@ -116,10 +125,11 @@ class BluetoothDeviceDiscovery implements DiscoveryListener {
         // Start discovering devices.
         doDiscoverDevices();
 
-        while (getDeviceDiscoveryResult() == BluetoothDeviceDiscovery.INQUIRY_IN_PROGRESS) {
+        while (getDeviceDiscoveryResult() == BT747BluetoothDeviceDiscovery.INQUIRY_IN_PROGRESS) {
             try {
                 Thread.sleep(20);
             } catch (final InterruptedException e) {
+                Log.debug("Discovery thread killed");
                 // This thread is being killed, just exit.
                 return null;
             }
@@ -232,6 +242,13 @@ class BluetoothDeviceDiscovery implements DiscoveryListener {
             final DeviceClass deviceClass) {
         Log.debug("Discovered device " + remoteDevice.getBluetoothAddress());
         discoveredDevices.addElement(remoteDevice);
+        try {
+            if(parentDiscoveryListener!=null) {
+                parentDiscoveryListener.deviceDiscovered(remoteDevice.getFriendlyName(false));
+            }
+        } catch (Exception e) {
+            Log.debug("Issue notifying parentDiscoveryListener");
+        }
     }
 
     /**

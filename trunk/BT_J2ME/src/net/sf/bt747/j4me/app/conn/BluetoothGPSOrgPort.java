@@ -32,7 +32,7 @@ import org.j4me.util.ConnectorHelper;
  * Main class for communication with GPS receiver. Use this class to access
  * GPS receiver from other classes.
  */
-public final class BluetoothGPSOrg extends gps.connection.GPSPort {
+public final class BluetoothGPSOrgPort extends gps.connection.GPSPort {
 
     /**
      * The protocol portion of the URL for Bluetooth addresses.
@@ -74,7 +74,7 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
      * phones 3 seconds seems to work. Motorola phones seem to be the only
      * ones with Bluetooth implementations that need this.
      */
-    public static final short READ_TIMEOUT = BluetoothGPSOrg.SLEEP_BEFORE_READ + 3000;
+    public static final short READ_TIMEOUT = BluetoothGPSOrgPort.SLEEP_BEFORE_READ + 3000;
 
     /**
      * The delay in milliseconds between reconnects.
@@ -110,15 +110,15 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
      * @param url -
      *                URL of bluetooth device to connect to.
      */
-    public BluetoothGPSOrg(final String url) {
+    public BluetoothGPSOrgPort(final String url) {
         this.url = url;
     }
 
-    public BluetoothGPSOrg() {
+    public BluetoothGPSOrgPort() {
     }
 
-    public static BluetoothGPSOrg getInstance() {
-        return new BluetoothGPSOrg();
+    public static BluetoothGPSOrgPort getInstance() {
+        return new BluetoothGPSOrgPort();
     }
 
     /**
@@ -146,7 +146,7 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
             Log.info("Connecting to Bluetooth device at " + url);
 
             connection = (StreamConnection) ConnectorHelper.open(url,
-                    Connector.READ_WRITE, BluetoothGPSOrg.BLUETOOTH_TIMEOUT);
+                    Connector.READ_WRITE, BluetoothGPSOrgPort.BLUETOOTH_TIMEOUT);
 
             Log.debug("Bluetooth connection established");
 
@@ -248,7 +248,7 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
         if (internalIsConnected && isReconnectAutomatically
                 && (nextOpentrial <= System.currentTimeMillis())) {
             nextOpentrial = System.currentTimeMillis() + 10
-                    * BluetoothGPSOrg.DELAY_BETWEEN_OPENTRIALS;
+                    * BluetoothGPSOrgPort.DELAY_BETWEEN_OPENTRIALS;
             try {
                 Log.info("Reconnecting after apparent disconnect");
                 try {
@@ -331,14 +331,14 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
         final int maxTries = 2;
 
         nextOpentrial = System.currentTimeMillis()
-                + BluetoothGPSOrg.DELAY_BETWEEN_OPENTRIALS;
+                + BluetoothGPSOrgPort.DELAY_BETWEEN_OPENTRIALS;
         // If the channel id is null, we need to guess at the channel id
         if (channelId == null) {
             // Try a few channels
             for (int i = 1; i <= maxTries; i++) {
                 String localUrl;
                 try {
-                    localUrl = BluetoothGPSOrg.constructBTURL(url, Integer
+                    localUrl = BluetoothGPSOrgPort.constructBTURL(url, Integer
                             .toString(i));
                     url = localUrl;
                     connect();
@@ -360,7 +360,7 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
             }
         } else {
             // Connect to the remote GPS device
-            url = BluetoothGPSOrg.constructBTURL(urlProvided, channelId);
+            url = BluetoothGPSOrgPort.constructBTURL(urlProvided, channelId);
             connect();
         }
         if (tt == null) {
@@ -410,9 +410,9 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
 
         // Add the "btspp://" prefix (if not already there).
         if (deviceBluetoothAddress.substring(0,
-                BluetoothGPSOrg.BLUETOOTH_PROTOCOL.length()).equalsIgnoreCase(
-                BluetoothGPSOrg.BLUETOOTH_PROTOCOL) == false) {
-            url.append(BluetoothGPSOrg.BLUETOOTH_PROTOCOL);
+                BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL.length()).equalsIgnoreCase(
+                BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL) == false) {
+            url.append(BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL);
         }
 
         // Add the address.
@@ -420,14 +420,14 @@ public final class BluetoothGPSOrg extends gps.connection.GPSPort {
 
         // Add the channel ID (if not already there).
         if (deviceBluetoothAddress.indexOf(':',
-                BluetoothGPSOrg.BLUETOOTH_PROTOCOL.length() + 1) < 0) {
+                BluetoothGPSOrgPort.BLUETOOTH_PROTOCOL.length() + 1) < 0) {
             url.append(':');
             url.append(channelId);
         }
 
         // Add the Bluetooth options (if not already there).
         if (deviceBluetoothAddress.indexOf(';') < 0) {
-            url.append(BluetoothGPSOrg.BLUETOOTH_GPS_OPTIONS);
+            url.append(BluetoothGPSOrgPort.BLUETOOTH_GPS_OPTIONS);
         }
 
         final String bturl = url.toString();
