@@ -247,6 +247,8 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     protected final GPSrxtx gpsRxTx() {
         return gpsRxTx;
     }
+    
+    private boolean expectedConnectionState = false;
 
     /**
      * Determine the connection status
@@ -254,7 +256,16 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * @return true if the connection is made
      */
     public final boolean isConnected() {
-        return gpsRxTx.isConnected();
+        boolean newState = gpsRxTx.isConnected();
+        if (newState != expectedConnectionState) {
+            expectedConnectionState = newState;
+            if (newState) {
+                postEvent(ModelEvent.CONNECTED);
+            } else {
+                postEvent(ModelEvent.DISCONNECTED);
+            }
+        }
+        return newState;
     }
 
     /**
