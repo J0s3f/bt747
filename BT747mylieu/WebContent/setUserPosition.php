@@ -176,15 +176,17 @@ else
 	$myBt_addr = "00:00:00:00:00";
 }
 
-
 // add an entry in an single-node xml-file
 $myFile = $MYLIEU_LOGDIRECTORY.'geodata.xml';
 
 $myDayString = date("Y_m_d",strtotime($myTime));
+if(!($myUser === "")) {
+  $myDayString.='_'.$myUser;
+}
 
 // the dayfile should be in the format 2009_03_23_geodata.xml
-$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.$myUser.'_'.'geodata.xml';
-$myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.$myUser.'_'.'geodata.gpx';
+$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.geodata.xml';
+$myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.'geodata.gpx';
 
 // create both file-entries
 writeXMLfile(false, $myFile, $myLatitude, $myLongitude, $myTime, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
