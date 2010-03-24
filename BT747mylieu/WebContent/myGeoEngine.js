@@ -68,6 +68,8 @@ myGeoEngine.prototype = {
 			if (this.myEngine = "google") {
 				if (typeof google == 'undefined') {
 					this.myEngine = "OSM";
+				} else {
+				   this.myMap = new google.maps.Map2($("map"));
 				}
 			}
 		} catch (err) {
@@ -79,7 +81,7 @@ myGeoEngine.prototype = {
 			// only if the google-api is proper called in the header of the html-page, this works!
 			if (typeof google != 'undefined') {
 				// create a good google map for the div "map"
-				this.myMap = new google.maps.Map2($("map"));
+				//Done before the switch : this.myMap = new google.maps.Map2($("map"));
 				this.myMap.setCenter(new GLatLng(lat, lon));
 				this.myMap.setZoom(zoom);
 				this.myMap.enableScrollWheelZoom();

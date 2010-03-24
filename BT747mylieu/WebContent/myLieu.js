@@ -5,7 +5,8 @@ try {
 	    google.load("maps", "2.x");
     }
 } catch (err) {
-	addMessage(err.message);
+// Messaging is not yet initialised, so next call can not work:
+//	addMessage(err.message);
 }
 
 /** myLieuUser

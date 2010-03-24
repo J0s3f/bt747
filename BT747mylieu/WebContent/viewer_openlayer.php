@@ -15,7 +15,7 @@ print "<title>".$MYLIEU_SITE_TITLE_WHERE_WAS_X.$MYLIEU_WHO."</title>";
 ?>
 	<script src="prototype.js" type="text/javascript"></script>
 	<script src="main.js" type="text/javascript"></script>
-	<?php GmapMgmt::gmapScript(); ?>
+	<!-- <?php GmapMgmt::gmapScript(); ?> -->
 	<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
 	<link href="myLieu.css" rel="stylesheet" type="text/css" />
