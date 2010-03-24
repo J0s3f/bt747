@@ -24,7 +24,7 @@ print "<title>".$MYLIEU_SITE_TITLE_WHERE_IS_X.$MYLIEU_WHO."</title>";
 <script src="myGeoEngine.js" type="text/javascript"></script>
 <script src="myLieu.js" type="text/javascript"></script>
 </head>
-<body onload="onLoad(1)" onresize="onResize()" onunload="onUnLoad()">
+<body onload="onLoad(gup('user'))" onresize="onResize()" onunload="onUnLoad()">
 <div id="map"></div>
 <div id="message"><textarea id="message_text" name="message_text"
 	rows="10" cols="30" readonly="readonly">.:myLieu:.</textarea>
