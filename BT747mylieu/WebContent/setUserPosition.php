@@ -36,6 +36,7 @@ if($MYLIEU_DEBUG!=0) {
 }
   
 function debugLog() {
+global $MYLIEU_DEBUGLOG;
 //*************DEBUG-LOG
 // write the string send to the server into an logfile
 
