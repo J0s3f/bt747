@@ -112,7 +112,7 @@ if (isset($_GET['time'])) {
 	$myTime = $_GET['time'];
 } else {
     $orgZone=date_default_timezone_get();
-    date_default_timezone_set('UTC');
+    date_default_timezone_set($MYLIEU_TIMEZONE);
 	$myTime = date("c");
 	date_default_timezone_set($orgZone);
 }
