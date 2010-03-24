@@ -185,7 +185,7 @@ if(!($myUser === "")) {
 }
 
 // the dayfile should be in the format 2009_03_23_geodata.xml
-$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.geodata.xml';
+$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.'geodata.xml';
 $myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.'geodata.gpx';
 
 // create both file-entries
