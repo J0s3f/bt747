@@ -108,6 +108,15 @@ if ($myLatitude == "")
 	exit;
 }
 
+if (isset($_GET['time'])) {
+	$myTime = $_GET['time'];
+} else {
+    $orgZone=date_default_timezone_get();
+    date_default_timezone_set('UTC');
+	$myTime = date("c");
+	date_default_timezone_set($orgZone);
+}
+
 if (isset($_GET['speed']))
 {
 	$mySpeed = $_GET['speed'];
@@ -171,16 +180,16 @@ else
 // add an entry in an single-node xml-file
 $myFile = $MYLIEU_LOGDIRECTORY.'geodata.xml';
 
-$myDayString = date("Y_m_d");
+$myDayString = date("Y_m_d",strtotime($myTime));
 
 // the dayfile should be in the format 2009_03_23_geodata.xml
-$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_geodata.xml';
-$myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_geodata.gpx';
+$myDayFile = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.$myUser.'_'.'geodata.xml';
+$myDayFileGPX = $MYLIEU_LOGDIRECTORY.$myDayString.'_'.$myUser.'_'.'geodata.gpx';
 
 // create both file-entries
-writeXMLfile(false, $myFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
-writeGPXfile(true, $myDayFileGPX, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop);
-writeXMLfile(true, $myDayFile, $myLatitude, $myLongitude, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
+writeXMLfile(false, $myFile, $myLatitude, $myLongitude, $myTime, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
+writeGPXfile(true, $myDayFileGPX, $myLatitude, $myLongitude, $myTime, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop);
+writeXMLfile(true, $myDayFile, $myLatitude, $myLongitude, $myTime, $mySpeed, $myAltitude, $myDirection, $myNumsat, $myHdop, $myBt_addr, $myUser);
 
 
 
@@ -206,6 +215,7 @@ function writeXMLfile($bAppend,
 					  $aFile, 
 					  $aLatitude, 
 					  $aLongitude, 
+						$aTime,
 					  $aSpeed, 
 					  $anAltitude, 
 					  $aDirection,
@@ -222,16 +232,28 @@ function writeXMLfile($bAppend,
 		return;
 	}
 	
-	if ($bAppend == true)
+	if (file_exists($aFile))
 	{
-		// we want to append to existing data in a file
-		// check before, if it exists!
-		if (file_exists($aFile))
-		{
 			$doc->load($aFile);
-		}
-	}
-
+	if (!$bAppend)
+	{
+		// We want to replace existing data for the user
+	    $markers = $doc->documentElement;
+       if ($markers->hasChildNodes()) {
+           foreach ($markers->childNodes as $m) {
+              if ($m->nodeType == XML_ELEMENT_NODE) {
+                 if($m->hasAttribute('user')) {
+    		        $node_user = $m->getAttribute('user');
+    		        if("$node_user" === "$aUser") {
+    		           $markers->removeChild($m);
+    		           break;
+    		        }
+                 }
+               }
+           }		
+	   }
+    }
+    }
 	// make the XML-file human-readable
 	$doc->preserveWhiteSpace = false;
 	$doc->formatOutput = true;
@@ -258,34 +280,8 @@ function writeXMLfile($bAppend,
 		echo "error creating element\n";
 	}
 	
-	$myLieu = getdate();
-	$myMonth = $myLieu['mon'];
-	if ($myMonth < 10)
-	{
-		$myMonth = "0".$myMonth;
-	}
-	$myDays = $myLieu['mday'];
-	if ($myDays < 10)
-	{
-		$myDays = "0".$myDays;
-	}
-	$myHours = $myLieu['hours'];
-	if ($myHours < 10)
-	{
-		$myHours = "0".$myHours;
-	}
-	$myMinutes = $myLieu['minutes'];
-	if ($myMinutes < 10)
-	{
-		$myMinutes = "0".$myMinutes;
-	}
-	$mySeconds = $myLieu['seconds'];
-	if ($mySeconds < 10)
-	{
-		$mySeconds = "0".$mySeconds;
-	}
-	$myTime = $myLieu['year']."-".$myMonth."-".$myDays."T".$myHours.":".$myMinutes.":".$mySeconds.".000Z+1:00";
-	$element->setAttribute('time', $myTime);
+	
+	$element->setAttribute('time', $aTime);
 	$element->setAttribute('lat', $aLatitude);
 	$element->setAttribute('lng', $aLongitude);
 	$element->setAttribute('speed', $aSpeed);
@@ -323,6 +319,7 @@ function writeGPXfile($bAppend,
 					  $aFile, 
 					  $aLatitude, 
 					  $aLongitude, 
+						$aTime,
 					  $aSpeed, 
 					  $anAltitude, 
 					  $aDirection,
@@ -375,41 +372,13 @@ function writeGPXfile($bAppend,
 	$root->setAttribute('xsi:schemaLocation', "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd");
 	
 	
-	$myLieu = getdate();
-	$myMonth = $myLieu['mon'];
-	if ($myMonth < 10)
-	{
-		$myMonth = "0".$myMonth;
-	}
-	$myDays = $myLieu['mday'];
-	if ($myDays < 10)
-	{
-		$myDays = "0".$myDays;
-	}
-	$myHours = $myLieu['hours'];
-	if ($myHours < 10)
-	{
-		$myHours = "0".$myHours;
-	}
-	$myMinutes = $myLieu['minutes'];
-	if ($myMinutes < 10)
-	{
-		$myMinutes = "0".$myMinutes;
-	}
-	$mySeconds = $myLieu['seconds'];
-	if ($mySeconds < 10)
-	{
-		$mySeconds = "0".$mySeconds;
-	}
-	$myTime = $myLieu['year']."-".$myMonth."-".$myDays."T".$myHours.":".$myMinutes.":".$mySeconds.".000Z+1:00";
-	
     // create trk-element, if not already there
     $trksegelement = $doc->getElementsbyTagName('trkseg')->item(0);
     if (!$trksegelement)
     {
 	    $trkelement = $doc->createElement('trk');
 	    $root->appendChild($trkelement);
-	    $trksubElement = $doc->createElement('name', 'myLieu-'.substr($myTime,0,10));
+	    $trksubElement = $doc->createElement('name', 'myLieu-'.substr($aTime,0,10));
 	    $trkelement->appendChild($trksubElement);
 	    
 	    // create a trkseg-element
@@ -429,7 +398,7 @@ function writeGPXfile($bAppend,
 	
 	$trksegelement->appendChild($element);
 	
-	$subElement = $doc->createElement('time', $myTime);
+	$subElement = $doc->createElement('time', $aTime);
 	$element->appendChild($subElement);
 	$subElement = $doc->createElement('ele', $anAltitude);
 	$element->appendChild($subElement);

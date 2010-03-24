@@ -21,7 +21,7 @@ $GMAP_KEY="GOOGLEMAPKEY";
 $MYLIEU_LOGDIRECTORY="./";
 $MYLIEU_DEBUG=0;
 $MYLIEU_DEBUGLOG="debug.log";
-
+$MYLIEU_TIMEZONE=date_default_timezone_get();
 
 // Get USER specific settings
 try {

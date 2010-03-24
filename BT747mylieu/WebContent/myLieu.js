@@ -37,7 +37,10 @@ myLieuUser.prototype=
 		this.myLastTime = null;
 		this.myTimeStampCounter = 0;
 		this.myStatus = false;
-		this.myUserName = null;
+		this.myUserName = "";
+	},
+	setUser:function(user) {
+	   this.myUserName = user;
 	},
 	// creates an icon for this user. Depends on the username, where the icon lies
 	createUserIcon:function()
@@ -87,30 +90,46 @@ myLieuUser.prototype=
 						// no markers, no fun!
 						return;
 					}
+					
+					// Last element by default
+					var selectedElement = markers.length-1;
 	
-					// take only the last one
-					var myLastElement = markers.length - 1;
-
+					if(thisInstance.myUserName!=null && thisInstance.myUserName!="") {
+					  // Unless following specific user
+					  selectedElement = -1;
+					}
+					
+					for ( var i = markers.length-1; i >=0; i--) {
+					    var m = markers[i];
+					    if(m.getAttribute('user')==thisInstance.myUserName) {
+					       selectedElement = i;
+					       i = -1;
+					    }  
+					}
+	
+					if(selectedElement<0) {
+					   return;
+					}
 					// get the last position in longitude and latitude
-					thisInstance.myPosition = aMapEngine.createLatLong(parseFloat(markers[myLastElement].getAttribute("lat")), parseFloat(markers[myLastElement].getAttribute("lng")));
+					thisInstance.myPosition = aMapEngine.createLatLong(parseFloat(markers[selectedElement].getAttribute("lat")), parseFloat(markers[selectedElement].getAttribute("lng")));
 					
 					// you may show that in the message-window
-					// addMessage("lat: " + parseFloat(markers[myLastElement].getAttribute("lat")) + " lng: " + parseFloat(markers[myLastElement].getAttribute("lng")) );
+					// addMessage("lat: " + parseFloat(markers[selectedElement].getAttribute("lat")) + " lng: " + parseFloat(markers[selectedElement].getAttribute("lng")) );
 	
 					// get the speed
-					thisInstance.myLastSpeed = markers[myLastElement].getAttribute("speed");
+					thisInstance.myLastSpeed = markers[selectedElement].getAttribute("speed");
 					
 					// get the number of satellites
-					thisInstance.myNumSatellites = markers[myLastElement].getAttribute("numsat");
+					thisInstance.myNumSatellites = markers[selectedElement].getAttribute("numsat");
 					
 					// the altitude
-					thisInstance.myAltitude  = markers[myLastElement].getAttribute("alt");
+					thisInstance.myAltitude  = markers[selectedElement].getAttribute("alt");
 					
 					// the direction
-					thisInstance.myDirection = markers[myLastElement].getAttribute("dir");
+					thisInstance.myDirection = markers[selectedElement].getAttribute("dir");
 					
 					// and the time
-					thisInstance.myTime = markers[myLastElement].getAttribute("time");
+					thisInstance.myTime = markers[selectedElement].getAttribute("time");
 					
 					// check 5 times if we got a newer time stamp (another time stamp string)
 					if (thisInstance.myLastTime == thisInstance.myTime)
@@ -368,11 +387,14 @@ function onCheck(stage)
  */
 function onLoad(anUser)
 {	
+	aUser.setUser(anUser);
 	// resize the map-div to screen of browser
 	onResize();
 
 	aMapEngine = new myGeoEngine();
 	aMapEngine.init();
+	
+	addMessage("User: "+anUser);
 
 	// start the periodical updater
 	onUpdate();
@@ -528,4 +550,17 @@ function showDownloadLink(aFileName)
 {
 	var myLinkArea = $("downloadLink");
 	myLinkArea.update("<a href=\"" + aFileName + "\">GPX</a>");
+}
+
+// Get URL parameter
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
 }

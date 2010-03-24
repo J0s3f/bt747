@@ -30,4 +30,10 @@ $MYLIEU_LOGDIRECTORY="./";
 // Filename for the debug log.
 $MYLIEU_DEBUGLOG=$MYLIEU_LOGDIRECTORY."debug.log";
 
+// Timezone as allowed in date_default_timezone_set
+// Used for date format
+$MYLIEU_TIMEZONE=date_default_timezone_get();
+//$MYLIEU_TIMEZONE="UTC";
+
+
 ?>
