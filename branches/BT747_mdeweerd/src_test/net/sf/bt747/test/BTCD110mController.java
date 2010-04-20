@@ -18,7 +18,9 @@ import bt747.sys.interfaces.*;
  * 
  */
 public class BTCD110mController implements WondeproudConstants {
-    /**
+    public static final String TEST_BTCD110m_FILE = "/net/sf/bt747/gps/log/in/test/logfiles/x.sr";
+	
+	/**
      * This extends the mtkDeviceModel;
      */
     private IBlue747Model mtkDeviceModel;
@@ -65,10 +67,13 @@ public class BTCD110mController implements WondeproudConstants {
         return -1;
     }
 
-    public static final String TEST_BTCD110m_FILE = "/net/sf/bt747/gps/log/in/test/logfiles/x.sr";
-
     public String getResourcePath(String rsc) {
-        return getClass().getResource(rsc).getPath(); // getClass().getResource("test1.csv")
+    	try {
+           return getClass().getResource(rsc).getPath(); // getClass().getResource("test1.csv")
+    	} catch (Exception e) {
+    		Generic.debug("Resource " + rsc + " issue",e);
+    	}
+    	return null;
     }
 
     private void replyLog() {

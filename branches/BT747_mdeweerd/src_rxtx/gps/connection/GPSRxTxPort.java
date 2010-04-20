@@ -406,11 +406,15 @@ public final class GPSRxTxPort extends GPSPort {
     }
 
     public final synchronized int readCheck() {
-        if (in != null) {
+        if (isConnected() && in != null) {
             try {
                 // System.err.println("Available: "+in.available());
                 // return 100;
                 return in.available();
+            } catch (IOException e) {
+            	Generic.debug("readCheck",e);
+            	closePort();
+            	return 0;
             } catch (final Exception e) {
                 Generic.debug("", e);
                 return 0;

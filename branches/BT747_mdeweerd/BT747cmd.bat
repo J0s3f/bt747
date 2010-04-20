@@ -1,8 +1,8 @@
 @echo off
 setlocal
 set       MYROOTPATH=%~dp0%
-set           MYDIST=%MYROOTPATH%\dist
-set            MYLIB=%MYROOTPATH%\lib
+set           MYDIST=%MYROOTPATH%dist
+set            MYLIB=%MYROOTPATH%lib
 set         RXTXPATH=%MYLIB%\rxtx-2.1-7-bins-r2
 set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
 set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
