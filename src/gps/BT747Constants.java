@@ -943,64 +943,41 @@ public final class BT747Constants { // dev as in device
     // +define MX_25L6405 0x2017 /* MX25L3205{,D} */
     // +define MX_25L1635D 0x2415
     // +define MX_25L3235D 0x2416
+    
+    private static class FlashInfo {
+    	int flashID;
+    	int memSize;
+    	String flashDescription;
+    	
+    	public FlashInfo(final int flashManuProdID) {
+			flashID = flashManuProdID;
+		}
+    };
 
+    private static FlashInfo lastFlashInfo = null;
+    
     public static final int getFlashSize(final int flashManuProdID) {
-        int manufacturer;
-        int devType;
-        int memSize = 1024 * 1024 * 2; // Default value
-        // String flashDesc;
-
-        manufacturer = (flashManuProdID >> 24) & 0xFF;
-        devType = (flashManuProdID >> 16) & 0xFF;
-
-        switch (manufacturer) {
-        case BT747Constants.SPI_MAN_ID_MACRONIX:
-            if ((devType == 0x20) || (devType == 0x24)) {
-                // +/* MX25L chips are SPI, first byte of device id is memory
-                // type,
-                // + second byte of device id is log(bitsize)-9 */
-                // +define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
-                // +define MX_25L1005 0x2011
-                // +define MX_25L2005 0x2012
-                // +define MX_25L4005 0x2013 /* MX25L4005{,A} */
-                // +define MX_25L8005 0x2014
-                // +define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
-                // +define MX_25L3205 0x2016 /* MX25L3205{,A} */
-                // +define MX_25L6405 0x2017 /* MX25L3205{,D} */
-                // +define MX_25L1635D 0x2415
-                // +define MX_25L3235D 0x2416
-                memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
-                // flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
-
-            }
-            break;
-        case BT747Constants.SPI_MAN_ID_EON:
-            if ((devType == 0x20 || devType == 0x31)) { // || (DevType == 0x24)) {
-                // Supposing the same rule as macronix.
-                // Example device: EN25P16
-                memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
-                // flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
-            }
-            break;
-        case BT747Constants.SPI_MAN_ID_STMICROELECTRONICS:
-            if ((devType == 0x20)) { // || (DevType == 0x24)) {
-                // Supposing the same rule as macronix.
-                // Example device: EN25P16
-                memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
-                // flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
-            }
-            break;
-        default:
-            break;
-        }
-        return memSize;
+    	final FlashInfo fi = getFlashinfo(flashManuProdID);
+    	return fi.memSize;
     }
 
     public static final String getFlashDesc(final int flashManuProdID) {
+    	final FlashInfo fi = getFlashinfo(flashManuProdID);
+    	return fi.flashDescription;
+    }
+    
+    private final static FlashInfo getFlashinfo(final int flashManuProdID) {
+    	if(lastFlashInfo!=null && lastFlashInfo.flashID == flashManuProdID) {
+    		// Use cached information
+    		return lastFlashInfo;
+    	}
+    	
+    	FlashInfo fi = new FlashInfo(flashManuProdID);
+    	
         int manufacturer;
         int devType;
-        int memSize = 1024 * 1024 * 2;
-        String flashDesc = "";
+        int memSize = 1024 * 1024 * 2; // Default value
+        String flashDesc = "(??)";
 
         manufacturer = (flashManuProdID >> 24) & 0xFF;
         devType = (flashManuProdID >> 16) & 0xFF;
@@ -1023,23 +1000,33 @@ public final class BT747Constants { // dev as in device
                 // +define MX_25L3235D 0x2416
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
                 flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
-
             }
             break;
         case BT747Constants.SPI_MAN_ID_EON:
-            if ((devType == 0x20)) { // || (DevType == 0x24)) {
+            if ((devType == 0x20 || devType == 0x31)) { // || (DevType == 0x24)) {
                 // Supposing the same rule as macronix.
                 // Example device: EN25P16
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
                 flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
             }
             break;
-
+        case BT747Constants.SPI_MAN_ID_STMICROELECTRONICS:
+            if ((devType == 0x20)) { // || (DevType == 0x24)) {
+                // Supposing the same rule as macronix.
+                // Example device: EN25P16
+                memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
+                flashDesc = "(STM," + memSize / (1024 * 1024) + "MB)";
+            }
+            break;
         default:
             break;
         }
-        return flashDesc;
+        fi.memSize = memSize;
+        fi.flashDescription = flashDesc;
+        
+        return fi;
     }
+
 
     public static final int VALID_NO_FIX_MASK = 0x0001;
     public static final int VALID_SPS_MASK = 0x0002;

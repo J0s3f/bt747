@@ -55,6 +55,13 @@ public class IBlue747Model {
         ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C,
         MBT1100, IBLUE747PLUS_TYPE2
     };
+    
+    /**
+     * The default model type used.
+     */
+    private static final DeviceModelType defaultModelType =
+//    	DeviceModelType.IBLUE747PLUS;
+    	DeviceModelType.IBLUE747PLUS_TYPE2;
 
     public GPSrxtx gpsRxTx = null;
 
@@ -79,13 +86,15 @@ public class IBlue747Model {
         logFile = "C:\\BT747\\20090629_747A+GNB.bin";
     }
 
+
     /**
      * 
      */
     public IBlue747Model() {
+    	
         // setupModel(DeviceModelType.HOLUXM1000C);
-        //setupModel(DeviceModelType.IBLUE747PLUS);
-        setupModel(DeviceModelType.MBT1100);
+        setupModel(defaultModelType);
+        //setupModel(DeviceModelType.MBT1100);
     }
 
     /**
@@ -111,7 +120,11 @@ public class IBlue747Model {
         gpsTimerTask.setGpsRxTx(gpsRxTx);
         // addTimer(10); // Palm minimum timer resolution= 10 ms
 
-        getLogData();
+        try {
+           getLogData();
+        } catch (Exception e) {
+        	Generic.debug("Issue getting virtual log data",e);
+        }
 
         TimerTask t;
         t = new TimerTask() {
@@ -870,6 +883,7 @@ public class IBlue747Model {
             mtkData.swVersion = "1.0";
             mtkData.logVersion = 139;
             mtkData.flashCode = 0x1C31161C;
+            mtkData.memUsed = 3*1024*1024; // 0x00019D0;
             break;
         case ML7:
             mtkData.coreVersion = "M-core_2.02";
