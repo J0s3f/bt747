@@ -413,7 +413,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                         gpsFile.addLogRecord(r);
                                         r = GPSRecord.getLogFormatRecord(0);
                                     } else {
-                                        if (r.utc >= BT747LogConvert.minValidUtcTime) {
+                                        if (r.hasUtc()) {
                                             if (r.utc > biggestBlockUtc) {
                                                 biggestBlockUtc = r.utc;
                                             }
@@ -785,7 +785,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 valid = false;
             }
         } else {
-            r.utc = 1000; // Value after earliest date
+            //r.utc = 1000; // Value after earliest date
         }
         if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
             r.valid = (0xFF & bytes[recIdx++]) << 0
