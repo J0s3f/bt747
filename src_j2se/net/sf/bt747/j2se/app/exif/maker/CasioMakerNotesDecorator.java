@@ -1,7 +1,11 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.app.exif;
+package net.sf.bt747.j2se.app.exif.maker;
+
+import net.sf.bt747.j2se.app.exif.ExifAttribute;
+import net.sf.bt747.j2se.app.exif.ExifIfdBlock;
+import net.sf.bt747.j2se.app.exif.ExifUtils;
 
 /**
  * This decorator is simplified and supposes the value keeps constant size.

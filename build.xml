@@ -315,6 +315,7 @@
 		       debug="${java.debug}"
 		       classpathref="j2seclasspath"
 		       encoding="iso-8859-15"
+			target="1.5"
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
@@ -352,6 +353,7 @@
 		       debug="${java.debug}"
 		       classpathref="wabaclasspath"
 		       encoding="iso-8859-15"
+			target="1.5"
 		>
 			<include name="BT747.java" />
 			<compilerarg line="-Xlint:unchecked" />
@@ -1017,6 +1019,7 @@
 		       debug="${java.debug}"
 		       classpathref="${build.classpath}"
 		       encoding="iso-8859-15"
+			target="1.5"
 		>
 			<include name="**/*.java" />
 		</javac>

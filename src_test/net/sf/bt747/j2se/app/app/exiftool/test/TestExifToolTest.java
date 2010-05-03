@@ -53,8 +53,16 @@ public class TestExifToolTest extends TestCase {
     }
 
     @Test
-    public void testExifToolWrite() throws Exception {
-        String imgPath = TestUtils.getTestResourcePath("IMG_0307_tagged.jpg");
+    public void testExifToolWrite(final String imgPath) throws Exception {
+    	doExifToolWrite(TestUtils.getTestResourcePath("IMG_0307_tagged.jpg"));
+    }
+
+    @Test
+    public void testCanonExifToolWrite(final String imgPath) throws Exception {
+    	doExifToolWrite(TestUtils.getTestResourcePath("IMG_8511_canon.jpg"));
+    }
+
+    public void doExifToolWrite(final String imgPath) throws Exception {
         String imgTestPath = imgPath + "tst.jpg";
         ExiftoolData ed = new ExiftoolData();
         ed.setFilePath(new BT747Path(imgPath));
@@ -84,7 +92,7 @@ public class TestExifToolTest extends TestCase {
 
     
     @Test
-    public void testJpexExifWriteExifToolRead() throws Exception {
+    public void testJpegExifWriteExifToolRead() throws Exception {
         String imgPath = TestUtils.getTestResourcePath("IMG_0307_Tagged.jpg");
         String imgTestPath = imgPath + "javatst.jpg";
         ImageData ed = new ImageData();

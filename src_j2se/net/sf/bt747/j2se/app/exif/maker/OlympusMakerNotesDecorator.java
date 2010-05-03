@@ -1,8 +1,10 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.app.exif;
+package net.sf.bt747.j2se.app.exif.maker;
 
+import net.sf.bt747.j2se.app.exif.ExifAttribute;
+import net.sf.bt747.j2se.app.exif.ExifIfdBlock;
 import bt747.sys.Generic;
 
 /**
@@ -53,6 +55,7 @@ public class OlympusMakerNotesDecorator extends ExifAttribute {
     }
 
     private final static char[] header = "OLYMPUS\0II\3\0".toCharArray();
+    //private final static char[] header2 = "OLYMP\0\1\0".toCharArray();
 
     /**
      * Decorate the Attribute only if needed. (See Decorator pattern of Design
@@ -74,6 +77,12 @@ public class OlympusMakerNotesDecorator extends ExifAttribute {
                 return makerNote;
             }
         }
+
+//        for (int i = 0; i < header2.length; i++) {
+//            if (value[i] != (byte) header2[i]) {
+//                return makerNote;
+//            }
+//        }
 
         try {
             return new OlympusMakerNotesDecorator(makerNote, buffer,
