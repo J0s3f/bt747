@@ -14,6 +14,9 @@
 // *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
+import net.sf.bt747.j2se.app.exif.maker.CanonMakerNotesDecorator;
+import net.sf.bt747.j2se.app.exif.maker.CasioMakerNotesDecorator;
+import net.sf.bt747.j2se.app.exif.maker.OlympusMakerNotesDecorator;
 import bt747.sys.Generic;
 
 /**
@@ -145,8 +148,18 @@ public class ExifApp1 {
             if (exifBlock.hasTag(ExifConstants.TAG_MAKERNOTE)) {
                 ExifAttribute atr;
                 atr = exifBlock.get(ExifConstants.TAG_MAKERNOTE);
-                exifBlock.set(CasioMakerNotesDecorator.decorate(atr, buffer, tiffHeaderStart, bigEndian));
-                exifBlock.set(OlympusMakerNotesDecorator.decorate(atr, buffer, tiffHeaderStart, bigEndian));
+				if (Ifd0.hasTag(ExifConstants.TAG_MAKE)
+						&& Ifd0.get(ExifConstants.TAG_MAKE).getStringValue()
+								.equals("Canon\0")) {
+					atr = CanonMakerNotesDecorator.decorate(atr, buffer,
+							tiffHeaderStart, bigEndian);
+				} else {
+					atr = CasioMakerNotesDecorator.decorate(atr, buffer,
+							tiffHeaderStart, bigEndian);
+					atr = OlympusMakerNotesDecorator.decorate(atr, buffer,
+							tiffHeaderStart, bigEndian);
+				}
+                exifBlock.set(atr);
             }
         }
         return 0;

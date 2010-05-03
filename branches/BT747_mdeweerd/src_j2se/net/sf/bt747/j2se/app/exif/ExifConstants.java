@@ -68,7 +68,9 @@ public class ExifConstants {
 
     /** Manufacturer of image input */
     /** equipment Make 271 10F R R R R */
+    public static final int TAG_MAKE = 0x10F;
     /** Model of image input equipment Model 272 110 R R R R */
+    public static final int TAG_MODEL = 0x110;
     /** Image data location StripOffsets 273 111 M M M N */
     public static final int TAG_STRIPOFFSETS = 0x111;
     /** Orientation of image Orientation 274 112 R R R R */

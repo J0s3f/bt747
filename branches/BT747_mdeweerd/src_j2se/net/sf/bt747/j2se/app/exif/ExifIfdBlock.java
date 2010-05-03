@@ -129,6 +129,10 @@ public class ExifIfdBlock {
     public final ExifAttribute get(final int tag) {
         return (ExifAttribute) atrs.get(tag);
     }
+    
+    public final BT747Hashtable getAttrIterator() {
+    	return atrs.iterator();
+    }
 
     public final void set(final ExifAttribute atr) {
         atrs.put(atr.getTag(), atr);

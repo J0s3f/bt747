@@ -83,6 +83,29 @@ public class ExifAttribute {
     public final int getValueIdx() {
         return valueOrgIdx;
     }
+
+    private final int size() {
+    	return getValueUnitSize(getType()) * count;
+    }
+    
+    public final boolean isPointer() {
+        boolean usePointer = false;
+        // switch (getType()) {
+        //
+        // case ExifConstants.BYTE:
+        // case ExifConstants.SHORT:
+        // case ExifConstants.LONG:
+        // case ExifConstants.UNDEFINED:
+        // break;
+        // default:
+        // usePointer = true;
+        // }
+
+        if (size() > 4 || type == ExifConstants.IFDBLOCK) {
+            usePointer = true;
+        }
+        return usePointer;
+    }
     
     public final int read(final byte[] buffer, final int currentIdxInBuffer,
             final int tiffHeaderStart, final boolean bigEndian) {
@@ -94,31 +117,17 @@ public class ExifAttribute {
                     bigEndian));
             setCount(ExifUtils.getLong4byte(buffer, currentIdxInBuffer + 4,
                     bigEndian));
-            final int size = getValueUnitSize(getType()) * count;
-            int valueIdx;
-            boolean usePointer = false;
-            // switch (getType()) {
-            //
-            // case ExifConstants.BYTE:
-            // case ExifConstants.SHORT:
-            // case ExifConstants.LONG:
-            // case ExifConstants.UNDEFINED:
-            // break;
-            // default:
-            // usePointer = true;
-            // }
 
+            int valueIdx;
             valueIdx = currentIdxInBuffer + 8;
-            if (size > 4 || type == ExifConstants.IFDBLOCK) {
-                usePointer = true;
-            }
             // TODO: Check out how to handle OLYMPUS IFDBLOCKS
-            if (usePointer) {
+            if (isPointer()) {
                 valueIdx = tiffHeaderStart
                         + ExifUtils.getLong4byte(buffer,
                                 currentIdxInBuffer + 8, bigEndian);
                 valueOrgIdx = valueIdx;
             }
+            int size = size();
             newValue(size);
             for (int i = 0; i < size; i++) {
                 value[i] = buffer[valueIdx + i];
