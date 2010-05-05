@@ -116,7 +116,7 @@ public class MapFactoryInfos {
     };
     public final static MyTileFactoryInfo tfiOpenPisteMap = new MyTileFactoryInfo(
             "openpiste", 2, 18, 19, 256, true, true,
-            "http://openpistemap.org/tiles/contours", "x", "y", "z",
+            "http://tiles.openpistemap.org/contours", "x", "y", "z",
             "Open Piste Map", "http://openpistemap.org") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
