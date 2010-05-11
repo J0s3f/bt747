@@ -199,7 +199,7 @@ public class GPXLogConvert extends GPSLogConvertInterface {
 			try {
 				final Node lon = latlon.getNamedItem("lon");
 				if (lon != null) {
-					activeFileFields.latitude = 0.0;
+					activeFileFields.longitude = 0.0;
 					r.longitude = Double.valueOf(lon.getNodeValue());
 				}
 			} catch (final Exception e) {
