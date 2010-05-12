@@ -101,6 +101,11 @@ public final class GPSConversionParameters {
      */
     
     public final static String DISTANCE_CALC_MODE = "dist-calc";
+    
+    /**
+     * When fields are missing, add a 0 or other 'neutral/normal' value in the output.
+     */
+    public final static String CREATE_FIELDS = "create-fields";
 
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);
