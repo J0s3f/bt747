@@ -141,6 +141,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
 
         cbNewTrackWhenLogOn.setSelected(m.getBooleanOpt(Model.IS_NEW_TRACK_WHEN_LOG_ON));
+        cbCreatMissingFields.setSelected(m.getBooleanOpt(Model.CREATE_MISSING_FIELDS));
         updateFileFormatData();
         updateColorButtons();
         updateDistanceCombo();
