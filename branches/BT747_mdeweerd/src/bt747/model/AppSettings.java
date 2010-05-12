@@ -524,6 +524,12 @@ public class AppSettings implements BT747Thread {
     /** Satellite field separation character for CSV output file. */
     public final static int CSV_SAT_SEP = 92;
 
+    /**
+     * When true, creates missing fields in the source during the
+     * conversion process.
+     */
+    public final static int CREATE_MISSING_FIELDS = 93;
+
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
 
@@ -779,8 +785,10 @@ public class AppSettings implements BT747Thread {
             setStringOpt(CSV_FIELD_SEP, ",");
             setStringOpt(CSV_DECIMAL, ".");
             setStringOpt(CSV_SAT_SEP, ";");
-
-            setStringOpt(AppSettings.VERSION, "0.51");
+            /* fall through */
+        case 51:
+            setBooleanOpt(CREATE_MISSING_FIELDS, false);
+            setStringOpt(AppSettings.VERSION, "0.52");
 
             /* fall through */
         default:
@@ -1774,9 +1782,12 @@ public class AppSettings implements BT747Thread {
     private static final int CSV_SAT_SEP_IDX = AppSettings.CSV_DECIMAL_IDX
             + AppSettings.CSV_DECIMAL_SIZE;
     private static final int CSV_SAT_SEP_SIZE = 1;
-    private static final int C_NEXT_IDX = AppSettings.CSV_SAT_SEP_IDX
+    private static final int CREATE_MISSING_FIELDS_IDX = AppSettings.CSV_SAT_SEP_IDX
             + AppSettings.CSV_SAT_SEP_SIZE;
-
+    private static final int CREATE_MISSING_FIELDS_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.CREATE_MISSING_FIELDS_IDX
+            + AppSettings.CREATE_MISSING_FIELDS_SIZE;
+    
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
@@ -2033,6 +2044,8 @@ public class AppSettings implements BT747Thread {
                     AppSettings.CSV_DECIMAL_IDX, AppSettings.CSV_DECIMAL_SIZE },
             { AppSettings.STRING, AppSettings.CSV_SAT_SEP,
                     AppSettings.CSV_SAT_SEP_IDX, AppSettings.CSV_SAT_SEP_SIZE },
+            { AppSettings.BOOL, AppSettings.CREATE_MISSING_FIELDS,
+                    AppSettings.CREATE_MISSING_FIELDS_IDX, AppSettings.CREATE_MISSING_FIELDS_SIZE },
     // End of list
     };
 }

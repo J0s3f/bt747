@@ -174,6 +174,11 @@ public abstract class GPSFile implements GPSFileInterface {
     protected double distanceWithPrevious;
     private int distCalcMode;
 
+    /**
+     * When true, create missing fields in the record.
+     */
+    private boolean createFields = false;
+    
     private final BT747HashSet filenames = JavaLibBridge.getHashSetInstance();
 
     /**
@@ -232,6 +237,12 @@ public abstract class GPSFile implements GPSFileInterface {
         } else {
             distCalcMode = AppSettings.DISTANCE_CALC_MODE_NONE;
         }
+        if (getParamObject().hasParam(GPSConversionParameters.CREATE_FIELDS)) {
+        	createFields = getParamObject().getBoolParam(GPSConversionParameters.CREATE_FIELDS);
+        } else {
+            createFields = false;
+        }
+        
         if (splitDistance != 0 || distCalcMode==AppSettings.DISTANCE_CALC_MODE_ALWAYS) {
             // When splitting according to distance, we need to calculate
             // the distance between positions.
@@ -261,11 +272,15 @@ public abstract class GPSFile implements GPSFileInterface {
         boolean willHaveDistanceInRecord;
         willHaveDistanceInRecord = (distCalcMode == AppSettings.DISTANCE_CALC_MODE_ALWAYS)
                 || (distCalcMode == AppSettings.DISTANCE_CALC_MODE_WHEN_MISSING);
-        if (willHaveDistanceInRecord) {
-            activeFileFieldsFormat.setDistance(0);
-        }
+
         activeFileFields = activeFileFieldsFormat.cloneRecord();
 
+        if (willHaveDistanceInRecord) {
+            activeFileFields.setDistance(0);
+        }
+        if(createFields) {
+        	setMissingFields(activeFileFields);
+        }
         updateFields();
     }
 
@@ -423,6 +438,33 @@ public abstract class GPSFile implements GPSFileInterface {
      * the derived classes.
      */
     protected boolean needsToSplitTrack = false;
+    
+    private final void setMissingFields(final GPSRecord r) {
+		if(!r.hasLatitude()) {
+			r.setLatitude(0.0);
+		}
+		if(!r.hasLongitude()) {
+			r.setLongitude(0.0);
+		}
+		if(!r.hasRcr()) {
+			r.setRcr(BT747Constants.RCR_TIME_MASK);
+		}
+		if(!r.hasPdop()) {
+			r.setPdop(0);
+		}
+		if(!r.hasHdop()) {
+			r.setHdop(0);
+		}
+		if(!r.hasVdop()) {
+			r.setVdop(0);
+		}
+		if(!r.hasHeight()) {
+			r.setHeight(0);
+		}
+		if(!r.hasSpeed()) {
+			r.setSpeed(0);
+		}
+    }
 
     /**
      * A record is added from the input log. User way points are geotagged
@@ -436,6 +478,9 @@ public abstract class GPSFile implements GPSFileInterface {
      * @param r
      */
     public void addLogRecord(final GPSRecord r) {
+    	if(createFields) {
+    		setMissingFields(r);
+    	}
         if (r.hasVoxStr()) {
             if (r.isLogOn()) {
                 logOn = true;
