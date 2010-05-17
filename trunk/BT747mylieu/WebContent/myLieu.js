@@ -23,6 +23,7 @@ try {
  * 
  */
 var myLieuUser = Class.create();
+var firstTime = true;
 
 myLieuUser.prototype=
 {
@@ -57,6 +58,12 @@ myLieuUser.prototype=
 	changePosition:function(aPosition)
 	{
        return aMapEngine.changeMarker(this.myUserMarker, aPosition);
+	},
+	centerPosition:function() {
+		if (aMapEngine && this.myPosition != null)
+		{
+			aMapEngine.map().panTo(this.myPosition);
+		}
 	},
 	/* trys to fetch the latest known position of this user
 	 */
@@ -173,12 +180,7 @@ myLieuUser.prototype=
 	
 					// then my speed will be displayed
 					// addMessage("Speed: " + thisInstance.myLastSpeed);
-					// addMessage("Alt: " + thisInstance.myAltitude);
-	
-					if (aMapEngine)
-					{
-						aMapEngine.map().panTo(thisInstance.myPosition);
-					}
+					// addMessage("Alt: " + thisInstance.myAltitude);	
 				}
 			}
 		});
@@ -214,8 +216,8 @@ myLieuUser.prototype=
 // the google-panel
 var aMapEngine = null;
 
-// create an object which has an Icon and a position
-var aUser = new myLieuUser();
+// create an array of objects that have an Icon and a position
+var users = new Array();
 
 function checkPHPversion()
 {
@@ -386,16 +388,23 @@ function onCheck(stage)
  * @param string anUser
  * the name of the user you want to focus after loading
  */
-function onLoad(anUser)
-{	
-	aUser.setUser(anUser);
+function onLoad(userList)
+{
+	var userIdens = userList.split(',');
+
+	for (var i = 0; i < userIdens.length; i++) {
+		var aUser = new myLieuUser();
+		aUser.setUser(userIdens[i]);
+		users.push(aUser);
+	}
+	
 	// resize the map-div to screen of browser
 	onResize();
 
 	aMapEngine = new myGeoEngine();
 	aMapEngine.init();
 	
-	addMessage("User: "+anUser);
+	addMessage("User(s): "+userList);
 
 	// start the periodical updater
 	onUpdate();
@@ -460,9 +469,15 @@ function onResize()
  */
 function onUpdate()
 {
-	// ask for the last position of the user
-	var aPosition = aUser.getLastPosition();
-
+	for (var i = 0; i < users.length; i++) {
+		// ask for the last position of the user
+		var aPosition = users[i].getLastPosition();
+		users[i].centerPosition();
+	}
+	if (users.length == 1 || (users.length > 0 && firstTime)) {
+		users[0].centerPosition();
+		firstTime = false;
+	}
 	// repeat this every 2 seconds
 	window.setTimeout("onUpdate()", 2000);	
 }
