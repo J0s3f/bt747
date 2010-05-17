@@ -472,7 +472,6 @@ function onUpdate()
 	for (var i = 0; i < users.length; i++) {
 		// ask for the last position of the user
 		var aPosition = users[i].getLastPosition();
-		users[i].centerPosition();
 	}
 	if (users.length == 1 || (users.length > 0 && firstTime)) {
 		users[0].centerPosition();
