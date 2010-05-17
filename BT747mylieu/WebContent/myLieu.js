@@ -63,7 +63,9 @@ myLieuUser.prototype=
 		if (aMapEngine && this.myPosition != null)
 		{
 			aMapEngine.map().panTo(this.myPosition);
+			return true;
 		}
+		return false;
 	},
 	/* trys to fetch the latest known position of this user
 	 */
@@ -474,8 +476,7 @@ function onUpdate()
 		var aPosition = users[i].getLastPosition();
 	}
 	if (users.length == 1 || (users.length > 0 && firstTime)) {
-		users[0].centerPosition();
-		firstTime = false;
+		firstTime &= ! users[0].centerPosition();
 	}
 	// repeat this every 2 seconds
 	window.setTimeout("onUpdate()", 2000);	
