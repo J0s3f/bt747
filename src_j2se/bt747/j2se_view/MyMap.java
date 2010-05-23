@@ -215,6 +215,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     gpsPosition = new GPSPositionWaypoint(r);
                 } else {
                     gpsPosition.setGpsRec(r);
+                    if(m.getBooleanOpt(AppSettings.AUTOCENTERMAP)) {
+                    	mapViewer.setCenterPosition(new GeoPosition(r.latitude,
+                                r.longitude));
+                    }
                 }
                 mapViewer.repaint();
             }
