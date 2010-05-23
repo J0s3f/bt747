@@ -530,6 +530,11 @@ public class AppSettings implements BT747Thread {
      */
     public final static int CREATE_MISSING_FIELDS = 93;
 
+    /**
+     * When true, automatically centers the map on the current position.
+     */
+    public final static int AUTOCENTERMAP = 94;
+
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
 
@@ -788,7 +793,10 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 51:
             setBooleanOpt(CREATE_MISSING_FIELDS, false);
-            setStringOpt(AppSettings.VERSION, "0.52");
+            /* fall through */
+        case 52:
+            setBooleanOpt(AUTOCENTERMAP, false);
+            setStringOpt(AppSettings.VERSION, "0.53");
 
             /* fall through */
         default:
@@ -1785,8 +1793,11 @@ public class AppSettings implements BT747Thread {
     private static final int CREATE_MISSING_FIELDS_IDX = AppSettings.CSV_SAT_SEP_IDX
             + AppSettings.CSV_SAT_SEP_SIZE;
     private static final int CREATE_MISSING_FIELDS_SIZE = 4;
-    private static final int C_NEXT_IDX = AppSettings.CREATE_MISSING_FIELDS_IDX
+    private static final int AUTOCENTERMAP_IDX = AppSettings.CREATE_MISSING_FIELDS_IDX
             + AppSettings.CREATE_MISSING_FIELDS_SIZE;
+    private static final int AUTOCENTERMAP_SIZE = 4;
+    private static final int C_NEXT_IDX = AppSettings.AUTOCENTERMAP_IDX
+            + AppSettings.AUTOCENTERMAP_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -2046,6 +2057,8 @@ public class AppSettings implements BT747Thread {
                     AppSettings.CSV_SAT_SEP_IDX, AppSettings.CSV_SAT_SEP_SIZE },
             { AppSettings.BOOL, AppSettings.CREATE_MISSING_FIELDS,
                     AppSettings.CREATE_MISSING_FIELDS_IDX, AppSettings.CREATE_MISSING_FIELDS_SIZE },
+            { AppSettings.BOOL, AppSettings.AUTOCENTERMAP,
+                    AppSettings.AUTOCENTERMAP_IDX, AppSettings.AUTOCENTERMAP_SIZE },
     // End of list
     };
 }
