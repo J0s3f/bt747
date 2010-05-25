@@ -123,8 +123,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private void updateGuiData() {
         cbPortName.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] {
-                        getString("USB_ForLinuxMac"),
-                        getString("BLUETOOTH_ForMac"),
+                        getString("USB_Port"),
+                        getString("BLUETOOTH_Port"),
                         "COM1:", // NOI18N
                         "COM2:", "COM3:", "COM4:", "COM5:", "COM6:",
                         "COM7:",
@@ -1451,18 +1451,23 @@ public class BT747Main extends javax.swing.JFrame implements
         }
     }
 
-    private void getDefaultPort() {
-        if (m.getStringOpt(AppSettings.FREETEXTPORT).length() != 0) {
-            cbPortName.setSelectedItem(m
-                    .getStringOpt(AppSettings.FREETEXTPORT));
-        } else if (m.getIntOpt(AppSettings.PORTNBR) >= 0) {
-            cbPortName.setSelectedItem("COM"
-                    + m.getIntOpt(AppSettings.PORTNBR) + ":"); // NOI18N
+	private void getDefaultPort() {
+		if (m.getStringOpt(AppSettings.FREETEXTPORT).length() != 0) {
+			String p = m.getStringOpt(AppSettings.FREETEXTPORT);
+			if (p.startsWith("BLUETOOTH")) {
+				p = getString("BLUETOOTH_Port");
+			} else if (p.startsWith("USB")) {
+				p = getString("USB_Port");
+			}
+			cbPortName.setSelectedItem(p);
+		} else if (m.getIntOpt(AppSettings.PORTNBR) >= 0) {
+			cbPortName.setSelectedItem("COM" + m.getIntOpt(AppSettings.PORTNBR)
+					+ ":"); // NOI18N
 
-        } else {
-            // Do nothing
-        }
-    }
+		} else {
+			// Do nothing
+		}
+	}
 
     /**
      * @param args

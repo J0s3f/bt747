@@ -232,6 +232,7 @@
           -keep public class BT747
           -keep public class bt747.j2se_view.BT747
 	      -keep public class sun.audio.AudioStream
+		  -keep public class org.snipecode.reg.RegUtil { *; }
 			-keep public class gps.log.out.GPSConversionParameters { public final static java.lang.String *;}
           -keep public class * extends waba.ui.MainWindow
  	      -keep public class * implements bt747.lang.TxtInterface
@@ -479,7 +480,7 @@
 	        	-injar ${swinglayout.jar}
 	                     -optimizationpasses 1
 			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
-			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+		    -keep public class org.snipecode.reg.RegUtil { *; }
 			-keep public class **swing.plaf**
 			-keep public class **ComponentUI**
             -keep public class org.jdesktop.swingx.JXHyperlink
@@ -518,6 +519,7 @@
               -printmapping ${dist}/${ant.project.name}_waba.map
               -keep public class BT747
               -keep public class sun.audio.AudioStream
+			  -keep public class org.snipecode.reg.RegUtil { *; }
               -keep public class * extends waba.ui.MainWindow
               -keep public class * implements bt747.lang.TxtInterface
               -keep public class * extends gps.connection.GPSPort
@@ -836,6 +838,7 @@
 		        -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
     			-keep public class BT747
  		        -keep public class sun.audio.AudioStream
+			  -keep public class org.snipecode.reg.RegUtil { *; }
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
                     public static void main(java.lang.String[]); }

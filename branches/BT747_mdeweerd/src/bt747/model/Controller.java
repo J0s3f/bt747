@@ -947,6 +947,7 @@ public class Controller implements ModelListener {
         if (m.isConnected()) {
             m.gpsRxTx().closePort();
         }
+        boolean b = m.isConnected(); // Workaround for status update issue
     }
 
     /**
