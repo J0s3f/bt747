@@ -52,9 +52,9 @@ public class IconWayPointRenderer implements BT747WaypointRenderer {
     
     static {
     try {
-        img = ImageIO.read(IconWayPointRenderer.class.getResource("/bt747/j2se_view/resources/icon_home.gif"));
+        img = ImageIO.read(IconWayPointRenderer.class.getResource("/bt747/j2se_view/resources/icon_home_red.gif"));
     } catch (Exception ex) {
-        System.out.println("couldn't read icon_home.gif");
+        System.out.println("couldn't read icon_home_red.gif");
         System.out.println(ex.getMessage());
         ex.printStackTrace();
     }
