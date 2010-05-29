@@ -135,29 +135,23 @@ public final class GPSRxTxPort extends GPSPort {
 		int result = -1;
 		String portStr;
 
-		portStr = java.lang.System.getProperty("bt747_port",
-				(portType == PORT_NUMBER) ? portPrefix + spPortNbr : null);
 		closePort();
 
-		if (portStr == null) {
-			switch (portType) {
-			case PORT_USB:
-				portStr = getUsbPort();
-				break;
-			case PORT_BT:
-				portStr = getBluetoothPort();
-			case PORT_NUMBER:
-				portStr = java.lang.System
-						.getProperty("bt747_port",
-								(portType == PORT_NUMBER) ? portPrefix
-										+ spPortNbr : "");
-				break;
-			case PORT_PATH:
-				portStr = getFreeTextPort();
-				break;
-			default:
-				break;
-			}
+		switch (portType) {
+		case PORT_USB:
+			portStr = getUsbPort();
+			break;
+		case PORT_BT:
+			portStr = getBluetoothPort();
+			break;
+		default:
+		case PORT_NUMBER:
+			portStr = java.lang.System.getProperty("bt747_port",
+					(portType == PORT_NUMBER) ? portPrefix + spPortNbr : "");
+			break;
+		case PORT_PATH:
+			portStr = getFreeTextPort();
+			break;
 		}
 
 		openDubiousPortAsWorkaroundOnLinux();
