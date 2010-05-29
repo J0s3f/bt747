@@ -76,7 +76,7 @@ public abstract class GPSPort {
 	 */
 	public void setPort(final int port) {
 		spPortNbr = port;
-		setFreeTextPort(PORTNBR_TEXT);
+		portType = PORT_NUMBER;
 	}
 
 	public int openPort() {
