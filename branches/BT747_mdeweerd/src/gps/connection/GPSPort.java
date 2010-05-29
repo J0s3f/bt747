@@ -54,7 +54,7 @@ public abstract class GPSPort {
 
 	private final String BLUETOOTH_TEXT = "BLUETOOTH";
 	private final String USB_TEXT = "USB";
-	private final String PORTNBR_TEXT = "PORTNBR";
+	private final String PORTNBR_TEXT = "";
 
 	public GPSPort() {
 	}

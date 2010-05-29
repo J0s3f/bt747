@@ -16,6 +16,7 @@ package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
 import gps.BT747Constants;
+import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
 
