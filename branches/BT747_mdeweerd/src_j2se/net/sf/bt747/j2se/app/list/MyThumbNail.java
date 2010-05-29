@@ -128,7 +128,9 @@ public final class MyThumbNail {
         mediaTracker.addImage(image, id);
         mediaTracker.waitForID(id);
 
-        return getThumbnail(thumbWidth, thumbHeight, image);
+        final BufferedImage result = getThumbnail(thumbWidth, thumbHeight, image);
+        image.flush();  // Not sure this helps, but trying.
+        return result;
         // BufferedOutputStream out = new BufferedOutputStream(
         // new FileOutputStream(thumbPath));
         // JPEGCodec.
@@ -165,7 +167,7 @@ public final class MyThumbNail {
         graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
-
+        graphics2D.dispose();
         return thumbImage;
     }
 

@@ -3,11 +3,8 @@
  */
 package bt747.j2se_view.model.test;
 
-import static org.junit.Assert.*;
 import gps.log.GPSRecord;
 import gps.log.out.AllWayPointStyles;
-import net.sf.bt747.j2se.app.exif.ExifJPG;
-import net.sf.bt747.j2se.app.exiftool.ExiftoolData;
 import net.sf.bt747.test.TestUtils;
 
 import org.junit.Test;
