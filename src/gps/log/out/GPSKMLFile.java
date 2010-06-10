@@ -99,13 +99,16 @@ public class GPSKMLFile extends GPSFile {
             if (isWayType) {
                 isWayType = false;
                 isPathType = true;
+                currentFilter = GPSFilter.WAYPT;
             } else if (isPathType) {
                 isTrackType = true;
                 isPathType = false;
+                currentFilter = GPSFilter.TRKPT;
             } else if (isTrackType) {
                 isTrackType = false;
+                currentFilter = GPSFilter.TRKPT;
+
             }
-            currentFilter = GPSFilter.TRKPT;
             // if(!m_multipleFiles) {
             // writeDataHeader();
             // }
