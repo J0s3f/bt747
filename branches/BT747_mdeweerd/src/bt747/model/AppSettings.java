@@ -534,6 +534,16 @@ public class AppSettings implements BT747Thread {
      * When true, automatically centers the map on the current position.
      */
     public final static int AUTOCENTERMAP = 94;
+    
+    /*
+     * Number of digits to use for lat and lon.
+     */
+    public final static int POSITIONDIGITS = 95;
+    
+    /*
+     * Number of digits to user for height.
+     */
+    public final static int HEIGHTDIGITS = 96;
 
     private static boolean defaultTraversable = false;
     private static int defaultChunkSize = 0x10000;
@@ -796,7 +806,17 @@ public class AppSettings implements BT747Thread {
             /* fall through */
         case 52:
             setBooleanOpt(AUTOCENTERMAP, false);
-            setStringOpt(AppSettings.VERSION, "0.53");
+        case 53:
+        	if (versionX100==0) {
+        		// First launch, small precision
+        		setIntOpt(POSITIONDIGITS,6);
+        		setIntOpt(HEIGHTDIGITS,1);
+        	} else {
+        		// Existing user do not change his habits.
+        		setIntOpt(POSITIONDIGITS,8);
+        		setIntOpt(HEIGHTDIGITS,3);
+        	}
+            setStringOpt(AppSettings.VERSION, "0.54");
 
             /* fall through */
         default:
@@ -1796,12 +1816,18 @@ public class AppSettings implements BT747Thread {
     private static final int AUTOCENTERMAP_IDX = AppSettings.CREATE_MISSING_FIELDS_IDX
             + AppSettings.CREATE_MISSING_FIELDS_SIZE;
     private static final int AUTOCENTERMAP_SIZE = 4;
-    private static final int C_NEXT_IDX = AppSettings.AUTOCENTERMAP_IDX
+    private static final int POSITIONDIGITS_IDX = AppSettings.AUTOCENTERMAP_IDX
             + AppSettings.AUTOCENTERMAP_SIZE;
+    private static final int POSITIONDIGITS_SIZE = 2;
+    private static final int HEIGHTDIGITS_IDX = AppSettings.POSITIONDIGITS_IDX
+            + AppSettings.POSITIONDIGITS_SIZE;
+    private static final int HEIGHTDIGITS_SIZE = 2;
+    private static final int C_NEW_NEXT_IDX = AppSettings.HEIGHTDIGITS_IDX
+            + AppSettings.HEIGHTDIGITS_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
-    private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
+    private static final int C_NEXT_IDX = AppSettings.C_NEXT_IDX
             + AppSettings.C_NEXT_SIZE;
 
     public static final int SIZE = C_NEW_NEXT_IDX;
@@ -2059,6 +2085,11 @@ public class AppSettings implements BT747Thread {
                     AppSettings.CREATE_MISSING_FIELDS_IDX, AppSettings.CREATE_MISSING_FIELDS_SIZE },
             { AppSettings.BOOL, AppSettings.AUTOCENTERMAP,
                     AppSettings.AUTOCENTERMAP_IDX, AppSettings.AUTOCENTERMAP_SIZE },
+			{ AppSettings.INT, AppSettings.POSITIONDIGITS,
+					AppSettings.POSITIONDIGITS_IDX,
+					AppSettings.POSITIONDIGITS_SIZE },
+			{ AppSettings.INT, AppSettings.HEIGHTDIGITS,
+					AppSettings.HEIGHTDIGITS_IDX, AppSettings.HEIGHTDIGITS_SIZE },
     // End of list
     };
 }

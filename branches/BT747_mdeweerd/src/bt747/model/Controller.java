@@ -418,7 +418,13 @@ public class Controller implements ModelListener {
                     m.getStringOpt(AppSettings.CSV_SAT_SEP));
             gpsFile.getParamObject().setBoolParam(
                     GPSConversionParameters.CREATE_FIELDS,
-                    m.getBooleanOpt(AppSettings.CREATE_MISSING_FIELDS));            
+                    m.getBooleanOpt(AppSettings.CREATE_MISSING_FIELDS));
+            gpsFile.getParamObject().setIntParam(
+                    GPSConversionParameters.POSITION_DIGITS,
+                    m.getIntOpt(AppSettings.POSITIONDIGITS));  
+            gpsFile.getParamObject().setIntParam(
+                    GPSConversionParameters.HEIGHT_DIGITS,
+                    m.getIntOpt(AppSettings.HEIGHTDIGITS));  
             String altMode = null;
             switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
             case 0:

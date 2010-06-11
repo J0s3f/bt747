@@ -59,6 +59,10 @@ public class GPSKMLFile extends GPSFile {
         fileStartTime = 0;
         lastTime = 0;
     }
+    
+    private int posDigits;
+    private int heightDigits;
+
 
     /*
      * (non-Javadoc)
@@ -76,6 +80,16 @@ public class GPSKMLFile extends GPSFile {
                 GPSConversionParameters.KML_TRACK_ALTITUDE_STRING);
         if (am != null) {
             altitudeModeIfHeight = am;
+        }
+        if (getParamObject().hasParam(GPSConversionParameters.POSITION_DIGITS)) {
+        	posDigits = getParamObject().getIntParam(GPSConversionParameters.POSITION_DIGITS);
+        } else {
+            posDigits = 6;
+        }
+        if (getParamObject().hasParam(GPSConversionParameters.HEIGHT_DIGITS)) {
+        	heightDigits = getParamObject().getIntParam(GPSConversionParameters.HEIGHT_DIGITS);
+        } else {
+            heightDigits = 3;
         }
     }
 
@@ -388,12 +402,12 @@ public class GPSKMLFile extends GPSFile {
                 if (r.hasPosition() && selectedFileFields.hasPosition()) {
                     rec.append("<Point>\r\n");
                     rec.append("<coordinates>");
-                    rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                    rec.append(JavaLibBridge.toString(r.getLongitude(), posDigits));
                     rec.append(",");
-                    rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                    rec.append(JavaLibBridge.toString(r.getLatitude(), posDigits));
                     if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                         rec.append(",");
-                        rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                        rec.append(JavaLibBridge.toString(r.getHeight(), heightDigits));
                     }
                     rec.append("</coordinates>");
                     rec.append("</Point>\r\n");
@@ -446,12 +460,12 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</altitudeMode><coordinates>\r\n");
                     }
                     rec.append("        ");
-                    rec.append(JavaLibBridge.toString(r.getLongitude(), 6));
+                    rec.append(JavaLibBridge.toString(r.getLongitude(), posDigits));
                     rec.append(",");
-                    rec.append(JavaLibBridge.toString(r.getLatitude(), 6));
+                    rec.append(JavaLibBridge.toString(r.getLatitude(), posDigits));
                     if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                         rec.append(",");
-                        rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                        rec.append(JavaLibBridge.toString(r.getHeight(), heightDigits));
                     }
                     rec.append("\r\n");
                     writeTxt(rec.toString());

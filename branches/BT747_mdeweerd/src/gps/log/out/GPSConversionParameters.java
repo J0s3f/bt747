@@ -106,6 +106,16 @@ public final class GPSConversionParameters {
      * When fields are missing, add a 0 or other 'neutral/normal' value in the output.
      */
     public final static String CREATE_FIELDS = "create-fields";
+    
+    /**
+     * Number of digits to use for height fields.
+     */
+    public final static String HEIGHT_DIGITS= "height-digits";
+    
+    /**
+     * Number of digits to use for position fields (lat/lon).
+     */
+    public final static String POSITION_DIGITS = "pos-digits";
 
     private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
             .getHashtableInstance(5);

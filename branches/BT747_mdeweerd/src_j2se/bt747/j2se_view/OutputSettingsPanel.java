@@ -145,6 +145,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         updateFileFormatData();
         updateColorButtons();
         updateDistanceCombo();
+        updateLatLonDigitsCombo();
+        updateHeightDigitsCombo();
     }
 
     private void adjustHeightCombo() {
@@ -164,6 +166,24 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         }
     }
     
+    
+    private void updateLatLonDigitsCombo() {
+    	try {
+    		cbLatLonDigits.setSelectedIndex(m.getIntOpt(Model.POSITIONDIGITS));
+    	} catch (Exception e) {
+    		// TODO: Notify exception
+    	}
+    }
+
+    private void updateHeightDigitsCombo() {
+    	try {
+    		cbHeightDigits.setSelectedIndex(m.getIntOpt(Model.HEIGHTDIGITS));
+    	} catch (Exception e) {
+    		// TODO: Notify exception
+    	}
+        
+    }
+    
     /**
      * 
      */
@@ -178,6 +198,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             case Model.FONTSCALE:
                 updateScale();
                 break;
+            case Model.POSITIONDIGITS:
+            	updateLatLonDigitsCombo();
+            	break;
+            case Model.HEIGHTDIGITS:
+            	updateHeightDigitsCombo();
             }
         }
     }
@@ -263,6 +288,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbAddTrackPointName = new javax.swing.JCheckBox();
         pnMissingPanel = new javax.swing.JPanel();
         cbCreatMissingFields = new javax.swing.JCheckBox();
+        pnDigits = new javax.swing.JPanel();
+        cbLatLonDigits = new javax.swing.JComboBox();
+        lbLatLonDigits = new javax.swing.JLabel();
+        cbHeightDigits = new javax.swing.JComboBox();
+        lbHeightDigits = new javax.swing.JLabel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnGUISettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnGUISettings.border.title"))); // NOI18N
@@ -947,6 +977,56 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                     .add(0, 3, Short.MAX_VALUE)))
         );
 
+        pnDigits.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnDigits.border.title"))); // NOI18N
+
+        cbLatLonDigits.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        cbLatLonDigits.setToolTipText(bundle.getString("OutputSettingsPanel.cbLatLonDigits.toolTipText")); // NOI18N
+        cbLatLonDigits.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbLatLonDigitsItemStateChanged(evt);
+            }
+        });
+
+        lbLatLonDigits.setLabelFor(cbLatLonDigits);
+        lbLatLonDigits.setText(bundle.getString("OutputSettingsPanel.lbLatLonDigits.text")); // NOI18N
+
+        cbHeightDigits.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6" }));
+        cbHeightDigits.setToolTipText(bundle.getString("OutputSettingsPanel.cbHeightDigits.toolTipText")); // NOI18N
+        cbHeightDigits.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbHeightDigitsItemStateChanged(evt);
+            }
+        });
+
+        lbHeightDigits.setLabelFor(cbHeightDigits);
+        lbHeightDigits.setText(bundle.getString("OutputSettingsPanel.lbHeightDigits.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnDigitsLayout = new org.jdesktop.layout.GroupLayout(pnDigits);
+        pnDigits.setLayout(pnDigitsLayout);
+        pnDigitsLayout.setHorizontalGroup(
+            pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnDigitsLayout.createSequentialGroup()
+                .addContainerGap(0, Short.MAX_VALUE)
+                .add(pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(lbLatLonDigits)
+                    .add(lbHeightDigits))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(cbHeightDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(cbLatLonDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+        pnDigitsLayout.setVerticalGroup(
+            pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnDigitsLayout.createSequentialGroup()
+                .add(pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbLatLonDigits)
+                    .add(cbLatLonDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(cbHeightDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbHeightDigits)))
+        );
+
         org.jdesktop.layout.GroupLayout pnFileOutputFieldInnerLayout = new org.jdesktop.layout.GroupLayout(pnFileOutputFieldInner);
         pnFileOutputFieldInner.setLayout(pnFileOutputFieldInnerLayout);
         pnFileOutputFieldInnerLayout.setHorizontalGroup(
@@ -958,7 +1038,10 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileOutputFieldInnerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnMissingPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
+                        .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
             .add(pnTrackPoints, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
@@ -972,8 +1055,13 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                         .add(pnFilePosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
                         .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(1, 1, 1)
-                        .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(pnFileOutputFieldInnerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
+                                .add(1, 1, 1)
+                                .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(pnDigits, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnMissingPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1390,6 +1478,22 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         c.setBooleanOpt(Model.CREATE_MISSING_FIELDS, evt.getStateChange() == java.awt.event.ItemEvent.SELECTED);
     }//GEN-LAST:event_cbCreatMissingFieldsItemStateChanged
 
+    private void cbLatLonDigitsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLatLonDigitsItemStateChanged
+        int orgValue = m.getIntOpt(Model.POSITIONDIGITS);
+        int newValue = cbLatLonDigits.getSelectedIndex();
+        if (orgValue != newValue) {
+            c.setIntOpt(Model.POSITIONDIGITS, newValue);
+        }
+    }//GEN-LAST:event_cbLatLonDigitsItemStateChanged
+
+    private void cbHeightDigitsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbHeightDigitsItemStateChanged
+        int orgValue = m.getIntOpt(Model.HEIGHTDIGITS);
+        int newValue = cbHeightDigits.getSelectedIndex();
+        if (orgValue != newValue) {
+            c.setIntOpt(Model.HEIGHTDIGITS, newValue);
+        }
+    }//GEN-LAST:event_cbHeightDigitsItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
@@ -1416,10 +1520,12 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JCheckBox cbFileUTCTime;
     private javax.swing.JCheckBox cbFileVDOP;
     private javax.swing.JButton cbGoodFixColor;
+    private javax.swing.JComboBox cbHeightDigits;
     private javax.swing.JComboBox cbHeightOverMeanSeaLevel;
     private javax.swing.JCheckBox cbImperialUnits;
     private javax.swing.JComboBox cbLanguage;
     private com.toedter.components.JLocaleChooser cbLanguageChooser;
+    private javax.swing.JComboBox cbLatLonDigits;
     private javax.swing.JCheckBox cbNewTrackWhenLogOn;
     private javax.swing.JButton cbNoFixColor;
     private javax.swing.JComboBox cbOneFilePerDay;
@@ -1433,10 +1539,13 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lbCode;
     private javax.swing.JLabel lbFontScale;
+    private javax.swing.JLabel lbHeightDigits;
+    private javax.swing.JLabel lbLatLonDigits;
     private javax.swing.JLabel lbMetersAfter;
     private javax.swing.JLabel lbMinPause;
     private javax.swing.JLabel lbNewTrackAfter;
     private javax.swing.JLabel lbNewTrackAfterDistance;
+    private javax.swing.JPanel pnDigits;
     private javax.swing.JPanel pnFileOutputFieldInner;
     private javax.swing.JPanel pnFileOutputFields;
     private javax.swing.JPanel pnFilePosition;
