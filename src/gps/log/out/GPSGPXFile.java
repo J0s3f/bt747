@@ -56,6 +56,8 @@ public class GPSGPXFile extends GPSFile {
         numberOfPasses = 2;
     }
 
+    private int posDigits;
+    private int heightDigits;
     /*
      * (non-Javadoc)
      * 
@@ -77,6 +79,18 @@ public class GPSGPXFile extends GPSFile {
             isGPX1_0 = !getParamObject().getBoolParam(
                     GPSConversionParameters.GPX_1_1);
         }
+        if (getParamObject().hasParam(GPSConversionParameters.POSITION_DIGITS)) {
+        	posDigits = getParamObject().getIntParam(GPSConversionParameters.POSITION_DIGITS);
+        } else {
+            posDigits = 6;
+        }
+        
+        if (getParamObject().hasParam(GPSConversionParameters.HEIGHT_DIGITS)) {
+        	heightDigits = getParamObject().getIntParam(GPSConversionParameters.HEIGHT_DIGITS);
+        } else {
+            heightDigits = 3;
+        }
+
 
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
@@ -345,12 +359,12 @@ public class GPSGPXFile extends GPSFile {
             }
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
                 rec.append("lat=\"");
-                rec.append(JavaLibBridge.toString(r.getLatitude(), 8));
+                rec.append(JavaLibBridge.toString(r.getLatitude(), posDigits));
                 rec.append("\" ");
             }
             if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
                 rec.append("lon=\"");
-                rec.append(JavaLibBridge.toString(r.getLongitude(), 8));
+                rec.append(JavaLibBridge.toString(r.getLongitude(), posDigits));
                 rec.append("\"");
             }
             rec.append(" >\r\n");
@@ -369,7 +383,7 @@ public class GPSGPXFile extends GPSFile {
 
             if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append("<ele>");
-                rec.append(JavaLibBridge.toString(r.getHeight(), 3));
+                rec.append(JavaLibBridge.toString(r.getHeight(), heightDigits));
                 rec.append("</ele>\r\n");
             }
 

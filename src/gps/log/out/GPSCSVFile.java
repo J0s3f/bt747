@@ -49,6 +49,10 @@ public final class GPSCSVFile extends GPSFile {
      */
     private char satSeperator = ';';
 
+    private int posDigits;
+    private int heightDigits;
+    
+
     /*
      * (non-Javadoc)
      * 
@@ -81,9 +85,20 @@ public final class GPSCSVFile extends GPSFile {
         if (ss != null) {
             satSeperator = ss.charAt(0);
         }
-
+        
+        if (getParamObject().hasParam(GPSConversionParameters.POSITION_DIGITS)) {
+        	posDigits = getParamObject().getIntParam(GPSConversionParameters.POSITION_DIGITS);
+        } else {
+            posDigits = 6;
+        }
+        
+        if (getParamObject().hasParam(GPSConversionParameters.HEIGHT_DIGITS)) {
+        	heightDigits = getParamObject().getIntParam(GPSConversionParameters.HEIGHT_DIGITS);
+        } else {
+            heightDigits = 3;
+        }
     }
-
+    
     public final boolean needPassToFindFieldsActivatedInLog() {
         return true;
     }
@@ -257,7 +272,7 @@ public final class GPSCSVFile extends GPSFile {
 
             if ((r.hasLatitude()) && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
-                appendNumber(rec, JavaLibBridge.toString(r.getLatitude(), 6));
+                appendNumber(rec, JavaLibBridge.toString(r.getLatitude(), posDigits));
                 if (r.getLatitude() >= 0) {
                     rec.append(fieldSep + "N");
                 } else {
@@ -269,7 +284,7 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((r.hasLongitude()) && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
-                appendNumber(rec, JavaLibBridge.toString(r.getLongitude(), 6));
+                appendNumber(rec, JavaLibBridge.toString(r.getLongitude(), posDigits));
                 if (r.getLongitude() >= 0) {
                     rec.append(fieldSep + "E");
                 } else {
@@ -282,10 +297,10 @@ public final class GPSCSVFile extends GPSFile {
             if ((r.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
                 if (!imperial) {
-                    appendNumber(rec, JavaLibBridge.toString(r.getHeight(), 3));
+                    appendNumber(rec, JavaLibBridge.toString(r.getHeight(), heightDigits));
                 } else {
                     appendNumber(rec, JavaLibBridge.toString(r.getHeight()
-                            * METERS_TO_FEET, 3));
+                            * METERS_TO_FEET, heightDigits));
                 }
 
                 // Add field concerning geoid separation.
@@ -309,7 +324,7 @@ public final class GPSCSVFile extends GPSFile {
                     if (imperial) {
                         separation *= METERS_TO_FEET;
                     }
-                    appendNumber(rec, JavaLibBridge.toString(separation, 1));
+                    appendNumber(rec, JavaLibBridge.toString(separation, heightDigits));
                     rec.append(fieldSep);
                 } else {
                     rec.append(fieldSep);
