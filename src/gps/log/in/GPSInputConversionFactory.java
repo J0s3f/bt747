@@ -81,6 +81,8 @@ public class GPSInputConversionFactory {
                 }
             } else if (logFileLC.endsWith(".sr")) {
                 return new WPLogConvert();
+            } else if (logFileLC.endsWith(".result")) {
+                return new SonyResultConvert();
             } else {
                 if (inLoggerType == BT747Constants.GPS_TYPE_SKYTRAQ) {
                     return new SkytraqLogConvert();
