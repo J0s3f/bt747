@@ -85,7 +85,7 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 			recCount = 0;
 			nextAddrToRead = 0;
 			fileSize = inFile.getSize();
-			while (!stop && (nextAddrToRead + 26< fileSize)) {
+			while (!stop && (nextAddrToRead + 26 < fileSize)) {
 				sizeToRead = C_BUF_SIZE;
 				if ((sizeToRead + nextAddrToRead) > fileSize) {
 					sizeToRead = fileSize - nextAddrToRead;
@@ -140,15 +140,11 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 						break;
 					default:
 						/* Unknown - skipping 2 and alerting */
-						Generic.debug(
-								"Unknown entry "
-										+ JavaLibBridge
-												.unsigned2hex(recType, 4)
-										+ "("
-										+ JavaLibBridge.unsigned2hex(
-												nextAddrToRead
-														+ offsetInBuffer, 8)
-										+ ")", null);
+						Generic.debug("Unknown entry "
+								+ JavaLibBridge.unsigned2hex(recType, 4)
+								+ "("
+								+ JavaLibBridge.unsigned2hex(nextAddrToRead
+										+ offsetInBuffer, 8) + ")", null);
 						offsetInBuffer += 2;
 						break;
 					}
@@ -188,18 +184,14 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 		r.latitude = JavaLibBridge.longBitsToDouble(latitude);
 
 		// 20 bytes done already.
-		recIdx++;
-		recIdx++;
+		r.height = ((((0xFF & bytes[recIdx++]) << 24) >> 16) | (0xFF & bytes[recIdx++]) << 0) * 10;
 		// recIdx++;
 		// recIdx++;
 		// Time: 4 bytes.
-		r.utc = (0xFF & bytes[recIdx++]) << 24|
-		      (0xFF & bytes[recIdx++]) << 16
-				| (0xFF & bytes[recIdx++]) << 8
-				| (0xFF & bytes[recIdx++]) << 0;
-		System.out.println(""+r.utc);
-		r.milisecond = r.utc % 256;
-		r.utc /= 256;
+		r.utc = (0xFF & bytes[recIdx++]) << 24 | (0xFF & bytes[recIdx++]) << 16
+				| (0xFF & bytes[recIdx++]) << 8 | (0xFF & bytes[recIdx++]) << 0;
+		r.milisecond = r.utc % 100;
+		r.utc = r.utc/100;
 
 		return r;
 	}
