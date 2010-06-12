@@ -148,6 +148,11 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
     public static final int POSTGIS_LOGTYPE = 19;
     
     /**
+     * Sony Result Log type for Tracker application
+     */
+    public static final int SONYTRACKERRESULT_LOGTYPE = 20;
+    
+    /**
      * The number of seconds in a day.
      */
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;
