@@ -190,8 +190,8 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 		// Time: 4 bytes.
 		r.utc = (0xFF & bytes[recIdx++]) << 24 | (0xFF & bytes[recIdx++]) << 16
 				| (0xFF & bytes[recIdx++]) << 8 | (0xFF & bytes[recIdx++]) << 0;
-		r.milisecond = r.utc % 100;
-		r.utc = r.utc/100;
+		r.milisecond = 10 * (r.utc % 100);
+		r.utc = r.utc / 100;
 
 		return r;
 	}
