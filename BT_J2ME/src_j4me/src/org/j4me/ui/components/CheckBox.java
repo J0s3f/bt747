@@ -151,7 +151,7 @@ public class CheckBox extends Component {
     private int checkboxSideSize(final Theme theme) {
         final int fontHeight = theme.getFont().getHeight();
         final int checkboxSide = (int) (fontHeight * CheckBox.CHECKBOX_TO_FONT_RATIO);
-        return Math.max(8,checkboxSide);
+        return Math.max(12,checkboxSide);
     }
 
     /**
