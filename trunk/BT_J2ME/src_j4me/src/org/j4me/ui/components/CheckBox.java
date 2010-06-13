@@ -151,7 +151,7 @@ public class CheckBox extends Component {
     private int checkboxSideSize(final Theme theme) {
         final int fontHeight = theme.getFont().getHeight();
         final int checkboxSide = (int) (fontHeight * CheckBox.CHECKBOX_TO_FONT_RATIO);
-        return checkboxSide;
+        return Math.max(8,checkboxSide);
     }
 
     /**
@@ -163,7 +163,7 @@ public class CheckBox extends Component {
     protected int[] getPreferredComponentSize(final Theme theme,
             final int viewportWidth, final int viewportHeight) {
         // Get the height of the checkbox.
-        final int checkboxSide = Math.max(8,checkboxSideSize(theme));
+        final int checkboxSide = checkboxSideSize(theme);
 
         // Get the height of the label to the right of the checkbox.
         final int[] labelDimensions = label.getPreferredSize(theme,
