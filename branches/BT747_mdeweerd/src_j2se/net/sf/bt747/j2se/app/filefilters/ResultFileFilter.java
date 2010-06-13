@@ -18,20 +18,20 @@ package net.sf.bt747.j2se.app.filefilters;
  * @author Mario
  * 
  */
-public final class KnownFileFilter extends ListFileFilter {
+public final class ResultFileFilter extends ListFileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
-    private static final String[] extensions = { ".bin", ".nmea", ".txt",
-            ".log", ".nme", ".nma", ".trl", ".csv", ".sr", ".gpx", ".result" };
+    private final static String[] extensions = { ".bin" };
 
-    private static final String description = "KNOWN_Description";
+    private final static String description = "BIN_Description";
 
     /**
      * 
      */
-    public KnownFileFilter() {
+    public ResultFileFilter() {
         super(extensions, description);
+        // super(extensions,description);
     }
 }
