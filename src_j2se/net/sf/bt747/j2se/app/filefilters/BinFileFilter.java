@@ -23,9 +23,9 @@ public final class BinFileFilter extends ListFileFilter {
     /**
      * Lower case list of accepted extensions.
      */
-    private final static String[] extensions = { ".bin" };
+    private final static String[] extensions = { ".result" };
 
-    private final static String description = "BIN_Description";
+    private final static String description = "RESULT_Description";
 
     /**
      * 
