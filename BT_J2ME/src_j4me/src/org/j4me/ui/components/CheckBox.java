@@ -163,7 +163,7 @@ public class CheckBox extends Component {
     protected int[] getPreferredComponentSize(final Theme theme,
             final int viewportWidth, final int viewportHeight) {
         // Get the height of the checkbox.
-        final int checkboxSide = checkboxSideSize(theme);
+        final int checkboxSide = Math.max(8,checkboxSideSize(theme));
 
         // Get the height of the label to the right of the checkbox.
         final int[] labelDimensions = label.getPreferredSize(theme,
