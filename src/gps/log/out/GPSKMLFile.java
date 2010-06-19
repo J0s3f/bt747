@@ -111,17 +111,18 @@ public class GPSKMLFile extends GPSFile {
             // writeDataFooter();
             // }
             if (isWayType) {
+            	// Next tracktype is path.
                 isWayType = false;
                 isPathType = true;
-                currentFilter = GPSFilter.WAYPT;
+                currentFilter = GPSFilter.TRKPT;
             } else if (isPathType) {
+            	// Next type is Track.
                 isTrackType = true;
                 isPathType = false;
                 currentFilter = GPSFilter.TRKPT;
             } else if (isTrackType) {
                 isTrackType = false;
                 currentFilter = GPSFilter.TRKPT;
-
             }
             // if(!m_multipleFiles) {
             // writeDataHeader();
