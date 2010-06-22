@@ -3,7 +3,7 @@
  */
 package bt747.j2se_view;
 
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.convert.GeoidIF;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
@@ -157,7 +157,7 @@ public class J2SEController extends Controller {
         }
         // Generic.debug("Set geoid to "+geoidIF);
         if (geoidIF != null) {
-            Conv.setGeoidIF(geoidIF);
+            ExternalUtils.setGeoidIF(geoidIF);
         }
     }
 

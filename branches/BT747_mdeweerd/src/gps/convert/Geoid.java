@@ -119,7 +119,7 @@ public final class Geoid implements GeoidIF {
         ilon2 = (ilon < GEOID_COL - 1) ? (ilon + 1) : ilon;
 
         try {
-            return Conv.bilinear((ilon1 * 10.) - 180., (ilat1 * 10.) - 90.,
+            return ExternalUtils.bilinear((ilon1 * 10.) - 180., (ilat1 * 10.) - 90.,
                     (ilon2 * 10.) - 180., (ilat2 * 10.) - 90., lon, lat,
                     geoid_delta[ilon1 + (ilat1 * GEOID_COL)],
                     geoid_delta[ilon2 + (ilat1 * GEOID_COL)],

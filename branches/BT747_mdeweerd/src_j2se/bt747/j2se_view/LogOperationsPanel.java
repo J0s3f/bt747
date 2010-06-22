@@ -15,7 +15,7 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
 
@@ -183,7 +183,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                         + getString("m")
                         + " "
                         + getString("(calc:")
-                        + Utils.format("%.1f", Conv.wgs84Separation(
+                        + Utils.format("%.1f", ExternalUtils.wgs84Separation(
                                 gps.latitude, gps.longitude))
                         + getString("m") + ")"); // NOI18N
             }

@@ -27,7 +27,7 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSRecord;
 
 import bt747.Txt;
@@ -206,7 +206,7 @@ public final class GPSconctrl extends Container implements ModelListener {
                 + JavaLibBridge.toString(gps.geoid, 3)
                 + Txt.getString(Txt.METERS_ABBR)
                 + Txt.getString(Txt.CALC)
-                + JavaLibBridge.toString(Conv.wgs84Separation(gps.latitude,
+                + JavaLibBridge.toString(ExternalUtils.wgs84Separation(gps.latitude,
                         gps.longitude), 3) + Txt.getString(Txt.METERS_ABBR) + ")");
 
         // lbLat.repaintNow();
