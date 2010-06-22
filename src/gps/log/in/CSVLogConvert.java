@@ -506,7 +506,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                 } else if (field.equals("Simulator mode")) {
                     r.valid = 0x0100;
                 } else {
-                    r.valid = 0x0000;
+                    //r.valid = 0x0000;
                 }
                 break;
             case FMT_LATNS: {

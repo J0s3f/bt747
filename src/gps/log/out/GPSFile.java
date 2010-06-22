@@ -16,7 +16,7 @@ package gps.log.out;
 
 import gps.BT747Constants;
 import gps.Txt;
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -745,7 +745,7 @@ public abstract class GPSFile implements GPSFileInterface {
                 || updateDistanceInRecord) {
             if (cachedRecordIsNeeded(r) && r.hasPosition()) {
                 if (!firstRecordForDistance) {
-                    distanceWithPrevious = Conv.earthDistance(
+                    distanceWithPrevious = ExternalUtils.earthDistance(
                             r.getLatitude(), r.getLongitude(), previousLat,
                             previousLon);
                     if (splitDistance != 0) {

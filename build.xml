@@ -636,6 +636,7 @@
 			            -keep public class gps.convert.GeoidIF { *; }
 	         -keep public class gps.log.out.GPSConversionParameters { public static final java.lang.String *;}
 			-keep public class gps.convert.Conv { public *** setGeoidIF(...); }
+			-keep public class gps.convert.ExternalUtils { public *** setGeoidIF(...); }
 			-keep public class gps.convert.Geoid { }
 			            -keep public class gps.mvc.MtkModel { public static final int DATA_*;
 		                                                      public boolean has*();

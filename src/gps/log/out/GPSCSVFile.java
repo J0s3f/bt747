@@ -14,7 +14,7 @@
 // *** *********************************************************** ***
 package gps.log.out;
 
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -318,7 +318,7 @@ public final class GPSCSVFile extends GPSFile {
                     if (r.hasGeoid()) {
                         separation = r.getGeoid();
                     } else {
-                        separation = ((long) (10 * Conv.wgs84Separation(r
+                        separation = ((long) (10 * ExternalUtils.wgs84Separation(r
                                 .getLatitude(), r.getLongitude()))) / 10.f;
                     }
                     if (imperial) {

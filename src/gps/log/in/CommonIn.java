@@ -15,7 +15,7 @@
 package gps.log.in;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSRecord;
 
 import bt747.sys.JavaLibBridge;
@@ -301,7 +301,7 @@ public final class CommonIn {
                 } else {
                     if (((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                             && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
-                        gpsRec.geoid = (float) Conv.wgs84Separation(
+                        gpsRec.geoid = (float) ExternalUtils.wgs84Separation(
                                 gpsRec.latitude, gpsRec.longitude);
                     }
                 }
@@ -407,9 +407,9 @@ public final class CommonIn {
         // && valid
         ) {
             if (factorConversionWGS84ToMSL < 0) {
-                r.height -= Conv.wgs84Separation(r.latitude, r.longitude);
+                r.height -= ExternalUtils.wgs84Separation(r.latitude, r.longitude);
             } else { // > 0
-                r.height += Conv.wgs84Separation(r.latitude, r.longitude);
+                r.height += ExternalUtils.wgs84Separation(r.latitude, r.longitude);
             }
         }
 
@@ -420,9 +420,9 @@ public final class CommonIn {
         if ((factorConversionWGS84ToMSL != 0) && r.hasPosition()
                 && r.hasHeight()) {
             if (factorConversionWGS84ToMSL < 0) {
-                r.height -= Conv.wgs84Separation(r.latitude, r.longitude);
+                r.height -= ExternalUtils.wgs84Separation(r.latitude, r.longitude);
             } else { // > 0
-                r.height += Conv.wgs84Separation(r.latitude, r.longitude);
+                r.height += ExternalUtils.wgs84Separation(r.latitude, r.longitude);
             }
         }
 

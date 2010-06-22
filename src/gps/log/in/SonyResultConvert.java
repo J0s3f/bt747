@@ -1,21 +1,19 @@
-// ********************************************************************
-// *** BT747
-// *** June 10, 2010.
-// *** Copyright 2010 Mario De Weerd.
-// *** ****************************************************************
-// *** The General Public License Version 3 applies to this file
-// *** unless you have another written agreement from the copyright
-// *** owner.
-// ***
-// *** Software is provided "AS IS," without a warranty of any ***
-// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
-// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
-// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-// *** IS ASSUMED BY THE USER. ***
-// *** See the GNU General Public License Version 3 for details. ***
-// *** *********************************************************** ***
-
+/**
+ * June 10, 2010.
+ * Copyright 2010 Mario De Weerd.
+ *******************************************************************
+ * The General Public License Version 3 applies to this file
+ * unless you have another written agreement from the copyright
+ * owner.
+ *
+ * Software is provided "AS IS," without a warranty of any 
+ * kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,
+ * INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY
+ * EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE
+ * IS ASSUMED BY THE USER.
+ * See the GNU General Public License Version 3 for details.
+ */
 package gps.log.in;
 
 import gps.BT747Constants;
@@ -25,15 +23,11 @@ import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
-import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Path;
-import bt747.sys.interfaces.BT747Time;
 
 /**
  * Conversion of Sony '.result' file format from 'Tracker' application.
- * 
- * Double
- * 
+
  * @author Mario De Weerd
  */
 public final class SonyResultConvert extends GPSLogConvertInterface {

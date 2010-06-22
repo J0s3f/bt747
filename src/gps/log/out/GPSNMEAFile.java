@@ -15,7 +15,7 @@
 package gps.log.out;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -378,7 +378,7 @@ public final class GPSNMEAFile extends GPSFile {
             final boolean hasLatLon = r.hasPosition()
                     && selectedFileFields.hasPosition();
             if (hasLatLon) {
-                separation = ((long) (10 * Conv.wgs84Separation(r
+                separation = ((long) (10 * ExternalUtils.wgs84Separation(r
                         .getLatitude(), r.getLongitude()))) / 10.f;
             }
             rec.append(JavaLibBridge.toString(r.getHeight() - separation, 3));

@@ -3,7 +3,7 @@
  */
 package net.sf.bt747.j2se.app.utils;
 
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.convert.GeoidIF;
 
 import java.io.InputStream;
@@ -145,7 +145,7 @@ public final class Geoid implements GeoidIF {
         }
 
         try {
-            return Conv.bilinear(lon1, lat1, lon2, lat2, lon, lat,
+            return ExternalUtils.bilinear(lon1, lat1, lon2, lat2, lon, lat,
                     geoid_delta[ilon1 + (ilat1 * GEOID_COL)],
                     geoid_delta[ilon2 + (ilat1 * GEOID_COL)],
                     geoid_delta[ilon1 + (ilat2 * GEOID_COL)],
