@@ -1136,7 +1136,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Track Points">
+                    <TitledBorder title="Track &amp; Way Points">
                       <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnTrackPoints.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </TitledBorder>
                   </Border>
@@ -1151,12 +1151,17 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="cbAddTrackPointName" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="cbAddWayPointComment" min="-2" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="cbAddTrackPointComment" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="cbAddTrackPointComment" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cbAddWayPointComment" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="cbAddTrackPointName" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1181,6 +1186,16 @@
                   </Properties>
                   <Events>
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbAddTrackPointNameItemStateChanged"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="cbAddWayPointComment">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="OutputSettingsPanel.cbAddWayPointComment.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbAddWayPointCommentItemStateChanged"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1244,7 +1259,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="lbLatLonDigits" min="-2" max="-2" attributes="0"/>
                               <Component id="lbHeightDigits" min="-2" max="-2" attributes="0"/>

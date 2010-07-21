@@ -181,6 +181,9 @@ public abstract class GPSFile implements GPSFileInterface {
     
     private final BT747HashSet filenames = JavaLibBridge.getHashSetInstance();
 
+    protected boolean isTrkComment = true;
+    protected boolean isWayComment = true;
+
     /**
      * This function has to be called at some time to initialize the file
      * conversion. Other parameters can be set through other methods.
@@ -248,6 +251,18 @@ public abstract class GPSFile implements GPSFileInterface {
             // the distance between positions.
             calcDistance = true;
         }
+
+
+        if (getParamObject().hasParam(GPSConversionParameters.WAY_COMMENT)) {
+            isWayComment = getParamObject().getBoolParam(
+                    GPSConversionParameters.WAY_COMMENT);
+        }
+
+        if (getParamObject().hasParam(GPSConversionParameters.TRK_COMMENT)) {
+            isTrkComment = getParamObject().getBoolParam(
+                    GPSConversionParameters.TRK_COMMENT);
+        }
+
         initPass();
     };
 
@@ -1057,8 +1072,6 @@ public abstract class GPSFile implements GPSFileInterface {
     public final String getErrorInfo() {
         return errorInfo;
     }
-
-    protected boolean isTrkComment = true;
 
     /*
      * (non-Javadoc)

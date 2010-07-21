@@ -368,8 +368,12 @@ public class Controller implements ModelListener {
                     .getStringOpt(AppSettings.COLOR_INVALIDTRACK));
             gpsFile.setGoodTrackColor(m
                     .getStringOpt(AppSettings.COLOR_VALIDTRACK));
-            gpsFile.setIncludeTrkComment(m
-                    .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.TRK_COMMENT,
+                    m.getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.WAY_COMMENT,
+                    m.getBooleanOpt(AppSettings.IS_WRITE_WAYPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
             gpsFile.setFilters(getLogFiltersToUse());
@@ -620,7 +624,12 @@ public class Controller implements ModelListener {
 
         if (logOutType == Model.OSM_LOGTYPE) {
             // For OSM output, we optimize the output file.
-            gpsFile.setIncludeTrkComment(false);
+        	gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.TRK_COMMENT,
+                    false);
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.WAY_COMMENT,
+                    false);
             gpsFile.setIncludeTrkName(false);
             gpsFile
                     .setOutputFields(GPSRecord
