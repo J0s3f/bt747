@@ -91,7 +91,6 @@ public class GPSGPXFile extends GPSFile {
             heightDigits = 3;
         }
 
-
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
     }
@@ -433,7 +432,7 @@ public class GPSGPXFile extends GPSFile {
             }
             // <cmt> xsd:string </cmt> [0..1] ?
             // No comments, so commented out.
-            if ((isTrkComment || isWayType)
+            if (((!isWayType && isTrkComment) || ( isWayType && isWayComment) )
                     && (recordNbrInLogs || (fixStr.length() != 0)
                             || (rcrStr.length() != 0)
                             || (hdopStr.length() != 0) || (nsatStr.length() != 0))) {

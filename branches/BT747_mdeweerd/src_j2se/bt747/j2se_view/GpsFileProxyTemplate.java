@@ -196,15 +196,6 @@ public class GpsFileProxyTemplate implements GPSFileInterface {
     /*
      * (non-Javadoc)
      * 
-     * @see gps.log.out.GPSFileConfInterface#setIncludeTrkComment(boolean)
-     */
-    public void setIncludeTrkComment(boolean isTrkComment) {
-        delegate.setIncludeTrkComment(isTrkComment);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see gps.log.out.GPSFileConfInterface#setIncludeTrkName(boolean)
      */
     public void setIncludeTrkName(boolean isIncludeTrkName) {

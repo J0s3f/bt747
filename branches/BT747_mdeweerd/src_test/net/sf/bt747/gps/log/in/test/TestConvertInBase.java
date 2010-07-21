@@ -73,7 +73,9 @@ public class TestConvertInBase extends junit.framework.TestCase {
         gpsFile.setRecordNbrInLogs(true);
         gpsFile.setBadTrackColor("0000FF");
         gpsFile.setGoodTrackColor("0000FF");
-        gpsFile.setIncludeTrkComment(true);
+        gpsFile.getParamObject().setBoolParam(
+                GPSConversionParameters.TRK_COMMENT,
+                true);
         gpsFile.setIncludeTrkName(true);
         gpsFile.setFilters(logFilters);
         gpsFile.setOutputFields(GPSRecord

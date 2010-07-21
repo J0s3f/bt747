@@ -286,6 +286,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         pnTrackPoints = new javax.swing.JPanel();
         cbAddTrackPointComment = new javax.swing.JCheckBox();
         cbAddTrackPointName = new javax.swing.JCheckBox();
+        cbAddWayPointComment = new javax.swing.JCheckBox();
         pnMissingPanel = new javax.swing.JPanel();
         cbCreatMissingFields = new javax.swing.JCheckBox();
         pnDigits = new javax.swing.JPanel();
@@ -932,6 +933,13 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             }
         });
 
+        cbAddWayPointComment.setText(bundle.getString("OutputSettingsPanel.cbAddWayPointComment.text")); // NOI18N
+        cbAddWayPointComment.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbAddWayPointCommentItemStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout pnTrackPointsLayout = new org.jdesktop.layout.GroupLayout(pnTrackPoints);
         pnTrackPoints.setLayout(pnTrackPointsLayout);
         pnTrackPointsLayout.setHorizontalGroup(
@@ -940,11 +948,15 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .add(cbAddTrackPointComment)
                 .add(18, 18, 18)
                 .add(cbAddTrackPointName))
+            .add(cbAddWayPointComment)
         );
         pnTrackPointsLayout.setVerticalGroup(
             pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(cbAddTrackPointComment)
+                .add(pnTrackPointsLayout.createSequentialGroup()
+                    .add(cbAddTrackPointComment)
+                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                    .add(cbAddWayPointComment))
                 .add(cbAddTrackPointName))
         );
 
@@ -1006,7 +1018,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         pnDigitsLayout.setHorizontalGroup(
             pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, pnDigitsLayout.createSequentialGroup()
-                .addContainerGap(0, Short.MAX_VALUE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnDigitsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(lbLatLonDigits)
                     .add(lbHeightDigits))
@@ -1494,9 +1506,15 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         }
     }//GEN-LAST:event_cbHeightDigitsItemStateChanged
 
+    private void cbAddWayPointCommentItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAddWayPointCommentItemStateChanged
+        c.setBooleanOpt(Model.IS_WRITE_WAYPOINT_COMMENT, cbAddWayPointComment
+                .isSelected());
+    }//GEN-LAST:event_cbAddWayPointCommentItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
+    private javax.swing.JCheckBox cbAddWayPointComment;
     private javax.swing.JCheckBox cbCreatMissingFields;
     private javax.swing.JComboBox cbDistanceCalculation;
     private javax.swing.JCheckBox cbFileAzimuth;

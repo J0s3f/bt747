@@ -369,7 +369,7 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<visibility>0</visibility>\r\n");
                 }
 
-                if (isWayType || isTrkComment) {
+                if (((isTrackType && isTrkComment) || ( isWayType && isWayComment) ) ) {
                     rec.append("<description>");
                     rec.append("<![CDATA[");
                     CommonOut.getHtml(rec, r, selectedFileFields, t,

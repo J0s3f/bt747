@@ -110,8 +110,6 @@ public interface GPSFileConfInterface {
 
     public void setAddLogConditionInfo(final boolean addLogConditionInfo);
 
-    public void setIncludeTrkComment(final boolean isTrkComment);
-
     public void setIncludeTrkName(final boolean isIncludeTrkName);
 
     public void setFilenameBuilder(final BT747FileName filenameBuilder);
