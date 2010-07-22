@@ -34,10 +34,6 @@ public final class WabaTime implements BT747Time {
         time = new waba.sys.Time();
     }
 
-    public WabaTime(final long t) {
-        time = new waba.sys.Time(t);
-    }
-
     public final int getYear() {
         return time.year;
     }
@@ -112,5 +108,9 @@ public final class WabaTime implements BT747Time {
         setYear(d.getYear());
         setMonth(d.getMonth());
         setDay(d.getDay());
+    }
+    
+    public final waba.sys.Time getNativeWabaTime() {
+    	return time;
     }
 }
