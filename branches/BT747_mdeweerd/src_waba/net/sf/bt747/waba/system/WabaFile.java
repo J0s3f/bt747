@@ -19,6 +19,8 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
+import sun.security.jca.GetInstance;
+import waba.sys.Time;
 import bt747.sys.interfaces.BT747RAFile;
 
 /**
@@ -78,5 +80,12 @@ public final class WabaFile extends waba.io.File implements BT747RAFile {
         final WabaDate d = new WabaDate(t.day,t.month,t.year);
         return d.dateToUTCepoch1970() + t.hour*3600 + t.minute*60 + t.second;
     }
+
+	public void setModificationTime(int utc) {
+		WabaTime t = new WabaTime();
+		t.setUTCTime(utc);
+		
+		setTime(TIME_MODIFIED, t.getNativeWabaTime());
+	}
 
 }
