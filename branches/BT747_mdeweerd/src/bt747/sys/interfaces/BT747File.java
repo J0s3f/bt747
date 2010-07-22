@@ -81,4 +81,10 @@ public interface BT747File extends BT747InputStream, BT747OutputStream {
      * Get modification time (UTC)
      */
     int getModificationTime();
+    
+    /**
+     * Set modification time (UTC).
+     * - may not work on all platforms.
+     */
+    void setModificationTime(int utc);
 }

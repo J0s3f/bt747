@@ -114,4 +114,8 @@ public class File {
     public final int getModificationTime() {
         return file.getModificationTime();
     }
+    
+    public final void setModificationTime(int utc) {
+    	file.setModificationTime(utc);
+    }
 }
