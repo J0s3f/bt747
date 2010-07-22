@@ -190,6 +190,7 @@ public class J2SEController extends Controller {
         }
         // now convert from orgPath to newPath.
         img.writeImage(new BT747Path(orgPath), new BT747Path(newPath));
+        img.setModifiedTime(new BT747Path(newPath));
     }
 
     /** Add a log file with GPS data to the list of files.

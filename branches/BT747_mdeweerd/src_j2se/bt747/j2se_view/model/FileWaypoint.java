@@ -90,4 +90,9 @@ public class FileWaypoint extends BT747Waypoint {
     public int getUtc() {
         return utc;
     }
+    
+    public final void setModifiedTime(final BT747Path path) {
+    	final File file = new File(path);
+    	file.setModificationTime(getUtc());
+    }
 }
