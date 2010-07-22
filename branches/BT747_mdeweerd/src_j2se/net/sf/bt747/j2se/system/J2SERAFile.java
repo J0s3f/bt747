@@ -229,6 +229,10 @@ public final class J2SERAFile implements BT747RAFile {
         return (int) (new java.io.File(filePath).lastModified() / 1000L);
     }
 
+	public void setModificationTime(int utc) {
+		(new java.io.File(filePath)).setLastModified(utc*1000L);
+	}
+
     // Kept for reference - unused.
     // public static char separatorChar = java.io.File.separatorChar;
     // public static String separatorStr = String.valueOf(separatorChar);
