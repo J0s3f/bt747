@@ -365,18 +365,6 @@ public final class GPSRxTxPort extends GPSPort {
 			portFound = isValidPort(portName);
 		}
 		if (!portFound) {
-			portName = "/dev/cu.usbmodem1b10";
-			portFound = isValidPort(portName);
-		}
-		if (!portFound) {
-			portName = "/dev/cu.usbmodem1d10";
-			portFound = isValidPort(portName);
-		}
-		if (!portFound) {
-			portName = "/dev/cu.usbmodem3a20";
-			portFound = isValidPort(portName);
-		}
-		if (!portFound) {
 			portName = "/dev/cu.iBTAGPS-SPPslave";
 			portFound = isValidPort(portName);
 		}
@@ -385,6 +373,22 @@ public final class GPSRxTxPort extends GPSPort {
 			portName = getPortFromPrefixes(linUsbPortPrefixes,
 					MAX_USBPORT_SEARCH_IDX);
 			portFound = portName != null;
+		}
+		if (!portFound) {
+			portName = "/dev/cu.usbmodem1b10";
+			portFound = isValidPort(portName);
+		}
+		if (!portFound) {
+			portName = "/dev/cu.usbmodem1d10";
+			portFound = isValidPort(portName);
+		}
+		if (!portFound) {
+			portName = "/dev/cu.usbmodem3d10";
+			portFound = isValidPort(portName);
+		}
+		if (!portFound) {
+			portName = "/dev/cu.usbmodem3a20";
+			portFound = isValidPort(portName);
 		}
 		if (!portFound) {
 			portName = null;

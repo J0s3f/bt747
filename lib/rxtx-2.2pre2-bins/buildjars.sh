@@ -1,8 +1,10 @@
 CDIR=$PWD
-(cd ../../.. ; ./sign.bat $CDIR/*.jar)
+(cd Mac_OS_X/mac-iharder ; zip ../../rxtx_2_2p2_mac_iharder.jar *)
+(cd ../../.. ; ./sign.bat $CDIR/*mac_iharder*.jar)
 exit
 (cd i686-pc-linux-gnu ; zip ../rxtx_2_2p2_lin_i686.jar *)
 (cd mac-10.5 ; zip ../rxtx_2_2p2_mac_10_5.jar *)
+(cd mac-iharder ; zip ../rxtx_2_2p2_mac_iharder.jar *)
 #(cd sparc-sun-solaris2.10-32 ; zip ../rxtx_2_2p2_sol32.jar *)
 #(cd sparc-sun-solaris2.10-64 ; zip ../rxtx_2_2p2_sol64.jar *)
 (cd win32 ; zip ../rxtx_2_2p2_win32.jar *)
