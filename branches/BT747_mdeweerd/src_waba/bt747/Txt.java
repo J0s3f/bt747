@@ -240,6 +240,6 @@ public final class Txt {
     public static final int HEIGHT_CONV_MSL_TO_WGS84 = 190;
     public static final int HEIGHT_CONV_WGS84_TO_MSL = 191;
     public static final int HEIGHT_CONV_NONE = 192;
-
+    public static final int ADD_MISSING = 193;
 
 }

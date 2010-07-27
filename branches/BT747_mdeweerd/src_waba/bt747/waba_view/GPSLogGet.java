@@ -68,6 +68,8 @@ public final class GPSLogGet extends Container implements ModelListener {
     private Edit edTrkSep;
     private ComboBox cbTimeOffsetHours;
 
+    private MyCheck chkAddMissing;
+
     private Calendar cal;
     private Button btCal;
 
@@ -175,6 +177,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         add(btToGMAP = new Button(Txt.getString(Txt.TO_GMAP)), CENTER, SAME); //$NON-NLS-1$
         add(btToNMEA = new Button(Txt.getString(Txt.TO_NMEA)), RIGHT, SAME); //$NON-NLS-1$
 
+        add(chkAddMissing = new MyCheck(Txt.getString(Txt.ADD_MISSING)),LEFT, AFTER + 4);
         savedBackColor = btToCSV.getBackColor();
 
         add(lbUsedMem = new Label(""), LEFT, AFTER + 3);
@@ -255,6 +258,7 @@ public final class GPSLogGet extends Container implements ModelListener {
                 + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
                 + Txt.getString(Txt.MEM_FREE) + ")");
         // m_RecordsLabel.repaintNow();
+        chkAddMissing.setChecked(m.getBooleanOpt(AppSettings.CREATE_MISSING_FIELDS));
     }
 
     /*
@@ -282,7 +286,10 @@ public final class GPSLogGet extends Container implements ModelListener {
                 c.setDownloadMethod(cbDownload.getSelectedIndex());
             } else if (event.target == chkLogOnOff) {
                 c.setLoggingActive(chkLogOnOff.getChecked());
-            } else if (event.target == cbColors) {
+			} else if (event.target == chkAddMissing) {
+				c.setBooleanOpt(AppSettings.CREATE_MISSING_FIELDS,
+						chkAddMissing.getChecked());
+			} else if (event.target == cbColors) {
                 c.setStringOpt(AppSettings.COLOR_INVALIDTRACK,
                         ((String) cbColors.getSelectedItem()));
             } else if (event.target == cbTimeOffsetHours) {
