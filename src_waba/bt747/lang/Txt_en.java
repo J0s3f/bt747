@@ -359,6 +359,7 @@ public final class Txt_en implements TxtInterface {
     private static final String HEIGHT_CONV_WGS84_TO_MSL = "To MSL";
     private static final String HEIGHT_CONV_NONE = "Keep Hght";
 
+    private static final String ADD_MISSING = "Add missing";
     /*
      * (non-Javadoc)
      * 
@@ -441,6 +442,6 @@ public final class Txt_en implements TxtInterface {
             LANG_DE, LANG_EN, LANG_ES, LANG_FR, LANG_IT, LANG_JP, LANG_KO,
             LANG_NL, LANG_ZH, MI_LANGUAGE, HEIGHT_CONV_AUTOMATIC,
             HEIGHT_CONV_MSL_TO_WGS84, HEIGHT_CONV_WGS84_TO_MSL,
-            HEIGHT_CONV_NONE, };
+            HEIGHT_CONV_NONE, ADD_MISSING};
 
 }
