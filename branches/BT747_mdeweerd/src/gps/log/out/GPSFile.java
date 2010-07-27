@@ -479,6 +479,9 @@ public abstract class GPSFile implements GPSFileInterface {
 		if(!r.hasSpeed()) {
 			r.setSpeed(0);
 		}
+		if(!r.hasNsat()) {
+			r.setNsat(0x0303);
+		}
 		if(!r.hasValid()) {
 			if (r.getLatitude() != 0 || r.getLongitude() != 0) {
 				r.setValid(BT747Constants.VALID_SPS_MASK);
