@@ -151,7 +151,10 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      * Sony Result Log type for Tracker application
      */
     public static final int SONYTRACKERRESULT_LOGTYPE = 20;
-    
+    /**
+     * Compe GPS log type (Writes PLT and WPT files).
+     */
+    public static final int WPT_LOGTYPE = 21;  
     /**
      * The number of seconds in a day.
      */

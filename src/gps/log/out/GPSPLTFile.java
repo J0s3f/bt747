@@ -55,13 +55,15 @@ public final class GPSPLTFile extends GPSFile {
 
     public void writeFileHeader(final String s) {
         super.writeFileHeader(s);
-        writeTxt("BT747 Track Point File http://sf.net/projects/bt747 Version "
+        writeTxt("BT747 Track Point File http://www.bt747.org Version "
                 + bt747.Version.VERSION_NUMBER
                 + "\r\n"
                 + "WGS 84\r\n"
                 + "Altitude is in feet\r\n"
                 + "Reserved 3\r\n"
-                + "0,2,255,BT747 Track,0,0,2,8421376\r\n" + "50000\r\n" // number
+                + "0,2,255,"
+                + s
+                + ",0,0,2,8421376\r\n" + "50000\r\n" // number
                 // of
         // points
         // in

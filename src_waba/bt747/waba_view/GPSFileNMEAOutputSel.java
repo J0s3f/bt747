@@ -37,7 +37,7 @@ import bt747.model.ModelListener;
 public final class GPSFileNMEAOutputSel extends Container implements
         ModelListener {
     /** The object that is used to communicate with the GPS device. */
-    private final MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
+    private final MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT+1];
     /** The button that requests to change the log format of the device */
 
     private static final int C_NMEAactiveFilters = 0x0002003A;
