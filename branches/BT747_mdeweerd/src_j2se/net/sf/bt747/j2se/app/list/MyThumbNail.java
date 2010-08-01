@@ -66,17 +66,12 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
-
-import sun.awt.image.ToolkitImage;
-
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 
 import bt747.j2se_view.model.ImageData;
 import bt747.sys.interfaces.BT747Path;
@@ -143,11 +138,12 @@ public final class MyThumbNail {
 		mediaTracker.addImage(image, id);
 		mediaTracker.waitForID(id);
 
-		if (image instanceof ToolkitImage) {
-			final ToolkitImage img = (ToolkitImage) image;
-			if (img.hasError()) {
+		try {
+			if ((Boolean) image.getClass().getMethod("hasError").invoke(image)) {
 				return null;
 			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		final BufferedImage result = getThumbnail(thumbWidth, thumbHeight,
 				image);
