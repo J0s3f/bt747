@@ -48,6 +48,8 @@ public class ExifApp1 {
         return new ExifAttribute(tag, type, count, bigEndian);
     }
 
+    private byte[] thumbnail;
+    
     public final int read(final byte[] buffer, final int initialIdxInBuffer) {
         int currentIdxInBuffer = initialIdxInBuffer;
         int tiffHeaderStart = currentIdxInBuffer;
@@ -138,8 +140,8 @@ public class ExifApp1 {
                         }
                     }
                 }
-
             }
+            thumbnail = getThumbnailData(buffer, initialIdxInBuffer);
         }
         // MakerNotes
         // Some maker notes have offsets relative to the TIFF header.
@@ -446,6 +448,10 @@ public class ExifApp1 {
     }
     
     public final byte[] getThumbnailData() {
+    	return thumbnail;
+    }
+    
+    private final byte[] getThumbnailData(final byte[] buffer, final int initialIdxInBuffer) {
         byte[] ret;
         ret = null; // Default value
         
@@ -454,6 +460,9 @@ public class ExifApp1 {
                     &&Ifd1.hasTag(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH)) {
                 int idx = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMAT).getIntValue(0);
                 int len = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH).getIntValue(0);
+                
+                byte[] b = java.util.Arrays.copyOfRange(buffer, initialIdxInBuffer + idx, initialIdxInBuffer + idx +len);
+                ret = b;
                 
             }
         }

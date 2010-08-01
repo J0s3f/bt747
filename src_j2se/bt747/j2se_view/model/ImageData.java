@@ -38,7 +38,20 @@ public class ImageData extends FileWaypoint {
 
     private int width;
     private int height;
+    
+    private byte[] thumbnailData; // Thumbnail data from exif - similar to JPG file format.
 
+    public final static ImageData getInstance(BT747Path path) {
+    	final ImageData i = new ImageData();
+    	i.setFilePath(path);
+    	return i;
+    }
+    
+    public final byte[] getThumbnailData() {
+    	getImageInfo();
+    	return thumbnailData;
+    }
+    
     @Override
     protected boolean getInfo() {
         return getImageInfo();
@@ -89,6 +102,8 @@ public class ImageData extends FileWaypoint {
             if (atr != null) {
                 setWidth(atr.getIntValue(0));
             }
+            
+            thumbnailData = exifJpg.getThumbnailData();
 
             atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELYDIMENSION);
             if (atr != null) {

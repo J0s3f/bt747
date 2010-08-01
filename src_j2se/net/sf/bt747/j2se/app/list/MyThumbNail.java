@@ -66,12 +66,20 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+
+import sun.awt.image.ToolkitImage;
+
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+
+import bt747.j2se_view.model.ImageData;
+import bt747.sys.interfaces.BT747Path;
 
 // import java.io.BufferedOutputStream;
 // import java.io.FileOutputStream;
@@ -81,210 +89,247 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 // import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public final class MyThumbNail {
-    private static MediaTracker mediaTracker;
-    private static int lastId = 0;
+	private static MediaTracker mediaTracker;
+	private static int lastId = 0;
 
-    public final static BufferedImage createThumbnail(final MediaTracker mt,
-            final String imgFilePath, int thumbWidth, int thumbHeight)
-            throws Exception {
-        if(bt747.Version.VERSION_NUMBER.equals("2.dev") && hasSanselan()) {
-            return createThumbnailSanselan(mt, imgFilePath, thumbWidth,
-                    thumbHeight);
-        }
-        return createThumbnailSingleStep(mt, imgFilePath, thumbWidth,
-                thumbHeight);
-    }
+	public final static BufferedImage createThumbnail(final MediaTracker mt,
+			final String imgFilePath, int thumbWidth, int thumbHeight)
+			throws Exception {
+		BufferedImage img = null;
+		// if (bt747.Version.VERSION_NUMBER.equals("2.dev") && hasSanselan()) {
+		// return createThumbnailSanselan(mt, imgFilePath, thumbWidth,
+		// thumbHeight);
+		// }
 
-    private static synchronized int getNextId() {
-        return ++lastId;
-    }
+		try {
+			img = createThumbnailFromJPGThumbNail(mt, imgFilePath, thumbWidth,
+					thumbHeight);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
-    private final static MediaTracker getMediaTracker(final MediaTracker mt) {
-        if (mt != null) {
-            return mt;
-        } else {
-            if (mediaTracker == null) {
-                mediaTracker = new MediaTracker(new Container());
-            }
-        }
-        return mediaTracker;
-    }
+		if (img == null) {
+			img = createThumbnailSingleStep(mt, imgFilePath, thumbWidth,
+					thumbHeight);
+		}
+		return img;
+	}
 
+	private static synchronized int getNextId() {
+		return ++lastId;
+	}
 
-    // public static void main(String[] args) throws Exception {
-    // new MyThumbNail().createThumbnail("C:/personal/a.jpg",
-    // "C:/personal/thumb.jpg", 50, 30);
-    // }
+	private final static MediaTracker getMediaTracker(final MediaTracker mt) {
+		if (mt != null) {
+			return mt;
+		} else {
+			if (mediaTracker == null) {
+				mediaTracker = new MediaTracker(new Container());
+			}
+		}
+		return mediaTracker;
+	}
 
-    public final static BufferedImage createThumbnailSingleStep(
-            final MediaTracker mt, final String imgFilePath, int thumbWidth,
-            int thumbHeight) throws Exception {
-        //final Image image = Toolkit.getDefaultToolkit().getImage(imgFilePath);
-        final Image image = Toolkit.getDefaultToolkit().createImage(imgFilePath);
-        final int id = getNextId();
+	public final static BufferedImage createThumbnailFromJPGThumbNail(
+			final MediaTracker mt, final String imgFilePath, int thumbWidth,
+			int thumbHeight) throws Exception {
+		ImageData i = ImageData.getInstance(new BT747Path(imgFilePath));
+		byte[] t = i.getThumbnailData();
+		final Image image = Toolkit.getDefaultToolkit().createImage(t);
+		final int id = getNextId();
 
-        mediaTracker = getMediaTracker(mt);
+		mediaTracker = getMediaTracker(mt);
 
-        mediaTracker.addImage(image, id);
-        mediaTracker.waitForID(id);
+		mediaTracker.addImage(image, id);
+		mediaTracker.waitForID(id);
 
-        final BufferedImage result = getThumbnail(thumbWidth, thumbHeight, image);
-        image.flush();  // Not sure this helps, but trying.
-        return result;
-        // BufferedOutputStream out = new BufferedOutputStream(
-        // new FileOutputStream(thumbPath));
-        // JPEGCodec.
-        // JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-        // JPEGEncodeParam param =
-        // encoder.getDefaultJPEGEncodeParam(thumbImage);
-        // int quality = 100;
-        // param.setQuality((float) quality / 100.0f, false);
-        // encoder.setJPEGEncodeParam(param);
-        // encoder.encode(thumbImage);
-        // out.close();
-    }
+		if (image instanceof ToolkitImage) {
+			final ToolkitImage img = (ToolkitImage) image;
+			if (img.hasError()) {
+				return null;
+			}
+		}
+		final BufferedImage result = getThumbnail(thumbWidth, thumbHeight,
+				image);
+		image.flush(); // Not sure this helps, but trying.
+		return result;
+	}
 
-    /**
-     * @param thumbWidth
-     * @param thumbHeight
-     * @param image
-     * @return
-     */
-    private static BufferedImage getThumbnail(int thumbWidth,
-            int thumbHeight, final Image image) {
-        final double thumbRatio = (double) thumbWidth / (double) thumbHeight;
-        final int imageWidth = image.getWidth(null);
-        final int imageHeight = image.getHeight(null);
-        final double imageRatio = (double) imageWidth / (double) imageHeight;
-        if (thumbRatio < imageRatio) {
-            thumbHeight = (int) (thumbWidth / imageRatio);
-        } else {
-            thumbWidth = (int) (thumbHeight * imageRatio);
-        }
-        final BufferedImage thumbImage = new BufferedImage(thumbWidth,
-                thumbHeight, BufferedImage.TYPE_INT_RGB);
-        final Graphics2D graphics2D = thumbImage.createGraphics();
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
-        graphics2D.dispose();
-        return thumbImage;
-    }
+	// public static void main(String[] args) throws Exception {
+	// new MyThumbNail().createThumbnail("C:/personal/a.jpg",
+	// "C:/personal/thumb.jpg", 50, 30);
+	// }
 
-    
-    // Following function taken from the public domain at:
-    // http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html?page=last#thread
-    /**
-     * Convenience method that returns a scaled instance of the provided
-     * {@code BufferedImage}.
-     * 
-     * @param img
-     *            the original image to be scaled
-     * @param targetWidth
-     *            the desired width of the scaled instance, in pixels
-     * @param targetHeight
-     *            the desired height of the scaled instance, in pixels
-     * @param hint
-     *            one of the rendering hints that corresponds to {@code
-     *            RenderingHints.KEY_INTERPOLATION} (e.g. {@code
-     *            RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-     *            {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR}, {@code
-     *            RenderingHints.VALUE_INTERPOLATION_BICUBIC})
-     * @param higherQuality
-     *            if true, this method will use a multi-step scaling technique
-     *            that provides higher quality than the usual one-step
-     *            technique (only useful in downscaling cases, where {@code
-     *            targetWidth} or {@code targetHeight} is smaller than the
-     *            original dimensions, and generally only when the {@code
-     *            BILINEAR} hint is specified)
-     * @return a scaled version of the original {@code BufferedImage}
-     */
-    public static BufferedImage getScaledInstanceMultiStep(
-            final BufferedImage img, final int targetWidth,
-            final int targetHeight, final Object hint,
-            final boolean higherQuality) {
-        int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB
-                : BufferedImage.TYPE_INT_ARGB;
-        BufferedImage ret = (BufferedImage) img;
-        int w, h;
-        if (higherQuality) {
-            // Use multi-step technique: start with original size, then
-            // scale down in multiple passes with drawImage()
-            // until the target size is reached
-            w = img.getWidth();
-            h = img.getHeight();
-        } else {
-            // Use one-step technique: scale directly from original
-            // size to target size with a single drawImage() call
-            w = targetWidth;
-            h = targetHeight;
-        }
+	public final static BufferedImage createThumbnailSingleStep(
+			final MediaTracker mt, final String imgFilePath, int thumbWidth,
+			int thumbHeight) throws Exception {
+		// final Image image =
+		// Toolkit.getDefaultToolkit().getImage(imgFilePath);
+		final Image image = Toolkit.getDefaultToolkit()
+				.createImage(imgFilePath);
+		final int id = getNextId();
 
-        do {
-            if (higherQuality && w > targetWidth) {
-                w /= 2;
-                if (w < targetWidth) {
-                    w = targetWidth;
-                }
-            }
+		mediaTracker = getMediaTracker(mt);
 
-            if (higherQuality && h > targetHeight) {
-                h /= 2;
-                if (h < targetHeight) {
-                    h = targetHeight;
-                }
-            }
+		mediaTracker.addImage(image, id);
+		mediaTracker.waitForID(id);
 
-            BufferedImage tmp = new BufferedImage(w, h, type);
-            Graphics2D g2 = tmp.createGraphics();
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-            g2.drawImage(ret, 0, 0, w, h, null);
-            g2.dispose();
+		final BufferedImage result = getThumbnail(thumbWidth, thumbHeight,
+				image);
+		image.flush(); // Not sure this helps, but trying.
+		return result;
+		// BufferedOutputStream out = new BufferedOutputStream(
+		// new FileOutputStream(thumbPath));
+		// JPEGCodec.
+		// JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+		// JPEGEncodeParam param =
+		// encoder.getDefaultJPEGEncodeParam(thumbImage);
+		// int quality = 100;
+		// param.setQuality((float) quality / 100.0f, false);
+		// encoder.setJPEGEncodeParam(param);
+		// encoder.encode(thumbImage);
+		// out.close();
+	}
 
-            ret = tmp;
-        } while (w != targetWidth || h != targetHeight);
+	/**
+	 * @param thumbWidth
+	 * @param thumbHeight
+	 * @param image
+	 * @return
+	 */
+	private static BufferedImage getThumbnail(int thumbWidth, int thumbHeight,
+			final Image image) {
+		final double thumbRatio = (double) thumbWidth / (double) thumbHeight;
+		final int imageWidth = image.getWidth(null);
+		final int imageHeight = image.getHeight(null);
+		final double imageRatio = (double) imageWidth / (double) imageHeight;
+		if (thumbRatio < imageRatio) {
+			thumbHeight = (int) (thumbWidth / imageRatio);
+		} else {
+			thumbWidth = (int) (thumbHeight * imageRatio);
+		}
+		final BufferedImage thumbImage = new BufferedImage(thumbWidth,
+				thumbHeight, BufferedImage.TYPE_INT_RGB);
+		final Graphics2D graphics2D = thumbImage.createGraphics();
+		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
+		graphics2D.dispose();
+		return thumbImage;
+	}
 
-        return ret;
-    }
+	// Following function taken from the public domain at:
+	// http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html?page=last#thread
+	/**
+	 * Convenience method that returns a scaled instance of the provided {@code
+	 * BufferedImage}.
+	 * 
+	 * @param img
+	 *            the original image to be scaled
+	 * @param targetWidth
+	 *            the desired width of the scaled instance, in pixels
+	 * @param targetHeight
+	 *            the desired height of the scaled instance, in pixels
+	 * @param hint
+	 *            one of the rendering hints that corresponds to {@code
+	 *            RenderingHints.KEY_INTERPOLATION} (e.g. {@code
+	 *            RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR}, {@code
+	 *            RenderingHints.VALUE_INTERPOLATION_BILINEAR}, {@code
+	 *            RenderingHints.VALUE_INTERPOLATION_BICUBIC})
+	 * @param higherQuality
+	 *            if true, this method will use a multi-step scaling technique
+	 *            that provides higher quality than the usual one-step technique
+	 *            (only useful in downscaling cases, where {@code targetWidth}
+	 *            or {@code targetHeight} is smaller than the original
+	 *            dimensions, and generally only when the {@code BILINEAR} hint
+	 *            is specified)
+	 * @return a scaled version of the original {@code BufferedImage}
+	 */
+	public static BufferedImage getScaledInstanceMultiStep(
+			final BufferedImage img, final int targetWidth,
+			final int targetHeight, final Object hint,
+			final boolean higherQuality) {
+		int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB
+				: BufferedImage.TYPE_INT_ARGB;
+		BufferedImage ret = (BufferedImage) img;
+		int w, h;
+		if (higherQuality) {
+			// Use multi-step technique: start with original size, then
+			// scale down in multiple passes with drawImage()
+			// until the target size is reached
+			w = img.getWidth();
+			h = img.getHeight();
+		} else {
+			// Use one-step technique: scale directly from original
+			// size to target size with a single drawImage() call
+			w = targetWidth;
+			h = targetHeight;
+		}
 
+		do {
+			if (higherQuality && w > targetWidth) {
+				w /= 2;
+				if (w < targetWidth) {
+					w = targetWidth;
+				}
+			}
 
-    private static int hasSanselanState = 0;
-    
-    private static boolean hasSanselan() {
-        if (hasSanselanState == 0) {
-            try {
-                if (Class.forName("org.apache.sanselan.Sanselan") != null)
-                    hasSanselanState = 1;
-            } catch (ClassNotFoundException e) {
-                hasSanselanState = -1;
-            }
-        }
-        return hasSanselanState == 1;
-    }
-    
-    
-    public final static BufferedImage createThumbnailSanselan(
-            final MediaTracker mt, final String imgFilePath, int thumbWidth,
-            int thumbHeight) throws Exception {
-        final IImageMetadata metadata = Sanselan.getMetadata(new File(
-                imgFilePath));
-        BufferedImage thumb = null;
-        if (metadata instanceof JpegImageMetadata) {
-            JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-            
-            try {
-                thumb = jpegMetadata.getEXIFThumbnail();
-            } catch (ImageReadException e) {
-                // This error is not an issue
-            }
-        }            
- 
-        if(thumb!=null) {
-            thumb.getWidth();
-            thumb = getThumbnail(thumbWidth, thumbHeight, thumb);
-        } else {
-            thumb = createThumbnailSingleStep(mt, imgFilePath, thumbWidth, thumbHeight);
-        }
-        return thumb;
-    }
+			if (higherQuality && h > targetHeight) {
+				h /= 2;
+				if (h < targetHeight) {
+					h = targetHeight;
+				}
+			}
+
+			BufferedImage tmp = new BufferedImage(w, h, type);
+			Graphics2D g2 = tmp.createGraphics();
+			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
+			g2.drawImage(ret, 0, 0, w, h, null);
+			g2.dispose();
+
+			ret = tmp;
+		} while (w != targetWidth || h != targetHeight);
+
+		return ret;
+	}
+
+	private static int hasSanselanState = 0;
+
+	private static boolean hasSanselan() {
+		if (hasSanselanState == 0) {
+			try {
+				if (Class.forName("org.apache.sanselan.Sanselan") != null)
+					hasSanselanState = 1;
+			} catch (ClassNotFoundException e) {
+				hasSanselanState = -1;
+			}
+		}
+		return hasSanselanState == 1;
+	}
+
+	public final static BufferedImage createThumbnailSanselan(
+			final MediaTracker mt, final String imgFilePath, int thumbWidth,
+			int thumbHeight) throws Exception {
+		final IImageMetadata metadata = Sanselan.getMetadata(new File(
+				imgFilePath));
+		BufferedImage thumb = null;
+		if (metadata instanceof JpegImageMetadata) {
+			JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+
+			try {
+				thumb = jpegMetadata.getEXIFThumbnail();
+			} catch (ImageReadException e) {
+				// This error is not an issue
+			}
+		}
+
+		if (thumb != null) {
+			thumb.getWidth();
+			thumb = getThumbnail(thumbWidth, thumbHeight, thumb);
+		} else {
+			thumb = createThumbnailSingleStep(mt, imgFilePath, thumbWidth,
+					thumbHeight);
+		}
+		return thumb;
+	}
 }

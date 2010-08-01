@@ -92,9 +92,16 @@ public final class CommonOut {
             final GPSRecord s, final GPSRecord selectedFields,
             final BT747Time t, final boolean recordNbrInLogs,
             final boolean imperial) {
+    	getHtml(rec, s, selectedFields, t, recordNbrInLogs, imperial, false);
+    }
+    
+    public final static void getHtml(final StringBuffer rec,
+            final GPSRecord s, final GPSRecord selectedFields,
+            final BT747Time t, final boolean recordNbrInLogs,
+            final boolean imperial, final boolean convertToLower) {
 
         // Need lowercase ;-(.
-        final boolean convertToLower = true;
+        // final boolean convertToLower = true;
         final String rcr = CommonOut.getRCRstr(s);
         WayPointStyle style = null;
         style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
