@@ -372,8 +372,10 @@ public class GPSKMLFile extends GPSFile {
                 if (((isTrackType && isTrkComment) || ( isWayType && isWayComment) ) ) {
                     rec.append("<description>");
                     rec.append("<![CDATA[");
+                    // Lowercase is needed in GE.
+                    // TODO: Maybe make lowercase option optional.
                     CommonOut.getHtml(rec, r, selectedFileFields, t,
-                            recordNbrInLogs, imperial);
+                            recordNbrInLogs, imperial, true);
                     rec.append("]]>");
                     rec.append("</description>");
                 }
