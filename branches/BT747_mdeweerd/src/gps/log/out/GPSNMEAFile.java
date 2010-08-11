@@ -626,6 +626,7 @@ public final class GPSNMEAFile extends GPSFile {
 		if (separateFileForWpts && (currentFilterIdx == GPSFilter.TRKPT)) {
 			previousDate = 0;
 			ext = "_WPT" + ext;
+			currentFilterIdx = GPSFilter.WAYPT;
 			return true;
 		} else {
 			return false;
