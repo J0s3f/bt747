@@ -361,8 +361,9 @@ public class Controller implements ModelListener {
 			gpsFile.setMaxDiff(m.getIntOpt(AppSettings.TAG_MAXTIMEDIFFERENCE));
 			gpsFile.setOverridePreviousTag(m
 					.getBooleanOpt(AppSettings.TAG_OVERRIDEPOSITIONS));
-			gpsFile.setAddLogConditionInfo(m
-					.getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS));
+			gpsFile.getParamObject().setBoolParam(
+					GPSConversionParameters.ADD_LOG_CONDITIONS,
+					m.getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS));
 			gpsFile.setImperial(m.getBooleanOpt(AppSettings.IMPERIAL));
 			gpsFile.setRecordNbrInLogs(m
 					.getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));

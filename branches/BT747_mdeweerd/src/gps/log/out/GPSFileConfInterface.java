@@ -108,8 +108,6 @@ public interface GPSFileConfInterface {
      */
     public void setRecordNbrInLogs(final boolean recordNbrInLogs);
 
-    public void setAddLogConditionInfo(final boolean addLogConditionInfo);
-
     public void setIncludeTrkName(final boolean isIncludeTrkName);
 
     public void setFilenameBuilder(final BT747FileName filenameBuilder);
