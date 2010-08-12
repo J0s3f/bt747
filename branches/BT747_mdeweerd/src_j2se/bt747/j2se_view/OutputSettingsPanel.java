@@ -147,6 +147,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         updateDistanceCombo();
         updateLatLonDigitsCombo();
         updateHeightDigitsCombo();
+        cbAddWayPointComment.setSelected((m.getBooleanOpt(Model.IS_WRITE_WAYPOINT_COMMENT)));
+        cbLogConditions.setSelected(m.getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
     }
 
     private void adjustHeightCombo() {
