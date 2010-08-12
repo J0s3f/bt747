@@ -549,6 +549,16 @@ public class AppSettings implements BT747Thread {
 	 */
 	public static final int IS_WRITE_WAYPOINT_COMMENT = 97;
 
+	/*
+	 * True if there is no 'comment' field to be written to GPX.
+	 */
+	public static final int IS_GPX_NO_COMMENT = 98;
+
+	/*
+	 * True if there is no 'symbol' field to be written to GPX.
+	 */
+	public static final int IS_GPX_NO_SYMBOL = 99;
+
 	private static boolean defaultTraversable = false;
 	private static int defaultChunkSize = 0x10000;
 
@@ -822,7 +832,11 @@ public class AppSettings implements BT747Thread {
 				setIntOpt(POSITIONDIGITS, 8);
 				setIntOpt(HEIGHTDIGITS, 3);
 			}
-			setStringOpt(AppSettings.VERSION, "0.55");
+			/* fall through */
+		case 55:
+			setBooleanOpt(IS_GPX_NO_COMMENT, true);
+			setBooleanOpt(IS_GPX_NO_SYMBOL, true);
+			setStringOpt(AppSettings.VERSION, "0.56");
 
 			/* fall through */
 		default:
@@ -1826,8 +1840,14 @@ public class AppSettings implements BT747Thread {
 	private static final int IS_WRITE_WAYPOINT_COMMENT_IDX = AppSettings.HEIGHTDIGITS_IDX
 			+ AppSettings.HEIGHTDIGITS_SIZE;
 	private static final int IS_WRITE_WAYPOINT_COMMENT_SIZE = 4;
-	private static final int C_NEXT_IDX = AppSettings.IS_WRITE_WAYPOINT_COMMENT_IDX
+	private static final int IS_GPX_NO_COMMENT_IDX = AppSettings.IS_WRITE_WAYPOINT_COMMENT_IDX
 			+ AppSettings.IS_WRITE_WAYPOINT_COMMENT_SIZE;
+	private static final int IS_GPX_NO_COMMENT_SIZE = 4;
+	private static final int IS_GPX_NO_SYMBOL_IDX = AppSettings.IS_GPX_NO_COMMENT_IDX
+			+ AppSettings.IS_GPX_NO_COMMENT_SIZE;
+	private static final int IS_GPX_NO_SYMBOL_SIZE = 4;
+	private static final int C_NEXT_IDX = AppSettings.IS_GPX_NO_SYMBOL_IDX
+			+ AppSettings.IS_GPX_NO_SYMBOL_SIZE;
 
 	// Next lines just to add new items faster using replace functions
 	private static final int C_NEXT_SIZE = 4;
@@ -2094,6 +2114,12 @@ public class AppSettings implements BT747Thread {
 			{ AppSettings.BOOL, AppSettings.IS_WRITE_WAYPOINT_COMMENT,
 					AppSettings.IS_WRITE_WAYPOINT_COMMENT_IDX,
 					AppSettings.IS_WRITE_WAYPOINT_COMMENT_SIZE },
+			{ AppSettings.BOOL, AppSettings.IS_GPX_NO_COMMENT,
+					AppSettings.IS_GPX_NO_COMMENT_IDX,
+					AppSettings.IS_GPX_NO_COMMENT_SIZE },
+			{ AppSettings.BOOL, AppSettings.IS_GPX_NO_SYMBOL,
+					AppSettings.IS_GPX_NO_SYMBOL_IDX,
+					AppSettings.IS_GPX_NO_SYMBOL_SIZE },
 	// End of list
 	};
 }

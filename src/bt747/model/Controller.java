@@ -431,6 +431,12 @@ public class Controller implements ModelListener {
 			gpsFile.getParamObject().setIntParam(
 					GPSConversionParameters.HEIGHT_DIGITS,
 					m.getIntOpt(AppSettings.HEIGHTDIGITS));
+			gpsFile.getParamObject().setBoolParam(
+					GPSConversionParameters.GPX_NO_COMMENT,
+					m.getBooleanOpt(AppSettings.IS_GPX_NO_COMMENT));
+			gpsFile.getParamObject().setBoolParam(
+					GPSConversionParameters.GPX_NO_SYMBOL,
+					m.getBooleanOpt(AppSettings.IS_GPX_NO_SYMBOL));
 			String altMode = null;
 			switch (m.getIntOpt(AppSettings.KML_ALTITUDEMODE)) {
 			case 0:
@@ -523,9 +529,9 @@ public class Controller implements ModelListener {
 			break;
 		case Model.NMEA_LOGTYPE:
 			// Create way points too.
-//			doConvertLog(Model.NMEAWPT_LOGTYPE,
-//					getOutFileHandler(Model.NMEAWPT_LOGTYPE),
-//					getOutFileExt(Model.NMEAWPT_LOGTYPE));
+			// doConvertLog(Model.NMEAWPT_LOGTYPE,
+			// getOutFileHandler(Model.NMEAWPT_LOGTYPE),
+			// getOutFileExt(Model.NMEAWPT_LOGTYPE));
 			break;
 		}
 		return doConvertLog(logType, getOutFileHandler(logType),

@@ -373,6 +373,8 @@
                       <Component id="cbGPXTrkSegWhenSmall" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbGPXAddLink" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbGPX_1_1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbGPXNoCommentTags" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbGPXNoSymbolTags" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="12" max="32767" attributes="0"/>
               </Group>
@@ -388,7 +390,10 @@
                   <Component id="cbGPXAddLink" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cbGPX_1_1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cbGPXNoCommentTags" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cbGPXNoSymbolTags" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -441,6 +446,26 @@
           </Properties>
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbGPX_1_1StateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbGPXNoCommentTags">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="AdvancedFileSettingsPanel.cbGPXNoCommentTags.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbGPXNoCommentTagsStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbGPXNoSymbolTags">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="AdvancedFileSettingsPanel.cbGPXNoSymbolTags.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbGPXNoSymbolTagsStateChanged"/>
           </Events>
         </Component>
       </SubComponents>

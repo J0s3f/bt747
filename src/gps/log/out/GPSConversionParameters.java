@@ -123,6 +123,14 @@ public final class GPSConversionParameters {
 	 * Add log conditions to certain output formats.
 	 */
 	public final static String ADD_LOG_CONDITIONS = "add-cond";
+        /**
+         * If true, do not add &lt;comment&gt; in GPX
+         */
+        public final static String GPX_NO_COMMENT = "gpxnc";
+        /**
+         * If true, do not add &lt;symbol&gt; in GPX
+         */
+        public final static String GPX_NO_SYMBOL = "gpxns";
 
 	private final bt747.sys.interfaces.BT747Hashtable h = JavaLibBridge
 			.getHashtableInstance(5);
