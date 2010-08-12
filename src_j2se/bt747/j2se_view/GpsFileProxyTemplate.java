@@ -136,15 +136,6 @@ public class GpsFileProxyTemplate implements GPSFileInterface {
     /*
      * (non-Javadoc)
      * 
-     * @see gps.log.out.GPSFileConfInterface#setAddLogConditionInfo(boolean)
-     */
-    final public void setAddLogConditionInfo(boolean addLogConditionInfo) {
-        delegate.setAddLogConditionInfo(addLogConditionInfo);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * gps.log.out.GPSFileConfInterface#setBadTrackColor(java.lang.String)
      */

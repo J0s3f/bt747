@@ -13,6 +13,7 @@ import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import gps.log.out.GPSKMLFile;
 
+import bt747.model.AppSettings;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Path;
@@ -70,7 +71,9 @@ public class TestConvertOutBase extends junit.framework.TestCase {
         gpsFile.setWayPointTimeCorrection(0);
         gpsFile.setMaxDiff(300);
         gpsFile.setOverridePreviousTag(true);
-        gpsFile.setAddLogConditionInfo(false);
+		gpsFile.getParamObject().setParam(
+				GPSConversionParameters.ADD_LOG_CONDITIONS,
+				false);
         gpsFile.setImperial(false);
         gpsFile.setRecordNbrInLogs(true);
         gpsFile.setBadTrackColor("0000FF");

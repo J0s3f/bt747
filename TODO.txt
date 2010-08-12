@@ -83,3 +83,10 @@ Map
 * Add statistics for the path:
    - traveled distance since start
    - traveled distance to end
+   
+UNCLASSIFIED
+Resetting the record number to 0 is something I can do (not done in the bug fix build);
+Good idea for the start/end - not too much work to add that in the track list view.
+I would leave the start filter date to 1983 to make sure that the user selects everything in the log by default, but I could do something to set the date of the popup to the current date by default if the 1983 date is still there.
+Increment/Decrement date buttons: good idea (as long as I can keep that small enough).
+To be propped in the right click menu too and as keyboard shortcuts (CTRL-left/right ?).

@@ -259,6 +259,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         pnFileOutputFieldInner = new javax.swing.JPanel();
         pnFileReason = new javax.swing.JPanel();
         cbFileRCR = new javax.swing.JCheckBox();
+        cbLogConditions = new javax.swing.JCheckBox();
         pnFileTime = new javax.swing.JPanel();
         cbFileUTCTime = new javax.swing.JCheckBox();
         cbFileMilliSeconds = new javax.swing.JCheckBox();
@@ -646,17 +647,27 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             }
         });
 
+        cbLogConditions.setText(bundle.getString("OutputSettingsPanel.cbLogConditions.text")); // NOI18N
+        cbLogConditions.setToolTipText(bundle.getString("OutputSettingsPanel.cbLogConditions.toolTipText")); // NOI18N
+        cbLogConditions.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbLogConditionsStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout pnFileReasonLayout = new org.jdesktop.layout.GroupLayout(pnFileReason);
         pnFileReason.setLayout(pnFileReasonLayout);
         pnFileReasonLayout.setHorizontalGroup(
             pnFileReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnFileReasonLayout.createSequentialGroup()
-                .add(cbFileRCR)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(cbFileRCR)
+            .add(cbLogConditions)
         );
         pnFileReasonLayout.setVerticalGroup(
             pnFileReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbFileRCR)
+            .add(pnFileReasonLayout.createSequentialGroup()
+                .add(cbFileRCR)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbLogConditions))
         );
 
         pnFileTime.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileTime.border.title"))); // NOI18N
@@ -952,7 +963,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         );
         pnTrackPointsLayout.setVerticalGroup(
             pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+            .add(pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(pnTrackPointsLayout.createSequentialGroup()
                     .add(cbAddTrackPointComment)
                     .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1511,6 +1522,14 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .isSelected());
     }//GEN-LAST:event_cbAddWayPointCommentItemStateChanged
 
+    private void cbLogConditionsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbLogConditionsStateChanged
+        boolean orgValue = m.getBooleanOpt(Model.OUTPUTLOGCONDITIONS);
+        boolean newValue = cbLogConditions.isSelected();
+        if (orgValue != newValue) {
+            c.setBooleanOpt(Model.OUTPUTLOGCONDITIONS, newValue);
+        }
+    }//GEN-LAST:event_cbLogConditionsStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
@@ -1544,6 +1563,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JComboBox cbLanguage;
     private com.toedter.components.JLocaleChooser cbLanguageChooser;
     private javax.swing.JComboBox cbLatLonDigits;
+    private javax.swing.JCheckBox cbLogConditions;
     private javax.swing.JCheckBox cbNewTrackWhenLogOn;
     private javax.swing.JButton cbNoFixColor;
     private javax.swing.JComboBox cbOneFilePerDay;

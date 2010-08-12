@@ -184,6 +184,8 @@ public abstract class GPSFile implements GPSFileInterface {
     protected boolean isTrkComment = true;
     protected boolean isWayComment = true;
 
+    protected boolean addLogConditionInfo = false;
+
     /**
      * This function has to be called at some time to initialize the file
      * conversion. Other parameters can be set through other methods.
@@ -263,6 +265,14 @@ public abstract class GPSFile implements GPSFileInterface {
                     GPSConversionParameters.TRK_COMMENT);
         }
 
+		if (getParamObject().hasParam(
+				GPSConversionParameters.ADD_LOG_CONDITIONS)) {
+			addLogConditionInfo = getParamObject().getBoolParam(
+					GPSConversionParameters.ADD_LOG_CONDITIONS);
+		} else {
+			addLogConditionInfo = false;
+		}
+		
         initPass();
     };
 
@@ -1055,19 +1065,8 @@ public abstract class GPSFile implements GPSFileInterface {
         this.recordNbrInLogs = recordNbrInLogs;
     }
 
-    protected boolean addLogConditionInfo = false;
-
-    public final boolean isAddLogConditionInfo() {
+    private final boolean isAddLogConditionInfo() {
         return addLogConditionInfo;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gps.log.out.GPSFileConfInterface#setAddLogConditionInfo(boolean)
-     */
-    public final void setAddLogConditionInfo(final boolean addLogConditionInfo) {
-        this.addLogConditionInfo = addLogConditionInfo;
     }
 
     protected String errorInfo;
