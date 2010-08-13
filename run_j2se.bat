@@ -1,4 +1,4 @@
-echo on
+@echo off
 setlocal
 set       MYROOTPATH="%~dp0"
 for /f "useback tokens=*" %%a in ('%MYROOTPATH%') do set MYROOTPATH=%%~a
@@ -43,7 +43,7 @@ goto end:
 :debug
 set DEBUG_OPTION=-Dgnu.io.log.mode=FILE_MODE
 
-set CLASSPATH"=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%"
+set CLASSPATH="%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%"
 for /f "useback tokens=*" %%a in ('%CLASSPATH%') do set CLASSPATH=%%~a
 
 java %MEM_HEAP_OPTION% %DEBUG_OPTION% -verbose bt747.j2se_view.BT747Main
