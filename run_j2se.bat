@@ -1,12 +1,25 @@
-@echo on
+echo on
 setlocal
-set       MYROOTPATH=%~dp0
-set           MYDIST=%MYROOTPATH%dist
-set            MYLIB=%MYROOTPATH%lib
-set         RXTXPATH=%MYLIB%\rxtx-2.1-7-bins-r2
-set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
-set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
-set        CLASSPATH=%MYDIST%\BT747_j2se.jar;%MYLIB%\swingx-ws.jar;%MYLIB%\swingx.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-2.4.1.jar;%MYLIB%\jchart2d-3.1.0.jar;%CLASSPATH%
+set       MYROOTPATH="%~dp0"
+for /f "useback tokens=*" %%a in ('%MYROOTPATH%') do set MYROOTPATH=%%~a
+
+set           MYDIST="%MYROOTPATH%dist"
+for /f "useback tokens=*" %%a in ('%MYDIST%') do set MYDIST=%%~a
+
+set            MYLIB="%MYROOTPATH%lib"
+for /f "useback tokens=*" %%a in ('%MYLIB%') do set MYLIB=%%~a
+
+set         RXTXPATH="%MYLIB%\rxtx-2.1-7-bins-r2"
+for /f "useback tokens=*" %%a in ('%RXTXPATH%') do set RXTXPATH=%%~a
+
+set MYSYSTEMRXTXBINS="%RXTXPATH%\Windows\i368-mingw32"
+for /f "useback tokens=*" %%a in ('%MYSYSTEMRXTXBINS%') do set MYSYSTEMRXTXBINS=%%~a
+
+set             PATH="%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%"
+for /f "useback tokens=*" %%a in ('%PATH%') do set PATH=%%~a
+
+set        CLASSPATH="%MYDIST%\BT747_j2se.jar;%MYLIB%\swingx-ws.jar;%MYLIB%\swingx.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-2.4.1.jar;%MYLIB%\jchart2d-3.1.0.jar;%CLASSPATH%"
+for /f "useback tokens=*" %%a in ('%CLASSPATH%') do set CLASSPATH=%%~a
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
 
@@ -29,7 +42,10 @@ java %MEM_HEAP_OPTION% %DEBUG_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :debug
 set DEBUG_OPTION=-Dgnu.io.log.mode=FILE_MODE
-set CLASSPATH=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%
+
+set CLASSPATH"=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%"
+for /f "useback tokens=*" %%a in ('%CLASSPATH%') do set CLASSPATH=%%~a
+
 java %MEM_HEAP_OPTION% %DEBUG_OPTION% -verbose bt747.j2se_view.BT747Main
 pause
 :end

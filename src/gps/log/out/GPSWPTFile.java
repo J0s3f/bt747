@@ -223,6 +223,25 @@ public final class GPSWPTFile extends GPSFile {
 			// Field 10 : Background Color (RGB value)
 			rec.append(',');
 			// Field 11 : Description (max 40), no commas
+			if (r.hasUtc()) {
+				String timeStr = "";
+				timeStr += t.getYear() + "-" + (t.getMonth() < 10 ? "0" : "")
+						+ t.getMonth() + "-" + (t.getDay() < 10 ? "0" : "")
+						+ t.getDay() + " " + (t.getHour() < 10 ? "0" : "")
+						+ t.getHour() + ":" + (t.getMinute() < 10 ? "0" : "")
+						+ t.getMinute() + ":" + (t.getSecond() < 10 ? "0" : "")
+						+ t.getSecond();
+
+				if ((r.hasMillisecond())
+						&& (selectedFileFields.hasMillisecond())) {
+					timeStr += ".";
+					timeStr += (r.milisecond < 100) ? "0" : "";
+					timeStr += (r.milisecond < 10) ? "0" : "";
+					timeStr += r.milisecond;
+				}
+				rec.append(timeStr);
+				rec.append(' ');
+			}
 			rec.append(CommonOut.getRcrSymbolText(r));
 			rec.append(',');
 			// Field 12 : Pointer Direction
@@ -248,6 +267,9 @@ public final class GPSWPTFile extends GPSFile {
 			rec.append(',');
 			// Field 21 : Proximity or Route or Both
 			rec.append(',');
+			if (r.hasVoxStr()) {
+				rec.append(r.getVoxStr());
+			}
 			// Field 22 : File Attachment Name
 			rec.append(',');
 			// Field 23 : Proximity File Attachment Name
