@@ -267,8 +267,8 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
         cbDecimalPoint = new javax.swing.JComboBox();
         cbSatInfoSeparator = new javax.swing.JComboBox();
 
-        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileNMEAOutput.border.title"))); // NOI18N
         pnFileNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
 
         lbNMEAFileType9.setText(bundle.getString("BT747Main.lbNMEAFileType9.text")); // NOI18N
@@ -436,7 +436,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
                     .add(pnFileNMEAOutRight, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
+        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPXFileSettings.border.title"))); // NOI18N
         pnGPXFileSettings.setToolTipText(bundle.getString("BT747Main.pnGPXFileSettings.toolTipText")); // NOI18N
 
         cbNotApplyUTCOffset.setText(bundle.getString("BT747Main.cbNotApplyUTCOffset.text")); // NOI18N
