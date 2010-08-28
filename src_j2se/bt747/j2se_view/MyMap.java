@@ -61,6 +61,7 @@ import org.jdesktop.swingx.painter.CompoundPainter;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.GPSPositionWaypoint;
 import bt747.j2se_view.model.PositionData;
+import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;

@@ -34,6 +34,7 @@ import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;
 import bt747.j2se_view.model.PositionData.UserWayPointListModel;
+import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;

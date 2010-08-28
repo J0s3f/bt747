@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bt747.j2se_view;
+package bt747.j2se_view.popupmenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
+import bt747.j2se_view.J2SEAppController;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.LogFileTableModel;
 

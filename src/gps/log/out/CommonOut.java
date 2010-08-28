@@ -15,6 +15,7 @@
 package gps.log.out;
 
 import gps.BT747Constants;
+import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import bt747.sys.I18N;
@@ -22,13 +23,6 @@ import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Time;
 
 public final class CommonOut {
-    private static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
-            "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
-
-    protected static final String idxToMonthStr(final int i) {
-        return I18N.i18n(MONTHS_AS_TEXT[i]);
-    }
-
     public final static String getRCRKey(final String r) {
         if ((r.length() > 0) && (r.charAt(0) == 'X')) {
             return (r.substring(1));
@@ -353,7 +347,7 @@ public final class CommonOut {
         return ((time.getDay() < 10) ? "0" : "") + time.getDay()
                 + "-"
                 // Month
-                + idxToMonthStr(time.getMonth() - 1) + "-"
+                + Conv.idxToShortMonthStr(time.getMonth() - 1) + "-"
                 + (((time.getYear() % 100)) < 10 ? "0" : "") + time.getYear()
                 % 100;
     }

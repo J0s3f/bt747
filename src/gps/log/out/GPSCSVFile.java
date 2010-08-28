@@ -38,7 +38,7 @@ public final class GPSCSVFile extends GPSFile {
     
     private static final char defaultDecimalPoint = '.';
     
-    private static char decimalPoint = defaultDecimalPoint;
+    private char decimalPoint = defaultDecimalPoint;
     /**
      * CSV field separator - fixed now, but may become a parameter in the
      * future.

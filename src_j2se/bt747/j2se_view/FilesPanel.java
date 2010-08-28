@@ -21,6 +21,7 @@ import javax.swing.table.TableColumn;
 import bt747.j2se_view.model.LogFileTableModel;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
+import bt747.j2se_view.popupmenu.LogFilePopupMenu;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;

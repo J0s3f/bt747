@@ -10,7 +10,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SuperwabaSDK"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar"/>
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar" sourcepath="C:/eclipse_extensions/eclipse/plugins/gnu.io.rxtx.source_2.1.7.4_v20071016/src/gnu.io.rxtx_2.1.7.4_v20071016/src.zip"/>
-	<classpathentry kind="lib" path="lib/Waba_only.jar" sourcepath="C:/SuperWabaSDK/src/java"/>
+	<classpathentry kind="lib" path="lib/Waba_only.jar" sourcepath="C:/SuperWabaSDK/src/java/"/>
 	<classpathentry kind="lib" path="lib/jcalendar-1.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/swing-layout-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/swingx-ws.jar" sourcepath="C:/mdeweerd/workspace/swingx-ws/src/java">

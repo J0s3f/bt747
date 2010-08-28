@@ -16,7 +16,7 @@ import bt747.j2se_view.model.GPSRecordUtils;
  * @author Mario
  */
 public class GPSRecordArrayDataProvider implements GPSRecordDataProvider {
-    private class GPSRecordArray extends AbstractList<TracePoint2D> {
+    private static class GPSRecordArray extends AbstractList<TracePoint2D> {
 
         private final int valueType;
         private final GPSRecord[] list;
