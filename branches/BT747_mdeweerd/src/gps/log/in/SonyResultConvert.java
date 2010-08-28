@@ -107,7 +107,7 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 				 * are complete
 				 */
 				while (!stop && offsetInBuffer + 26 < sizeToRead) {
-					int recType = (bytes[offsetInBuffer] << 8)
+					int recType = ((bytes[offsetInBuffer]&0xFF) << 8)
 							| (bytes[offsetInBuffer + 1]);
 					switch (recType) {
 					case 0x0000: // Size 2 (or 4, but next is 00 too)

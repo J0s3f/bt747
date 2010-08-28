@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package gps.log.out;
 
+import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -166,7 +167,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
                                 + t.getDay()
                                 + "-"
                                 // Month calculation
-                                + CommonOut.idxToMonthStr(t.getMonth() - 1)
+                                + Conv.idxToShortMonthStr(t.getMonth() - 1)
                                 + "-"
                                 + (((t.getYear() % 100) < 10) ? "0" : "")
                                 // Year calculation

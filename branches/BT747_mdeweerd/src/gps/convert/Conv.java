@@ -16,12 +16,32 @@
  */
 package gps.convert;
 
+import gps.log.out.CommonOut;
+import bt747.sys.I18N;
+import bt747.sys.JavaLibBridge;
+import bt747.sys.interfaces.BT747Time;
+
 /**
  * Implement some conversion functions
  * 
  * @author Mario De Weerd
  */
 public final class Conv {
+	/**
+	 * Days in a month that is not a leap year. January = index 0.
+	 */
+	final static private byte daysInMonth[] = new byte[] { 31, 28, 31, 30, 31,
+			30, 31, 31, 30, 31, 30, 31 };
+	private static final String[] MONTHS_AS_SHORTTEXT = { "JAN", "FEB", "MAR",
+			"APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+	private static final String[] MONTHS_AS_LONGTEXT = { "January", "February",
+			"March", "April", "May", "June", "July", "August", "September",
+			"October", "November", "December" };
+	private static final String[] WEEKDAYS_AS_SHORTTEXT = { "Sun", "Mon",
+			"Tue", "Wed", "Thu", "Fri", "Sat" };
+	private static final String[] WEEKDAYS_AS_LONGTEXT = { "Sunday", "Monday",
+			"Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+
 	/**
 	 * Convert a string in hexadecimal to a list of bytes
 	 * 
@@ -261,7 +281,7 @@ public final class Conv {
 	 * d	Day of the month, 2 digits with leading zeros	01 to 31
 	 * D	A textual representation of a day, three letters	Mon through Sun
 	 * j	Day of the month without leading zeros	1 to 31
-	 * l (lowercase 'L')	A full textual representation of the day of the week	Sunday through Saturday
+	 * l (lower case 'L')	A full textual representation of the day of the week	Sunday through Saturday
 	 * N	ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)	1 (for Monday) through 7 (for Sunday)
 	 * S	English ordinal suffix for the day of the month, 2 characters	st, nd, rd or th. Works well with j
 	 * w	Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
@@ -306,8 +326,377 @@ public final class Conv {
 	 * @param orgStr
 	 * @return
 	 */
-	public static final String expandDate(final String orgStr) {
-		String newStr = orgStr;
-		return newStr;
+	public static final String expandDate(final String orgStr, final BT747Time t) {
+		StringBuffer newStr = new StringBuffer(20);
+		for (int i = 0; i < orgStr.length(); i++) {
+			char c = orgStr.charAt(i);
+			if (c != '%') {
+				newStr.append(c);
+			} else {
+				if (i + 1 >= orgStr.length()) {
+					// Last character in string.
+					newStr.append(c);
+				} else {
+					// Ranse already checked.
+					i++;
+					char f = orgStr.charAt(i);
+					switch (f) {
+					// Decode special token
+					// Day --- ---
+					case 'd': // Day of the month, 2 digits with leading zeros
+						// 01 to 31
+					{
+						int d = t.getDay();
+						if (d < 10) {
+							newStr.append('0');
+						}
+						newStr.append(d);
+					}
+						break;
+					case 'D': // A textual representation of a day, three
+						// letters Mon through Sun
+						newStr.append(idxToWeekdayShortStr(ExternalUtils
+								.getDayOfWeek(t.getDay(), t.getMonth(), t
+										.getYear())));
+						break;
+					case 'j': // Day of the month without leading zeros 1 to 31
+					{
+						int d = t.getDay();
+						newStr.append(d);
+					}
+						break;
+					case 'l': // (lower case 'L') A full textual representation
+						// of the day of the week Sunday through
+						// Saturday
+						newStr.append(idxToWeekdayStr(ExternalUtils
+								.getDayOfWeek(t.getDay(), t.getMonth(), t
+										.getYear())));
+						break;
+					case 'N': // ISO-8601 numeric representation of the day of
+						// the week (added in PHP 5.1.0) 1 (for Monday)
+						// through 7 (for Sunday)
+					{
+						int d = ExternalUtils.getDayOfWeek(t.getDay(), t
+								.getMonth(), t.getYear());
+						if (d == 0) {
+							d = 7;
+						}
+						newStr.append(d);
+					}
+						break;
+					case 'S': // English ordinal suffix for the day of the
+						// month, 2 characters st, nd, rd or th. Works
+						// well with j
+					{
+						int d = t.getDay();
+						switch (d) {
+						case 1:
+						case 21:
+						case 31:
+							newStr.append("st");
+							break;
+						case 2:
+						case 14:
+						case 15:
+						case 16:
+						case 17:
+						case 18:
+						case 19:
+						case 22:
+							newStr.append("nd");
+							break;
+						case 3:
+						case 23:
+							newStr.append("rd");
+							break;
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+						case 12:
+						case 20:
+						case 24:
+						case 25:
+						case 26:
+						case 27:
+						case 28:
+						case 29:
+						case 30:
+							newStr.append("th");
+							break;
+						}
+					}
+						break;
+					case 'w': // Numeric representation of the day of the week 0
+						// (for Sunday) through 6 (for Saturday)
+					{
+						int d = ExternalUtils.getDayOfWeek(t.getDay(), t
+								.getMonth(), t.getYear());
+						newStr.append(d);
+					}
+						break;
+					case 'z': // The day of the year (starting from 0) 0 through
+						// 365
+					{
+						int diff = JavaLibBridge.getDateInstance(t.getDay(),
+								t.getMonth(), t.getYear()).dateToUTCepoch1970()
+								- JavaLibBridge.getDateInstance(1, 1,
+										t.getYear()).dateToUTCepoch1970();
+						newStr.append(diff);
+					}
+						break;
+					// Week --- ---
+					case 'W': // ISO-8601 week number of year, weeks starting on
+						// Monday (added in PHP 4.1.0) Example: 42 (the
+						// 42nd week in the year)
+					{
+						int weekday = ExternalUtils.getDayOfWeek(1, 1, t
+								.getYear());
+						int diff = JavaLibBridge.getDateInstance(t.getDay(),
+								t.getMonth(), t.getYear()).dateToUTCepoch1970()
+								/ (24 * 3600)
+								- JavaLibBridge.getDateInstance(1, 1,
+										t.getYear()).dateToUTCepoch1970()
+								/ (24 * 3600);
+						newStr.append((diff + 7 - weekday) / 7);
+					}
+						break;
+					// Month --- ---
+					case 'F': // A full textual representation of a month, such
+						// as January or March January through December
+						newStr.append(idxToMonthStr(t.getMonth() - 1));
+						break;
+					case 'm': // Numeric representation of a month, with leading
+						// zeros 01 through 12
+					{
+						int d = t.getMonth();
+						if (d < 10) {
+							newStr.append('0');
+						}
+						newStr.append(d);
+					}
+						break;
+					case 'M': // A short textual representation of a month,
+						// three letters Jan through Dec
+					{
+						String a = idxToShortMonthStr(t.getMonth() - 1);
+						newStr.append(a.charAt(0));
+						newStr.append(a.substring(1).toLowerCase());
+					}
+						break;
+					case 'n': // Numeric representation of a month, without
+						// leading zeros 1 through 12
+					{
+						int d = t.getDay();
+						newStr.append(d);
+					}
+						break;
+					case 't': // Number of days in the given month 28 through 31
+						newStr
+								.append(getDaysInMonth(t.getMonth(), t
+										.getYear()));
+						break;
+					// Year --- ---
+					case 'L': // Whether it's a leap year 1 if it is a leap
+						// year, 0 otherwise.
+					{
+						// TODO:
+					}
+						break;
+					case 'o': // ISO-8601 year number. This has the same value
+						// as Y, except that if the ISO week number (W)
+						// belongs to the previous or next year, that
+						// year is used instead. (added in PHP 5.1.0)
+						// Examples: 1999 or 2003
+					{
+						// TODO:
+					}
+						break;
+					case 'Y': // A full numeric representation of a year, 4
+						// digits Examples: 1999 or 2003
+						newStr.append(t.getYear());
+						break;
+					case 'y': // A two digit representation of a year Examples:
+						// 99 or 03
+						newStr.append(t.getYear() % 100);
+						break; // * Time --- ---
+					case 'a': // Lowercase Ante meridiem and Post meridiem am or
+						// pm
+						if (t.getHour() < 12) {
+							newStr.append("am");
+						} else {
+							newStr.append("pm");
+						}
+						break;
+					case 'A': // Uppercase Ante meridiem and Post meridiem AM or
+						// PM
+						if (t.getHour() < 12) {
+							newStr.append("AM");
+						} else {
+							newStr.append("PM");
+						}
+						break;
+					case 'B': // Swatch Internet time 000 through 999
+					{
+						// TODO:
+					}
+						break;
+					case 'g': // 12-hour format of an hour without leading zeros
+						// 1 through 12
+						newStr.append(t.getHour() % 12);
+						break;
+					case 'G': // 24-hour format of an hour without leading zeros
+						// 0 through 23
+						newStr.append(t.getHour());
+						break;
+					case 'h': // 12-hour format of an hour with leading zeros 01
+						// through 12
+					{
+						int h = t.getHour() % 12;
+						if (h < 10) {
+							newStr.append('0');
+						}
+						newStr.append(h);
+					}
+						break;
+					case 'H': // 24-hour format of an hour with leading zeros 00
+						// through 23
+					{
+						int h = t.getHour();
+						if (h < 10) {
+							newStr.append('0');
+						}
+						newStr.append(h);
+					}
+						break;
+					case 'i': // Minutes with leading zeros 00 to 59
+					{
+						int h = t.getMinute();
+						if (h < 10) {
+							newStr.append('0');
+						}
+						newStr.append(h);
+					}
+						break;
+					case 's': // Seconds, with leading zeros 00 through 59
+					{
+						int h = t.getSecond();
+						if (h < 10) {
+							newStr.append('0');
+						}
+						newStr.append(h);
+					}
+						break;
+					case 'u': // Microseconds (added in PHP 5.2.2) Example:
+						// 654321
+					{
+						// TODO:
+					}
+						break;
+					// Timezone --- ---
+					case 'e': // Timezone identifier (added in PHP 5.1.0)
+						// Examples: UTC, GMT, Atlantic/Azores
+					{
+						// TODO:
+					}
+						break;
+					case 'I': // (capital i) Whether or not the date is in
+						// daylight saving time 1 if Daylight Saving
+						// Time, 0 otherwise.
+					{
+						// TODO:
+					}
+						break;
+					case 'O': // Difference to Greenwich time (GMT) in hours
+						// Example: +0200
+					case 'P': // Difference to Greenwich time (GMT) with colon
+						// between hours and minutes (added in PHP
+						// 5.1.3) Example: +02:00
+					{
+						// TODO:
+					}
+						break;
+					case 'T': // Timezone abbreviation Examples: EST, MDT ...
+					{
+						// TODO:
+					}
+						break;
+					case 'Z': // Timezone offset in seconds. The offset for
+						// timezones west of UTC is always negative, and
+						// for those east of UTC is always positive.
+						// -43200 through 50400
+					{
+						// TODO:
+					}
+						break;
+					// Full Date/Time --- ---
+					case 'c': // ISO 8601 date (added in PHP 5)
+						// 2004-02-12T15:19:21+00:00
+						newStr.append(CommonOut.getDateTimeISO8601(t, 0));
+						// TODO: Timezone
+						break;
+					case 'r': // RFC 2822 formatted date Example: Thu, 21 Dec
+						// 2000 16:01:07 +0200
+					{
+						// TODO:
+					}
+						break;
+					case 'U': // Seconds since the Unix Epoch (January 1 1970
+						// 00:00:00 GMT) See also time()
+					{
+						int s = JavaLibBridge.getDateInstance(t.getDay(),
+								t.getMonth(), t.getYear()).dateToUTCepoch1970()
+								+ t.getHour()
+								* 3600
+								+ t.getMinute()
+								* 60
+								+ t.getSecond();
+						newStr.append(s);
+					}
+						break;
+					default:
+						newStr.append(f);
+					}
+				}
+			}
+		}
+		return newStr.toString();
+	}
+
+	final static private int getDaysInMonth(final int month, final int year) {
+		final int idx = month - 1;
+		int leapMonth;
+		if (idx == 1 && Conv.isLeapYear(year)) {
+			leapMonth = 1;
+		} else {
+			leapMonth = 0;
+		}
+		return daysInMonth[idx] + leapMonth;
+	}
+
+	private final static boolean isLeapYear(final int year) {
+		// Leap year happens when year can be divided by 4, or by 400 but not on
+		// other years where it can be divided by 100.
+		return ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0)));
+	}
+
+	public static final String idxToShortMonthStr(final int i) {
+		return I18N.i18n(MONTHS_AS_SHORTTEXT[i]);
+	}
+
+	public static final String idxToMonthStr(final int i) {
+		return I18N.i18n(MONTHS_AS_LONGTEXT[i]);
+	}
+
+	public static final String idxToWeekdayShortStr(final int i) {
+		return I18N.i18n(WEEKDAYS_AS_SHORTTEXT[i]);
+	}
+
+	public static final String idxToWeekdayStr(final int i) {
+		return I18N.i18n(WEEKDAYS_AS_LONGTEXT[i]);
 	}
 }

@@ -20,6 +20,7 @@ import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
+import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 
 /**
  * 

@@ -19,7 +19,7 @@ IMPROVEMENTS
 * Report error of GPX upload.
 * Detect power up/rest of device (Initial PMTK010) and use it to request all the values again.
 * Need to indicate that the device needs formatting in all setups (J2ME, PDA).
-* Improve image thumbnail generation and caching.
+* Improve image thumbnail caching.
 * Improve waypoint handling (when there are many): put drawing them in a separate thread.
 
 FEATURES
@@ -70,7 +70,7 @@ Tracks
 * Allow color configuration.
 
 Tagging
-* Allow tagging using the exiftool.
+* Allow tagging using the exiftool (can currently be done using external command).
 * Allow tagging of other files by renaming them.
   As a coordinate format:
    decimal coordinates an hemispheres separated by underlines.

@@ -28,125 +28,125 @@ import net.sf.bt747.j2se.app.trackgraph.DataProvider;
  */
 public class DataProviderCSVFile implements DataProvider, CoordinateResolver {
 
-    class TrackIterator implements Iterator<TracePoint2D> {
-        Queue<TracePoint2D> queue;
+	class TrackIterator implements Iterator<TracePoint2D> {
+		Queue<TracePoint2D> queue;
 
-        public TrackIterator(Queue<TracePoint2D> q) {
-            super();
-            queue = q;
-        }
+		public TrackIterator(Queue<TracePoint2D> q) {
+			super();
+			queue = q;
+		}
 
-        public boolean hasNext() {
-            if (queue.peek() == null)
-                return fillBuffer();
-            return true;
-        }
+		public boolean hasNext() {
+			if (queue.peek() == null)
+				return fillBuffer();
+			return true;
+		}
 
-        public TracePoint2D next() {
-            return queue.remove();
-        }
+		public TracePoint2D next() {
+			return queue.remove();
+		}
 
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
 
-    /**
-     * A simple GPSRecord that only holds the coordinates and the record
-     * number.
-     * 
-     */
-    class SimpleGPSRecord extends GPSRecord {
-        public SimpleGPSRecord(String[] line) {
-            super();
+	/**
+	 * A simple GPSRecord that only holds the coordinates and the record number.
+	 * 
+	 */
+	class SimpleGPSRecord extends GPSRecord {
+		public SimpleGPSRecord(String[] line) {
+			super();
 
-            recCount = Integer.parseInt(line[0]);
-            latitude = Double.parseDouble(line[5]);
-            if ("S" == line[6])
-                latitude *= -1;
-            longitude = Double.parseDouble(line[7]);
-            if ("W" == line[8])
-                longitude *= -1;
+			recCount = Integer.parseInt(line[0]);
+			latitude = Double.parseDouble(line[5]);
+			if ("S" == line[6])
+				latitude *= -1;
+			longitude = Double.parseDouble(line[7]);
+			if ("W" == line[8])
+				longitude *= -1;
 
-        }
+		}
 
-        @Override
-        public String toString() {
+		@Override
+		public String toString() {
 
-            String ret = (recCount) + ": (";
-            ret += fmt.format(latitude);
-            if (latitude >= 0)
-                ret += " N; ";
-            else
-                ret += " S; ";
+			String ret = (recCount) + ": (";
+			ret += fmt.format(latitude);
+			if (latitude >= 0)
+				ret += " N; ";
+			else
+				ret += " S; ";
 
-            ret += fmt.format(longitude);
-            if (longitude >= 0)
-                ret += " E)";
-            else
-                ret += " W)";
+			ret += fmt.format(longitude);
+			if (longitude >= 0)
+				ret += " E)";
+			else
+				ret += " W)";
 
-            return ret;
-        }
-    }
+			return ret;
+		}
+	}
 
-    private BufferedReader reader;
+	private BufferedReader reader;
 
-    private Queue<TracePoint2D> valuesHeight;
-    private Queue<TracePoint2D> valuesSpeed;
+	private Queue<TracePoint2D> valuesHeight;
+	private Queue<TracePoint2D> valuesSpeed;
 
-    private TreeMap<Double, GPSRecord> coordinates;
+	private TreeMap<Double, GPSRecord> coordinates;
 
-    private DateFormat dformat = new SimpleDateFormat(
-            "yyyy/MM/dd+kk:mm:ss.SSS");
-    private DecimalFormat fmt = new DecimalFormat("#######0.000000");
+	private DateFormat dformat = new SimpleDateFormat("yyyy/MM/dd+kk:mm:ss.SSS");
+	private DecimalFormat fmt = new DecimalFormat("#######0.000000");
 
-    public DataProviderCSVFile(File csvfile) throws IOException {
-        reader = new BufferedReader(new FileReader(csvfile));
-        reader.readLine(); // drop 1st line
+	public DataProviderCSVFile(File csvfile) throws IOException {
+		reader = new BufferedReader(new FileReader(csvfile));
+		reader.readLine(); // drop 1st line
 
-        valuesHeight = new LinkedList<TracePoint2D>();
-        valuesSpeed = new LinkedList<TracePoint2D>();
+		valuesHeight = new LinkedList<TracePoint2D>();
+		valuesSpeed = new LinkedList<TracePoint2D>();
 
-        coordinates = new TreeMap<Double, GPSRecord>();
-    }
+		coordinates = new TreeMap<Double, GPSRecord>();
+	}
 
-    private boolean fillBuffer() {
-        String[] values;
-        double time;
+	private boolean fillBuffer() {
+		String[] values;
+		double time;
 
-        try {
-            values = reader.readLine().split(",");
-            time = (double) dformat.parse(values[2] + "+" + values[3])
-                    .getTime();
-        } catch (Exception e) {
-            return false;
-        }
+		try {
+			values = reader.readLine().split(",");
+			if (values != null) {
+				time = (double) dformat.parse(values[2] + "+" + values[3])
+						.getTime();
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
 
-        valuesHeight
-                .add(new TracePoint2D(time, Double.parseDouble(values[9])));
-        valuesSpeed
-                .add(new TracePoint2D(time, Double.parseDouble(values[10])));
+		valuesHeight.add(new TracePoint2D(time, Double.parseDouble(values[9])));
+		valuesSpeed.add(new TracePoint2D(time, Double.parseDouble(values[10])));
 
-        coordinates.put(time, new SimpleGPSRecord(values));
+		coordinates.put(time, new SimpleGPSRecord(values));
 
-        return true;
-    }
+		return true;
+	}
 
-    public Iterator<TracePoint2D> getHeightIter() {
-        return new TrackIterator(valuesHeight);
-    }
+	public Iterator<TracePoint2D> getHeightIter() {
+		return new TrackIterator(valuesHeight);
+	}
 
-    public Iterator<TracePoint2D> getSpeedIter() {
-        return new TrackIterator(valuesSpeed);
-    }
+	public Iterator<TracePoint2D> getSpeedIter() {
+		return new TrackIterator(valuesSpeed);
+	}
 
-    public GPSRecord getRecordOfTimestamp(double t) {
-        
-//        final Entry<Double, GPSRecord> e = coordinates.floorEntry(t);
-//        return e.getValue();
-        return coordinates.get(coordinates.headMap(t).firstKey());
-//        return coordinates.get(t);
-    }
+	public GPSRecord getRecordOfTimestamp(double t) {
+
+		// final Entry<Double, GPSRecord> e = coordinates.floorEntry(t);
+		// return e.getValue();
+		return coordinates.get(coordinates.headMap(t).firstKey());
+		// return coordinates.get(t);
+	}
 
 }

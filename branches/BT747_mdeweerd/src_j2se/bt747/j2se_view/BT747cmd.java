@@ -23,6 +23,7 @@ package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
+import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.out.CommonOut;
@@ -54,6 +55,7 @@ import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Int;
 import bt747.sys.interfaces.BT747Path;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * 
@@ -333,8 +335,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 	// }
 
 	private volatile boolean downloadIsSuccessFull = true;
-	private volatile Boolean eraseStarted = Boolean.FALSE;
-	private volatile Boolean eraseOngoing = Boolean.FALSE;
+	private volatile Integer eraseStarted = 0;
+	private volatile Integer eraseOngoing = 0;
 	private long conversionStartTime;
 	private long downloadStartTime;
 	private volatile boolean overwriteDownloadOk = false;
@@ -511,7 +513,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 				|| (getEraseOngoing() // Erase still going on
 				// And no time out.
 				&& (eraseTimeoutTime > System.currentTimeMillis()))) {
-			if (!eraseStarted && eraseTimeoutTime == 0) {
+			if ((eraseStarted == 0) && eraseTimeoutTime == 0) {
 				eraseTimeoutTime = System.currentTimeMillis() + eraseTimeoutMs;
 			}
 
@@ -531,7 +533,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 				// Do nothing
 			}
 		}
-		if (eraseOngoing) {
+		if (getEraseOngoing()) {
 			return "WARNING: Waiting for end of erase timed out";
 		} else {
 			return null;
@@ -1203,13 +1205,23 @@ public class BT747cmd implements bt747.model.ModelListener {
 						final int utcTimeSeconds,
 						final String proposedExtension,
 						final String proposedTimeSpec) {
+					BT747Time t = JavaLibBridge.getTimeInstance();
+					t.setUTCTime(utcTimeSeconds);
+					String base = Conv.expandDate(baseName.getPath(), t);
+					boolean addTimeSpec;
+					addTimeSpec = (baseName.getPath().indexOf('%') < 0);
 					switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
 					case 0:
-						return new BT747Path(baseName.getPath() + "_trk"
-								+ proposedExtension);
+						addTimeSpec &= false;
 					default:
-						return new BT747Path(baseName.getPath()
-								+ proposedTimeSpec + "_trk" + proposedExtension);
+						addTimeSpec &= true;
+					}
+
+					if (!addTimeSpec) {
+						return new BT747Path(base + "_trk" + proposedExtension);
+					} else {
+						return new BT747Path(base + proposedTimeSpec + "_trk"
+								+ proposedExtension);
 					}
 				}
 			});
@@ -1240,13 +1252,22 @@ public class BT747cmd implements bt747.model.ModelListener {
 						final int utcTimeSeconds,
 						final String proposedExtension,
 						final String proposedTimeSpec) {
+					BT747Time t = JavaLibBridge.getTimeInstance();
+					t.setUTCTime(utcTimeSeconds);
+					String base = Conv.expandDate(baseName.getPath(), t);
+					boolean addTimeSpec;
+					addTimeSpec = (baseName.getPath().indexOf('%') < 0);
 					switch (m.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
 					case 0:
-						return new BT747Path(baseName.getPath() + "_wpt"
-								+ proposedExtension);
+						addTimeSpec &= false;
 					default:
-						return new BT747Path(baseName.getPath()
-								+ proposedTimeSpec + "_wpt" + proposedExtension);
+						addTimeSpec &= true;
+					}
+					if (addTimeSpec) {
+						return new BT747Path(base + proposedTimeSpec + "_wpt"
+								+ proposedExtension);
+					} else {
+						return new BT747Path(base + "_wpt" + proposedExtension);
 					}
 				}
 			});
@@ -1309,14 +1330,26 @@ public class BT747cmd implements bt747.model.ModelListener {
 								final int utcTimeSeconds,
 								final String proposedExtension,
 								final String proposedTimeSpec) {
+							BT747Time t = JavaLibBridge.getTimeInstance();
+							t.setUTCTime(utcTimeSeconds);
+							String base = Conv
+									.expandDate(baseName.getPath(), t);
+
+							boolean addTimeSpec;
+							addTimeSpec = (baseName.getPath().indexOf('%') < 0);
 							switch (m
 									.getIntOpt(AppSettings.OUTPUTFILESPLITTYPE)) {
 							case 0:
-								return new BT747Path(baseName
-										+ proposedExtension);
+								addTimeSpec &= false;
 							default:
-								return new BT747Path(baseName
-										+ proposedTimeSpec + proposedExtension);
+								addTimeSpec &= true;
+							}
+
+							if (!addTimeSpec) {
+								return new BT747Path(base + proposedExtension);
+							} else {
+								return new BT747Path(base + proposedTimeSpec
+										+ proposedExtension);
 							}
 						}
 					});
@@ -1550,14 +1583,14 @@ public class BT747cmd implements bt747.model.ModelListener {
 
 	private final boolean getEraseOngoing() {
 		synchronized (eraseOngoing) {
-			return eraseOngoing.booleanValue();
+			return eraseOngoing != 0;
 		}
 	}
 
 	private final void setEraseOngoing(final boolean isEraseOngoing) {
 		synchronized (eraseOngoing) {
-			eraseStarted = true;
-			eraseOngoing = Boolean.valueOf(isEraseOngoing);
+			eraseStarted = 1;
+			eraseOngoing = isEraseOngoing ? 1 : 0;
 		}
 	}
 
