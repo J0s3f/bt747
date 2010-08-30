@@ -51,15 +51,15 @@ public class IBlue747Model {
         IBlue747Model.modelPort = port;
     }
 
-    enum DeviceModelType {
+    public enum DeviceModelType {
         ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C,
-        MBT1100, IBLUE747PLUS_TYPE2
+        MBT1100, IBLUE747PLUS_TYPE2, BTCD110m
     };
     
     /**
      * The default model type used.
      */
-    private static final DeviceModelType defaultModelType =
+    public static DeviceModelType defaultModelType =
 //    	DeviceModelType.IBLUE747PLUS;
     	DeviceModelType.IBLUE747PLUS_TYPE2;
 
