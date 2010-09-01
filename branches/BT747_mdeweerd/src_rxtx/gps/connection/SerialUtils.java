@@ -8,7 +8,9 @@ public class SerialUtils {
 
 	private static final String[] knownPorts = { "\\device\\usbser",
 			"\\device\\slabser", "\\device\\profilicserial",
-			"\\device\\silabser" };
+			"\\device\\silabser", "\\device\\BthModem" // This one is actually
+														// bluetooth modem.
+	};
 
 	public final static String SERIALPATH = "HARDWARE\\DEVICEMAP\\SERIALCOMM\\";
 
@@ -30,10 +32,22 @@ public class SerialUtils {
 
 			// Get its Value
 			byte[] values = RegUtil.RegQueryValueEx(handle, name);
+			// For the bluetooth ports, only take the first of the pair. this is
+			// the "counter"
+			boolean bluetoothEven = false;
 			if (null != values) {
 				final String n = (new String(name)).trim().toLowerCase();
 				for (int j = 0; j < knownPorts.length; j++) {
 					if (n.startsWith(knownPorts[j])) {
+						if (j == knownPorts.length - 1) {
+							// last in list is bluetooth
+							bluetoothEven = !bluetoothEven;
+							if (!bluetoothEven) {
+								// This is not the first out of two, so do not
+								// add the port
+								break;
+							}
+						}
 						portList.add(new String(values).trim());
 						break;
 					}
