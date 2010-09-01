@@ -34,6 +34,7 @@ import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;
 import bt747.j2se_view.model.PositionData.UserWayPointListModel;
+import bt747.j2se_view.popupmenu.POIActionHandler;
 import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 import bt747.model.AppSettings;
 import bt747.model.Model;
@@ -47,7 +48,7 @@ import bt747.sys.Generic;
  */
 @SuppressWarnings("serial")
 public class FileTablePanel extends javax.swing.JPanel implements
-        ModelListener {
+        ModelListener, POIActionHandler {
 
     /** Creates new form FileTablePanel. */
     public FileTablePanel() {
@@ -59,6 +60,8 @@ public class FileTablePanel extends javax.swing.JPanel implements
     private J2SEAppModel m;
 
     private UserWayPointListModel wpListModel;
+    
+    POIActionHandler poiActionHandler;
 
     public final void init(final J2SEAppController pC) {
         c = pC;
@@ -77,7 +80,7 @@ public class FileTablePanel extends javax.swing.JPanel implements
             col.setPreferredWidth(fileTableModel.getPreferredWidth(fm, i) + 4);
         }
 
-        new TagFilePopupMenu(this,tbImageList);
+        new TagFilePopupMenu(this,tbImageList, this);
         // dt = new DropTarget(tbImageList,this);
         // tbImageList.setDropTarget(dt);
 
@@ -102,6 +105,20 @@ public class FileTablePanel extends javax.swing.JPanel implements
         updateGuiData();
     }
 
+    /**
+     * POIActionHandler proxy....
+     */
+    
+    public final void setPOIActionHandler(POIActionHandler h) {
+    	poiActionHandler = h;
+    }
+    
+    public final void addPosition(Object e) {
+    	if(poiActionHandler!=null) {
+    		poiActionHandler.addPosition(e);
+    	}
+    }
+    
     /*
      * (non-Javadoc)
      * 

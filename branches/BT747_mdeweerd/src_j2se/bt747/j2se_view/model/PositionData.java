@@ -298,6 +298,9 @@ public class PositionData extends AbstractBean {
             super.fireIntervalAdded(source, index0, index1);
         }
 
+        public void fireChange(final int idx) {
+			super.fireContentsChanged(this, idx, idx);
+		}
         /*
          * (non-Javadoc)
          * 

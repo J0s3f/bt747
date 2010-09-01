@@ -141,6 +141,10 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
                 PositionData.WAYPOINTSELECTED, wpSelectedListener);
     }
 
+    public GeoPosition getCenterPosition() {
+    	return mapViewer.getCenterPosition();
+    }
+    
     private final PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {

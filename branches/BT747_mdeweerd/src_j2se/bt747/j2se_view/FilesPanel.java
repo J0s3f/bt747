@@ -22,6 +22,7 @@ import bt747.j2se_view.model.LogFileTableModel;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.j2se_view.popupmenu.LogFilePopupMenu;
+import bt747.j2se_view.popupmenu.POIActionHandler;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -32,7 +33,7 @@ import bt747.model.ModelListener;
  * @author Mario
  */
 @SuppressWarnings("serial")
-public class FilesPanel extends javax.swing.JPanel implements ModelListener {
+public class FilesPanel extends javax.swing.JPanel implements ModelListener, POIActionHandler {
 
     private final LogFileTableModel logFileModel = new LogFileTableModel();
     private final FileTablePanel fileTablePanel = new FileTablePanel();
@@ -54,6 +55,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
         map.setMiniMapVisible(false);
         logFileModel.setLogfileInfos(Model.logFiles);
         fileTablePanel.init(pC);
+        fileTablePanel.setPOIActionHandler(this);
         tbLogFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         final FontMetrics fm = tbLogFile.getFontMetrics(tbLogFile.getFont());
         for (int i = tbLogFile.getColumnCount() - 1; i >= 0; i--) {
@@ -75,7 +77,16 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
             break;
         }
     }
-
+    
+    public void addPosition(Object e) {
+    	if(e instanceof MapWaypoint) {
+    		MapWaypoint w = (MapWaypoint) e;
+    		if(!w.getGpsRecord().hasPosition()) {
+    			w.setPosition(map.getCenterPosition());
+    		}
+    	}
+    }
+    
     private final PropertyChangeListener wpSelectedListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {

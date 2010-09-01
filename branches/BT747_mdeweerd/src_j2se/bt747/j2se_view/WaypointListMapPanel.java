@@ -20,6 +20,7 @@ import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
+import bt747.j2se_view.popupmenu.POIActionHandler;
 import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 
 /**
@@ -27,7 +28,7 @@ import bt747.j2se_view.popupmenu.TagFilePopupMenu;
  * @author Mario
  */
 @SuppressWarnings("serial")
-public class WaypointListMapPanel extends javax.swing.JPanel  {
+public class WaypointListMapPanel extends javax.swing.JPanel implements POIActionHandler {
 
     private WaypointMapKit map;
 
@@ -56,13 +57,22 @@ public class WaypointListMapPanel extends javax.swing.JPanel  {
         // waypointList.setPreferredSize(new Dimension(100,0));
         splitPane.setDividerLocation(100);
 
-        new TagFilePopupMenu(wayPointScrollPane, waypointList);
+        new TagFilePopupMenu(wayPointScrollPane, waypointList, this);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WAYPOINTSELECTED, wpSelectedListener);
     }
 
+    
+    public void addPosition(Object e) {
+    	if(e instanceof MapWaypoint) {
+    		MapWaypoint w = (MapWaypoint) e;
+    		if(!w.getGpsRecord().hasPosition()) {
+    			w.setPosition(map.getCenterPosition());
+    		}
+    	}
+    }
     private final PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {

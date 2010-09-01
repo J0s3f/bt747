@@ -61,6 +61,7 @@ import org.jdesktop.swingx.painter.CompoundPainter;
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.GPSPositionWaypoint;
 import bt747.j2se_view.model.PositionData;
+import bt747.j2se_view.popupmenu.POIActionHandler;
 import bt747.j2se_view.popupmenu.TagFilePopupMenu;
 import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
@@ -72,7 +73,7 @@ import bt747.sys.Generic;
  * @author Mario
  */
 @SuppressWarnings("serial")
-public class MyMap extends javax.swing.JPanel implements ModelListener {
+public class MyMap extends javax.swing.JPanel implements ModelListener, POIActionHandler {
 
     private JXMapViewer mapViewer;
     private MyWaypointPainter<JXMapViewer> waypointPainter;
@@ -138,13 +139,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         // waypointList.setPreferredSize(new Dimension(100,0));
         splitPane.setDividerLocation(100);
 
-        new TagFilePopupMenu(wayPointScrollPane, waypointList);
+        new TagFilePopupMenu(wayPointScrollPane, waypointList, this);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WAYPOINTSELECTED, wpSelectedListener);
     }
 
+    
+    public void addPosition(Object e) {
+    	if(e instanceof MapWaypoint) {
+    		MapWaypoint w = (MapWaypoint) e;
+    		if(!w.getGpsRecord().hasPosition()) {
+    			w.setPosition(mapViewer.getCenterPosition());
+    		}
+    	}
+    }
     private final PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
 
         public void propertyChange(PropertyChangeEvent evt) {
