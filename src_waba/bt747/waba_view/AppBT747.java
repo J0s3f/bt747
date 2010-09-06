@@ -33,8 +33,6 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import javax.swing.JOptionPane;
-
 import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.connection.*;

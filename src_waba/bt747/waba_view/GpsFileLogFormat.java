@@ -19,11 +19,13 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.sys.Convert;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -45,6 +47,9 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
     private MyCheck commentCheck;
     /** When selected give a name to individual trackpoints */
     private MyCheck nameCheck;
+    
+    private MyCheck chkAddMissing;
+
 
     /**
      * Initialiser of this Container.<br>
@@ -76,6 +81,8 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
         nameCheck = new MyCheck(Txt.getString(Txt.TRKPTNAME));
         add(commentCheck, LEFT, AFTER + 6);
         add(nameCheck, getClientRect().width / 2, SAME);
+        
+        add(chkAddMissing = new MyCheck(Txt.getString(Txt.ADD_MISSING)),LEFT, AFTER + 1);
     }
 
     /** Get the format set by the user in the user interface. */
@@ -134,6 +141,9 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
             } else if (event.target == nameCheck) {
                 c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, nameCheck
                         .getChecked());
+			} else if (event.target == chkAddMissing) {
+				c.setBooleanOpt(AppSettings.CREATE_MISSING_FIELDS,
+						chkAddMissing.getChecked());
             } else {
                 boolean isLogFmtUpdated = false;
                 for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
@@ -151,6 +161,10 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
             break;
         }
     }
+    
+    private final void updateAddMissing() {
+        chkAddMissing.setChecked(m.getBooleanOpt(AppSettings.CREATE_MISSING_FIELDS));
+    }
 
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
@@ -158,9 +172,12 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
             updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));
             break;
         case ModelEvent.SETTING_CHANGE:
-            // switch (event.getArg()) {
-            //            
-            // }
+      	  final int arg = Convert.toInt((String) event.getArg());
+            switch (arg) {
+            case AppSettings.CREATE_MISSING_FIELDS:
+          	  updateAddMissing();
+          	  break;
+            }
         break;
         default:
             break;
