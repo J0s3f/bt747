@@ -375,8 +375,8 @@ public final class Txt_de implements TxtInterface {
     private static final String ADD_RECORD_NUMBER =
         "Rekord-Nummer im Log";
     
-    private static final String S_DEBUG_CONN= "Debug Verbindung";
-    private static final String S_IMPERIAL= "Britische Einheiten";
+    private static final String S_DEBUG_CONN= "Debug-Verb.";
+    private static final String S_IMPERIAL= "Imperiale Einh.";
     private static final String BAD_SUPERWABAVERSION =
         "Diese Anwendung wurde erstellt|für SuperWaba V";
     private static final String BAD_SUPERWABAVERSION_CONT =
