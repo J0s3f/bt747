@@ -38,10 +38,8 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.File;
-import bt747.sys.interfaces.BT747Int;
 import bt747.waba_view.ui.FileSelect;
 
 /**

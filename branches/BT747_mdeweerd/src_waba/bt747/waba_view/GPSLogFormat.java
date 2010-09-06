@@ -19,15 +19,13 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import gps.BT747Constants;
+import gps.mvc.MtkModel;
 import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
-
-import gps.BT747Constants;
-import gps.mvc.MtkModel;
-
 import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -91,6 +89,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
         lbEstNbrRecords = new Label("0000000" + Txt.getString(Txt.REC_ESTIMATED));
         add(lbEstNbrRecords, LEFT, AFTER);
         lbEstNbrRecords.setText("");
+
 
         // Add button confirming change of log format.
         btChangeFormatErase = new Button(Txt.getString(Txt.SET_ERASE));
