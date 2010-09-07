@@ -56,8 +56,6 @@ public final class GPSLogReason extends Container implements ModelListener {
     private MyCheck chkPowerSaveOnOff;
     private MyCheck chkSBASOnOff;
     private MyCheck chkSBASTestOnOff;
-    private static final String[] strDGPSMode = { Txt.getString(Txt.NO_DGPS), Txt.getString(Txt.RTCM),
-            Txt.getString(Txt.WAAS) };
     private ComboBox cbDGPSMode;
     private static final String[] strDatumMode = { "WGS84", "TOKYO-M",
             "TOKYO-A" };
@@ -84,13 +82,15 @@ public final class GPSLogReason extends Container implements ModelListener {
         edTime.setValidChars(Edit.numbersSet + ".");
         add(chkSBASOnOff = new MyCheck("SBAS"), LEFT, AFTER + 3); //$NON-NLS-1$
         cbDGPSMode = new ComboBox();
-        cbDGPSMode.add(strDGPSMode);
+        final String[] tmp = { Txt.getString(Txt.NO_DGPS), Txt.getString(Txt.RTCM),
+                Txt.getString(Txt.WAAS) };
+        cbDGPSMode.add(tmp);
         add(cbDGPSMode, AFTER, SAME);
         add(chkSBASTestOnOff = new MyCheck(Txt.getString(Txt.INCL_TST_SBAS)), RIGHT, SAME); //$NON-NLS-1$
         cbDatumMode = new ComboBox();
         cbDatumMode.setEnabled(false);
         cbDatumMode.add(strDatumMode);
-        add(cbDatumMode, LEFT, AFTER + 3);
+        add(cbDatumMode, LEFT, AFTER + 6);
         if (ENABLE_PWR_SAVE_CONTROL) {
             add(chkPowerSaveOnOff = new MyCheck(Txt.getString(Txt.PWR_SAVE_INTRNL)), LEFT,
                     AFTER + 3); //$NON-NLS-1$
