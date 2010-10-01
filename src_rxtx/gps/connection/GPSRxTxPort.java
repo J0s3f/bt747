@@ -280,6 +280,7 @@ public final class GPSRxTxPort extends GPSPort {
 			"/dev/tty.iBT-GPS-SPPslave-", // Port for
 			"/dev/cu.QstarzGPS-SPPslave-", // Port for some Qstartz devices
 			"/dev/tty.QstarzGPS-SPPslave-",// Port for some Qstartz devices
+			"/dev/tty.Qstarz1000XT-SPPslave-",// Port for some Qstartz devices
 			"/dev/tty.BlumaxBT-GPS-SPPSlave-" // Port for Blumax device
 	};
 
