@@ -9,8 +9,8 @@ class GmapMgmt {
   }
   // Generate the Gmap script initialisation
   public static function gmapScript() {
-     print '<script src="http://maps.google.com/jsapi?key='.GmapMgmt::$gmapKey.'" type="text/javascript"></script>';
-  }  
+     print '<script src="http://www.google.com/jsapi?key='.GmapMgmt::$gmapKey.'" type="text/javascript"></script>';
+  }
 }
 
 
