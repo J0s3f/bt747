@@ -729,7 +729,6 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     && ((0xFF & bytes[offsetInBuffer + 6]) == 'R')
                     && ((0xFF & bytes[offsetInBuffer + 7]) == '2')
                     && ((0xFF & bytes[offsetInBuffer + 8]) == '4')
-                    && ((0xFF & bytes[offsetInBuffer + 9]) == '5')
                     && ((0xFF & bytes[offsetInBuffer + 16]) == ' ')
                     && ((0xFF & bytes[offsetInBuffer + 17]) == ' ')
                     && ((0xFF & bytes[offsetInBuffer + 18]) == ' ')
