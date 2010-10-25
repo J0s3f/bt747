@@ -208,7 +208,7 @@ public class J2SEController extends Controller {
      * Get the AGPS data from the default Url and upload to the device.
      */
     public final void downloadAndUploadAgpsData() {
-        final String urlTxt = Version.AURL + "MTK7d.EPO";
+        final String urlTxt = Version.AURL + "MTK8d.EPO";
         bt747.sys.Generic.debug("Getting MTK7d.EPO data.");
         downloadAndUploadAgpsData(urlTxt);
     }
