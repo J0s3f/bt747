@@ -90,7 +90,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         badrecordCount++;
     }
     
-    private void isGoodRecord(final int offset) {
+	private void isGoodRecord(final int offset) {
         if(lastRecordIsBad) {
             Generic.debug("Recovered ("
                     + JavaLibBridge.unsigned2hex(offset, 8) + ")", null);
@@ -281,6 +281,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                     int nbrBytes;
                     nbrBytes = getSpecialRecord(bytes, offsetInBuffer,
                             gpsFile);
+                    int fileOffset =  nextAddrToRead
+                    - sizeToRead + offsetInBuffer;
                     if ((recCount == 0)
                             && !firstBlockDone
                             && ((logMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0)) {
@@ -292,6 +294,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                         isGoodRecord(nextAddrToRead
                                 - sizeToRead + offsetInBuffer);
                         offsetInBuffer += nbrBytes;
+                        okInBuffer = offsetInBuffer;
                     }
                 }
 
@@ -408,6 +411,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                 // buffer).
                                 valid = getRecord(bytes, r, recIdx, rcrIdx,
                                         satcnt);
+                                int fileOffset =  nextAddrToRead
+                                - sizeToRead + recIdx;
                                 if (valid) {
                                     if (!passToFindFirstBlockInLog) {
                                         gpsFile.addLogRecord(r);
@@ -419,13 +424,11 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                             }
                                         }
                                     }
-                                    isGoodRecord(nextAddrToRead
-                                            - sizeToRead + recIdx);
+                                    isGoodRecord(fileOffset);
                                     okInBuffer = offsetInBuffer;
                                     foundRecord = true;
                                 } else {
-                                    isBadRecord(r.recCount, nextAddrToRead
-                                            - sizeToRead + recIdx);
+                                    isBadRecord(r.recCount, fileOffset);
                                     // Recover ...
                                     recCount--;
                                     offsetInBuffer = recIdx;
