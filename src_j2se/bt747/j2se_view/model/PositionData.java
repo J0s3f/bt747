@@ -25,6 +25,7 @@ import org.jdesktop.beans.AbstractBean;
 import bt747.j2se_view.J2SEAppModel;
 import bt747.model.Controller;
 import bt747.model.ModelEvent;
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Path;
 
 /**
@@ -183,7 +184,7 @@ public class PositionData extends AbstractBean {
                     }
 
                 } catch (final IOException e) {
-                    // TODO: handle exception
+                    Generic.debug("Issue with adding a file", e);
                 }
             }
             fireLogFileUpdate();
