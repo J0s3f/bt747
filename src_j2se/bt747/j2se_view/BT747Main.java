@@ -304,7 +304,11 @@ public class BT747Main extends javax.swing.JFrame implements
              * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
              */
             public void filesDropped(final java.io.File[] files) {
+            	try {
                 m.getPositionData().addFiles(files);
+            	} catch (Exception e) {
+					Generic.debug("BT747Main, filesDropped", e);
+				}
             }
         };
         new FileDrop(this, dl);
