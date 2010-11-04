@@ -115,7 +115,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             index = 1;
             break;
         }
-        cbOneFilePerDay.setSelectedIndex(index);
+        try {
+        	cbOneFilePerDay.setSelectedIndex(index);
+    	} catch (Exception e) {
+    		Generic.debug("cbOneFilePerDay",e);
+		}
         
         
         cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(
@@ -174,6 +178,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     		cbLatLonDigits.setSelectedIndex(m.getIntOpt(Model.POSITIONDIGITS));
     	} catch (Exception e) {
     		// TODO: Notify exception
+    		Generic.debug("updateLatLonDigitsCombo",e);
     	}
     }
 
@@ -181,8 +186,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     	try {
     		cbHeightDigits.setSelectedIndex(m.getIntOpt(Model.HEIGHTDIGITS));
     	} catch (Exception e) {
-    		// TODO: Notify exception
-    	}
+    		Generic.debug("updateHeightDigitsCombo",e);
+		}
         
     }
     
@@ -190,7 +195,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
      * 
      */
     private void updateDistanceCombo() {
-        cbDistanceCalculation.setSelectedIndex(m.getIntOpt(Model.DISTANCE_CALCULATION_MODE));
+    	try {
+    		cbDistanceCalculation.setSelectedIndex(m.getIntOpt(Model.DISTANCE_CALCULATION_MODE));
+    	} catch (Exception e) {
+    		Generic.debug("updateDistanceCombo",e);
+		}
     }
     
     public void modelEvent(final ModelEvent e) {
