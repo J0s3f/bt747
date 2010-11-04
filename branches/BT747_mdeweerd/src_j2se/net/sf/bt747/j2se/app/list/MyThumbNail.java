@@ -74,6 +74,7 @@ import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 
 import bt747.j2se_view.model.ImageData;
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Path;
 
 // import java.io.BufferedOutputStream;
@@ -101,6 +102,7 @@ public final class MyThumbNail {
 					thumbHeight);
 		} catch (Exception e) {
 			// TODO: handle exception
+        	Generic.debug("MyThumbNail",e);
 		}
 
 		if (img == null) {
@@ -144,6 +146,7 @@ public final class MyThumbNail {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+        	Generic.debug("MyThumbNail",e);
 		}
 		final BufferedImage result = getThumbnail(thumbWidth, thumbHeight,
 				image);

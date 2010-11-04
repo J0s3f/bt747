@@ -3,12 +3,6 @@
  */
 package net.sf.bt747.j2se.app.exif.maker;
 
-import bt747.sys.JavaLibBridge;
-import bt747.sys.interfaces.BT747Hashtable;
-import bt747.sys.interfaces.BT747Vector;
-
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
-
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifIfdBlock;
 import net.sf.bt747.j2se.app.exif.ExifUtils;
