@@ -822,6 +822,8 @@
                 -keep public class * extends waba.ui.MainWindow
  		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort
+			<keep name="gps.connection.GPSRxTxPort" />
+
     	        -keep public class * {
     	          public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
 			      public static boolean hasDefaultPortInstance();
