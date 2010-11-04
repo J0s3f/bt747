@@ -110,6 +110,7 @@ public class ExiftoolData extends FileWaypoint {
         try {
             exifResult = getExifToolInfo(getGpsRecord(), getFilePath());
         } catch (Exception e) {
+        	Generic.debug("ExiftoolData",e);
             return false;
         }
 

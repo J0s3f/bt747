@@ -57,7 +57,7 @@ public final class ExifTool {
             Generic.debug("ExifTool", e);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+        	Generic.debug("ExifTool",e);
         }
         tested = true;
     }
