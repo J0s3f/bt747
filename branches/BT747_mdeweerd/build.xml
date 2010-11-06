@@ -320,6 +320,7 @@
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
+			<include name="de/k621/avr/gps/converter/NMEAConverter.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked" />
@@ -395,6 +396,7 @@
 			<fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
 			<fileset dir="${src_j2se.dir}" includes="**/geoid1DEG.bin" />
 			<fileset dir="${src_j2se.dir}" includes="**/resources/*" />
+			<fileset dir="${src_j2se.dir}" includes="**/icons/*" />
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 		</jar>
 
