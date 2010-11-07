@@ -1007,6 +1007,7 @@
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_j2se.dir}/**/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
+				<include name="*/de/**" if="is.lib" />
 				<include name="*/bt747/*view/**" if="is.lib" />
 				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**"
 				         if="is.lib"
