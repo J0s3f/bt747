@@ -193,12 +193,32 @@ public class BT747cmd implements bt747.model.ModelListener {
 	private static final String OPT_START = "start";
 	/** Cold parameter for start. */
 	private static final String OPT_COLD = "cold";
-	/** Cold parameter for start. */
+	/** Warm parameter for start. */
 	private static final String OPT_WARM = "warm";
-	/** Cold parameter for start. */
+	/** Hot parameter for start. */
 	private static final String OPT_HOT = "hot";
-	/** Cold parameter for start. */
+	/** . */
 	private static final String OPT_FACTORY = "factory";
+	/** Filter parameter. */
+	private static final String OPT_MIN_SPEED = "min-speed";
+	/** Filter parameter. */
+	private static final String OPT_MAX_SPEED = "max-speed";
+	/** Filter parameter. */
+	private static final String OPT_MIN_NSAT = "min-nsat";
+	/** Filter parameter. */
+	private static final String OPT_MAX_DISTANCE = "max-distance";
+	/** Filter parameter. */
+	private static final String OPT_MIN_DISTANCE = "min-distance";
+	/** Filter parameter. */
+	private static final String OPT_MAX_RECCOUNT = "max-reccount";
+	/** Filter parameter. */
+	private static final String OPT_MIN_RECCOUNT = "min-reccount";
+	/** Filter parameter. */
+	private static final String OPT_MAX_VDOP = "max-vdop";
+	/** Filter parameter. */
+	private static final String OPT_MAX_HDOP = "max-hdop";
+	/** Filter parameter. */
+	private static final String OPT_MAX_PDOP = "max-pdop";
 
 	private int eraseTimeoutMs = 60000;
 
@@ -752,6 +772,66 @@ public class BT747cmd implements bt747.model.ModelListener {
 			}
 			c.setIntOpt(Model.FILETIMEOFFSET, hour * 3600 + minute * 60
 					+ seconds);
+		}
+
+		if (options.has(OPT_MIN_SPEED)) {
+			final Float limit = (Float) options.valueOf(OPT_MIN_SPEED);
+			c.setFloatOpt(Model.MIN_SPEED, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_SPEED)) {
+			final Float limit = (Float) options.valueOf(OPT_MAX_SPEED);
+			c.setFloatOpt(Model.MAX_SPEED, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MIN_RECCOUNT)) {
+			final Integer limit = (Integer) options.valueOf(OPT_MIN_RECCOUNT);
+			c.setIntOpt(Model.MIN_RECCOUNT, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_RECCOUNT)) {
+			final Integer limit = (Integer) options.valueOf(OPT_MAX_RECCOUNT);
+			c.setIntOpt(Model.MAX_RECCOUNT, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MIN_NSAT)) {
+			final Integer limit = (Integer) options.valueOf(OPT_MIN_NSAT);
+			c.setIntOpt(Model.MIN_NSAT, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MIN_DISTANCE)) {
+			final Float limit = (Float) options.valueOf(OPT_MIN_DISTANCE);
+			c.setFloatOpt(Model.MIN_DISTANCE, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_DISTANCE)) {
+			final Float limit = (Float) options.valueOf(OPT_MAX_DISTANCE);
+			c.setFloatOpt(Model.MAX_DISTANCE, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_HDOP)) {
+			final Float limit = (Float) options.valueOf(OPT_MAX_HDOP);
+			c.setFloatOpt(Model.MAX_HDOP, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_VDOP)) {
+			final Float limit = (Float) options.valueOf(OPT_MAX_VDOP);
+			c.setFloatOpt(Model.MAX_VDOP, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
+		}
+
+		if (options.has(OPT_MAX_PDOP)) {
+			final Float limit = (Float) options.valueOf(OPT_MAX_PDOP);
+			c.setFloatOpt(Model.MAX_PDOP, limit);
+			c.setBooleanOpt(AppSettings.ADVFILTACTIVE, true);
 		}
 
 		if (options.has(OPT_COLOR)) {
@@ -1431,6 +1511,35 @@ public class BT747cmd implements bt747.model.ModelListener {
 						"Serial port speed, default 115200 baud")
 						.withRequiredArg().describedAs("speed").ofType(
 								Integer.class);
+
+				accepts(OPT_MIN_SPEED, "Filter Minimum Speed")
+						.withRequiredArg().describedAs("min_speed").ofType(
+								Float.class);
+				accepts(OPT_MAX_SPEED, "Filter Maximum Speed")
+						.withRequiredArg().describedAs("max_speed").ofType(
+								Float.class);
+				accepts(OPT_MIN_NSAT, "Filter Minimum Satelites")
+						.withRequiredArg().describedAs("min_nsat").ofType(
+								Integer.class);
+				accepts(OPT_MIN_RECCOUNT, "Filter Minimum Record Number")
+						.withRequiredArg().describedAs("min_recnbr").ofType(
+								Integer.class);
+				accepts(OPT_MAX_RECCOUNT, "Filter Maximum Record Number")
+						.withRequiredArg().describedAs("max_recnbr").ofType(
+								Integer.class);
+				accepts(OPT_MIN_DISTANCE, "Filter Minimum Distance")
+						.withRequiredArg().describedAs("min_dist").ofType(
+								Float.class);
+				accepts(OPT_MAX_VDOP, "Filter Maximum VDOP").withRequiredArg()
+						.describedAs("max_vdop").ofType(Float.class);
+				accepts(OPT_MAX_PDOP, "Filter Maximum PDOP").withRequiredArg()
+						.describedAs("max_pdop").ofType(Float.class);
+				accepts(OPT_MAX_HDOP, "Filter Maximum HDOP").withRequiredArg()
+						.describedAs("max_hdop").ofType(Float.class);
+				accepts(OPT_MAX_DISTANCE, "Filter Maximum Distance")
+						.withRequiredArg().describedAs("max_dist").ofType(
+								Float.class);
+
 				accepts(OPT_CREATE_GPX_TRACKS, "Create a gpx file with tracks");
 				accepts(OPT_VERSION_ONLY, "Print BT747 version and exit");
 				accepts(OPT_CREATE_GPX_WAYPOINTS,
