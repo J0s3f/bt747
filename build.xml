@@ -1,4 +1,38 @@
+<!--
+ BUILD FILE FOR BT747.
+ 
+ Most important targets:
+ 'run.j2se'
+    Builds the J2SE target and launches it.
+    Good for use in initial trials.
 
+ 'all.package'
+    Used all the time by Mario De Weerd to build, package and upload BT747.
+    It builds the J2SE and SuperWaba platform targets.
+    The PACKAGE.BAT and UPLOAD.BAT scripts are not part of the distribution
+    or SVN.
+    PACKAGING and UPLOADing should be skipped automatically if you use this
+    target.
+    To build the SuperWaba target (for PDA-like devices) you need SuperWaba
+    "installed" on your system.
+
+  'all'
+    Builds BT747 for the J2SE and SuperWaba target systems.
+    Used by 'all.package'.
+  
+  'build.j2seapp'
+    Builds only the J2SE target (including the 'J2SE library').
+    
+  'dist.j2se'
+    Prepare the J2SE app for distribution in the 'dist' directory.
+   
+   Note:
+   For development, Mario De Weerd uses Eclipse (and Netbeans for the GUI layout).
+   In Eclipse it is possible to define 'launch' configurations.  These
+   are in the 'dev' directory and are suitable for debugging in the IDE.
+   Integrated debugging is surely possible in Netbeans too, but has not been
+   set up.
+ -->
 <project name="BT747" basedir="." default="all">
 	<!-- Local properties (not in version control/local override) -->
 	<property file="local.properties" />
