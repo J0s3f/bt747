@@ -102,13 +102,13 @@ what a Bridge is, you'll need to learn about Design Patterns.  A good start is a
  I now build the 'cod' file for BlackBerry automatically before uploading the
  application using 'build_cod.bat'.
  
- The core part of the scripts to package and upload the files are in the SVN
- database.  They do rely on local scripts and configuration though - I do not want
- to share passwords for instance.
- In BT747, local properties should be set in the 'local.properties' file which
- has higher priority than the default settings.  To know what you can set, the
- default.properties files can give some hints.
- My file looks something like this (the password is different of course):
+ 
+ The build process is automated using ANT.
+ You can find some comments in the 'build.xml' file which is the file used
+ by ANT to know how to build.
+ Some local paths and other particularities need to be known by ANT and you can
+ set these in a 'local.properties' file.
+ My 'local.properties'e looks something like this (the password is different of course):
  
 ======== local.properties sample start ============= 
 user.email = mymail@myserver.dom
