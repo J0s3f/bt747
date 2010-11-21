@@ -56,26 +56,18 @@
 	<property name="keytool.keystore" value="cfg/jws/myKeystore" />
 
 	<property name="superwaba.jar" value="${lib.dir}/Waba_only.jar" />
-	<property name="swcollections.jar"
-	          value="${lib.dir}/collections-superwaba.jar"
-	/>
+	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar" />
 
 	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
 	<property name="wabalang.jar" value="${lib.dir}/wabalang.jar" />
-	<property name="rxtxcomm.base.dir"
-	value ="${lib.dir}/rxtx-2.1-7-bins-r2" />
+	<property name="rxtxcomm.base.dir" value="${lib.dir}/rxtx-2.1-7-bins-r2" />
 	<property name="rxtxcomm.os.subdir" value="Windows/i368-mingw32" />
-	<property name="rxtxcomm.system.dir"
-    value ="${rxtxcomm.base.dir}/${rxtxcomm.os.subdir}" />
+	<property name="rxtxcomm.system.dir" value="${rxtxcomm.base.dir}/${rxtxcomm.os.subdir}" />
 	<!-- How to make a separation between full paths, not inside the path -->
 	<property name="system.paths.sep" value=";" />
 
-	<property name="rxtxcomm.jar"
-	          value="${rxtxcomm.base.dir}/RXTXcomm.jar"
-	/>
-	<property name="swinglayout.jar"
-	          value="${lib.dir}/swing-layout-1.0.3.jar"
-	/>
+	<property name="rxtxcomm.jar" value="${rxtxcomm.base.dir}/RXTXcomm.jar" />
+	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
 	<property name="swingx.jar" value="${lib.dir}/swingx.jar" />
 	<property name="swingx-ws.jar" value="${lib.dir}/swingx-ws.jar" />
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
@@ -155,16 +147,12 @@
 	</target>
 
 	<target name="javanativecompile.j2se_trial">
-		<exec dir="${javanativecompiler}"
-		      command="AutoCompiler.exe ${project.dir}/dev/bt747_j2se.jnc"
-		/>
+		<exec dir="${javanativecompiler}" command="AutoCompiler.exe ${project.dir}/dev/bt747_j2se.jnc" />
 	</target>
 
 	<target name="javanativecompile.j2se" depends="dist.j2se,proguard.jnc_task">
 		<delete file="${dist}/${ant.project.name}_jnc-win.jar" />
-		<exec dir="${javanativecompiler}"
-		      executable="${javanativecompiler}/AutoCompiler.exe"
-		>
+		<exec dir="${javanativecompiler}" executable="${javanativecompiler}/AutoCompiler.exe">
 			<arg value="${project.dir}/dev/bt747_j2se_opt.jnc" />
 		</exec>
 	</target>
@@ -184,19 +172,19 @@
 	<!-- ======================================== -->
 	<target name="package" if="do.package">
 		<exec command="package.bat" failifexecutionfails="false" />
+		<mkdir dir="${dist}/bt747_dev"/>
+		<copy file="dev/pkgbuild.tmpl" tofile="${dist}/bt747_dev/PKGBUILD" />
+		<checksum file="pack/BT747_${build_version}.${build.current.revision}_full.zip" property="zip.md5" />
+		<copy file="dev/bt747.desktop" tofile="${dist}/bt747_dev/bt747.desktop" />
+		<copy file="dev/bt747.install" tofile="${dist}/bt747_dev/bt747.install" />
+		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%VERSION%" replace='${build_version}.${build.current.revision}' />
+		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%MD5SUM%" replace='${zip.md5}' />
+		<tar destfile="pack/bt747_dev.tar.gz" compression="gzip" basedir="${dist}" includes="bt747_dev/**" />
 	</target>
 
 	<target name="upload-jnlp" if="do.upload">
-		<signjar jar="dist/BT747.jar"
-		         alias="${keytool.alias}"
-		         storepass="${keytool.passwd}"
-		         keystore="${keytool.keystore}"
-		/>
-		<signjar jar="dist/BT747_rxtx.jar"
-		         alias="${keytool.alias}"
-		         storepass="${keytool.passwd}"
-		         keystore="${keytool.keystore}"
-		/>
+		<signjar jar="dist/BT747.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
+		<signjar jar="dist/BT747_rxtx.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 		<!--
         <scp file="BT747.jar"
             todir="shell.sourceforge.net:bt747/htdocs/"/>
@@ -233,10 +221,7 @@
 
 	<target name="cond.proguard.rxtx-dist" depends="proguard.rxtx-dist" />
 	<target name="proguard.rxtx-dist" unless="skip.proguard">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<move tofile="${rxtxbuild.dir}/tmp.jar" file="${proguard.infile}" />
 
 		<!-- Then, build a single jar -->
@@ -248,17 +233,7 @@
               
           -->
 
-		<proguard shrink="${proguard.shrink}"
-		          defaultpackage=""
-		          optimize="{proguard.optimize}"
-		          obfuscate="false"
-		          allowaccessmodification="${proguard.accessmodification}"
-		          flattenpackagehierarchy=""
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<proguard shrink="${proguard.shrink}" defaultpackage="" optimize="{proguard.optimize}" obfuscate="false" allowaccessmodification="${proguard.accessmodification}" flattenpackagehierarchy="" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${superwaba.jar}" />
@@ -290,20 +265,14 @@
 		<attribute name="build.j2se" default="" />
 		<sequential>
 			<build.rxtx suffix="@{suffix}_tmp" build.j2se="@{build.j2se}" />
-			<move file="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar"
-			      tofile="${dist}/${ant.project.name}@{suffix}.jar"
-			/>
+			<move file="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar" tofile="${dist}/${ant.project.name}@{suffix}.jar" />
 
 			<antcall target="proguard.rxtx-dist">
-				<param name="proguard.infile"
-				       value="${dist}/${ant.project.name}@{suffix}.jar"
-				/>
+				<param name="proguard.infile" value="${dist}/${ant.project.name}@{suffix}.jar" />
 				<param name="suffix" value="@{suffix}" />
 			</antcall>
 			<antcall target="sign">
-				<param name="jar.tosign"
-				       value="${dist}/${ant.project.name}@{suffix}.jar"
-				/>
+				<param name="jar.tosign" value="${dist}/${ant.project.name}@{suffix}.jar" />
 			</antcall>
 		</sequential>
 	</macrodef>
@@ -328,9 +297,7 @@
 
 
 
-	<uptodate property="libj2se.uptodate"
-	          targetfile="${dist}/lib${ant.project.name}.jar"
-	>
+	<uptodate property="libj2se.uptodate" targetfile="${dist}/lib${ant.project.name}.jar">
 		<srcfiles dir="${src.dir}/bt747/model" includes="**" />
 		<srcfiles dir="${src.dir}/gps" includes="**" />
 	</uptodate>
@@ -347,15 +314,7 @@
 		<delete dir="${j2sebuild.dir}" />
 		<mkdir dir="${j2sebuild.dir}" />
 
-		<javac verbose="no"
-		       srcdir="${src_j2se.dir}"
-		       destdir="${j2sebuild.dir}"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       classpathref="j2seclasspath"
-		       encoding="iso-8859-15"
-			target="1.5"
-		>
+		<javac verbose="no" srcdir="${src_j2se.dir}" destdir="${j2sebuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="j2seclasspath" encoding="iso-8859-15" target="1.5">
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
 			<include name="de/k621/avr/gps/converter/NMEAConverter.java" />
@@ -386,15 +345,7 @@
 		<delete dir="${wababuild.dir}" />
 		<mkdir dir="${wababuild.dir}" />
 
-		<javac verbose="no"
-		       srcdir="${src_waba.dir}"
-		       destdir="${wababuild.dir}"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       classpathref="wabaclasspath"
-		       encoding="iso-8859-15"
-			target="1.5"
-		>
+		<javac verbose="no" srcdir="${src_waba.dir}" destdir="${wababuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="wabaclasspath" encoding="iso-8859-15" target="1.5">
 			<include name="BT747.java" />
 			<compilerarg line="-Xlint:unchecked" />
 		</javac>
@@ -407,12 +358,8 @@
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${j2se.main}" />
-			<attribute name="Implementation-Version"
-			           value="${full.build.version}"
-			/>
-			<attribute name="Class-Path"
-			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar"
-			/>
+			<attribute name="Implementation-Version" value="${full.build.version}" />
+			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
                  TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -423,10 +370,7 @@
         </jar>
         -->
 
-		<jar manifest="MANIFEST.MF"
-		     jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-		     compress="true"
-		>
+		<jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar" compress="true">
 			<fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
 			<fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
 			<fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
@@ -440,14 +384,10 @@
 
 		<antcall target="proguard.j2seapp" />
 
-		<copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-		      tofile="${dist}/${ant.project.name}_j2se.jar"
-		/>
+		<copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar" tofile="${dist}/${ant.project.name}_j2se.jar" />
 
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_j2se.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_j2se.jar" />
 		</antcall>
 
 	</target>
@@ -456,23 +396,9 @@
 
 
 	<target name="proguard.j2seapp_task" unless="skip.proguard">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<move file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-		      tofile="${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar"
-		/>
-		<proguard forceprocessing="true"
-		          shrink="${proguard.shrink}"
-		          defaultpackage=""
-		          optimize="${proguard.optimize}"
-		          obfuscate="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<move file="${j2sebuild.dir}/${ant.project.name}_j2se.jar" tofile="${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar" />
+		<proguard forceprocessing="true" shrink="${proguard.shrink}" defaultpackage="" optimize="${proguard.optimize}" obfuscate="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${jopt-simple.jar}" />
 			<libraryjar file="${jchart.jar}" />
@@ -494,20 +420,8 @@
 
 
 	<target name="proguard.jnc_task">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<proguard forceprocessing="true"
-		          shrink="${proguard.shrink}"
-		          defaultpackage=""
-		          optimize="false"
-		          obfuscate="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<proguard forceprocessing="true" shrink="${proguard.shrink}" defaultpackage="" optimize="false" obfuscate="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${jopt-simple.jar}" />
@@ -532,23 +446,9 @@
 	<!-- OPTIMIZE THE WABA APPLICATION
 	  -->
 	<target name="proguard.wabaapp_task" unless="skip.proguard">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<move file="${wababuild.dir}/${ant.project.name}_waba.jar"
-		      tofile="${wababuild.dir}/${ant.project.name}_waba_unopt.jar"
-		/>
-		<proguard forceprocessing="true"
-		          shrink="${proguard.shrink}"
-		          defaultpackage=""
-		          optimize="${proguard.optimize}"
-		          obfuscate="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<move file="${wababuild.dir}/${ant.project.name}_waba.jar" tofile="${wababuild.dir}/${ant.project.name}_waba_unopt.jar" />
+		<proguard forceprocessing="true" shrink="${proguard.shrink}" defaultpackage="" optimize="${proguard.optimize}" obfuscate="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${superwaba.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
@@ -586,12 +486,8 @@
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="BT747" />
-			<attribute name="Implementation-Version"
-			           value="${full.build.version}"
-			/>
-			<attribute name="Class-Path"
-			           value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar swingx.jar swingx-ws.jar ../lib/swingx.jar ../lib/swingx-ws.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar"
-			/>
+			<attribute name="Implementation-Version" value="${full.build.version}" />
+			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar swingx.jar swingx-ws.jar ../lib/swingx.jar ../lib/swingx-ws.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
 	             TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -602,23 +498,16 @@
 		</jar>
 		-->
 
-		<jar manifest="MANIFEST.MF"
-		     jarfile="${wababuild.dir}/${ant.project.name}_waba.jar"
-		     compress="true"
-		>
+		<jar manifest="MANIFEST.MF" jarfile="${wababuild.dir}/${ant.project.name}_waba.jar" compress="true">
 			<fileset dir="${wababuild.dir}" includes="**/*.class" />
 		</jar>
 
 		<antcall target="proguard.wabaapp" />
 
-		<copy file="${wababuild.dir}/${ant.project.name}_waba.jar"
-		      tofile="${dist}/${ant.project.name}_waba.jar"
-		/>
+		<copy file="${wababuild.dir}/${ant.project.name}_waba.jar" tofile="${dist}/${ant.project.name}_waba.jar" />
 
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_waba.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_waba.jar" />
 		</antcall>
 	</target>
 
@@ -627,34 +516,19 @@
 	<property name="libtmp_suffix" value="_j2se_libtmp" />
 	<property name="libj2se_suffix" value="_j2se" />
 	<target name="proguard.lib_task" unless="skip.proguard">
-		<move file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
-		      tofile="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar"
-		/>
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
+		<move file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" tofile="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar" />
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<!--
 		                        -injar ${swcollections.jar}(!META-INF/**)
 		-->
-		<proguard forceprocessing="true"
-		          shrink="${proguard.shrink}"
-		          defaultpackage=""
-		          optimize="${proguard.optimize}"
-		          obfuscate="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<proguard forceprocessing="true" shrink="${proguard.shrink}" defaultpackage="" optimize="${proguard.optimize}" obfuscate="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${jcalendar.jar}" />
 			<libraryjar file="${swingx.jar}" />
 			<libraryjar file="${swingx-ws.jar}" />
 			<libraryjar file="${swinglayout.jar}" />
 			<libraryjar file="${rxtxcomm.jar}" />
-			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
-			/>
+			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" />
              	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
                         -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar
 			             (!BT747.class,
@@ -732,25 +606,17 @@
 	-->
 	<target name="dist.libj2se" unless="libj2se.uptodate">
 		<!-- First build normal target -->
-		<build.rxtx suffix="${libtmp_suffix}"
-		            build.j2se="yes"
-		            no.waba="yes"
-		            build.lib="yes"
-		/>
+		<build.rxtx suffix="${libtmp_suffix}" build.j2se="yes" no.waba="yes" build.lib="yes" />
 
 		<!-- Optimise the library -->
 		<antcall target="proguard.lib" />
 
 		<!-- Distribute the library -->
-		<copy file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
-		      tofile="${dist}/lib${ant.project.name}.jar"
-		/>
+		<copy file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" tofile="${dist}/lib${ant.project.name}.jar" />
 
 		<!-- Sign the library -->
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/lib${ant.project.name}.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/lib${ant.project.name}.jar" />
 		</antcall>
 	</target>
 
@@ -760,11 +626,7 @@
 		<attribute name="suffix" default="_waba_j2se" />
 		<attribute name="build.j2se" default="yes" />
 		<sequential>
-			<build.rxtx suffix="@{suffix}"
-				build.j2se="@{build.j2se}"
-                no.waba="@{build.j2se}"
-			    build.lib="no"
-			/>
+			<build.rxtx suffix="@{suffix}" build.j2se="@{build.j2se}" no.waba="@{build.j2se}" build.lib="no" />
 
 			<!--
 	        <antcall target="rxtxjar">
@@ -776,8 +638,7 @@
 			<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
                 <env key="PATH" value="${env.PATH}${system.paths.sep}${rxtxcomm.dir}"/>
 	        -->
-			<java classname="@{main-class}" fork="true" spawn="false"
-				>
+			<java classname="@{main-class}" fork="true" spawn="false">
 				<jvmarg value="-Djava.library.path=${rxtxcomm.system.dir}" />
 				<classpath>
 					<pathelement path="${rxtxcomm.jar}" />
@@ -786,8 +647,7 @@
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
-					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar"
-					/>
+					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" />
 				</classpath>
 
 				<arg line="@{main-class-args}" />
@@ -796,9 +656,7 @@
 	</macrodef>
 
 	<target name="run.j2sewaba">
-		<macro.run.rxtx main-class="waba.applet.Applet"
-		                main-class-args="/w 320 /h 320 /x 500 /scale 1 /bpp 8 bt747.j2se_view.BT747"
-		/>
+		<macro.run.rxtx main-class="waba.applet.Applet" main-class-args="/w 320 /h 320 /x 500 /scale 1 /bpp 8 bt747.j2se_view.BT747" />
 	</target>
 
 	<target name="run.j2se">
@@ -810,35 +668,18 @@
 	</target>
 
 	<target name="run.rxtx">
-		<macro.run.rxtx main-class="waba.applet.Applet"
-		                main-class-args="/w 320 /h 320 /scale 1 /bpp 8 BT747"
-		/>
+		<macro.run.rxtx main-class="waba.applet.Applet" main-class-args="/w 320 /h 320 /scale 1 /bpp 8 BT747" />
 	</target>
 
 	<target name="proguard.rxtx" depends="rxtxjar,proguard.rxtx_task">
 	</target>
 
 	<target name="proguard.rxtx_task" unless="skip.proguard">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<getsuffix />
-		<move file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
-		      tofile="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
-		/>
+		<move file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" tofile="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
 
-		<proguard shrink="false"
-		          defaultpackage=""
-		          optimize="false"
-		          obfuscate="false"
-		          allowaccessmodification="no"
-		          flattenpackagehierarchy=""
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
+		<proguard shrink="false" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<!--
 			<keep name="${mainClass}" />
 			<keep name="gps.parser.*" />
@@ -856,8 +697,7 @@
 			<libraryjar file="${swingx-ws.jar}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${superwaba.jar}" />
-			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
-			/>
+			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
                 -keep public class * extends waba.ui.MainWindow
  		        -keep public class * implements bt747.lang.TxtInterface
@@ -903,13 +743,9 @@
         </antcall>
         -->
 
-		<copy file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"
-		      tofile="${dist}/${ant.project.name}_waba_j2se.jar"
-		/>
+		<copy file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" tofile="${dist}/${ant.project.name}_waba_j2se.jar" />
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_waba_j2se.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_waba_j2se.jar" />
 		</antcall>
 
 	</target>
@@ -942,15 +778,7 @@
 		<mkdir dir="${dist}" />
 		<copy_src srcid="waba_only_sources" dest.dir="${build.dir}/waba/src" />
 
-		<javac srcdir="${build.dir}/waba/src"
-		       destdir="${build.dir}/waba"
-		       target="1.1"
-		       source="1.2"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       deprecation="true"
-		       encoding="iso-8859-15"
-		>
+		<javac srcdir="${build.dir}/waba/src" destdir="${build.dir}/waba" target="1.1" source="1.2" optimize="${java.optimize}" debug="${java.debug}" deprecation="true" encoding="iso-8859-15">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
@@ -969,21 +797,7 @@
 		<mkdir dir="${build.dir}/wabalang" />
 		<property name="build.sysclasspath" value="ignore" />
 		<echoproperties prefix="build.sys" />
-		<javac srcdir="${superwaba_root}/src/java/waba/lang"
-		       destdir="${build.dir}/wabalang"
-		       verbose="yes"
-		       target="1.1"
-		       source="1.2"
-		       includeantruntime="no"
-		       includejavaruntime="false"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       classpathref="wabalangclasspath"
-		       extdirs=""
-		       bootclasspath=""
-		       classpath=""
-		       encoding="iso-8859-15"
-		>
+		<javac srcdir="${superwaba_root}/src/java/waba/lang" destdir="${build.dir}/wabalang" verbose="yes" target="1.1" source="1.2" includeantruntime="no" includejavaruntime="false" optimize="${java.optimize}" debug="${java.debug}" classpathref="wabalangclasspath" extdirs="" bootclasspath="" classpath="" encoding="iso-8859-15">
 			<include name="*.java" />
 		</javac>
 		<jar jarfile="${wabalang.jar}" compress="true">
@@ -1047,27 +861,15 @@
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/de/**" if="is.lib" />
 				<include name="*/bt747/*view/**" if="is.lib" />
-				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**"
-				         if="is.lib"
-				/>
-				<include name="${src_j2se.dir}/net/iharder/dnd/**"
-				         if="is.lib"
-				/>
-				<include name="${src_j2se.dir}/**/Bundle*.properties" if="is.lib"/>
-				<include name="${src_j2se.dir}/**/geoid1DEG.bin" if="is.lib"/>
-				<include name="${src_j2se.dir}/**/BT747base*.properties" if="is.lib"/>
-				<include name="${src_j2se.dir}/**/resources/*" if="is.lib"/>
+				<include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**" if="is.lib" />
+				<include name="${src_j2se.dir}/net/iharder/dnd/**" if="is.lib" />
+				<include name="${src_j2se.dir}/**/Bundle*.properties" if="is.lib" />
+				<include name="${src_j2se.dir}/**/geoid1DEG.bin" if="is.lib" />
+				<include name="${src_j2se.dir}/**/BT747base*.properties" if="is.lib" />
+				<include name="${src_j2se.dir}/**/resources/*" if="is.lib" />
 			</fileset>
 		</delete>
-		<javac verbose="no"
-		       srcdir="${rxtxsrc.dir}"
-		       destdir="${rxtxbuild.dir}"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       classpathref="${build.classpath}"
-		       encoding="iso-8859-15"
-			target="1.5"
-		>
+		<javac verbose="no" srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="${build.classpath}" encoding="iso-8859-15" target="1.5">
 			<include name="**/*.java" />
 		</javac>
 		<copy todir="${rxtxbuild.dir}">
@@ -1090,24 +892,11 @@
 				<include name="gps/connection/GPSWabaSocketPort.java" />
 			</fileset>
 		</copy>
-		<replace file="${symbiansrc.dir}bt747/waba_view/AppBT747.java"
-		         encoding="${encoding}"
-		         token="GPSWabaPort"
-		         summary="yes"
-		         value="GPSWabaSocketPort"
-		/>
+		<replace file="${symbiansrc.dir}bt747/waba_view/AppBT747.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
 
 		<delete dir="${symbiansrc.dir}/gps/parser">
 		</delete>
-		<javac srcdir="${symbiansrc.dir}"
-		       destdir="${symbianbuild.dir}"
-		       target="1.1"
-		       source="1.2"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       deprecation="true"
-		       encoding="iso-8859-15"
-		>
+		<javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" source="1.2" optimize="${java.optimize}" debug="${java.debug}" deprecation="true" encoding="iso-8859-15">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
@@ -1133,28 +922,10 @@
 				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
 			</fileset>
 		</copy>
-		<replace file="${filesrc.dir}bt747/waba_view/AppBT747.java"
-		         encoding="${encoding}"
-		         token="GPSWabaPort"
-		         summary="yes"
-		         value="GPSFilePort"
-		/>
-		<replace file="${filesrc.dir}/bt747/waba_view/AppController.java"
-		         encoding="${encoding}"
-		         token="//#if RXTX"
-		         summary="yes"
-		         value=""
-		/>
+		<replace file="${filesrc.dir}bt747/waba_view/AppBT747.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
+		<replace file="${filesrc.dir}/bt747/waba_view/AppController.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
-		<javac srcdir="${filesrc.dir}"
-		       destdir="${filebuild.dir}"
-		       source="1.3"
-		       target="1.1"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       classpathref="classpath"
-		       encoding="iso-8859-15"
-		>
+		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}" source="1.3" target="1.1" optimize="${java.optimize}" debug="${java.debug}" classpathref="classpath" encoding="iso-8859-15">
 			<include name="**/*.java" />
 			<exclude name="gps/connection/GPSWabaPort.java*" />
 			<exclude name="gps/connection/GPSRxTxPort.java*" />
@@ -1187,12 +958,8 @@
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${current.main.class}" />
-			<attribute name="Implementation-Version"
-			           value="${full.build.version}"
-			/>
-			<attribute name="Class-Path"
-			           value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar"
-			/>
+			<attribute name="Implementation-Version" value="${full.build.version}" />
+			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
              TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -1207,25 +974,18 @@
                 />
             </fileset> 
                    -->
-		<echoproperties prefix="build.lib"/>
+		<echoproperties prefix="build.lib" />
 
-		<jar manifest="MANIFEST.MF"
-		     jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
-		     compress="true"
-		>
+		<jar manifest="MANIFEST.MF" jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" compress="true">
 			<fileset dir="${src_j2se.dir}">
 				<include name="**/Bundle*.properties" unless="${build.lib}" />
-				<include name="**/BT747base*.properties"
-				         unless="${build.lib}"
-				/>
+				<include name="**/BT747base*.properties" unless="${build.lib}" />
 				<include name="**/resources/*" unless="${build.lib}" />
 				<include name="**/geoid1DEG.bin" unless="${build.lib}" />
 			</fileset>
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class" />
 		</jar>
-		<copy tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
-		      file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
-		/>
+		<copy tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
 		<!--
 		<retroweaver
 			inputjar="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
@@ -1241,31 +1001,12 @@
 
 	<target name="symbianjar" depends="symbianbuild">
 
-		<jar jarfile="${symbianbuild.dir}/${ant.project.name}_symbian.jar"
-		     compress="true"
-		>
+		<jar jarfile="${symbianbuild.dir}/${ant.project.name}_symbian.jar" compress="true">
 			<fileset dir="${symbianbuild.dir}" includes="**/*.class" />
 		</jar>
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<move file="${symbianbuild.dir}/${ant.project.name}_symbian.jar"
-		      tofile="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar"
-		/>
-		<proguard shrink="true"
-		          defaultpackage=""
-		          optimize="${proguard.optimize}"
-		          obfuscate="${proguard.obfuscate}"
-		          allowaccessmodification="${proguard.accessmodification}"
-		          flattenpackagehierarchy=""
-		          repackageclasses=""
-		          printusage="false"
-		          overloadaggressively="${proguard.overload}"
-		          verbose="true"
-		          ignorewarnings="true"
-		          printmapping="${dist}/${ant.project.name}_symbian.mapping"
-		>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<move file="${symbianbuild.dir}/${ant.project.name}_symbian.jar" tofile="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar" />
+		<proguard shrink="true" defaultpackage="" optimize="${proguard.optimize}" obfuscate="${proguard.obfuscate}" allowaccessmodification="${proguard.accessmodification}" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="${proguard.overload}" verbose="true" ignorewarnings="true" printmapping="${dist}/${ant.project.name}_symbian.mapping">
 			<keep name="${mainClass}" />
 
 			<!-- to check if methods are Waba compatible -->
@@ -1275,11 +1016,9 @@
             <libraryjar file="${proguard.java.rt.lib}" />
             -->
 			<libraryjar file="${superwaba.jar}" />
-			<injar path="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar"
-			/>
+			<injar path="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar" />
 			<injar path="${swcollections.jar}" />
-			<outjar path="${symbianbuild.dir}/${ant.project.name}_symbian.jar"
-			/>
+			<outjar path="${symbianbuild.dir}/${ant.project.name}_symbian.jar" />
 			<keep name="gps.parser.*" />
 			<keep name="gps.connection.*" />
 		</proguard>
@@ -1289,17 +1028,13 @@
 			</fileset>
 		</copy>
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_symbian.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_symbian.jar" />
 		</antcall>
 	</target>
 
 	<target name="filejar" depends="filebuild">
 
-		<jar jarfile="${filebuild.dir}/${ant.project.name}_file.jar"
-		     compress="true"
-		>
+		<jar jarfile="${filebuild.dir}/${ant.project.name}_file.jar" compress="true">
 			<fileset dir="${filebuild.dir}" includes="**/*.class" />
 		</jar>
 		<copy todir="${dist}">
@@ -1308,35 +1043,15 @@
 			</fileset>
 		</copy>
 		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_file.jar"
-			/>
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_file.jar" />
 		</antcall>
 
 	</target>
 
 	<target name="proguard_task" depends="waba.lang,jar" unless="skip.proguard">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<move file="${build.dir}/${ant.project.name}.jar"
-		      tofile="${build.dir}/${ant.project.name}_unopt.jar"
-		/>
-		<proguard shrink="true"
-		          defaultpackage=""
-		          optimize="${proguard.optimize}"
-		          obfuscate="${proguard.obfuscate}"
-		          allowaccessmodification="${proguard.accessmodification}"
-		          flattenpackagehierarchy=""
-		          repackageclasses=""
-		          printusage="false"
-		          overloadaggressively="${proguard.overload}"
-		          verbose="true"
-		          ignorewarnings="true"
-		          optimizationpasses="${proguard.optimizationpasses}"
-		          printmapping="${dist}/${ant.project.name}.mapping"
-		>
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar" />
+		<proguard shrink="true" defaultpackage="" optimize="${proguard.optimize}" obfuscate="${proguard.obfuscate}" allowaccessmodification="${proguard.accessmodification}" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="${proguard.overload}" verbose="true" ignorewarnings="true" optimizationpasses="${proguard.optimizationpasses}" printmapping="${dist}/${ant.project.name}.mapping">
 			<keep name="${mainClass}" />
 
 			<!-- to check if methods are Waba compatible -->
@@ -1371,11 +1086,7 @@
 	<!-- Execute WARP -->
 	<target name="warp" depends="proguard">
 		<echoproperties prefix="skip" />
-		<java dir="${build.dir}"
-		      classname="superwaba.tools.Warp"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${build.dir}" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c" />
 			<arg value="/c" />
 			<arg value="BT74" />
@@ -1388,11 +1099,7 @@
 	<!-- Execute WARP -->
 	<target name="symbianwarp" depends="symbianjar">
 
-		<java dir="${symbianbuild.dir}"
-		      classname="superwaba.tools.Warp"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${symbianbuild.dir}" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c" />
 			<arg value="/x" />
 			<arg value="GPSFilePort" />
@@ -1435,11 +1142,7 @@
 	<!-- Execute EXEGEN 
 	  -->
 	<target name="exegen" depends="warp, prepare-exegen">
-		<java dir="${build.dir}"
-		      classname="superwaba.tools.Exegen"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/INST" />
 			<!-- <arg value="/SIS"/> -->
 			<!-- <arg value="/SH"/> -->
@@ -1459,11 +1162,7 @@
 	<!-- Execute EXEGEN -->
 	<target name="symbianexegen" depends="symbianwarp, symbianprepare-exegen">
 
-		<java dir="${symbianbuild.dir}"
-		      classname="superwaba.tools.Exegen"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${symbianbuild.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<!-- <arg value="/INST"/> -->
 			<arg value="/SIS" />
 			<arg value="/I" />
@@ -1481,11 +1180,7 @@
 	<!-- Execute EXEGEN with WinCE EXE -->
 	<target name="exegen-exe" depends="warp, prepare-exegen">
 
-		<java dir="${build.dir}"
-		      classname="superwaba.tools.Exegen"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/I" />
 			<arg value="BT747_" />
 			<arg value="/c" />
@@ -1501,11 +1196,7 @@
 	<!-- Execute EXEGEN with WinCE CAB   -->
 	<target name="exegen-cab" depends="warp, prepare-exegen">
 
-		<java dir="${build.dir}"
-		      classname="superwaba.tools.Exegen"
-		      fork="true"
-		      classpathref="utils"
-		>
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/I" />
 			<arg value="BT747_" />
 			<arg value="/c" />
@@ -1525,11 +1216,7 @@
 	and referencing that here for the exegen.
 	 -->
 	<target name="exegensp-cab" depends="warp, prepare-exegen">
-		<java dir="${build.dir}"
-		      classname="superwaba.tools.Exegen"
-		      fork="true"
-		      classpathref="sputils"
-		>
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="sputils">
 			<arg value="/I" />
 			<arg value="BT747_" />
 			<arg value="/c" />
@@ -1552,10 +1239,7 @@
 	<!-- Execute WARP and populate distribution directory -->
 	<target name="all-warp" depends="warp">
 
-		<move failonerror="false"
-		      file="${build.dir}/${ant.project.name}.pdb"
-		      todir="${dist}"
-		/>
+		<move failonerror="false" file="${build.dir}/${ant.project.name}.pdb" todir="${dist}" />
 
 	</target>
 
@@ -1613,9 +1297,7 @@
 	<!--
 	Build the distribution for PDA's
 	-->
-	<target name="dist.pda"
-	        depends="exegen, exegen-exe, exegensp-cab, exegen-cab, all-warp"
-	>
+	<target name="dist.pda" depends="exegen, exegen-exe, exegensp-cab, exegen-cab, all-warp">
 		<move todir="${dist}">
 			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc" />
@@ -1651,9 +1333,7 @@
 	<!-- Stuff to build war target - under development -->
 
 	<target name="pack.test">
-		<war destfile="${dist}/${ant.project.name}.war"
-		     webxml="src/metadata/BT747.xml"
-		>
+		<war destfile="${dist}/${ant.project.name}.war" webxml="src/metadata/BT747.xml">
 			<fileset dir="${dist}/" includes="BT747*rxtx*jar" />
 			<lib dir="ext">
 				<exclude name="jdbc1.jar" />
@@ -1668,10 +1348,7 @@
 	</target>
 	<target name="pack" depends="pack.init,jws.pack">
 		<delete file="${build.dir}/wars/${application}.war" />
-		<war destfile="${build.dir}/wars/${application}.war"
-		     webxml="${dist}/src/WEB-INF/web.xml"
-		     basedir="${dist}/src"
-		>
+		<war destfile="${build.dir}/wars/${application}.war" webxml="${dist}/src/WEB-INF/web.xml" basedir="${dist}/src">
 			<lib dir="lib">
 				<include name="jnlp-servlet.jar" />
 				<!--
@@ -1695,11 +1372,7 @@
 				<expandproperties />
 			</filterchain>
 		</copy>
-		<fixcrlf srcdir="${dist}/src/WEB-INF"
-		         includes="**/*.xml"
-		         eol="lf"
-		         eof="remove"
-		/>
+		<fixcrlf srcdir="${dist}/src/WEB-INF" includes="**/*.xml" eol="lf" eof="remove" />
 	</target>
 
 	<target name="jws.jnlp-init">
@@ -1725,15 +1398,8 @@
 	</target>
 
 	<target name="jws.pack.lib">
-		<copy todir="${build.dir}/sign"
-		      file="${lib.dir}/${lib.name}"
-		      overwrite="yes"
-		/>
-		<signjar jar="${build.dir}/sign/${lib.name}"
-		         alias="${keytool.alias}"
-		         storepass="${keytool.passwd}"
-		         keystore="${keytool.keystore}"
-		/>
+		<copy todir="${build.dir}/sign" file="${lib.dir}/${lib.name}" overwrite="yes" />
+		<signjar jar="${build.dir}/sign/${lib.name}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 		<copy todir="${dist}/src/app">
 			<fileset dir="${build.dir}/sign" includes="${lib.name}" />
 			<mapper type="glob" from="*.jar" to="*__V${lib.version}.jar" />
@@ -1774,9 +1440,7 @@
 	<!-- ========================================= -->
 	<!-- Create the standalone client distribution -->
 	<!-- ========================================= -->
-	<target description="Build the standalone client distribution"
-	        name="build.standalone.dist"
-	>
+	<target description="Build the standalone client distribution" name="build.standalone.dist">
 		<!--	depends="dist" -->
 
 		<mkdir dir="${dist}/configuration" />
@@ -1795,17 +1459,13 @@
 	<!-- ======================================= -->
 	<!-- Create the webstart client distribution -->
 	<!-- ======================================= -->
-	<target description="Build the webstart client distribution"
-	        name="build.webstart.dist"
-	>
+	<target description="Build the webstart client distribution" name="build.webstart.dist">
 		<!--		depends="dist,sign.jars" -->
 
 		<mkdir dir="${dist}" />
 
 		<!-- build the web archive -->
-		<war destfile="${dist}/${ant.project.name}.war"
-		     webxml="cfg/war/web.xml"
-		>
+		<war destfile="${dist}/${ant.project.name}.war" webxml="cfg/war/web.xml">
 
 			<fileset dir="." includes="${lib.dir}/**" />
 			<fileset dir="." includes="BT747.jnlp" />
@@ -1824,9 +1484,7 @@
 	<!-- ============================================== -->
 	<!-- Create the static webstart client distribution -->
 	<!-- ============================================== -->
-	<target description="Build the webstart client distribution"
-	        name="build.static.webstart.dist"
-	>
+	<target description="Build the webstart client distribution" name="build.static.webstart.dist">
 		<!--		depends="dist,sign.jars" -->
 
 		<mkdir dir="${dist}/configuration" />
@@ -1839,13 +1497,9 @@
 
 		</copy>
 
-		<copy file="${ant.project.name}.jnlp"
-		      toFile="${dist}/configuration/{ant.project.name}.jnlp"
-		/>
+		<copy file="${ant.project.name}.jnlp" toFile="${dist}/configuration/{ant.project.name}.jnlp" />
 
-		<zip zipfile="${dist}/configuration.zip"
-		     basedir="${dist}/configuration"
-		/>
+		<zip zipfile="${dist}/configuration.zip" basedir="${dist}/configuration" />
 	</target>
 
 	<!-- ======================================== -->
@@ -1893,9 +1547,7 @@
 		<!-- redo the flow of the html for cd install -->
 		<delete file="${dist}/webclient_cd/index.html" />
 		<delete file="${dist}/webclient_cd/oneTimeSetup.html" />
-		<move file="${dist}/webclient_cd/oneTimeSetup_cd.html"
-		      tofile="${dist}/webclient_cd/index.html"
-		/>
+		<move file="${dist}/webclient_cd/oneTimeSetup_cd.html" tofile="${dist}/webclient_cd/index.html" />
 
 	</target>
 
@@ -1907,13 +1559,9 @@
 	<!-- Version information from SVN -->
 	<!-- SVN revision information -->
 	<!-- To property build.current.revision -->
-	<exec outputproperty="build.current.revision"
-	      executable="${svnversion}"
-	      failifexecutionfails="false"
-	      failonerror="false"
-	>
+	<exec outputproperty="build.current.revision" executable="${svnversion}" failifexecutionfails="false" failonerror="false">
 		<arg line="-n -c" />
-		<env key="LANG" value=""/>
+		<env key="LANG" value="" />
 		<redirector>
 			<outputfilterchain>
 				<tokenfilter>
@@ -1925,43 +1573,29 @@
 
 	<!-- SVN Version information -->
 	<!-- To property build.current.version -->
-	<exec outputproperty="build.current.version"
-	      executable="${svn}"
-	      failifexecutionfails="false"
-	      failonerror="false"
-	>
+	<exec outputproperty="build.current.version" executable="${svn}" failifexecutionfails="false" failonerror="false">
 		<arg line="info" />
-		<env key="LANG" value=""/>
+		<env key="LANG" value="" />
 		<redirector>
 			<outputfilterchain>
 				<linecontainsregexp>
 					<regexp pattern="^URL:" />
 				</linecontainsregexp>
 				<tokenfilter>
-					<replaceregex pattern=".*\/([^\/]+)$"
-					              replace="\1"
-					              flags="g"
-					/>
+					<replaceregex pattern=".*\/([^\/]+)$" replace="\1" flags="g" />
 				</tokenfilter>
 			</outputfilterchain>
 		</redirector>
 	</exec>
-	<property name="full.build.version"
-	          value="${build.current.version}.${build.current.revision}"
-	/>
+	<property name="full.build.version" value="${build.current.version}.${build.current.revision}" />
 
 	<!-- Update version information in the Version.java file -->
-	<target name="updatedate"
-	        depends="initdate"
-	        description="increase build number and set release date"
-	>
+	<target name="updatedate" depends="initdate" description="increase build number and set release date">
 		<copy_src />
 	</target>
 
 
-	<macrodef name="copy_src"
-	          description="Changes sources (in the build dir) with build-time information"
-	>
+	<macrodef name="copy_src" description="Changes sources (in the build dir) with build-time information">
 		<attribute name="dest.dir" default="src" />
 		<attribute name="rxtx" default="false" />
 		<attribute name="srcid" />
@@ -1978,53 +1612,22 @@
 				<fileset refid="@{srcid}" />
 			</copy>
 			<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
-			               encoding="${encoding}"
-			               match="BUILD = [0-9]+L;"
-			               replace="BUILD = ${TIMESTAMP}L;"
-			/>
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
-			               encoding="${encoding}"
-			               match='BUILD_STR = \".*\";'
-			               replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";'
-			/>
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
-			               encoding="${encoding}"
-			               match="DATE = [^\s]*;"
-			               replace='DATE = "${DATE_DE}";'
-			/>
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;" />
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
 			<!-- Modification of version during development -->
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
-			               encoding="${encoding}"
-			               match="VERSION_NUMBER = [^\s]*;"
-			               replace='VERSION_NUMBER = "${build_version}.${build.current.revision}";'
-			/>
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}.${build.current.revision}";' />
 
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
-			               encoding="${encoding}"
-			               match="AURL = [^\s]*;"
-			               replace='AURL = "${agpsurlbase}";'
-			/>
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java" encoding="${encoding}" match="AURL = [^\s]*;" replace='AURL = "${agpsurlbase}";' />
 
 
-			<replace dir="@{dest.dir}"
-			         token="GPSWabaPort"
-			         summary="yes"
-			         value="GPSRxTxPort"
-			>
-				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppBT747.java"
-				/>
+			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppBT747.java" />
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
-			<echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
-			/>
-			<replace dir="@{dest.dir}"
-			         token="// #if RXTX"
-			         summary="yes"
-			         value=""
-			>
-				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
-				/>
+			<echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
+			<replace dir="@{dest.dir}" token="// #if RXTX" summary="yes" value="">
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
 			</replace>
 			<condition property="lang" value="${default.lang}">
 				<not>
@@ -2035,10 +1638,8 @@
 			<copy file="dev/package.bat" tofile="package.bat" />
 			<copy file="dev/upload.bat" tofile="upload.bat" />
 			<!-- Changed version reference during development -->
-			<replaceregexp file="package.bat"
-			               match="SET DT=[^\s]*"
-			               replace='SET DT=${build_version}.${build.current.revision}'
-			/>
+			<replaceregexp file="package.bat" match="SET DT=[^\s]*" replace='SET DT=${build_version}.${build.current.revision}' />
+
 		</sequential>
 	</macrodef>
 
@@ -2110,11 +1711,7 @@
 
 	<target name="sign" if="keytool.sign">
 		<!-- Sign only if keytool.sign is set, this indicates parameters are set -->
-		<signjar jar="${jar.tosign}"
-		         alias="${keytool.alias}"
-		         storepass="${keytool.passwd}"
-		         keystore="${keytool.keystore}"
-		/>
+		<signjar jar="${jar.tosign}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 	</target>
 
 
