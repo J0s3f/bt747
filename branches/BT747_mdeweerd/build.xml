@@ -9,6 +9,10 @@
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
 
+	<available file="${proguardLib}" property="proguardLib.ok" />
+	<condition property="skip.proguard">
+		<isfalse value="${proguardLib.ok}" />
+	</condition>
 	<property name="dist" value="dist" />
 
 	<property name="application" value="BT747" />
@@ -1169,7 +1173,7 @@
                 />
             </fileset> 
                    -->
-	    <echoproperties prefix="build.lib"/>
+		<echoproperties prefix="build.lib"/>
 
 		<jar manifest="MANIFEST.MF"
 		     jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
@@ -1332,7 +1336,7 @@
 
 	<!-- Execute WARP -->
 	<target name="warp" depends="proguard">
-	    <echoproperties prefix="skip" />
+		<echoproperties prefix="skip" />
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Warp"
 		      fork="true"
