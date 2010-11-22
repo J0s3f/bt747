@@ -172,7 +172,7 @@
 	<!-- ======================================== -->
 	<target name="package" if="do.package">
 		<exec command="package.bat" failifexecutionfails="false" />
-		<mkdir dir="${dist}/bt747_dev"/>
+		<mkdir dir="${dist}/bt747_dev" />
 		<copy file="dev/pkgbuild.tmpl" tofile="${dist}/bt747_dev/PKGBUILD" />
 		<checksum file="pack/BT747_${build_version}.${build.current.revision}_full.zip" property="zip.md5" />
 		<copy file="dev/bt747.desktop" tofile="${dist}/bt747_dev/bt747.desktop" />
@@ -180,6 +180,12 @@
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%VERSION%" replace='${build_version}.${build.current.revision}' />
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%MD5SUM%" replace='${zip.md5}' />
 		<tar destfile="pack/bt747_dev.tar.gz" compression="gzip" basedir="${dist}" includes="bt747_dev/**" />
+		<exec command="dev/aurploader" failifexecutionfails="false">
+			<arg value="-login" />
+			<arg value="../aurplogin" />
+			<arg value="-a" />
+			<arg value="pack/bt747_dev.tar.gz" />
+		</exec>
 	</target>
 
 	<target name="upload-jnlp" if="do.upload">
