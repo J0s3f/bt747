@@ -108,7 +108,7 @@ what a Bridge is, you'll need to learn about Design Patterns.  A good start is a
  by ANT to know how to build.
  Some local paths and other particularities need to be known by ANT and you can
  set these in a 'local.properties' file.
- My 'local.properties'e looks something like this (the password is different of course):
+ My 'local.properties' looks something like this (the password is different of course):
  
 ======== local.properties sample start ============= 
 user.email = mymail@myserver.dom

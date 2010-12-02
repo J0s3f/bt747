@@ -69,7 +69,7 @@ public class TestConvertInBase extends junit.framework.TestCase {
         gpsFile.setWayPointTimeCorrection(0);
         gpsFile.setMaxDiff(300);
         gpsFile.setOverridePreviousTag(true);
-		gpsFile.getParamObject().setParam(
+		gpsFile.getParamObject().setBoolParam(
 				GPSConversionParameters.ADD_LOG_CONDITIONS,
 				false);
         gpsFile.setImperial(false);
