@@ -883,11 +883,6 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 							| (0xFF & bytes[recIdx++]) << 24;
 
 					r.height = JavaLibBridge.toFloatBitwise(height);
-					if (((r.valid & 0x0001) != 1) // record has a fix
-							&& ((r.height < -3000.) || (r.height > 15000.))) {
-						invalidReason += "Invalid height:" + r.height + ";";
-						valid = false;
-					}
 				}
 			}
 			if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
