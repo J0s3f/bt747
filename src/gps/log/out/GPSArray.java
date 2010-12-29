@@ -62,7 +62,7 @@ public final class GPSArray extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected final boolean recordIsNeeded(final GPSRecord s) {
-        return ptFilters[GPSFilter.TRKPT].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s)||ptFilters[GPSFilter.WAYPT].doFilter(s);
     }
 
     /*
