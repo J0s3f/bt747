@@ -24,6 +24,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Path;
 
 /**
  * Class to convert files using external tool.
@@ -76,7 +77,7 @@ public final class ExternalToolConvert extends GpsFileProxyTemplate {
             BT747HashSet iter = getFilesCreated().iterator();
             
             while (iter.hasNext()) {
-                final String fileName = (String) iter.next();
+                final String fileName = ((BT747Path) iter.next()).getPath();
                 try {
                     ExternalTool et = new ExternalTool(extCommand);
                     BT747Hashtable ht = JavaLibBridge.getHashtableInstance(5);
