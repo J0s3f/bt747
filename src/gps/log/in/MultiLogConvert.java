@@ -94,6 +94,8 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             /* Do nothing */
             lc.setConvertWGS84ToMSL(0);
         }
+        
+        lc.setLoggerType(getLoggerType());
         return lc;
     }
 

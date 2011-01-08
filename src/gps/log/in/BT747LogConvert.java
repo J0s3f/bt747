@@ -592,14 +592,6 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 		return error;
 	}
 
-	/**
-	 * @param holux
-	 *            The holux to set.
-	 */
-	public final void setHolux(final boolean holux) {
-		this.holux = holux;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
