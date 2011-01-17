@@ -8,6 +8,8 @@ import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.out.GPSFile;
 
+import bt747.model.AppSettings;
+import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -83,18 +85,8 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         final int destinationHeightReference = BT747Constants
                 .getHeightReference(getType());
 
-        // Supposing automatic mode here... - should be consistent anyway.
-        if ((sourceHeightReference == BT747Constants.HEIGHT_MSL)
-                && (destinationHeightReference == BT747Constants.HEIGHT_WGS84)) {
-            lc.setConvertWGS84ToMSL(+1);
-        } else if ((sourceHeightReference == BT747Constants.HEIGHT_WGS84)
-                && (destinationHeightReference == BT747Constants.HEIGHT_MSL)) {
-            lc.setConvertWGS84ToMSL(-1);
-        } else {
-            /* Do nothing */
-            lc.setConvertWGS84ToMSL(0);
-        }
-        
+        Controller.setHeightConversionMode(this.mode, lc, sourceHeightReference, destinationHeightReference);
+
         lc.setLoggerType(getLoggerType());
         return lc;
     }

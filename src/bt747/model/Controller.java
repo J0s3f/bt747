@@ -542,28 +542,21 @@ public class Controller implements ModelListener {
 		return BT747Constants.getHeightReference(logType);
 	}
 
-	public GPSLogConvertInterface getInputConversionInstance(
-			final int logOutType) {
-		final GPSLogConvertInterface lc;
-		if (Model.logFiles.size() != 0) {
-			final MultiLogConvert mlc = new MultiLogConvert();
-			mlc.setLogFiles(Model.logFiles);
-			lc = mlc;
-		} else {
-			lc = getInputConversionInstance();
-		}
-		final int destinationHeightReference = getHeightReference(logOutType);
-		final int sourceHeightReference = getHeightReference(lc.getType());
-		String parameters = "";
-
-		switch (m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE)) {
+	/**
+	 * Utility function / Should be moved.
+	 * 
+	 * Set the appropriate height conversion according to mode.
+	 * Refactored to reuse in MultiLogConvert.
+	 */
+	public static final void setHeightConversionMode(int mode, GPSLogConvertInterface lc, int sourceRef, int destRef) {
+		switch (mode) {
 		case AppSettings.HEIGHT_AUTOMATIC:
-			if ((sourceHeightReference == BT747Constants.HEIGHT_MSL)
-					&& (destinationHeightReference == BT747Constants.HEIGHT_WGS84)) {
+			if ((sourceRef == BT747Constants.HEIGHT_MSL)
+					&& (destRef == BT747Constants.HEIGHT_WGS84)) {
 				/* Need to add the height in automatic mode */
 				lc.setConvertWGS84ToMSL(+1);
-			} else if ((sourceHeightReference == BT747Constants.HEIGHT_WGS84)
-					&& (destinationHeightReference == BT747Constants.HEIGHT_MSL)) {
+			} else if ((sourceRef == BT747Constants.HEIGHT_WGS84)
+					&& (destRef == BT747Constants.HEIGHT_MSL)) {
 				/* Need to substract the height in automatic mode */
 				lc.setConvertWGS84ToMSL(-1);
 			} else {
@@ -580,7 +573,25 @@ public class Controller implements ModelListener {
 		case AppSettings.HEIGHT_MSL_TO_WGS84:
 			lc.setConvertWGS84ToMSL(1);
 			break;
+		}	}
+	
+	public GPSLogConvertInterface getInputConversionInstance(
+			final int logOutType) {
+		final GPSLogConvertInterface lc;
+		if (Model.logFiles.size() != 0) {
+			final MultiLogConvert mlc = new MultiLogConvert();
+			mlc.setLogFiles(Model.logFiles);
+			lc = mlc;
+		} else {
+			lc = getInputConversionInstance();
 		}
+		final int destinationHeightReference = getHeightReference(logOutType);
+		final int sourceHeightReference = getHeightReference(lc.getType());
+		String parameters = "";
+
+		final int mode = m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE);
+		lc.setHeightConvertMode(mode);
+		setHeightConversionMode(mode, lc, sourceHeightReference, destinationHeightReference);
 
 		lc.setLoggerType(m.getIntOpt(AppSettings.GPSTYPE));
 		if (Generic.isDebug()) {
