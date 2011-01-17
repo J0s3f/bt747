@@ -47,7 +47,8 @@ public abstract class GPSLogConvertInterface {
     protected abstract void closeFileObject(final Object file);
 
     protected int factorConversionWGS84ToMSL = 0;
-
+    protected int mode = Model.HEIGHT_AUTOMATIC;
+    
     /**
      * Height conversion active if true.
      * 
@@ -58,6 +59,11 @@ public abstract class GPSLogConvertInterface {
      */
     public final void setConvertWGS84ToMSL(final int mode) {
         factorConversionWGS84ToMSL = mode;
+    }
+
+    /** Added for multiple log conversion. */
+    public final void setHeightConvertMode(final int mode) {
+        this.mode = mode;
     }
 
     public abstract int toGPSFile(final BT747Path fileName,
