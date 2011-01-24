@@ -108,6 +108,10 @@ public class Tile extends AbstractBean {
         return error;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     /**
      * Returns the Throwable tied to any error that may have ocurred while loading the tile. This error may change several times if multiple
      * errors occur
