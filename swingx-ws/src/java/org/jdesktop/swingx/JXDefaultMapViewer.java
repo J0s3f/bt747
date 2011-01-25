@@ -272,6 +272,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
     }
 
     // Next functions could go in some kind of TileFactoryInfoDecorator
+    // or could even be moved to the default tilefactoryinfo.
     private int getTileSize(final int zoom) {
         int minzoom = getTileFactory().getInfo().getMinimumZoomLevel();
         int extrazoom = minzoom - zoom;
@@ -284,6 +285,14 @@ public class JXDefaultMapViewer extends JXMapViewer {
         int tileSize = getTileFactory().getTileSize(tilezoom);
         tileSize <<= extrazoom; // Multiply by power of.
         return tileSize;
+    }
+
+    private Point2D geoToPixel(GeoPosition pos, int zoom) {
+        return getTileFactory().geoToPixel(pos, zoom);
+    }
+
+    public GeoPosition pixelToGeo(Point2D p, int zoom) {
+        return getTileFactory().pixelToGeo(p, zoom);
     }
 
     private Dimension getMapSize(final int zoom) {
@@ -495,9 +504,10 @@ public class JXDefaultMapViewer extends JXMapViewer {
         yOffset = oldCenter.getY() - zoomCenter.getY();
         Dimension oldMapSize = getMapSize(oldZoom);
         Dimension mapSize = getMapSize(newZoom);
+        double tileSizeRatio = ((double) getTileSize(newZoom)) / getTileSize(oldZoom);
         setZoomAndCenter(new Point2D.Double(xOffset
-                + (zoomCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth())), yOffset
-                + (zoomCenter.getY() * (mapSize.getHeight() / oldMapSize.getHeight()))), newZoom);
+                + tileSizeRatio * (zoomCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth())), yOffset
+                + tileSizeRatio * (zoomCenter.getY() * (mapSize.getHeight() / oldMapSize.getHeight()))), newZoom);
     }
 
     /*
@@ -545,7 +555,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
     public void setAddressLocation(GeoPosition addressLocation) {
         GeoPosition old = getAddressLocation();
         this.addressLocation = addressLocation;
-        setCenter(getTileFactory().geoToPixel(addressLocation, getZoom()));
+        setCenter(geoToPixel(addressLocation, getZoom()));
         firePropertyChange("addressLocation", old, getAddressLocation());
     }
 
@@ -555,7 +565,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
      * @see org.jdesktop.swingx.JXMapViewer#recenterToAddressLocation()
      */
     public void recenterToAddressLocation() {
-        setCenter(getTileFactory().geoToPixel(getAddressLocation(), getZoom()));
+        setCenter(geoToPixel(getAddressLocation(), getZoom()));
     }
 
     /*
@@ -629,7 +639,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
      */
     public void setCenterPosition(GeoPosition geoPosition) {
         GeoPosition oldVal = getCenterPosition();
-        setCenter(getTileFactory().geoToPixel(geoPosition, zoom));
+        setCenter(geoToPixel(geoPosition, zoom));
         GeoPosition newVal = getCenterPosition();
         firePropertyChange("centerPosition", oldVal, newVal);
     }
@@ -640,7 +650,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
      * @see org.jdesktop.swingx.JXMapViewer#getCenterPosition()
      */
     public GeoPosition getCenterPosition() {
-        return getTileFactory().pixelToGeo(getCenter(), zoom);
+        return pixelToGeo(getCenter(), zoom);
     }
 
     /*
@@ -757,6 +767,8 @@ public class JXDefaultMapViewer extends JXMapViewer {
 
         }
 
+        // TODO: oldGP calculation seems incorrect when zoom changed.
+        //       could be improved!!!
         GeoPosition oldGP = this.getCenterPosition();
         center = newCenter;
         firePropertyChange("center", oldCenter, center);
@@ -786,7 +798,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
                 tilezoom = zoom + extrazoom;
             }
 
-            int tileSize = getTileSize(tilezoom);
+            int tileSize = getTileSize(z_zoom);
             LinkedList<Tile> newRequiredTiles;
             boolean sameTiles = false;
             needToCalcMapTiles = false;
@@ -899,7 +911,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
             return;
         }
 
-        int newZoom = getTileFactory().getInfo().getMinimumZoomLevel();
+        int newZoom = getTileFactory().getInfo().getMinimumZoomLevel() - maxextrazoom;
         Rectangle2D rect = generateBoundingRect(positions, newZoom);
         // Rectangle2D viewport = map.getViewportBounds();
         Point2D newCenter;
@@ -936,7 +948,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
                 mapHeight);
 
         for (GeoPosition pos : positions) {
-            final Point2D point = getTileFactory().geoToPixel(pos, zoom);
+            final Point2D point = geoToPixel(pos, zoom);
             if (view.contains(point)) {
                 if (rect == null) {
                     rect = new Rectangle2D.Double(point.getX(), point.getY(),
@@ -1177,7 +1189,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
      */
     public Point2D convertGeoPositionToPoint(GeoPosition pos) {
         // convert from geo to world bitmap
-        Point2D pt = getTileFactory().geoToPixel(pos, getZoom());
+        Point2D pt = geoToPixel(pos, getZoom());
         // convert from world bitmap to local
         Rectangle bounds = getViewportBounds();
         return new Point2D.Double(pt.getX() - bounds.getX(), pt.getY()
