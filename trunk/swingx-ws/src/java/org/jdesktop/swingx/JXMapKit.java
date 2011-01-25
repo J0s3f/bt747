@@ -539,7 +539,7 @@ public class JXMapKit extends JXPanel {
         miniMap.setTileFactory(fact);
 //        miniMap.setZoom(fact.getInfo().getDefaultZoomLevel()+3);
 //        miniMap.setCenterPosition(new GeoPosition(0,0));
-        zoomSlider.setMinimum(fact.getInfo().getMinimumZoomLevel());
+        zoomSlider.setMinimum(fact.getInfo().getMinimumZoomLevel()-mainMap.maxextrazoom);
         zoomSlider.setMaximum(fact.getInfo().getMaximumZoomLevel());
     }
 
