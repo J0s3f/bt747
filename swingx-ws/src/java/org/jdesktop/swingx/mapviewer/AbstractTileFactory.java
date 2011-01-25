@@ -22,9 +22,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -110,7 +112,7 @@ public abstract class AbstractTileFactory extends TileFactory {
     @Override
     public int getTileSize(int zoom) {
         int tilezoom = getTileZoom(zoom);
-        return getInfo().getTileSize(tilezoom) << (tilezoom-zoom);
+        return getInfo().getTileSize(tilezoom) << (tilezoom - zoom);
     }
 
     /**
@@ -124,11 +126,11 @@ public abstract class AbstractTileFactory extends TileFactory {
     @Override
     public Dimension getMapSize(int zoom) {
         int tilezoom = getTileZoom(zoom);
-        int scale = 1 << (tilezoom-zoom);
+        int scale = 1 << (tilezoom - zoom);
 
         Dimension s = GeoUtil.getMapSize(tilezoom, getInfo());
-        if(scale!=1) {
-            s.setSize(s.getWidth()*scale, s.getHeight()*scale);
+        if (scale != 1) {
+            s.setSize(s.getWidth() * scale, s.getHeight() * scale);
         }
         return s;
     }
@@ -145,7 +147,7 @@ public abstract class AbstractTileFactory extends TileFactory {
     @Override
     public Point2D geoToPixel(GeoPosition c, int zoom) {
         int tilezoom = getTileZoom(zoom);
-        int scale = 1 << (tilezoom-zoom);
+        int scale = 1 << (tilezoom - zoom);
 
         Point2D p = GeoUtil.getBitmapCoordinate(c, tilezoom, getInfo());
         if (scale != 1) {
@@ -166,7 +168,7 @@ public abstract class AbstractTileFactory extends TileFactory {
     @Override
     public GeoPosition pixelToGeo(Point2D pixelCoordinate, int zoom) {
         int tilezoom = getTileZoom(zoom);
-        int scale = 1 << (tilezoom-zoom);
+        int scale = 1 << (tilezoom - zoom);
         Point2D p = (Point2D) pixelCoordinate.clone();
         if (scale != 1) {
             p.setLocation(p.getX() / scale, p.getY() / scale);
@@ -391,11 +393,12 @@ public abstract class AbstractTileFactory extends TileFactory {
                             urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
                             String url = baseURL + "/" + urlTemp;
                             ArrayList<String> keys = new ArrayList<String>();
-                            BufferedImage parentTile = downloadParentTile(keys, url);
-                            if (keys.isEmpty() == true) {
+                            List<String> synchronizedList = Collections.synchronizedList(keys);
+                            BufferedImage parentTile = downloadParentTile(synchronizedList, url);
+                            if (synchronizedList.isEmpty() == true) {
                                 scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), parentTile);
                             } else {
-                                for (String item : keys) {
+                                for (String item : synchronizedList) {
                                     Integer[] parentKeys = getParentKeys(item);
                                     int x = parentKeys[1];
                                     int y = parentKeys[2];
@@ -406,7 +409,7 @@ public abstract class AbstractTileFactory extends TileFactory {
                                     urlTemp = urlTemp.substring(urlTemp.indexOf("/") + 1);
                                     urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
                                     url = baseURL + "/" + urlTemp;
-                                    parentTile = downloadParentTile(keys, url);
+                                    parentTile = downloadParentTile(synchronizedList, url);
                                     scaledImage = computeScaledImage(item, x, y, parentTile);
                                 }
                                 scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), scaledImage);
@@ -506,7 +509,7 @@ public abstract class AbstractTileFactory extends TileFactory {
             return retBi;
         }
 
-        private BufferedImage downloadParentTile(ArrayList<String> keys, String urlString) {
+        private BufferedImage downloadParentTile(List<String> keys, String urlString) {
             Integer[] parentKeys = getParentKeys("osm" + urlString.substring(urlString.indexOf(baseURL) + baseURL.length()));
             int x = parentKeys[1];
             int y = parentKeys[2];
@@ -595,7 +598,7 @@ public abstract class AbstractTileFactory extends TileFactory {
 
     @Override
     public Tile getTileInstance(int x, int y, int zoom) {
-        zoom=getTileZoom(zoom);
+        zoom = getTileZoom(zoom);
         String key = getTileKey(x, y, zoom);
         Tile t = tileHandler.getTile(key);
         if (t != null) {
