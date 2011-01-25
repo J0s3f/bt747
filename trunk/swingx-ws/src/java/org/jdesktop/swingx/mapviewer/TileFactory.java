@@ -36,7 +36,15 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
      * @return the size of an edge of a tile in pixels
      */
     public int getTileSize(int zoom) {
-        return getInfo().getTileSize(zoom);
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        return getInfo().getTileSize(tilezoom) << extrazoom;
     }
 
     /**

@@ -102,6 +102,16 @@ public abstract class AbstractTileFactory extends TileFactory {
      */
     @Override
     public int getTileSize(int zoom) {
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        int scale = 1 << extrazoom;
+
         return getInfo().getTileSize(zoom);
     }
 
@@ -115,7 +125,21 @@ public abstract class AbstractTileFactory extends TileFactory {
      */
     @Override
     public Dimension getMapSize(int zoom) {
-        return GeoUtil.getMapSize(zoom, getInfo());
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        int scale = 1 << extrazoom;
+
+        Dimension s = GeoUtil.getMapSize(tilezoom, getInfo());
+        if(scale!=1) {
+            s.setSize(s.getWidth()*scale, s.getHeight()*scale);
+        }
+        return s;
     }
 
     /**
