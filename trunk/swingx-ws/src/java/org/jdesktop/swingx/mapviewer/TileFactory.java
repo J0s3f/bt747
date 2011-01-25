@@ -36,15 +36,8 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
      * @return the size of an edge of a tile in pixels
      */
     public int getTileSize(int zoom) {
-        int minzoom = getInfo().getMinimumZoomLevel();
-        int extrazoom = minzoom - zoom;
-        int tilezoom = zoom;
-        if (extrazoom <= 0) {
-            extrazoom = 0;
-        } else {
-            tilezoom = zoom + extrazoom;
-        }
-        return getInfo().getTileSize(tilezoom) << extrazoom;
+        int tilezoom = getTileZoom(zoom);
+        return getInfo().getTileSize(tilezoom) << (tilezoom-zoom);
     }
 
     /**
@@ -58,6 +51,7 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
      * @param zoom the current zoom level
      */
     public Dimension getMapSize(int zoom) {
+        zoom = getTileZoom(zoom);
         return GeoUtil.getMapSize(zoom, getInfo());
     }
 
@@ -69,16 +63,30 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
     public abstract Tile getTile(String key, String mapName);
 
     public String getTileKey(int x, int y, int zoom) {
+        zoom = getTileZoom(zoom);
         return Tile.getKey(info.getName(), x, y, zoom, info.getTileUrl(x, y, zoom), info.getTileBaseKey(x, y, zoom));
     }
 
     ;
 
     public Tile getTileInstance(int x, int y, int zoom) {
+        zoom = getTileZoom(zoom);
         return new Tile(info.getName(), x, y, zoom, info.getTileUrl(x, y, zoom), info.getTileBaseKey(x, y, zoom));
     }
 
     ;
+
+    protected int getTileZoom(int zoom) {
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        return tilezoom;
+    }
 
     /**
      * Convert a pixel in the world bitmap at the specified
@@ -88,15 +96,8 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
      * @return the converted GeoPosition
      */
     public GeoPosition pixelToGeo(Point2D pixelCoordinate, int zoom) {
-        int minzoom = getInfo().getMinimumZoomLevel();
-        int extrazoom = minzoom - zoom;
-        int tilezoom = zoom;
-        if (extrazoom <= 0) {
-            extrazoom = 0;
-        } else {
-            tilezoom = zoom + extrazoom;
-        }
-        int scale = 1 << extrazoom;
+        int tilezoom = getTileZoom(zoom);
+        int scale = 1 << (tilezoom-zoom);
         Point2D p = (Point2D) pixelCoordinate.clone();
         if (scale != 1) {
             p.setLocation(p.getX() / scale, p.getY() / scale);
@@ -113,15 +114,8 @@ public abstract class TileFactory /*TODO extends AbstractBean*/ {
      * @return the pixel point
      */
     public Point2D geoToPixel(GeoPosition c, int zoom) {
-        int minzoom = getInfo().getMinimumZoomLevel();
-        int extrazoom = minzoom - zoom;
-        int tilezoom = zoom;
-        if (extrazoom <= 0) {
-            extrazoom = 0;
-        } else {
-            tilezoom = zoom + extrazoom;
-        }
-        int scale = 1 << extrazoom;
+        int tilezoom = getTileZoom(zoom);
+        int scale = 1 << (tilezoom-zoom);
 
         Point2D p = GeoUtil.getBitmapCoordinate(c, tilezoom, getInfo());
         if (scale != 1) {

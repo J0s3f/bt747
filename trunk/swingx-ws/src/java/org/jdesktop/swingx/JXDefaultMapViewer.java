@@ -274,17 +274,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
     // Next functions could go in some kind of TileFactoryInfoDecorator
     // or could even be moved to the default tilefactoryinfo.
     private int getTileSize(final int zoom) {
-        int minzoom = getTileFactory().getInfo().getMinimumZoomLevel();
-        int extrazoom = minzoom - zoom;
-        int tilezoom = zoom;
-        if (extrazoom <= 0) {
-            extrazoom = 0;
-        } else {
-            tilezoom = zoom + extrazoom;
-        }
-        int tileSize = getTileFactory().getTileSize(tilezoom);
-        tileSize <<= extrazoom; // Multiply by power of.
-        return tileSize;
+        return getTileFactory().getTileSize(zoom);
     }
 
     private Point2D geoToPixel(GeoPosition pos, int zoom) {
@@ -296,20 +286,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
     }
 
     private Dimension getMapSize(final int zoom) {
-        // Some code repeat - has to be refactored.
-
-        int minzoom = getTileFactory().getInfo().getMinimumZoomLevel();
-        int extrazoom = minzoom - zoom;
-        int tilezoom = zoom;
-        if (extrazoom <= 0) {
-            extrazoom = 0;
-        } else {
-            tilezoom = zoom + extrazoom;
-        }
-
-        Dimension mapSize = getTileFactory().getMapSize(tilezoom);
-        //mapSize.setSize(mapSize.width, mapSize.height);
-        return mapSize;
+        return getTileFactory().getMapSize(zoom);
     }
 
     /**
@@ -360,15 +337,6 @@ public class JXDefaultMapViewer extends JXMapViewer {
                         g.fillRect(point.x, point.y, tileSize, tileSize);
                     }
                 } else {
-                    int minzoom = getTileFactory().getInfo().getMinimumZoomLevel();
-                    int extrazoom = minzoom - zoom;
-                    int tilezoom = zoom;
-                    if (extrazoom <= 0) {
-                        extrazoom = 0;
-                    } else {
-                        tilezoom = zoom + extrazoom;
-                    }
-
                     g.drawImage(tileImage, point.x, point.y, tileSize, tileSize, null);
                 }
 
@@ -476,7 +444,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
     public void setZoom(int newZoom) {
         this.setZoom(getCenter(), newZoom);
     }
-    public int maxextrazoom = 3;
+    public int maxextrazoom = 2;
 
     /*
      * (non-Javadoc)
@@ -504,15 +472,15 @@ public class JXDefaultMapViewer extends JXMapViewer {
         yOffset = oldCenter.getY() - zoomCenter.getY();
         Dimension oldMapSize = getMapSize(oldZoom);
         Dimension mapSize = getMapSize(newZoom);
-        double tileSizeRatio = ((double) getTileSize(newZoom)) / getTileSize(oldZoom);
+        //double tileSizeRatio = ((double) getTileSize(newZoom)) / getTileSize(oldZoom);
         setZoomAndCenter(new Point2D.Double(xOffset
-                + tileSizeRatio * (zoomCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth())), yOffset
-                + tileSizeRatio * (zoomCenter.getY() * (mapSize.getHeight() / oldMapSize.getHeight()))), newZoom);
+                + (zoomCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth())), yOffset
+                + (zoomCenter.getY() * (mapSize.getHeight() / oldMapSize.getHeight()))), newZoom);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.jdesktop.swingx.JXMapViewer#setZoomAndCenter(java.awt.geom.Point2D,
      * int)
@@ -789,15 +757,6 @@ public class JXDefaultMapViewer extends JXMapViewer {
         try {
             int z_zoom = getZoom();
 
-            int minzoom = getTileFactory().getInfo().getMinimumZoomLevel();
-            int extrazoom = minzoom - zoom;
-            int tilezoom = zoom;
-            if (extrazoom <= 0) {
-                extrazoom = 0;
-            } else {
-                tilezoom = zoom + extrazoom;
-            }
-
             int tileSize = getTileSize(z_zoom);
             LinkedList<Tile> newRequiredTiles;
             boolean sameTiles = false;
@@ -849,12 +808,12 @@ public class JXDefaultMapViewer extends JXMapViewer {
                     synchronized (requiredTilesMutex) {
                         tile = currentTiles.get(getTileFactory().getTileKey(
                                 currentTile_MapTileIndex_X,
-                                currentTile_MapTileIndex_Y, tilezoom));
+                                currentTile_MapTileIndex_Y, zoom));
                     }
                     if (tile == null) {
                         tile = getTileFactory().getTileInstance(
                                 currentTile_MapTileIndex_X,
-                                currentTile_MapTileIndex_Y, tilezoom);
+                                currentTile_MapTileIndex_Y, zoom);
                         tile.addPropertyChangeListener("image",
                                 tileImageChangeListener);
                     }
