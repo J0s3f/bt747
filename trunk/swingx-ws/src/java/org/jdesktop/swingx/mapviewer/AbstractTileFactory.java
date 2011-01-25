@@ -128,8 +128,22 @@ public abstract class AbstractTileFactory extends TileFactory {
      * @return a pixel location in the world bitmap
      */
     @Override
-    public Point2D geoToPixel(GeoPosition c, int zoomLevel) {
-        return GeoUtil.getBitmapCoordinate(c, zoomLevel, getInfo());
+    public Point2D geoToPixel(GeoPosition c, int zoom) {
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        int scale = 1 << extrazoom;
+
+        Point2D p = GeoUtil.getBitmapCoordinate(c, tilezoom, getInfo());
+        if (scale != 1) {
+            p.setLocation(p.getX() * scale, p.getY() * scale);
+        }
+        return p;
     }
 
     /**
@@ -143,7 +157,21 @@ public abstract class AbstractTileFactory extends TileFactory {
      */
     @Override
     public GeoPosition pixelToGeo(Point2D pixelCoordinate, int zoom) {
-        return getInfo().getPosition(pixelCoordinate, zoom);
+        int minzoom = getInfo().getMinimumZoomLevel();
+        int extrazoom = minzoom - zoom;
+        int tilezoom = zoom;
+        if (extrazoom <= 0) {
+            extrazoom = 0;
+        } else {
+            tilezoom = zoom + extrazoom;
+        }
+        int scale = 1 << extrazoom;
+        Point2D p = (Point2D) pixelCoordinate.clone();
+        if (scale != 1) {
+            p.setLocation(p.getX() / scale, p.getY() / scale);
+        }
+
+        return getInfo().getPosition(p, tilezoom);
     }
 
     /**
