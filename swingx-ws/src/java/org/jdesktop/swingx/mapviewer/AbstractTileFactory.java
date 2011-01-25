@@ -6,29 +6,34 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
 import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
 import org.jdesktop.swingx.mapviewer.util.GeoUtil;
-import org.jdesktop.swingx.util.PaintUtils;
 
 /**
  * The <code>AbstractTileFactory</code> provides a basic implementation for
@@ -36,16 +41,21 @@ import org.jdesktop.swingx.util.PaintUtils;
  */
 public abstract class AbstractTileFactory extends TileFactory {
 
-    private static final Logger LOG = Logger
-            .getLogger(DefaultTileFactory.class.getName());
+    private static final Logger LOG = Logger.getLogger(DefaultTileFactory.class.getName());
     private BufferedImage tileLoadingImage;
     private static final int SOCKET_TIMEOUT_MS = 30000;
     private HashSet<String> maps = new HashSet<String>();
+    private int parentX = 0;
+    private int parentY = 0;
+    private static int mapZoom;
+    private static String baseURL;
 
     public AbstractTileFactory(TileFactoryInfo info) {
         super(info);
         Deamons.addDeamonUser();
         setupFactory(info);
+        mapZoom = info.getTotalMapZoom();
+        baseURL = info.baseURL;
     }
 
     /**
@@ -61,8 +71,7 @@ public abstract class AbstractTileFactory extends TileFactory {
         try {
             URL url = this.getClass().getResource("resources/loading.png");
             if (url == null) {
-                url = AbstractTileFactory.class
-                        .getResource("resources/loading.png");
+                url = AbstractTileFactory.class.getResource("resources/loading.png");
             }
             loadingImage = ImageIO.read(url);
         } catch (Throwable ex) {
@@ -74,8 +83,7 @@ public abstract class AbstractTileFactory extends TileFactory {
             g2.fillRect(0, 0, 16, 16);
             g2.dispose();
         }
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gs = ge.getDefaultScreenDevice();
         GraphicsConfiguration gc = gs.getDefaultConfiguration();
         int tileSize = info.getTileSize(0);
@@ -88,7 +96,6 @@ public abstract class AbstractTileFactory extends TileFactory {
         int imageY = (tileSize - loadingImage.getHeight(null)) / 2;
         g.drawImage(loadingImage, imageX, imageY, null);
     }
-
     private TileFactoryInfo info;
     private static TileCache cache = new TileCache();
 
@@ -260,7 +267,8 @@ public abstract class AbstractTileFactory extends TileFactory {
 
         public void run() {
             running = true;
-            tileLoadLoop: while (running) {
+            tileLoadLoop:
+            while (running) {
                 try {
                     Tile tile = tileHandler.getTileToLoad();
                     if (tile == null) {
@@ -285,7 +293,6 @@ public abstract class AbstractTileFactory extends TileFactory {
     private final static String getCacheTileKey(Tile tile) {
         return tile.getKey();
     }
-
     private static final String PROP_USER_AGENT_IDEN = "User-Agent";
     private static final String PROP_USER_AGENT_DEFAULT_VALUE = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)";
     private static String userAgent = PROP_USER_AGENT_DEFAULT_VALUE;
@@ -301,17 +308,34 @@ public abstract class AbstractTileFactory extends TileFactory {
         TileDownloader(String name) {
             this.name = name;
         }
-
         private volatile boolean running;
 
         public void stop() {
             running = false;
         }
 
+        private Integer[] getParentKeys(String key) {
+            Integer[] ret = new Integer[3];
+            StringTokenizer str = new StringTokenizer(key, "/");
+            int i = 0;
+            while (str.hasMoreTokens()) {
+                String nextToken = str.nextToken();
+                if (nextToken.indexOf(".png") != -1) {
+                    nextToken = nextToken.substring(0, nextToken.indexOf("."));
+                }
+                if (nextToken.equalsIgnoreCase("osm") == false) {
+                    ret[i] = new Integer(nextToken);
+                    i++;
+                }
+            }
+            return ret;
+        }
+
         public void run() {
             running = true;
 
-            tileDownloadLoop: while (running) {
+            tileDownloadLoop:
+            while (running) {
                 Tile tile = tileHandler.getTileToDownload();
 
                 if (tile == null) {
@@ -344,9 +368,8 @@ public abstract class AbstractTileFactory extends TileFactory {
                         bout.write(buf, 0, n);
                     }
                     byte[] bimg = bout.toByteArray();
-                    BufferedImage img = PaintUtils
-                            .loadCompatibleImage(new ByteArrayInputStream(
-                                    bimg));
+                    BufferedImage img = GraphicsUtilities.loadCompatibleImage(new ByteArrayInputStream(
+                            bimg));
                     cache.put(getCacheTileKey(tile), bimg, img);
                     tile.setImage(img);
                     continue tileDownloadLoop;
@@ -358,8 +381,38 @@ public abstract class AbstractTileFactory extends TileFactory {
                         tile.setNeedsToBeDownLoaded(true);
                         tileHandler.tileStatusChanged();
                     } else if (e instanceof FileNotFoundException) {
-                        LOG.log(Level.INFO, name + " tile doesn't exist: "
-                                + tile.getKey() + " url: " + urlString);
+                        String computeXYIndexParentTile = computeXYIndexParentTile(tile.getX(), tile.getY(), tile.getZoom());
+                        BufferedImage unscaledImg = cache.get(computeXYIndexParentTile);
+                        BufferedImage scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), unscaledImg);
+                        if (scaledImage == null) {
+                            String urlTemp = computeXYIndexParentTile.substring(computeXYIndexParentTile.indexOf("osm/") + 4);
+                            Integer zoomTemp = new Integer(urlTemp.substring(0, urlTemp.indexOf("/")));
+                            urlTemp = urlTemp.substring(urlTemp.indexOf("/") + 1);
+                            urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
+                            String url = baseURL + "/" + urlTemp;
+                            ArrayList<String> keys = new ArrayList<String>();
+                            BufferedImage parentTile = downloadParentTile(keys, url);
+                            if (keys.isEmpty() == true) {
+                                scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), parentTile);
+                            } else {
+                                for (String item : keys) {
+                                    Integer[] parentKeys = getParentKeys(item);
+                                    int x = parentKeys[1];
+                                    int y = parentKeys[2];
+                                    int zoom = parentKeys[0];
+                                    String tmp = computeXYIndexParentTile(x, y, zoom);
+                                    urlTemp = tmp.substring(tmp.indexOf("osm/") + 4);
+                                    zoomTemp = new Integer(urlTemp.substring(0, urlTemp.indexOf("/")));
+                                    urlTemp = urlTemp.substring(urlTemp.indexOf("/") + 1);
+                                    urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
+                                    url = baseURL + "/" + urlTemp;
+                                    parentTile = downloadParentTile(keys, url);
+                                    scaledImage = computeScaledImage(item, x, y, parentTile);
+                                }
+                                scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), scaledImage);
+                            }
+                        }
+                        tile.setImage(scaledImage);
                     } else {
                         LOG.log(Level.SEVERE, name
                                 + " error downloading tile: " + tile.getKey()
@@ -370,6 +423,147 @@ public abstract class AbstractTileFactory extends TileFactory {
                             + tile.getKey() + " url: " + urlString, e);
                 }
 
+            }
+        }
+
+        private String computeXYIndexParentTile(int x, int y, int zoom) {
+            //compute values
+            if (x % 2 == 0) {
+                // even
+                x = (x - 1) / 2;
+            } else {
+                // odd
+                x = x / 2;
+            }
+            if (y % 2 == 0) {
+                // even
+                y = y / 2;
+            } else {
+                // odd
+                y = (y - 1) / 2;
+            }
+            int zoomParent = zoom + 1;
+            String key = "osm/" + zoomParent + "/" + x + "/" + y + ".png";
+            return key;
+        }
+
+        private BufferedImage computeScaledImage(String tileKey, int x, int y, BufferedImage unscaledImage) {
+            int w;
+            int h;
+            int targetWidth;
+            int targetHeight;
+            if (unscaledImage == null) {
+                return null;
+            }
+            int type = (unscaledImage.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+            w = unscaledImage.getWidth();
+            h = unscaledImage.getHeight();
+            targetWidth = w * 2;
+            targetHeight = h * 2;
+            BufferedImage bsrc = unscaledImage;
+            BufferedImage bdest = new BufferedImage(targetWidth, targetHeight, type);
+            Graphics2D g = bdest.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            AffineTransform at = AffineTransform.getScaleInstance((double) targetWidth / bsrc.getWidth(), (double) targetHeight / bsrc.getHeight());
+            g.drawRenderedImage(bsrc, at);
+            boolean isXEven,
+                    isYEven;
+            if (x % 2 == 0) {
+                // even
+                isXEven = true;
+            } else {
+                // odd
+                isXEven = false;
+            }
+            if (y % 2 == 0) {
+                // even
+                isYEven = true;
+            } else {
+                // odd
+                isYEven = false;
+            }
+            BufferedImage retBi = null;
+            if (isXEven == true && isYEven == true) {
+                retBi = bdest.getSubimage(256, 0, 256, 256);
+            }
+            if (isXEven == false && isYEven == true) {
+                retBi = bdest.getSubimage(0, 0, 256, 256);
+            }
+            if (isXEven == true && isYEven == false) {
+                retBi = bdest.getSubimage(256, 256, 256, 256);
+            }
+            if (isXEven == false && isYEven == false) {
+                retBi = bdest.getSubimage(0, 256, 256, 256);
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(retBi, "png", baos);
+                byte[] bytesOut = baos.toByteArray();
+                cache.put(tileKey, bytesOut, retBi);
+            } catch (IOException ex) {
+                Logger.getLogger(AbstractTileFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return retBi;
+        }
+
+        private BufferedImage downloadParentTile(ArrayList<String> keys, String urlString) {
+            Integer[] parentKeys = getParentKeys("osm" + urlString.substring(urlString.indexOf(baseURL) + baseURL.length()));
+            int x = parentKeys[1];
+            int y = parentKeys[2];
+            int zoom = mapZoom - parentKeys[0];
+            String key = "osm/" + zoom + "/" + x + "/" + y + ".png";
+            String tempStr = urlString.substring(urlString.indexOf(baseURL) + baseURL.length() + 1);
+            String baseKey = zoom + "/" + tempStr.substring(tempStr.indexOf("/") + 1);
+            ByteArrayOutputStream bout = new ByteArrayOutputStream(
+                    40 * 1024);
+            byte[] buf = new byte[256];
+
+            try {
+                URL url = new URL(urlString);
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty(PROP_USER_AGENT_IDEN, userAgent);
+                conn.setConnectTimeout(SOCKET_TIMEOUT_MS);
+                conn.setReadTimeout(SOCKET_TIMEOUT_MS);
+                InputStream ins = conn.getInputStream();
+                bout.reset();
+                while (true) {
+                    int n = ins.read(buf);
+                    if (n == -1) {
+                        break;
+                    }
+                    bout.write(buf, 0, n);
+                }
+                byte[] bimg = bout.toByteArray();
+                BufferedImage img = GraphicsUtilities.loadCompatibleImage(new ByteArrayInputStream(
+                        bimg));
+                Tile parentTile = new Tile("osm", x, y, zoom, urlString, baseKey);
+                cache.put(parentTile.getKey(), bimg, img);
+                return img;
+            } catch (Exception e) {
+                if (e instanceof SocketTimeoutException) {
+                    LOG.log(Level.INFO, "Timed out downloading tile: url: " + urlString);
+                } else if (e instanceof FileNotFoundException) {
+                    //if (zoom >= 1) {
+                    String xyParentTile = computeXYIndexParentTile(x, y, zoom);
+                    BufferedImage image = null;//cache.get(xyParentTile);
+                    //if (image == null) {
+                    String tmpStr = xyParentTile.substring(xyParentTile.indexOf("osm/") + 4);
+                    int z = new Integer(parentKeys[0]) - 1;
+                    tmpStr = z + "/" + tmpStr.substring(tmpStr.indexOf("/") + 1);
+                    String newUrl = baseURL + "/" + tmpStr;
+                    keys.add(key);
+                    image = downloadParentTile(keys, newUrl);
+                    //compute image...
+                    //image = computeScaledImage("osm/"+zoom+"/"+x+"/"+y+".png", x, y, image);
+                    return image;
+//                    } else {
+//                        return image;
+//                    }
+                    //}
+                } else {
+                    LOG.log(Level.INFO, "Timed out downloading tile: url: " + urlString);
+                }
+                return null;
             }
         }
     }
@@ -383,7 +577,7 @@ public abstract class AbstractTileFactory extends TileFactory {
         if ((image == null)
                 || (imageDate == null)
                 || ((System.currentTimeMillis() - imageDate) > 7 * 24 * 60
-                        * 60 * 1000)) {
+                * 60 * 1000)) {
             tile.setNeedsToBeDownLoaded(true);
             tileHandler.tileStatusChanged();
         }
@@ -411,7 +605,6 @@ public abstract class AbstractTileFactory extends TileFactory {
         tileHandler.addTile(key, t);
         return t;
     }
-
     private final static TilesHandler tileHandler = new TilesHandler();
     private final static int THREAD_TIMEOUT = 500;
 
@@ -453,26 +646,24 @@ public abstract class AbstractTileFactory extends TileFactory {
          */
         public Tile getTile(String key, String mapName) {
             synchronized (requiredTiles) {
-                Hashtable<String, Tile> requiredTilesForMap = requiredTiles
-                        .get(mapName);
+                Hashtable<String, Tile> requiredTilesForMap = requiredTiles.get(mapName);
                 if (requiredTilesForMap == null) {
                     return null;
                 }
                 return requiredTilesForMap.get(key);
             }
         }
-
         private Iterator<Hashtable<String, Tile>> loadMapIterator = null;
         private Iterator<Tile> loadTileIterator = null;
 
         public void tileStatusChanged() {
-            synchronized(requiredTiles) {
-               requiredTiles.notifyAll();
+            synchronized (requiredTiles) {
+                requiredTiles.notifyAll();
             }
         }
 
         private void initLoadMapIterator() {
-            synchronized(requiredTiles) {
+            synchronized (requiredTiles) {
                 loadMapIterator = requiredTiles.values().iterator();
                 loadTileIterator = null;
             }
@@ -494,14 +685,20 @@ public abstract class AbstractTileFactory extends TileFactory {
                                         && loadTileIterator.hasNext()) {
                                     {
                                         tile = loadTileIterator.next();
+//                                        if (tile.getZoom() <= 2) {
+//                                            String uRL = tile.getURL();
+//                                            if (uRL.startsWith("virtual-") == false) {
+//                                                tile.setUrl("virtual-" + tile.getURL());
+//                                                tile.setNeedsToBeDownLoaded(true);
+//                                            }
+//                                        }
                                         if (tile.setNeedsToBeLoaded(false)) {
                                             return tile;
                                         }
                                     }
                                 }
                             } while (loadMapIterator.hasNext()
-                                    && ((loadTileIterator = loadMapIterator
-                                            .next().values().iterator()) != null));
+                                    && ((loadTileIterator = loadMapIterator.next().values().iterator()) != null));
 
                         }
                         requiredTiles.wait(THREAD_TIMEOUT);
@@ -513,7 +710,6 @@ public abstract class AbstractTileFactory extends TileFactory {
             }
             return null;
         }
-
         private Iterator<Hashtable<String, Tile>> downloadMapIterator = null;
         private Iterator<Tile> downloadTileIterator = null;
 
@@ -539,13 +735,18 @@ public abstract class AbstractTileFactory extends TileFactory {
                                 while (downloadTileIterator != null
                                         && downloadTileIterator.hasNext()) {
                                     tile = downloadTileIterator.next();
+//                                    if (tile.getZoom() <= 2) {
+//                                        String uRL = tile.getURL();
+//                                        if (uRL.startsWith("virtual-") == false) {
+//                                            tile.setUrl("virtual-" + tile.getURL());
+//                                        }
+//                                    }
                                     if (tile.setNeedsToBeDownLoaded(false)) {
                                         return tile;
                                     }
                                 }
                             } while (downloadMapIterator.hasNext()
-                                    && ((downloadTileIterator = downloadMapIterator
-                                            .next().values().iterator()) != null));
+                                    && ((downloadTileIterator = downloadMapIterator.next().values().iterator()) != null));
 
                         }
                         requiredTiles.wait(THREAD_TIMEOUT);
@@ -563,8 +764,7 @@ public abstract class AbstractTileFactory extends TileFactory {
             Deamons.startTileLoaders();
 
             synchronized (requiredTiles) {
-                Hashtable<String, Tile> requiredTilesForMap = requiredTiles
-                        .get(mapName);
+                Hashtable<String, Tile> requiredTilesForMap = requiredTiles.get(mapName);
                 if (requiredTilesForMap == null) {
                     // Required tiles for map does not exist yet - create the
                     // hash.
@@ -574,8 +774,7 @@ public abstract class AbstractTileFactory extends TileFactory {
 
                 // Remove any tiles no longer needed by the map from the
                 // required list.
-                Iterator<Entry<String, Tile>> entryIt = requiredTilesForMap
-                        .entrySet().iterator();
+                Iterator<Entry<String, Tile>> entryIt = requiredTilesForMap.entrySet().iterator();
                 while (entryIt.hasNext()) {
                     Entry<String, Tile> entry = entryIt.next();
                     if (!tiles.contains(entry.getValue())) {
@@ -589,9 +788,13 @@ public abstract class AbstractTileFactory extends TileFactory {
                         // Key already available - do nothing.
                         continue;
                     }
+                    if (tile.getZoom() <= 2) {
+                        requiredTilesForMap.put(tile.getKey(), tile);
+                        tile.setNeedsToBeLoaded(true);
+                    }
                     if ((tile.getImage() == null)
                             && GeoUtil.isValidTile(tile.getX(), tile.getY(),
-                                    tile.getZoom(), info)) {
+                            tile.getZoom(), info)) {
                         // tile.setImage(tileLoadingImage);
                         requiredTilesForMap.put(tile.getKey(), tile);
                         tile.setNeedsToBeLoaded(true);
@@ -607,9 +810,10 @@ public abstract class AbstractTileFactory extends TileFactory {
         }
 
         private void requiredTilesUpdated() {
-                initLoadMapIterator();
-                initDownloadMapIterator();
+            initLoadMapIterator();
+            initDownloadMapIterator();
         }
+
         public boolean removeRequiredTiles(String mapName) {
             synchronized (requiredTiles) {
                 if (requiredTiles.containsKey(mapName)) {

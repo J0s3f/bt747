@@ -140,6 +140,10 @@ public class Tile extends AbstractBean {
         return needsToBeDownLoaded;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     /**
      * Sets the Image associated with this Tile.
      */
