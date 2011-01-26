@@ -742,6 +742,8 @@ public class JXMapKitNewMapViewer extends JXPanel {
                 kit.getMainMap().setDrawTileBorders(true);
                 kit.getMainMap().setRestrictOutsidePanning(true);
                 kit.getMainMap().setHorizontalWrapped(false);
+                kit.setAddressLocationShown(false);
+                kit.getMainMap().setOverlayPainter(new JXPainterTest());
 
                 //((DefaultTileFactory)kit.getMainMap().getTileFactory()).setThreadPoolSize(8);
                 JFrame frame = new JFrame("JXMapKit test");

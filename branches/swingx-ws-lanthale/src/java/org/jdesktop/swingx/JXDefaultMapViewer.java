@@ -349,6 +349,7 @@ public class JXDefaultMapViewer extends JXMapViewer {
             final Rectangle viewportBounds) {
         if (overlay != null) {
             overlay.paint((Graphics2D) g, this, getWidth(), getHeight());
+            needsRepaint();
         }
 
     }

@@ -26,16 +26,20 @@ public class JXPainterTest implements Painter<JXMapViewer> {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         //convert from viewport to world bitmap
         Rectangle rect = t.getViewportBounds();
-        gd.translate(-rect.x, -rect.y);
+        //gd.translate(-rect.x, -rect.y);
 
         //convert geo to world bitmap pixel
         GeoPosition gp = new GeoPosition(51.5, 0);
         Point2D center = t.getTileFactory().geoToPixel(gp, t.getZoom());
-        Ellipse2D el = new Ellipse2D.Double(center.getX()-5, center.getY()-5, 10, 10);
+        int x = (int) (center.getX() - rect.getX());
+        int y = (int) (center.getY() - rect.getY());
+        gd.translate(x, y);
+        Ellipse2D el = new Ellipse2D.Double(- 5, - 5, 10, 10);
         //do the drawing
         gd.setColor(Color.black);
         gd.fill(el);
         gd.draw(el);
+        gd.translate(-x, -y);
         gd.dispose();
     }
 
