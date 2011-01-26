@@ -740,9 +740,11 @@ public class JXMapKit extends JXPanel {
                 kit.setTileFactory(tf);
                 kit.setZoom(14);
                 kit.setAddressLocation(new GeoPosition(51.5, 0));
+                kit.setAddressLocationShown(false);
                 kit.getMainMap().setDrawTileBorders(true);
                 kit.getMainMap().setRestrictOutsidePanning(true);
                 kit.getMainMap().setHorizontalWrapped(false);
+                kit.getMainMap().setOverlayPainter(new JXPainterTest());
 
                 //((DefaultTileFactory)kit.getMainMap().getTileFactory()).setThreadPoolSize(8);
                 JFrame frame = new JFrame("JXMapKit test");
