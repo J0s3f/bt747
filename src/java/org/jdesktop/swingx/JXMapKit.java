@@ -743,7 +743,7 @@ public class JXMapKit extends JXPanel {
                 kit.setAddressLocationShown(false);
                 kit.getMainMap().setDrawTileBorders(true);
                 kit.getMainMap().setRestrictOutsidePanning(true);
-                kit.getMainMap().setHorizontalWrapped(false);
+                kit.getMainMap().setHorizontalWrapped(false);                
                 kit.getMainMap().setOverlayPainter(new JXPainterTest());
 
                 //((DefaultTileFactory)kit.getMainMap().getTileFactory()).setThreadPoolSize(8);

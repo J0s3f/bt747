@@ -395,6 +395,7 @@ public abstract class AbstractTileFactory extends TileFactory {
                             }
                         }
                         tile.setImage(scaledImage);
+                        tileHandler.tileStatusChanged();
                     } else {
                         LOG.log(Level.SEVERE, name
                                 + " error downloading tile: " + tile.getKey()
