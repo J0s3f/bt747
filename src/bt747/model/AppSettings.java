@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import waba.sys.Convert;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.LogFileInfo;
