@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import waba.sys.Convert;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.LogFileInfo;
@@ -922,6 +923,14 @@ public class AppSettings implements BT747Thread {
 		// + bt747.sys.Convert.unsigned2hex(
 		// getIntOpt(FILEFIELDFORMAT), 8) + " to "
 		// + bt747.sys.Convert.unsigned2hex(value, 8), null);
+		//
+		// }
+		// if (param == AppSettings.TRKPT_VALID) {
+		// if ((value & BT747Constants.VALID_SPS_MASK) == 0)
+		// Generic.debug("Trackpoint valid filter set to "
+		// + Convert.unsigned2hex(getIntOpt(FILEFIELDFORMAT), 8),
+		// new Throwable(
+		// "Potential cause of filter settings issue"));
 		//
 		// }
 		if ((param < AppSettings.paramsList.length)
