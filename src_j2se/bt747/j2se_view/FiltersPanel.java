@@ -26,8 +26,12 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
     private J2SEAppController c;
     private Model m;
 
+    /** Avoid updating values based on state changes before initialisation is finished. */
+    private boolean initialised = false;
+    
     /** Creates new form FiltersPanel */
     public FiltersPanel() {
+    	initialised = false;
         initComponents();
     }
 
@@ -50,11 +54,10 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         txtDistanceMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_DISTANCE))); // NOI18N
         txtSpeedMin.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MIN_SPEED))); // NOI18N
         txtSpeedMax.setText(Utils.format("%.2f", m.getFloatOpt(AppSettings.MAX_SPEED))); // NOI18N
-
+        initialised = true;
     }
 
     public void modelEvent(final ModelEvent e) {
-        // TODO Auto-generated method stub
         int type = e.getType();
         switch (type) {
         case ModelEvent.SETTING_CHANGE:
@@ -121,6 +124,9 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
     void setTrkValidFilterSettings() {
         int trkValid = 0;
+        if(!this.initialised) {
+        	return;
+        }
         if (cbTrkNoFix.isSelected()) {
             trkValid |= BT747Constants.VALID_NO_FIX_MASK;
         }
@@ -152,8 +158,10 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
     }
 
     void setWayValidFilterSettings() {
-
         int wayValid = 0;
+        if(!this.initialised) {
+        	return;
+        }
         if (cbWayNoFix.isSelected()) {
             wayValid |= BT747Constants.VALID_NO_FIX_MASK;
         }
@@ -186,6 +194,9 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
     void setTrkRCRFilterSettings() {
         int trkRCR = 0;
+        if(!this.initialised) {
+        	return;
+        }
         if (cbTrkTime.isSelected()) {
             trkRCR |= BT747Constants.RCR_TIME_MASK;
         }
@@ -206,6 +217,9 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
     void setWayRCRFilterSettings() {
         int wayRCR = 0;
+        if(!this.initialised) {
+        	return;
+        }
         if (cbWayTime.isSelected()) {
             wayRCR |= BT747Constants.RCR_TIME_MASK;
         }

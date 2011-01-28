@@ -113,6 +113,11 @@ public abstract class GPSFile implements GPSFileInterface {
     protected int previousDate = 0;
     protected int previousTime = 0;
     protected int nextPreviousTime = 0;
+    
+    /**
+     * True if new files should be created in this pass.
+     */
+    protected boolean createNewFiles = true;
 
     private double previousLat = 0;
     private double previousLon = 0;
@@ -206,6 +211,7 @@ public abstract class GPSFile implements GPSFileInterface {
     public void initialiseFile(final BT747Path baseName,
             final String extension, final int fileSeparationFreq) {
         nbrOfPassesToGo = numberOfPasses - 1;
+        createNewFiles = true;
         ext = extension;
         basename = baseName;
         switch (fileSeparationFreq) {
@@ -734,7 +740,8 @@ public abstract class GPSFile implements GPSFileInterface {
             }
 
             if (createOK) {
-                final boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
+            	// Keeping second part of next assignment ot make sure of backward compatibility.
+                final boolean createNewFile = createNewFiles || (numberOfPasses - 1 == nbrOfPassesToGo);
 
                 final int error = createFile(r.utc, extraExt, createNewFile);
 
@@ -841,6 +848,7 @@ public abstract class GPSFile implements GPSFileInterface {
      * @return true if analysis must go on.
      */
     public boolean nextPass() {
+    	createNewFiles = false;
         // bt747.sys.Generic.debug("Next pass");
         addUntreatedWayPoints();
         if (nbrOfPassesToGo == 0) {
