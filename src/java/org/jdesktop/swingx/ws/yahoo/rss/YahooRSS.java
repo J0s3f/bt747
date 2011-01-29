@@ -24,6 +24,7 @@ package org.jdesktop.swingx.ws.yahoo.rss;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -62,14 +63,14 @@ public abstract class YahooRSS extends AbstractBean {
     /**
      * Constructs the URL to return
      */
-    protected final URL constructUrl() throws MalformedURLException {
+    protected final URL constructUrl() throws MalformedURLException, UnsupportedEncodingException {
         StringBuilder buffer = new StringBuilder(getUrlPrefix());
         buffer.append("?");
         Map params = getParameters();
         for (Object key : params.keySet()) {
-            buffer.append(URLEncoder.encode(key.toString()));
+            buffer.append(URLEncoder.encode(key.toString(), "UTF-8"));
             buffer.append("=");
-            buffer.append(URLEncoder.encode(params.get(key).toString()));
+            buffer.append(URLEncoder.encode(params.get(key).toString(), "UTF-8"));
             buffer.append("&");
         }
         if (buffer.charAt(buffer.length() - 1) == '&') {

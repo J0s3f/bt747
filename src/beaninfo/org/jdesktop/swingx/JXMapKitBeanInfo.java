@@ -22,6 +22,7 @@ public class JXMapKitBeanInfo extends BeanInfoSupport {
         super(JXMapKit.class);
     }
 
+    @Override
     protected void initialize() {
         //setPropertyEditor(DefaultProvidersPropertyEditor.class, "defaultProvider");
         setPreferred(true, "defaultProvider");
