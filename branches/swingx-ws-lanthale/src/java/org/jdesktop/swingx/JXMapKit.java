@@ -67,7 +67,7 @@ public class JXMapKit extends JXPanel {
 
         SwingLabsBlueMarble, OpenStreetMaps, Custom
     };
-    private DefaultProviders defaultProvider = DefaultProviders.OpenStreetMaps;
+    private DefaultProviders defaultProvider = DefaultProviders.SwingLabsBlueMarble;
     private boolean addressLocationShown = true;
     private boolean dataProviderCreditShown = false;
     private boolean dataProviderLinkShown = false;
