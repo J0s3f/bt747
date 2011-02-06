@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>BT_J2ME</name>
+	<name>BT_J2ME_NewBT</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -29,7 +29,7 @@
 		<link>
 			<name>BT747_PROJECT_COMMON_SRC</name>
 			<type>2</type>
-			<locationURI>BT747_PROJECT_COMMON_SRC</locationURI>
+			<location>D:/mdeweerd/workspace/BT747/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

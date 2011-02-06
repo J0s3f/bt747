@@ -19,8 +19,8 @@ import bt747.sys.interfaces.BT747RAFile;
 /**
  * @author Mario De Weerd
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ *         TODO To change the template for this generated type comment go to
+ *         Window - Preferences - Java - Code Style - Code Templates
  */
 public final class J2MEFile implements BT747RAFile {
     private String path = null;
@@ -285,6 +285,16 @@ public final class J2MEFile implements BT747RAFile {
                     .lastModified() / 1000L);
         } catch (final Exception e) {
             return 0;
+        }
+    }
+
+    public void setModificationTime(int utc) {
+        try {
+            // No known method to set the modification time?
+//            ((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
+//                    .setLastModified(utc*1000L);
+        } catch (final Exception e) {
+            bt747.sys.Generic.debug("Modification time change failed",e);
         }
     }
 }

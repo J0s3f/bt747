@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <stringAttribute key="bad_container_name" value="\BT_J2ME\lib\B"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/BT_J2ME"/>
+<listEntry value="/BT_J2ME_NewBT"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
@@ -28,5 +28,5 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.microemu.app.Main"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--impl&#13;&#10;org.microemu.cldc.file.FileSystem&#13;&#10;--impl&#13;&#10;com.intel.bluetooth.BlueCoveImpl&#13;&#10;deployed/DefaultCldcPhone2/BT_J2ME.jad"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT_J2ME"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BT_J2ME_NewBT"/>
 </launchConfiguration>
