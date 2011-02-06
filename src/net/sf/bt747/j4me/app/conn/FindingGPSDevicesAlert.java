@@ -1,14 +1,14 @@
 package net.sf.bt747.j4me.app.conn;
 
-import java.io.IOException;
-
 import net.sf.bt747.j4me.app.AppController;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
-import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
-import org.j4me.bluetoothgps.LocationProvider;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Menu;
+import org.j4me.ui.MenuItem;
+import org.j4me.ui.UIManager;
+import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
 /**
@@ -20,7 +20,8 @@ import org.j4me.ui.components.Label;
  * them a selection once it is done. This usually takes a few seconds, but
  * sometimes as many as 30.
  */
-public class FindingGPSDevicesAlert extends ProgressAlert implements BT747DiscoveryListener {
+public class FindingGPSDevicesAlert extends Menu implements
+        BluetoothListenerInterface, Runnable {
     /**
      * The location information for this application.
      */
@@ -48,101 +49,122 @@ public class FindingGPSDevicesAlert extends ProgressAlert implements BT747Discov
      */
     private final DeviceScreen previous;
 
+    private Label status = new Label();
+
     private DeviceScreen next;
 
     /**
      * Constructs the "Finding GPS Devices..." alert screen.
      * 
      * @param c
-     *                is the application's controller.
+     *            is the application's controller.
      * @param previous
-     *                is the screen that came before this one.
+     *            is the screen that came before this one.
      */
     public FindingGPSDevicesAlert(final AppController c,
             final DeviceScreen previous, final DeviceScreen next) {
-        super("Finding GPS...", "Looking for nearby Bluetooth devices.");
+        setTitle("Finding BT GPS ...");
 
         this.c = c;
         this.previous = previous;
         this.next = next;
     }
 
-    /* (non-Javadoc)
+    private boolean initialScreenSetup = false;
+
+    private boolean done = false;
+
+    private final int TIMEOUT = 1000;
+
+    public void initialSetupScreen() {
+        if (!initialScreenSetup) {
+            createNewSection("Status");
+            status.setLabel("Initialising");
+            append(status);
+            createNewSection("Devices");
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sf.bt747.j4me.app.screens.ProgressAlert#cancel()
      */
     public void cancel() {
         Log.info("Canceling Bluetooth device discovery.");
-        super.cancel();
+        BluetoothFacade.getInstance().cancel(this);
+        status.setLabel("Cancelled");
     }
+
     /**
      * Called when the user presses the alert's dismiss button.
      */
     public final void onCancel() {
-        Log.info("Going to "+previous.getTitle());
+        cancel();
+        Log.info("Going to " + previous.getTitle());
         previous.show();
     }
-    
-    /**
-     * Uses Bluetooth device discovery to get a list of the nearby (within 10
-     * meters) Bluetooth GPS devices that are turned on. If more than one
-     * device is returned, the user should select which is their GPS device.
-     * <p>
-     * The address of the Bluetooth device should be set using the
-     * <code>Criteria.setRemoteDeviceAddress</code> method. That
-     * <code>Criteria</code> object can then be used as the argument to the
-     * <code>getInstance</code> factory method.
-     * <p>
-     * Discovering Bluetooth devices is a lengthy operation. It usually takes
-     * more than ten seconds. Therefore this method call normally should be
-     * made from a separate thread to keep the application responsive.
-     * 
-     * @return An array of all the nearby Bluetooth devices that will accept a
-     *         connection, not just GPS devices. Each array element returns
-     *         another <code>String[2]</code> where the first element is the
-     *         device's human readable name and the second is the address
-     *         (devices that do not support human readable names will be set
-     *         to the address). If the operation completed successfully, and
-     *         no devices are nearby, the returned array will have length 0.
-     *         If the operation terminated, for example because the device
-     *         does not support the Bluetooth API, the returned array will be
-     *         <code>null</code>.
-     * @throws IOException
-     *                 if any Bluetooth I/O errors occur. For example if
-     *                 another Bluetooth discovery operation is already in
-     *                 progess.
-     * @throws SecurityException
-     *                 if the user did not grant access to Bluetooth on the
-     *                 device.
-     */
-    public static String[][] discoverBluetoothDevices(BT747DiscoveryListener l) throws IOException,
-            SecurityException {
-        String[][] devices = null;
 
-        // If the device doesn't support Bluetooth, just return null.
-        if (LocationProvider.supportsBluetoothAPI() == false) {
-            Log.info("Device does not support Bluetooth");
-            return null;
-        }
-
-        // Discover devices.
-        BT747BluetoothDeviceDiscovery discoverer = null;
-
-        try {
-            discoverer = new BT747BluetoothDeviceDiscovery(l);
-        } catch (final Exception e) {
-            // Some kind of exception creating the BluetoothDeviceDiscovery
-            // object.
-            // This can happen on some platforms, such as pre-JSR-82
-            // BlackBerry devices.
-            Log.warn("Cannot discover Bluetooth devices", e);
-            return null;
-        }
-
-        devices = discoverer.discoverNearbyDeviceNamesAndAddresses();
-
-        return devices;
+    private void startWorker() {
+        // Start the worker thread.
+        final Thread worker = new Thread(this);
+        worker.start();
     }
 
+    /**
+     * Executes the worker thread. This method synchronizes with the main UI
+     * thread to avoid any race conditions involved with the order screens are
+     * set.
+     */
+    public void run() {
+        try {
+            // Do the background thread work.
+            // final DeviceScreen next = doWork();
+            doWork();
+            // Go to the next screen.
+            // if ((canceled == false) && (next != null)) {
+            // next.show();
+            // }
+        } catch (final Throwable t) {
+            Log.error("Exception " + getTitle(), t);
+
+            // Display the error.
+            final ErrorAlert error = new ErrorAlert("Unhandled Exception", t
+                    .toString(), this);
+            error.show();
+        }
+    }
+
+    private void doWork() {
+        done = false;
+        String errorText;
+        Log.info("Starting find Bluetooth");
+        try {
+            done = !BluetoothFacade.getInstance().findBluetoothDevices(this);
+            status.setLabel("Searching");
+        } catch (final SecurityException e) {
+            // The user prevented communication with the server.
+            // Inform them to allow it.
+            Log.error("User denied Bluetooth access.", e);
+            errorText = "You must allow access for the GPS to work.\n"
+                    + "Please restart and allow all connections.";
+            (new ErrorAlert("Discovery Error", errorText, previous)).show();
+        }
+        if (done) {
+            // The operation failed for an unknown Bluetooth reason.
+            Log.error("Bluetooth discovery not launched."
+                    + "  Operation returned null.");
+            errorText = "Bluetooth device discovery not launched.  Is bluetooth active?";
+            // (new ErrorAlert("Discovery Error", errorText,
+            // previous)).show();
+        }
+    }
+
+    public void showNotify() {
+        initialSetupScreen();
+        startWorker();
+        super.showNotify();
+    }
 
     /**
      * A thread that finds nearby Bluetooth devices and sets them on a select
@@ -150,7 +172,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert implements BT747Discov
      * 
      * @return the screen to show after this thread finishes.
      */
-    protected final DeviceScreen doWork() {
+    protected final DeviceScreen doNoWork() {
         String[][] devices = null;
         String errorText = null;
 
@@ -170,7 +192,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert implements BT747Discov
             try {
                 Log.info("Discovering Bluetooth devices.");
 
-                devices = discoverBluetoothDevices(this);
+                // devices = discoverBluetoothDevices(this);
 
                 if (devices == null) {
                     // The operation failed for an unknown Bluetooth reason.
@@ -184,16 +206,17 @@ public class FindingGPSDevicesAlert extends ProgressAlert implements BT747Discov
                 Log.error("User denied Bluetooth access.", e);
                 errorText = "You must allow access for the GPS to work.\n"
                         + "Please restart and allow all connections.";
-            } catch (final IOException e) {
-                // There was an unknown I/O error preventing us from going
-                // farther.
-                Log.error("Problem with Bluetooth device discovery.", e);
-                errorText = "Bluetooth GPS device discovery failed.\n"
-                        + "Exit the application and verify your phone's"
-                        + " Bluetooth is on.  "
-                        + "If it is please restart your phone and"
-                        + " GPS device and try again.";
             }
+            // catch (final IOException e) {
+            // // There was an unknown I/O error preventing us from going
+            // // farther.
+            // Log.error("Problem with Bluetooth device discovery.", e);
+            // errorText = "Bluetooth GPS device discovery failed.\n"
+            // + "Exit the application and verify your phone's"
+            // + " Bluetooth is on.  "
+            // + "If it is please restart your phone and"
+            // + " GPS device and try again.";
+            // }
 
             // Go to the next screen.
             if (errorText != null) {
@@ -237,16 +260,57 @@ public class FindingGPSDevicesAlert extends ProgressAlert implements BT747Discov
                 }
             }
 
-            Log.info("Returning "+next.getTitle());
+            Log.info("Returning " + next.getTitle());
             return next;
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.sf.bt747.j4me.app.conn.BT747DiscoveryListener#deviceDiscovered(java.lang.String)
+    int devicesFound = 0;
+
+    private final static void connect(String deviceRef) {
+
+    }
+
+    public void deviceFound(final String deviceDescription,
+            final String deviceRef) {
+        devicesFound++;
+
+        status.setLabel("Found " + devicesFound + " device(s)");
+        Log.info("Found device " + deviceDescription);
+        this.appendMenuOption(new MenuItem() {
+            public final String getText() {
+                return deviceDescription;
+            }
+
+            public final void onSelection() {
+                connect(deviceRef);
+                // confirmScreen.show();
+            }
+        });
+        repaint();
+    }
+
+    public void discoveryDone() {
+        Log.info("Discovery done ");
+        status.setLabel("Done");
+
+        synchronized (FindingGPSDevicesAlert.BLUETOOTH_LOCK) {
+            done = true;
+        }
+    }
+
+    /**
+     * Adds components for a new section of information.
+     * 
+     * @param title
+     *            is the name of the section.
      */
-    public void deviceDiscovered(String deviceDescription) {
-        // TODO Auto-generated method stub
-        append(new Label(deviceDescription));
+    private void createNewSection(final String title) {
+        append(new HorizontalRule());
+
+        final Label header = new Label();
+        header.setFont(UIManager.getTheme().getMenuFont());
+        header.setLabel(title);
+        append(header);
     }
 }

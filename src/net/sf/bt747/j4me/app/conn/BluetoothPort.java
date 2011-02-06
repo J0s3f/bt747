@@ -14,7 +14,7 @@ import bt747.model.Controller;
  * Maps the communications with a Bluetooth GPS device to the
  * <code>LocationProvider</code> interface.
  */
-public class BluetoothPort extends gps.connection.GPSPort{
+public class BluetoothPort extends gps.connection.GPSPort {
 
     /**
      * The protocol portion of the URL for Bluetooth addresses.
@@ -67,8 +67,8 @@ public class BluetoothPort extends gps.connection.GPSPort{
     private static Controller gpsController;
 
     /**
-     * Returns a <code>LocationProvider</code> for the GPS device connected
-     * to via Bluetooth.
+     * Returns a <code>LocationProvider</code> for the GPS device connected to
+     * via Bluetooth.
      */
     public final static synchronized BluetoothPort getInstance()
             throws IOException {
@@ -103,25 +103,24 @@ public class BluetoothPort extends gps.connection.GPSPort{
     }
 
     /**
-     * Construct the instance of this class. If the <code>channelId</code>
-     * is <code>null</code> this method will attempt to guess at the channel
-     * id.
+     * Construct the instance of this class. If the <code>channelId</code> is
+     * <code>null</code> this method will attempt to guess at the channel id.
      * 
-     * @param remoteDeviceBTAddress -
-     *                The remote GPS device bluetooth address
-     * @param channelId -
-     *                The channel id for the remote device. This may be
-     *                <code>null</code>. If this is the case we will simply
-     *                guess at the channel ID for the device.
-     * @throws ConnectionNotFoundException -
-     *                 If the target of the name cannot be found, or if the
-     *                 requested protocol type is not supported.
-     * @throws IOException -
-     *                 If error occurs while establishing bluetooth connection
-     *                 or opening input stream.
-     * @throws SecurityException -
-     *                 May be thrown if access to the protocol handler is
-     *                 prohibited.
+     * @param remoteDeviceBTAddress
+     *            - The remote GPS device bluetooth address
+     * @param channelId
+     *            - The channel id for the remote device. This may be
+     *            <code>null</code>. If this is the case we will simply guess
+     *            at the channel ID for the device.
+     * @throws ConnectionNotFoundException
+     *             - If the target of the name cannot be found, or if the
+     *             requested protocol type is not supported.
+     * @throws IOException
+     *             - If error occurs while establishing bluetooth connection
+     *             or opening input stream.
+     * @throws SecurityException
+     *             - May be thrown if access to the protocol handler is
+     *             prohibited.
      */
     private void connect(final String remoteDeviceBTAddress,
             final String channelId) throws ConnectionNotFoundException,
@@ -166,35 +165,40 @@ public class BluetoothPort extends gps.connection.GPSPort{
     /**
      * Connect to the GPs device.
      * 
-     * @param bturl -
-     *                The url to the bluetooth GPS device
-     * @throws ConnectionNotFoundException -
-     *                 If the target of the name cannot be found, or if the
-     *                 requested protocol type is not supported.
-     * @throws IOException -
-     *                 If error occurs while establishing bluetooth connection
-     *                 or opening input stream.
-     * @throws SecurityException -
-     *                 May be thrown if access to the protocol handler is
-     *                 prohibited.
+     * @param bturl
+     *            - The url to the bluetooth GPS device
+     * @throws ConnectionNotFoundException
+     *             - If the target of the name cannot be found, or if the
+     *             requested protocol type is not supported.
+     * @throws IOException
+     *             - If error occurs while establishing bluetooth connection
+     *             or opening input stream.
+     * @throws SecurityException
+     *             - May be thrown if access to the protocol handler is
+     *             prohibited.
      */
     private BluetoothGPS connect(final String bturl)
             throws ConnectionNotFoundException, IOException,
             SecurityException {
-        Log.info("Try URL: " + bturl);
-        // Connect to the Bluetooth GPS device.
-        final BluetoothGPS gps = new BluetoothGPS(this, bturl);
-        gps.connect();
-        return gps;
+        if (bturl == null) {
+            Log.info("No bluetooth port");
+            return null;
+        } else {
+            Log.info("Try URL: " + bturl);
+            // Connect to the Bluetooth GPS device.
+            final BluetoothGPS gps = new BluetoothGPS(this, bturl);
+            gps.connect();
+            return gps;
+        }
     }
 
     /**
      * Construct the Bluetooth URL
      * 
-     * @param deviceBluetoothAddress -
-     *                The address of the remote device
-     * @param channelId -
-     *                The channel ID to use
+     * @param deviceBluetoothAddress
+     *            - The address of the remote device
+     * @param channelId
+     *            - The channel ID to use
      */
     protected static String constructBTURL(
             final String deviceBluetoothAddress, final String channelId) {
@@ -206,9 +210,8 @@ public class BluetoothPort extends gps.connection.GPSPort{
 
         // Add the "btspp://" prefix (if not already there).
         if (deviceBluetoothAddress.substring(0,
-                BluetoothPort.BLUETOOTH_PROTOCOL.length())
-                .equalsIgnoreCase(
-                        BluetoothPort.BLUETOOTH_PROTOCOL) == false) {
+                BluetoothPort.BLUETOOTH_PROTOCOL.length()).equalsIgnoreCase(
+                BluetoothPort.BLUETOOTH_PROTOCOL) == false) {
             url.append(BluetoothPort.BLUETOOTH_PROTOCOL);
         }
 
@@ -242,7 +245,7 @@ public class BluetoothPort extends gps.connection.GPSPort{
      * Set the state of the location provider
      * 
      * @param state
-     *                the location provider's state
+     *            the location provider's state
      */
     public void setState(final int state) {
         this.state = state;
@@ -306,7 +309,7 @@ public class BluetoothPort extends gps.connection.GPSPort{
                 return 0;
             }
         } catch (final javax.bluetooth.BluetoothConnectionException e) {
-            Log.error("readCheck",e);
+            Log.error("readCheck", e);
             return 0;
         } catch (final IOException e) {
             Log.error("readCheck", e);
@@ -334,8 +337,7 @@ public class BluetoothPort extends gps.connection.GPSPort{
 
     public final void connected(final boolean status) {
         if ((BluetoothPort.gpsController != null) & status) {
-            BluetoothPort.gpsController
-                    .performOperationsAfterGPSConnect();
+            BluetoothPort.gpsController.performOperationsAfterGPSConnect();
         }
     }
 }
