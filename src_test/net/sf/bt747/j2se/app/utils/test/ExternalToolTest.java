@@ -32,8 +32,9 @@ public class ExternalToolTest extends TestCase {
         String expectedResult = "abcd\n";
         byte[] result;
         result = et.execTool(tokens);
-        
-        assertEquals(expectedResult,new String(result));
+        String sResult = new String(result);
+        sResult=sResult.replace("\r\n", "\n");
+        assertEquals(expectedResult, sResult);
     }
     
     /**
@@ -48,7 +49,9 @@ public class ExternalToolTest extends TestCase {
         String expectedResult = "abafilenamecd\n";
         byte[] result;
         result = et.execTool(tokens);
-        
-        assertEquals(expectedResult,new String(result));
+        String sResult = new String(result);
+        sResult=sResult.replace("\r\n", "\n");
+  
+        assertEquals(expectedResult,sResult);
     }
 }
