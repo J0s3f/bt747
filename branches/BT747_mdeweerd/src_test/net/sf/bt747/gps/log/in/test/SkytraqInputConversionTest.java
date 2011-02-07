@@ -76,7 +76,7 @@ public class SkytraqInputConversionTest extends TestConvertInBase {
         assertEquals("snr", false, trkPt1.hasSnr());
         assertEquals("speed", 0.0, trkPt1.getSpeed(), 0.00000001);
         assertEquals("tagutc", 0, trkPt1.tagutc);
-        assertEquals("utc", 1263668369, trkPt1.getUtc());
+        assertEquals("utc", 1263668369-16, trkPt1.getUtc());
         assertEquals("valid", false, trkPt1.hasValid());
         assertEquals("vdop", false, trkPt1.hasVdop());
         assertEquals("voxStr", false, trkPt1.hasVoxStr());
