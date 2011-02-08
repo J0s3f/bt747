@@ -274,15 +274,15 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	 * List of valid bluetooth port prefixes for the mac.
 	 */
 	private static final String[] macPortPrefixes = {
-			"/dev/tty.HOLUX_M-241-SPPSlave-", // Port for Holux M-241
-			"/dev/tty.HoluxM-1000C-SPPslave-", // Port for Holux M1000C
-			"/dev/tty.HOLUX_M-1200E-SPPslave-",
-			"/dev/tty.iBT-GPS-SPPSlave-", // Port for
-			"/dev/tty.iBT-GPS-SPPslave-", // Port for
-			"/dev/cu.QstarzGPS-SPPslave-", // Port for some Qstartz devices
-			"/dev/tty.QstarzGPS-SPPslave-",// Port for some Qstartz devices
-			"/dev/tty.Qstarz1000XT-SPPslave-",// Port for some Qstartz devices
-			"/dev/tty.BlumaxBT-GPS-SPPSlave-" // Port for Blumax device
+			"/dev/tty.HOLUX_M-241-SPPSlave",   // Port for Holux M-241
+			"/dev/tty.HoluxM-1000C-SPPslave",  // Port for Holux M1000C
+			"/dev/tty.HOLUX_M-1200E-SPPslave", // Port for
+			"/dev/tty.iBT-GPS-SPPSlave",       // Port for
+			"/dev/tty.iBT-GPS-SPPslave",       // Port for
+			"/dev/cu.QstarzGPS-SPPslave",      // Port for some Qstartz devices
+			"/dev/tty.QstarzGPS-SPPslave",     // Port for some Qstartz devices
+			"/dev/tty.Qstarz1000XT-SPPslave",  // Port for some Qstartz devices
+			"/dev/tty.BlumaxBT-GPS-SPPSlave"   // Port for Blumax device
 	};
 
 	/**
@@ -298,7 +298,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 
 		if (os_name.toLowerCase().startsWith("mac")) {
 			portName = getPortFromPrefixes(macPortPrefixes,
-					MAX_BTPORT_SEARCH_IDX);
+					MAX_BTPORT_SEARCH_IDX, "-");
 		}
 
 		return portName;
@@ -315,12 +315,20 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	 * @return port if a valid port was found and set, otherwise null
 	 */
 	private final synchronized String getPortFromPrefixes(
-			final String[] prefixes, final int maxIdx) {
+			final String[] prefixes, final int maxIdx, final String extra) {
 		String portName = null;
 		for (int prefixIdx = 0; portName == null && prefixIdx < prefixes.length; prefixIdx++) {
+			final String baseNamePort = prefixes[prefixIdx];
+			if (extra != null) {
+				final String testPort = baseNamePort;
+				if (isValidPort(testPort)) {
+					portName = testPort;
+				}
+			}
 			for (int i = 0; portName == null && (i < maxIdx); i++) {
-				final String testPort = prefixes[prefixIdx] + i;
-				if (isValidPort(portName)) {
+				final String testPort = baseNamePort
+						+ (extra != null ? extra : "") + i;
+				if (isValidPort(testPort)) {
 					portName = testPort;
 				}
 			}
@@ -373,7 +381,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 
 		if (!portFound && os_name.toLowerCase().startsWith("lin")) {
 			portName = getPortFromPrefixes(linUsbPortPrefixes,
-					MAX_USBPORT_SEARCH_IDX);
+					MAX_USBPORT_SEARCH_IDX, null);
 			portFound = portName != null;
 		}
 		if (!portFound) {
