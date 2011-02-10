@@ -659,7 +659,7 @@ public class JXMapKit extends JXPanel {
             setZoom(3);
         }
         if (prov == DefaultProviders.OpenStreetMaps) {
-            final int max = 21;
+            final int max = 22;
             TileFactoryInfo info = new TileFactoryInfo("osm", 1, max - 2, max,
                     256, true, true, // tile size is 256 and x/y orientation is normal
                     "http://tile.openstreetmap.org",//5/15/10.png",
@@ -710,12 +710,13 @@ public class JXMapKit extends JXPanel {
     public static void main(String... args) {
         SwingUtilities.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 JXMapKit kit = new JXMapKit();
                 kit.setDefaultProvider(DefaultProviders.OpenStreetMaps);
                 Logger.getLogger(JXMapViewer.class.getName()).setLevel(Level.ALL);
                 Logger.getLogger(Tile.class.getName());
-                final int max = 21;
+                final int max = 22;
                 TileFactoryInfo info = new TileFactoryInfo("osm", 1, max - 2, max,
                         256, true, true, // tile size is 256 and x/y orientation is normal
                         "http://tile.openstreetmap.org",//5/15/10.png",

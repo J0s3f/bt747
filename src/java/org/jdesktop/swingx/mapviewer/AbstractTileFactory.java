@@ -312,6 +312,7 @@ public abstract class AbstractTileFactory extends TileFactory {
             return ret;
         }
 
+        @Override
         public void run() {
             running = true;
 
@@ -373,27 +374,8 @@ public abstract class AbstractTileFactory extends TileFactory {
                             urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
                             String url = baseURL + "/" + urlTemp;
                             List<String> keys = Collections.synchronizedList(new ArrayList<String>());
-                            BufferedImage parentTile = downloadParentTile(keys, url);
-                            if (keys.isEmpty() == true) {
-                                scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), parentTile);
-                            } else {
-                                for (int i = 0; i < keys.size(); i++) {
-                                    String item = keys.get(i);
-                                    Integer[] parentKeys = getParentKeys(item);
-                                    int x = parentKeys[1];
-                                    int y = parentKeys[2];
-                                    int zoom = parentKeys[0];
-                                    String tmp = computeXYIndexParentTile(x, y, zoom);
-                                    urlTemp = tmp.substring(tmp.indexOf("osm/") + 4);
-                                    zoomTemp = new Integer(urlTemp.substring(0, urlTemp.indexOf("/")));
-                                    urlTemp = urlTemp.substring(urlTemp.indexOf("/") + 1);
-                                    urlTemp = (mapZoom - zoomTemp) + "/" + urlTemp;
-                                    url = baseURL + "/" + urlTemp;
-                                    parentTile = downloadParentTile(keys, url);
-                                    scaledImage = computeScaledImage(item, x, y, parentTile);
-                                }
-                                scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), scaledImage);
-                            }
+                            scaledImage=downloadParentTile(keys, url);
+                            scaledImage = computeScaledImage(tile.getKey(), tile.getX(), tile.getY(), scaledImage);                            
                         }
                         tile.setImage(scaledImage);
                         tileHandler.tileStatusChanged();
@@ -529,14 +511,15 @@ public abstract class AbstractTileFactory extends TileFactory {
                     LOG.log(Level.INFO, error);
                 } else if (e instanceof FileNotFoundException) {
                     String xyParentTile = computeXYIndexParentTile(x, y, zoom);
-                    BufferedImage image = null;//cache.get(xyParentTile);                    
+                    BufferedImage image = null;//cache.get(xyParentTile);
                     String tmpStr = xyParentTile.substring(xyParentTile.indexOf("osm/") + 4);
                     int z = new Integer(parentKeys[0]) - 1;
                     tmpStr = z + "/" + tmpStr.substring(tmpStr.indexOf("/") + 1);
                     String newUrl = baseURL + "/" + tmpStr;
                     keys.add(key);
                     image = downloadParentTile(keys, newUrl);
-                    return image;
+                    BufferedImage scaledImage = computeScaledImage(key, x, y, image);
+                    return scaledImage;
                 } else {
                     String error = "Timed out downloading tile: url: " + urlString;
                     LOG.log(Level.INFO, error);
@@ -562,11 +545,13 @@ public abstract class AbstractTileFactory extends TileFactory {
         return image;
     }
 
+    @Override
     public void setRequiredTiles(Collection<Tile> tiles, String mapName) {
         maps.add(mapName); // To be sure to remove from required tiles.
         tileHandler.setRequiredTiles(tiles, mapName, info);
     }
 
+    @Override
     public Tile getTile(String key, String mapName) {
         return tileHandler.getTile(key, mapName);
     }
