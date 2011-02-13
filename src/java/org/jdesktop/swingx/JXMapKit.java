@@ -275,9 +275,9 @@ public class JXMapKit extends JXPanel {
         mainMap.setName("main"); // NOI18N
 
         miniMap.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        miniMap.setOpaque(false);
         miniMap.setMinimumSize(new java.awt.Dimension(100, 100));
         miniMap.setName("mini"); // NOI18N
-        miniMap.setOpaque(false);
         miniMap.setPreferredSize(new java.awt.Dimension(100, 100));
 
         miniMapMinimizeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdesktop/swingx/mapviewer/resources/minus.png"))); // NOI18N
@@ -291,25 +291,25 @@ public class JXMapKit extends JXPanel {
             }
         });
 
-        javax.swing.GroupLayout miniMapLayout = new javax.swing.GroupLayout(miniMap);
+        org.jdesktop.layout.GroupLayout miniMapLayout = new org.jdesktop.layout.GroupLayout(miniMap);
         miniMap.setLayout(miniMapLayout);
         miniMapLayout.setHorizontalGroup(
-            miniMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 98, Short.MAX_VALUE)
-            .addGroup(miniMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(miniMapLayout.createSequentialGroup()
+            miniMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 98, Short.MAX_VALUE)
+            .add(miniMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(miniMapLayout.createSequentialGroup()
                     .addContainerGap(78, Short.MAX_VALUE)
-                    .addComponent(miniMapMinimizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)))
+                    .add(miniMapMinimizeButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(0, 0, 0)))
         );
         miniMapLayout.setVerticalGroup(
-            miniMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 98, Short.MAX_VALUE)
-            .addGroup(miniMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(miniMapLayout.createSequentialGroup()
+            miniMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 98, Short.MAX_VALUE)
+            .add(miniMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(miniMapLayout.createSequentialGroup()
                     .addContainerGap(78, Short.MAX_VALUE)
-                    .addComponent(miniMapMinimizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)))
+                    .add(miniMapMinimizeButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(0, 0, 0)))
         );
 
         miniMapMaximizeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdesktop/swingx/mapviewer/resources/plus.png"))); // NOI18N
@@ -363,60 +363,60 @@ public class JXMapKit extends JXPanel {
             }
         });
 
-        javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
+        org.jdesktop.layout.GroupLayout sliderPanelLayout = new org.jdesktop.layout.GroupLayout(sliderPanel);
         sliderPanel.setLayout(sliderPanelLayout);
         sliderPanelLayout.setHorizontalGroup(
-            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(zoomSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-            .addGroup(sliderPanelLayout.createSequentialGroup()
-                .addComponent(zoomOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(zoomInButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            sliderPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(zoomSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+            .add(sliderPanelLayout.createSequentialGroup()
+                .add(zoomOutButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(zoomInButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         sliderPanelLayout.setVerticalGroup(
-            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sliderPanelLayout.createSequentialGroup()
-                .addComponent(zoomSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(zoomOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(zoomInButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            sliderPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, sliderPanelLayout.createSequentialGroup()
+                .add(zoomSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(sliderPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(zoomOutButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(zoomInButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
         dataProviderLink.setText("Copyright");
 
-        javax.swing.GroupLayout mainMapLayout = new javax.swing.GroupLayout(mainMap);
+        org.jdesktop.layout.GroupLayout mainMapLayout = new org.jdesktop.layout.GroupLayout(mainMap);
         mainMap.setLayout(mainMapLayout);
         mainMapLayout.setHorizontalGroup(
-            mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainMapLayout.createSequentialGroup()
+            mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(mainMapLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dataProviderLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(miniMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainMapLayout.createSequentialGroup()
+                .add(sliderPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(dataProviderLink, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(miniMap, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(mainMapLayout.createSequentialGroup()
                     .addContainerGap(203, Short.MAX_VALUE)
-                    .addComponent(miniMapMaximizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)))
+                    .add(miniMapMaximizeButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(0, 0, 0)))
         );
         mainMapLayout.setVerticalGroup(
-            mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainMapLayout.createSequentialGroup()
+            mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(mainMapLayout.createSequentialGroup()
                 .addContainerGap(40, Short.MAX_VALUE)
-                .addGroup(mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(miniMap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainMapLayout.createSequentialGroup()
-                        .addGroup(mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dataProviderLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .add(mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, miniMap, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, mainMapLayout.createSequentialGroup()
+                        .add(mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(sliderPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(dataProviderLink, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())))
-            .addGroup(mainMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainMapLayout.createSequentialGroup()
+            .add(mainMapLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(mainMapLayout.createSequentialGroup()
                     .addContainerGap(237, Short.MAX_VALUE)
-                    .addComponent(miniMapMaximizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)))
+                    .add(miniMapMaximizeButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(0, 0, 0)))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
