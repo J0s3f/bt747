@@ -1002,8 +1002,10 @@ public final class BT747Constants { // dev as in device
 			}
 			break;
 		case BT747Constants.SPI_MAN_ID_EON:
-			if ((devType == 0x20 || devType == 0x31)) { // || (DevType == 0x24))
-														// {
+			if ((devType == 0x20 || devType == 0x31 || devType == 0x30 // EN25Q32B
+																		// [0x3016]
+			)) { // || (D evType == 0x24))
+				// {
 				// Supposing the same rule as macronix.
 				// Example device: EN25P16
 				memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
