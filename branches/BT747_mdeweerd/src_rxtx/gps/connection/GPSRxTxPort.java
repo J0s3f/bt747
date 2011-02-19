@@ -255,14 +255,20 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	}
 
 	private final boolean isValidPort(final String path) {
+		boolean result = false;
+		int portType = -1;
 		try {
-			return (new File(path)).exists()
-					&& (CommPortIdentifier.getPortIdentifier(path)
-							.getPortType() == CommPortIdentifier.PORT_SERIAL);
+			result = (new File(path)).exists()
+					&& ((portType = CommPortIdentifier.getPortIdentifier(path)
+							.getPortType()) == CommPortIdentifier.PORT_SERIAL);
 		} catch (final Exception e) {
-			return false;
+			// return false;
 		}
-
+		if (Generic.isDebug()) {
+			Generic.debug("isValidPort('" + path + "')?: " + result + " "
+					+ portType);
+		}
+		return result;
 	}
 
 	/** Maximum index when looking for BT port number given a base name. */
@@ -274,15 +280,15 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	 * List of valid bluetooth port prefixes for the mac.
 	 */
 	private static final String[] macPortPrefixes = {
-			"/dev/tty.HOLUX_M-241-SPPSlave",   // Port for Holux M-241
-			"/dev/tty.HoluxM-1000C-SPPslave",  // Port for Holux M1000C
+			"/dev/tty.HOLUX_M-241-SPPSlave", // Port for Holux M-241
+			"/dev/tty.HoluxM-1000C-SPPslave", // Port for Holux M1000C
 			"/dev/tty.HOLUX_M-1200E-SPPslave", // Port for
-			"/dev/tty.iBT-GPS-SPPSlave",       // Port for
-			"/dev/tty.iBT-GPS-SPPslave",       // Port for
-			"/dev/cu.QstarzGPS-SPPslave",      // Port for some Qstartz devices
-			"/dev/tty.QstarzGPS-SPPslave",     // Port for some Qstartz devices
-			"/dev/tty.Qstarz1000XT-SPPslave",  // Port for some Qstartz devices
-			"/dev/tty.BlumaxBT-GPS-SPPSlave"   // Port for Blumax device
+			"/dev/tty.iBT-GPS-SPPSlave", // Port for
+			"/dev/tty.iBT-GPS-SPPslave", // Port for
+			"/dev/cu.QstarzGPS-SPPslave", // Port for some Qstartz devices
+			"/dev/tty.QstarzGPS-SPPslave", // Port for some Qstartz devices
+			"/dev/tty.Qstarz1000XT-SPPslave", // Port for some Qstartz devices
+			"/dev/tty.BlumaxBT-GPS-SPPSlave" // Port for Blumax device
 	};
 
 	/**
