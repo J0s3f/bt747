@@ -139,6 +139,11 @@ public class GpsEvent {
     public static final int EXCEPTION = 38;
 
     /**
+     * Indicates that the log download was requested.
+     */
+    public static final int LOG_DOWNLOAD_REQUESTED = 39;
+
+    /**
      * The event's type.
      */
     private final int type;
