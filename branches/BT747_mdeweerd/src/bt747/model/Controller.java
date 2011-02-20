@@ -55,6 +55,7 @@ import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Int;
 import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -124,6 +125,8 @@ public class Controller implements ModelListener {
 		return m.gpsM();
 	}
 
+	private boolean isStartLogDownloadNeeded = false;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -171,6 +174,21 @@ public class Controller implements ModelListener {
 				m.setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
 			}
 		}
+		case ModelEvent.DATA_UPDATE:
+			if (this.isStartLogDownloadNeeded) {
+				switch (((BT747Int) e.getArg()).getValue()) {
+				case MtkModel.DATA_MEM_USED:
+				case MtkModel.DATA_FLASH_TYPE:
+					if (m.isAvailable(MtkModel.DATA_MEM_USED)
+							&& m.isAvailable(MtkModel.DATA_FLASH_TYPE)
+							&& this.isStartLogDownloadNeeded) {
+						isStartLogDownloadNeeded = false;
+						startDefaultDownload();
+					}
+					break;
+				}
+				break;
+			}
 		}
 	}
 
@@ -545,10 +563,11 @@ public class Controller implements ModelListener {
 	/**
 	 * Utility function / Should be moved.
 	 * 
-	 * Set the appropriate height conversion according to mode.
-	 * Refactored to reuse in MultiLogConvert.
+	 * Set the appropriate height conversion according to mode. Refactored to
+	 * reuse in MultiLogConvert.
 	 */
-	public static final void setHeightConversionMode(int mode, GPSLogConvertInterface lc, int sourceRef, int destRef) {
+	public static final void setHeightConversionMode(int mode,
+			GPSLogConvertInterface lc, int sourceRef, int destRef) {
 		switch (mode) {
 		case AppSettings.HEIGHT_AUTOMATIC:
 			if ((sourceRef == BT747Constants.HEIGHT_MSL)
@@ -573,8 +592,9 @@ public class Controller implements ModelListener {
 		case AppSettings.HEIGHT_MSL_TO_WGS84:
 			lc.setConvertWGS84ToMSL(1);
 			break;
-		}	}
-	
+		}
+	}
+
 	public GPSLogConvertInterface getInputConversionInstance(
 			final int logOutType) {
 		final GPSLogConvertInterface lc;
@@ -591,7 +611,8 @@ public class Controller implements ModelListener {
 
 		final int mode = m.getIntOpt(AppSettings.HEIGHT_CONVERSION_MODE);
 		lc.setHeightConvertMode(mode);
-		setHeightConversionMode(mode, lc, sourceHeightReference, destinationHeightReference);
+		setHeightConversionMode(mode, lc, sourceHeightReference,
+				destinationHeightReference);
 
 		lc.setLoggerType(m.getIntOpt(AppSettings.GPSTYPE));
 		if (Generic.isDebug()) {
@@ -812,6 +833,14 @@ public class Controller implements ModelListener {
 	 * device type.
 	 */
 	public final void startDefaultDownload() {
+		isStartLogDownloadNeeded = false;
+		if (!(m.isAvailable(MtkModel.DATA_MEM_USED) && m
+				.isAvailable(MtkModel.DATA_FLASH_TYPE))) {
+			this.isStartLogDownloadNeeded = true;
+	        m.postEvent(GpsEvent.LOG_DOWNLOAD_REQUESTED);
+			return;
+		}
+
 		try {
 			int endAddress;
 			endAddress = m.logMemUsed() - 1;

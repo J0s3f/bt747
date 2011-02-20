@@ -156,10 +156,11 @@ public class GpsController implements BT747Thread, ProtocolConstants,
     }
 
     private final void getLogCtrlInfo() {
-        setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        setDataNeeded(MtkModel.DATA_FLASH_TYPE);
         setDataNeeded(MtkModel.DATA_MEM_USED);
-        setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
         mtkC.reqData(MtkModel.DATA_LOG_OVERWRITE_STATUS);
+        setDataNeeded(MtkModel.DATA_LOG_VERSION);
+        setDataNeeded(MtkModel.DATA_MEM_PTS_LOGGED);
     }
 
     /**
