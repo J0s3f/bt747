@@ -279,10 +279,10 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     private boolean setZoom() {
         // TODO Auto-generated method stub
 
-        double minlat = 180f;
-        double minlon = 90f;
-        double maxlat = -180f;
-        double maxlon = -90f;
+        double minlat = 90f;
+        double minlon = 180f;
+        double maxlat = -90f;
+        double maxlon = -180f;
         boolean hasPositions = false;
         final PositionData pd = m.getPositionData();
         final List<List<GPSRecord>> trks = pd.getTracks();
