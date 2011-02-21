@@ -1090,7 +1090,7 @@ public class MtkModel implements EventPoster {
 	}
 
 	public final boolean isLoggerNeedsFormat() {
-		return loggerNeedsInit;
+		return loggerNeedsInit && !loggerIsFull;
 	}
 
 	public final String getFirmwareVersion() {
