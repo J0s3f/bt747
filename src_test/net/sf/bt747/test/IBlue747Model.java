@@ -52,7 +52,7 @@ public class IBlue747Model {
 	}
 
 	public enum DeviceModelType {
-		ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C, MBT1100, IBLUE747PLUS_TYPE2, BTCD110m
+		ML7, QST1300, IBLUE747PLUS, PHOTOMATE887, QST1000, QST1000X, M241, IBLUE821, IBLUE747, HOLUXM1000C, MBT1100, IBLUE747PLUS_TYPE2, BTCD110m, TSI_887_Lite
 	};
 
 	/**
@@ -60,7 +60,8 @@ public class IBlue747Model {
 	 */
 	public static DeviceModelType defaultModelType =
 	// DeviceModelType.IBLUE747PLUS;
-	DeviceModelType.IBLUE747PLUS_TYPE2;
+	// DeviceModelType.IBLUE747PLUS_TYPE2;
+	DeviceModelType.TSI_887_Lite;
 
 	public GPSrxtx gpsRxTx = null;
 
@@ -341,6 +342,7 @@ public class IBlue747Model {
 		 */
 		public DeviceMode deviceMode = DeviceMode.DEVICE_MODE_NMEA;
 		public int flashCode = 0xC22015C2;
+		public int flashStatus = 1;
 		/**
 		 * The logger's format.
 		 */
@@ -412,7 +414,7 @@ public class IBlue747Model {
 		}
 	}
 
-	public void replyMTK_Log_Ack(final String[] p_nmea) {
+	public void replyMTK_Log_Ack(final String[] p_nmea, int p_ack_type) {
 		try {
 			sendPacket("PMTK" + BT747Constants.PMTK_ACK_STR + ","
 					+ BT747Constants.PMTK_CMD_LOG + "," + p_nmea[1] + ","
@@ -431,6 +433,7 @@ public class IBlue747Model {
 	 * @return 0 if all went ok.
 	 */
 	public int replyLogNmea(final String[] p_nmea) {
+		int ack = BT747Constants.PMTK_ACK_SUCCEEDED;
 		try {
 			switch (JavaLibBridge.toInt(p_nmea[1])) {
 			case BT747Constants.PMTK_LOG_SET:
@@ -474,6 +477,13 @@ public class IBlue747Model {
 				final int z_type = JavaLibBridge.toInt(p_nmea[2]);
 				if (p_nmea.length >= 3) {
 					switch (z_type) {
+					case BT747Constants.PMTK_LOG_FLASH_STAT:
+						infoMsg("Get Flash Status");
+						sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
+								+ BT747Constants.PMTK_LOG_DT + "," + p_nmea[2]
+								+ "," + mtkData.flashStatus // Address
+						);
+						break;
 					case BT747Constants.PMTK_LOG_FORMAT: // 2;
 						// if(GPS_DEBUG) {
 						// waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
@@ -629,7 +639,14 @@ public class IBlue747Model {
 				break;
 			case BT747Constants.PMTK_LOG_OFF:
 				infoMsg("Set Log Off");
-				mtkData.logStatus &= ~BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK;
+				if ((mtkData.logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0) {
+					sendPacket("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+							+ BT747Constants.PMTK_LOG_DT + ","
+							+ BT747Constants.PMTK_LOG_FLASH_STAT + "," + "3");
+					ack = BT747Constants.PMTK_ACK_FAILED;
+				} else {
+					mtkData.logStatus &= ~BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK;
+				}
 				break;
 			case BT747Constants.PMTK_LOG_DISABLE:
 				infoMsg("Set Log Disable");
@@ -648,7 +665,7 @@ public class IBlue747Model {
 		} catch (final Exception e) {
 			// TODO: handle exception
 		}
-		replyMTK_Log_Ack(p_nmea);
+		replyMTK_Log_Ack(p_nmea, ack);
 		return 0; // Done.
 
 	}
@@ -783,6 +800,10 @@ public class IBlue747Model {
 								+ "," + mtkData.coreVersion + ","
 								+ mtkData.modelNumber + "," + mtkData.modelRef
 								+ "," + mtkData.swVersion;
+					}
+					switch (mtkData.modelType) {
+					case TSI_887_Lite:
+						acknowledge = null;
 					}
 					break;
 				case BT747Constants.PMTK_Q_VERSION: // 604
@@ -957,6 +978,13 @@ public class IBlue747Model {
 			mtkData.swVersion = "1.0"; // Not confirmed
 			mtkData.logVersion = 139;
 			mtkData.flashCode = 0x20201710;
+			break;
+		case TSI_887_Lite:
+			mtkData.coreVersion = "AXN_1.30-B_1.3_C01";
+			mtkData.modelNumber = "0003";
+			mtkData.modelRef = "TSI_887Lite";
+			mtkData.swVersion = "1.0";
+			mtkData.flashCode = 0x1C30161C;
 			break;
 		case QST1300:
 		default:
