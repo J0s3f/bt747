@@ -69,7 +69,14 @@ public class IBlue747Model {
 	private BTCD110mController cd110Controller = new BTCD110mController(this);
 
 	private byte[] logData = null;
-	private static String logFile = "c:/bt747/Test.bin";
+    private static final String DEFAULT_LOG_FILE = "files/iBlue747_allfields.bin";
+    
+	private static String logFile = getResourcePath(DEFAULT_LOG_FILE);
+
+
+    private final static String getResourcePath(String rsc) {
+        return IBlue747Model.class.getResource(rsc).getPath(); // getClass().getResource("test1.csv")
+    }
 
 	/**
 	 * Set up system specific classes.
@@ -83,7 +90,7 @@ public class IBlue747Model {
 		if (!GPSrxtx.hasDefaultPortInstance()) {
 			GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
 		}
-		logFile = "C:\\BT747\\20090629_747A+GNB.bin";
+		//logFile = "C:\\BT747\\20090629_747A+GNB.bin";
 	}
 
 	/**
