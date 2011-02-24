@@ -559,6 +559,12 @@ public class AppSettings implements BT747Thread {
 	 */
 	public static final int IS_GPX_NO_SYMBOL = 99;
 
+	public static final int SPEED_DISPLAY_OPTION = 100;
+
+	public static final int SPEED_DISPLAY_FIELD_NORMAL = 0;
+	public static final int SPEED_DISPLAY_FIELD_MINUTES_PER_KM = 1;
+	public static final int SPEED_DISPLAY_FIELD_MMSS_PER_KM = 2;
+
 	private static boolean defaultTraversable = false;
 	private static int defaultChunkSize = 0x10000;
 
@@ -836,7 +842,10 @@ public class AppSettings implements BT747Thread {
 		case 55:
 			setBooleanOpt(IS_GPX_NO_COMMENT, true);
 			setBooleanOpt(IS_GPX_NO_SYMBOL, true);
-			setStringOpt(AppSettings.VERSION, "0.56");
+			/* fall through */
+		case 56:
+			setIntOpt(SPEED_DISPLAY_OPTION, SPEED_DISPLAY_FIELD_NORMAL);
+			setStringOpt(AppSettings.VERSION, "0.57");
 
 			/* fall through */
 		default:
@@ -1854,8 +1863,11 @@ public class AppSettings implements BT747Thread {
 	private static final int IS_GPX_NO_SYMBOL_IDX = AppSettings.IS_GPX_NO_COMMENT_IDX
 			+ AppSettings.IS_GPX_NO_COMMENT_SIZE;
 	private static final int IS_GPX_NO_SYMBOL_SIZE = 4;
-	private static final int C_NEXT_IDX = AppSettings.IS_GPX_NO_SYMBOL_IDX
+	private static final int SPEED_DISPLAY_OPTION_IDX = AppSettings.IS_GPX_NO_SYMBOL_IDX
 			+ AppSettings.IS_GPX_NO_SYMBOL_SIZE;
+	private static final int SPEED_DISPLAY_OPTION_SIZE = 1;
+	private static final int C_NEXT_IDX = AppSettings.SPEED_DISPLAY_OPTION_IDX
+			+ AppSettings.SPEED_DISPLAY_OPTION_SIZE;
 
 	// Next lines just to add new items faster using replace functions
 	private static final int C_NEXT_SIZE = 4;
@@ -2128,6 +2140,9 @@ public class AppSettings implements BT747Thread {
 			{ AppSettings.BOOL, AppSettings.IS_GPX_NO_SYMBOL,
 					AppSettings.IS_GPX_NO_SYMBOL_IDX,
 					AppSettings.IS_GPX_NO_SYMBOL_SIZE },
+			{ AppSettings.INT, AppSettings.SPEED_DISPLAY_OPTION,
+					AppSettings.SPEED_DISPLAY_OPTION_IDX,
+					AppSettings.SPEED_DISPLAY_OPTION_SIZE },
 	// End of list
 	};
 }
