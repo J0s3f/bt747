@@ -20,6 +20,8 @@ import gps.log.GPSRecord;
 
 import java.util.Date;
 
+import javax.microedition.global.Formatter;
+
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Menu;
 import org.j4me.ui.Theme;
@@ -134,12 +136,24 @@ public final class GpsPositionScreen extends
         }
         if (c.getModel().getBooleanOpt(AppSettings.IMPERIAL)) {
             fvAltitude.setName("Altitude (ft)");
-            fvSpeed.setName("Speed (mph)");
         } else {
             fvAltitude.setName("Altitude (m)");
-            fvSpeed.setName("Speed (km/h)");
         }
-
+        switch (c.getModel().getIntOpt(AppSettings.SPEED_DISPLAY_OPTION)) {
+        case AppSettings.SPEED_DISPLAY_FIELD_NORMAL:
+            if (c.getModel().getBooleanOpt(AppSettings.IMPERIAL)) {
+                fvSpeed.setName("Speed (mph)");
+            } else {
+                fvSpeed.setName("Speed (km/h)");
+            }
+            break;
+        case AppSettings.SPEED_DISPLAY_FIELD_MINUTES_PER_KM:
+            fvSpeed.setName("Speed (min/km)");
+            break;
+        case AppSettings.SPEED_DISPLAY_FIELD_MMSS_PER_KM:
+            fvSpeed.setName("Speed (mm:ss/km)");
+            break;
+        }
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
     }
@@ -277,10 +291,25 @@ public final class GpsPositionScreen extends
                 latitude.setLabel(g.latitude, 6);
                 longitude.setLabel(g.longitude, 6);
                 fvTime.setLabel((g.utc) * 1000L + g.milisecond);
-                if (c.getAppModel().getBooleanOpt(AppSettings.IMPERIAL)) {
-                    fvSpeed.setLabel(g.speed * 0.621371192237334f, 1);
-                } else {
-                    fvSpeed.setLabel(g.speed, 1);
+                switch (c.getModel().getIntOpt(
+                        AppSettings.SPEED_DISPLAY_OPTION)) {
+                case AppSettings.SPEED_DISPLAY_FIELD_NORMAL:
+                    if (c.getAppModel().getBooleanOpt(AppSettings.IMPERIAL)) {
+                        fvSpeed.setLabel(g.speed * 0.621371192237334f, 1);
+                    } else {
+                        fvSpeed.setLabel(g.speed, 1);
+                    }
+                    break;
+                case AppSettings.SPEED_DISPLAY_FIELD_MINUTES_PER_KM:
+                    fvSpeed.setLabel(60 / g.speed, 1);
+                    break;
+                case AppSettings.SPEED_DISPLAY_FIELD_MMSS_PER_KM:
+                    int min = (int) Math.floor(60 / g.speed);
+                    int sec = ((int) Math.floor(3600 / g.speed)) - min * 60;
+                    String v = (min < 10 ? "0" + min : "" + min) + ":"
+                            + (sec < 10 ? "0" + sec : "" + sec);
+                    fvSpeed.setLabel(v);
+                    break;
                 }
                 fvCourse.setLabel(g.heading, 1);
                 updateValidColor(g.valid);

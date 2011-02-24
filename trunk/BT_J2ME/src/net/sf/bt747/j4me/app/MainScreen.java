@@ -43,7 +43,6 @@ import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
 
 import bt747.model.AppSettings;
-import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.interfaces.BT747Exception;
@@ -81,6 +80,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     private DelayedDialog connectConfig;
     private PosSrvMonitorScreen posSrvScreen;
     private RadioButton appUnits;
+    private RadioButton speedDisplay;
 
     private final java.util.Timer tm = new Timer();
     private TimerTask ttLabels;
@@ -169,7 +169,7 @@ public final class MainScreen extends Dialog implements ModelListener {
 
             // fun
             posSrvScreen = new PosSrvMonitorScreen(c, this);
-            
+
             // Call here for debug
             // c.doConvertLog(Model.GPX_LOGTYPE);
             rootMenu = new Menu("Log", this);
@@ -207,7 +207,7 @@ public final class MainScreen extends Dialog implements ModelListener {
 
             // fun
             rootMenu.appendMenuOption("Position Server", posSrvScreen);
-            
+
             Menu subMenu;
 
             subMenu = new Menu("AGPS", rootMenu);
@@ -299,8 +299,29 @@ public final class MainScreen extends Dialog implements ModelListener {
             appUnits.append("Metric System (meters)");
             appUnits.append("English System (miles)");
             appUnits.setSelectedIndex(c.getAppModel().getBooleanOpt(
-                    AppSettings.IMPERIAL)?1:0);
+                    AppSettings.IMPERIAL) ? 1 : 0);
             subMenu.append(appUnits);
+            speedDisplay = new RadioButton();
+            speedDisplay.append("Std Speed Display");
+            speedDisplay.append("Minutes/km display");
+            speedDisplay.append("MM:SS/km display");
+            int idx = 0;
+            switch (c.getAppModel().getIntOpt(
+                    AppSettings.SPEED_DISPLAY_OPTION)) {
+            case AppSettings.SPEED_DISPLAY_FIELD_NORMAL:
+                idx = 0;
+                break;
+            case AppSettings.SPEED_DISPLAY_FIELD_MINUTES_PER_KM:
+                idx = 1;
+                break;
+            case AppSettings.SPEED_DISPLAY_FIELD_MMSS_PER_KM:
+                idx = 2;
+                break;
+            default:
+                break;
+            }
+            speedDisplay.setSelectedIndex(idx);
+            subMenu.append(speedDisplay);
 
             rootMenu.appendSubmenu(subMenu);
 
@@ -382,7 +403,8 @@ public final class MainScreen extends Dialog implements ModelListener {
             m().addListener(this);
         } else {
             // Screen already set up, get the options that might have changed.
-            c.setBooleanOpt(AppSettings.IMPERIAL,appUnits.getSelectedIndex()==1);
+            c.setBooleanOpt(AppSettings.IMPERIAL,
+                    appUnits.getSelectedIndex() == 1);
         }
     }
 
@@ -469,6 +491,20 @@ public final class MainScreen extends Dialog implements ModelListener {
     public void showNotify() {
         Log.debug("MainScreen showNotify");
         setupScreen();
+        int sd = 0;
+        switch (speedDisplay.getSelectedIndex()) {
+        case 0:
+            sd = AppSettings.SPEED_DISPLAY_FIELD_NORMAL;
+            break;
+        case 1:
+            sd = AppSettings.SPEED_DISPLAY_FIELD_MINUTES_PER_KM;
+            break;
+        case 2:
+            sd = AppSettings.SPEED_DISPLAY_FIELD_MMSS_PER_KM;
+            break;
+        }
+        c.setIntOpt(AppSettings.SPEED_DISPLAY_OPTION, sd);
+
     }
 
     /*
@@ -530,7 +566,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                         c.replyToOkToOverwrite(confirmScreen
                                 .getConfirmation());
                     } catch (BT747Exception e) {
-                        
+
                     }
                     if (interruptedScreen != null) {
                         confirmScreen = null;
@@ -765,7 +801,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     }
 
     private DeviceScreen interruptedScreen = null;
-    
+
     private final static int DEFAULT_RECONNECT_TRIALS = 5;
     private int reconnectTrialsToGo = 0;
 
@@ -782,7 +818,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         case ModelEvent.DISCONNECTED:
             // Display.getDisplay(this).flashBacklight(500);
             Display.getDisplay(midlet).vibrate(200);
-            if(reconnectTrialsToGo>0) {
+            if (reconnectTrialsToGo > 0) {
                 reconnectTrialsToGo--;
                 c.reconnectGpsAfterDisconnect();
             }
