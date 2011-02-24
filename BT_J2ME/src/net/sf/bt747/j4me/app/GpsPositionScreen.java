@@ -15,7 +15,7 @@
 package net.sf.bt747.j4me.app;
 
 import gps.GpsEvent;
-import gps.convert.Conv;
+import gps.convert.ExternalUtils;
 import gps.log.GPSRecord;
 
 import java.util.Date;
@@ -282,7 +282,7 @@ public final class GpsPositionScreen extends
                     mslStr = JavaLibBridge.toString(g.height - g.geoid, 1);
                     mslStr += "(calc: ";
                     mslStr += JavaLibBridge.toString(g.height - g.geoid
-                            + Conv.wgs84Separation(g.latitude, g.longitude),
+                            + ExternalUtils.wgs84Separation(g.latitude, g.longitude),
                             1);
                     mslStr += ")";
                     fvAltitude.setLabel(mslStr);
