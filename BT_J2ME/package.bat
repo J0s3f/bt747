@@ -32,7 +32,7 @@ cp %FILES% dist
 call build_cod.bat
 zip -9 -r %PACK_DIR%/BT_J2ME_%DT%.zip dist -x nbproject/private/\* \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
 REM bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip"
-bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip /home/frs/project/b/bt/bt747/bt747_dev/development"
+bash -c "../myrsync.sh %PACK_DIR%/BT_J2ME_%DT%.zip /home/frs/project/b/bt/bt747/Development
 
 
 CALL ..\uploadBT747.bat dist\BT_J2ME.jar J2ME/BT_J2ME.jar
