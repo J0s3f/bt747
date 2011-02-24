@@ -387,7 +387,7 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 		final double b = a * (1 - f);
 		/** Squared excentricity. */
 		final double e_2 = 2 * f - f * f;
-		/** Second squared excentircity. */
+		/** Second squared excentricity. */
 		final double ep2 = f * (2 - f) / ((1 - f) * (1 - f));
 		final double E2 = a * a - b * b;
 
@@ -421,9 +421,9 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 	static private class SkytraqPositionRecord {
 		public int tow;
 		public int wn;
-		public long x;
-		public long y;
-		public long z;
+		public int x; // 32 bit
+		public int y; // 32 bit
+		public int z; // 32 bit
 		public int speed;
 
 	};
@@ -437,18 +437,18 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 				+ ((bytes[recIdx + 2] >> 4) & 0x0F);
 		r.wn = ((bytes[recIdx + 2] & 0x3) << 8)
 				+ (bytes[recIdx + 3] & SkytraqLogConvert.X_FF);
-		r.x = ((bytes[recIdx + 6] & 0xFFL) << 8)
-				+ ((bytes[recIdx + 7] & 0xFFL))
-				+ ((bytes[recIdx + 8] & 0xFFL) << 24)
-				+ ((bytes[recIdx + 9] & 0xFFL) << 16);
-		r.y = ((bytes[recIdx + 10] & 0xFFL) << 8)
-				+ ((bytes[recIdx + 11] & 0xFFL))
-				+ ((bytes[recIdx + 12] & 0xFFL) << 24)
-				+ ((bytes[recIdx + 13] & 0xFFL) << 16);
-		r.z = ((bytes[recIdx + 14] & 0xFFL) << 8)
-				+ ((bytes[recIdx + 15] & 0xFFL))
-				+ ((bytes[recIdx + 16] & 0xFFL) << 24)
-				+ ((bytes[recIdx + 17] & 0xFFL) << 16);
+		r.x = ((bytes[recIdx + 6] & 0xFF) << 8)
+				+ ((bytes[recIdx + 7] & 0xFF))
+				+ ((bytes[recIdx + 8] & 0xFF) << 24)
+				+ ((bytes[recIdx + 9] & 0xFF) << 16);
+		r.y = ((bytes[recIdx + 10] & 0xFF) << 8)
+				+ ((bytes[recIdx + 11] & 0xFF))
+				+ ((bytes[recIdx + 12] & 0xFF) << 24)
+				+ ((bytes[recIdx + 13] & 0xFF) << 16);
+		r.z = ((bytes[recIdx + 14] & 0xFF) << 8)
+				+ ((bytes[recIdx + 15] & 0xFF))
+				+ ((bytes[recIdx + 16] & 0xFF) << 24)
+				+ ((bytes[recIdx + 17] & 0xFF) << 16);
 		return r;
 	}
 
