@@ -1,15 +1,20 @@
 package net.sf.bt747.j4me.app;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import gps.BT747Constants;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 
 import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.components.DateFieldTextBox;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
 import org.j4me.ui.components.TextBox;
 
 import bt747.model.AppSettings;
 import bt747.model.Model;
+import bt747.sys.interfaces.BT747Date;
 import bt747.sys.JavaLibBridge;
 
 /**
@@ -41,6 +46,8 @@ public final class ConvertToScreen extends
     private TextBox tbTrackSeparation;
 
     private RadioButton rbTimeOffsetHours;
+    
+    private DateFieldTextBox dftbSinceDate;
 
     private TextBox tbBinFile;
 
@@ -58,7 +65,7 @@ public final class ConvertToScreen extends
         if (!screenIsSetup) {
             screenIsSetup = true;
             deleteAll();
-            setTitle("JavaLibBridge Log");
+            setTitle("Convert");
 
             Label l;
             l = new Label("'" + getRightMenuText()
@@ -179,6 +186,11 @@ public final class ConvertToScreen extends
             int offsetIdx = BT747Constants.getUtcIdx(m().getIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS));
             rbTimeOffsetHours.setSelectedIndex(offsetIdx);
             append(rbTimeOffsetHours);
+            
+            dftbSinceDate = new DateFieldTextBox();
+            dftbSinceDate.setLabel("Convert only since");
+            dftbSinceDate.setDate(new Date(1000L*m().getFilterStartTime()));
+            append(dftbSinceDate);
         }
     }
 
@@ -188,6 +200,9 @@ public final class ConvertToScreen extends
 
     public void showNotify() {
         setUpScreen();
+        // We might be coming back from a date update.
+        // Updating the date in the model.
+        c.setFilterStartTime((int)(this.dftbSinceDate.getDate().getTime()/1000L));
     }
 
     protected void acceptNotify() {
@@ -227,7 +242,7 @@ public final class ConvertToScreen extends
         c.setIntOpt(AppSettings.GPSTIMEOFFSETQUARTERS,
                 BT747Constants.timeZones[rbTimeOffsetHours.getSelectedIndex()]
                 );
-
+        
         progressScreen = new ConvertToProgressScreen(c, previous,
                 getSelectedLogType());
         deleteAll(); // Clean up screen.

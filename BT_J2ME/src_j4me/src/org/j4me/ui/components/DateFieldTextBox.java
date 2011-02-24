@@ -18,9 +18,18 @@ import org.j4me.ui.UIManager;
  */
 public class DateFieldTextBox extends TextBox {
 
+    private Date date;
+    
     public void setDate(final Date date) {
-        final String dateStr = DateFieldTextBox.date2Str(date);
-        setString(dateStr);
+        this.date = date;
+        if (date != null)
+            setString(DateFieldTextBox.date2Str(date));
+        else
+            setString(null);
+    }
+    
+    public Date getDate() {
+        return this.date;
     }
 
     private static String date2Str(final Date date) {
@@ -30,38 +39,13 @@ public class DateFieldTextBox extends TextBox {
         c.setTime(date);
 
         final int year = c.get(Calendar.YEAR);
-        final int month = c.get(Calendar.MONTH);
+        final int month = c.get(Calendar.MONTH) + 1;
         final int day = c.get(Calendar.DAY_OF_MONTH);
 
-        sb.append(year).append('.').append(month).append('.').append(day);
+        sb.append(year).append('-').append(month).append('-').append(day);
         final String dateStr = sb.toString();
 
         return dateStr;
-    }
-
-    private static Date str2Date(final String str) {
-        final int idx1 = str.indexOf('.');
-        final int idx2 = str.lastIndexOf('.');
-
-        final String yearStr = str.substring(0, idx1);
-        final String monthStr = str.substring(idx1 + 1, idx2);
-        final String dayStr = str.substring(idx2 + 1);
-
-        final int year = Integer.parseInt(yearStr);
-        final int month = Integer.parseInt(monthStr);
-        final int day = Integer.parseInt(dayStr);
-
-        final Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, day);
-
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.HOUR, 0);
-
-        return c.getTime();
     }
 
     protected void select() {
@@ -150,7 +134,7 @@ public class DateFieldTextBox extends TextBox {
             }
 
             dateField = new DateField(label, DateField.DATE);
-            dateField.setDate(DateFieldTextBox.str2Date(contents));
+            dateField.setDate(dateBox.date);
             append(dateField);
 
             setCommandListener(this);
@@ -163,12 +147,7 @@ public class DateFieldTextBox extends TextBox {
             if (c == ok) {
                 // Update the contents of owning date box.
                 final Date date = dateField.getDate();
-                if (null != date) {
-                    final String input = DateFieldTextBox.date2Str(date);
-                    component.setString(input);
-                } else {
-                    component.setString(null);
-                }
+                component.setDate(date);
             }
 
             // Return to the parent screen.
