@@ -40,8 +40,10 @@ import org.j4me.ui.MenuItem;
 import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
+import org.j4me.ui.components.RadioButton;
 
 import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.interfaces.BT747Exception;
@@ -78,6 +80,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     private DeviceScreen logFieldSelectScreen;
     private DelayedDialog connectConfig;
     private PosSrvMonitorScreen posSrvScreen;
+    private RadioButton appUnits;
 
     private final java.util.Timer tm = new Timer();
     private TimerTask ttLabels;
@@ -292,6 +295,13 @@ public final class MainScreen extends Dialog implements ModelListener {
             subMenu.appendMenuOption("Download Settings", new DelayedDialog(
                     ScreenFactory.LOGDOWNLOADCONFIGSCREEN, c, this, this));
             subMenu.appendMenuOption("App log", logScreen);
+            appUnits = new RadioButton();
+            appUnits.append("Metric System (meters)");
+            appUnits.append("English System (miles)");
+            appUnits.setSelectedIndex(c.getAppModel().getBooleanOpt(
+                    AppSettings.IMPERIAL)?1:0);
+            subMenu.append(appUnits);
+
             rootMenu.appendSubmenu(subMenu);
 
             subMenu = new Menu("Convert Menu", rootMenu);
@@ -370,6 +380,9 @@ public final class MainScreen extends Dialog implements ModelListener {
             rootMenu.appendSubmenu(subMenu);
 
             m().addListener(this);
+        } else {
+            // Screen already set up, get the options that might have changed.
+            c.setBooleanOpt(AppSettings.IMPERIAL,appUnits.getSelectedIndex()==1);
         }
     }
 

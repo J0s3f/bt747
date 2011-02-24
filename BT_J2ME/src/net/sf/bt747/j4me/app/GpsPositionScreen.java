@@ -27,6 +27,7 @@ import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
+import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.JavaLibBridge;
@@ -83,7 +84,7 @@ public final class GpsPositionScreen extends
      * The time of the last location.
      */
     private FieldValue fvTime = new FieldValue("");
-    
+
     private boolean screenSetup = false;
 
     public void setupScreen() {
@@ -108,7 +109,7 @@ public final class GpsPositionScreen extends
             append(fvFix);
             append(latitude);
             append(longitude);
-            
+
             append(new HorizontalRule());
 
             // append(horizontalAccuracy);
@@ -131,6 +132,14 @@ public final class GpsPositionScreen extends
             append(fvHdop);
             append(NSAT);
         }
+        if (c.getModel().getBooleanOpt(AppSettings.IMPERIAL)) {
+            fvAltitude.setName("Altitude (ft)");
+            fvSpeed.setName("Speed (mph)");
+        } else {
+            fvAltitude.setName("Altitude (m)");
+            fvSpeed.setName("Speed (km/h)");
+        }
+
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
     }
@@ -192,9 +201,13 @@ public final class GpsPositionScreen extends
      * Shows a field and its value such as "Speed (m/s): 5.0".
      */
     private static final class FieldValue extends Label {
-        private final String name;
+        private String name;
 
         public FieldValue(final String name) {
+            this.name = name;
+        }
+
+        public final void setName(final String name) {
             this.name = name;
         }
 
@@ -264,7 +277,11 @@ public final class GpsPositionScreen extends
                 latitude.setLabel(g.latitude, 6);
                 longitude.setLabel(g.longitude, 6);
                 fvTime.setLabel((g.utc) * 1000L + g.milisecond);
-                fvSpeed.setLabel(g.speed, 1);
+                if (c.getAppModel().getBooleanOpt(AppSettings.IMPERIAL)) {
+                    fvSpeed.setLabel(g.speed * 0.621371192237334f, 1);
+                } else {
+                    fvSpeed.setLabel(g.speed, 1);
+                }
                 fvCourse.setLabel(g.heading, 1);
                 updateValidColor(g.valid);
                 // Log.info("GPRMC");
@@ -276,15 +293,27 @@ public final class GpsPositionScreen extends
                 latitude.setLabel(g.latitude, 6);
                 longitude.setLabel(g.longitude, 6);
                 NSAT.setLabel((g.nsat / 256)
-                        + (((g.nsat&0xFF) < 255) ? "" : "(" + (g.nsat & 0xFF) + ")"));
+                        + (((g.nsat & 0xFF) < 255) ? "" : "("
+                                + (g.nsat & 0xFF) + ")"));
+                float mult;
+                if (c.getModel().getBooleanOpt(AppModel.IMPERIAL)) {
+                    mult = 3.28083989501312f;
+                } else {
+                    mult = 1.f;
+                }
                 {
                     String mslStr;
-                    mslStr = JavaLibBridge.toString(g.height - g.geoid, 1);
+                    mslStr = JavaLibBridge.toString((g.height - g.geoid)
+                            * mult, 1);
                     mslStr += "(calc: ";
-                    mslStr += JavaLibBridge.toString(g.height - g.geoid
-                            + ExternalUtils.wgs84Separation(g.latitude, g.longitude),
-                            1);
+                    mslStr += JavaLibBridge
+                            .toString(
+                                    (g.height - g.geoid + ExternalUtils
+                                            .wgs84Separation(g.latitude,
+                                                    g.longitude))
+                                            * mult, 1);
                     mslStr += ")";
+
                     fvAltitude.setLabel(mslStr);
                 }
                 fvHdop.setLabel(g.hdop / 100f, 2);
