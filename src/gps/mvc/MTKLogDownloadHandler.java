@@ -721,7 +721,6 @@ final class MTKLogDownloadHandler {
             if (overwrite) {
                 openNewLog(context.logPath);
                 context.setLogNextReadAddr(0);
-                context.setLogNextReadAddr(0);
                 context.setLogState(MTKLogDownloadHandler.C_LOG_ACTIVE);
             } else {
                 endGetLog();
