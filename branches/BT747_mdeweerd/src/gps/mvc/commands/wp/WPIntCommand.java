@@ -63,7 +63,7 @@ public class WPIntCommand implements GpsLinkExecCommand {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "WPIntCommand " + JavaLibBridge.unsigned2hex(cmd, bufSize*2) + " " + arg;
+        return "WPIntCommand " + JavaLibBridge.unsigned2hex(cmd, 8) + " " + bufSize + " " + arg;
     }
 
     /* (non-Javadoc)

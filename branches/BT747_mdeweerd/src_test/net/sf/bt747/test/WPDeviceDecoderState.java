@@ -3,10 +3,7 @@
  */
 package net.sf.bt747.test;
 
-import org.jdesktop.swingx.decorator.ResetDTCRColorHighlighter;
-
 import gps.WondeproudConstants;
-import gps.connection.DecoderStateFactory;
 import gps.connection.DecoderStateInterface;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
