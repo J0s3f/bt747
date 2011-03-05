@@ -66,6 +66,8 @@ public class GPSInputConversionFactory {
             final String logFileLC = logFile.getPath().toLowerCase();
             if (logFileLC.endsWith(".trl")) {
                 return new HoluxTrlLogConvert();
+            } else if (logFileLC.endsWith(".trl2")) {
+                return new HoluxTrl2LogConvert();
             } else if (logFileLC.endsWith(".csv")) {
                 return new CSVLogConvert();
             } else if (logFileLC.endsWith(".nmea")

@@ -124,7 +124,10 @@ public class WPController extends MtkController implements WondeproudConstants {
 		switch (dataType) {
 		case MtkModel.DATA_LAST_LOG_BLOCK:
 		case MtkModel.DATA_INITIAL_LOG:
+			return false;
 		case MtkModel.DATA_LOG_STATUS:
+			reqWPDateTime();
+			break;
 		case MtkModel.DATA_MEM_PTS_LOGGED:
 			return false;
 		case MtkModel.DATA_LOG_VERSION:
