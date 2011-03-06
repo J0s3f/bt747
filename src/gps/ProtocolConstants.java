@@ -46,4 +46,22 @@ public interface ProtocolConstants {
      * The Skytraq protocol. This one can also have flavors.
      */
     public final static int PROTOCOL_SKYTRAQ = 4;
+
+    /**
+     * Same as Holux but MTK Protocol is no longer available
+     */
+    public final static int PROTOCOL_HOLUX_PHLX260 = 5;
+    
+	/**
+	 * Connection protocols.
+	 */
+    /*
+	public static final int PROTOCOL_MTK = 0;
+	public static final int PROTOCOL_WONDE_PROUD = 1;
+	public static final int PROTOCOL_PHLX = 2;
+	public static final int PROTOCOL_SKYTRAQ = 3;
+	public static final int PROTOCOL_PHLX260 = 4;
+	*/
+
+
 }

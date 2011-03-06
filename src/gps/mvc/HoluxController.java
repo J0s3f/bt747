@@ -13,11 +13,15 @@ import gps.HoluxConstants;
  */
 public class HoluxController extends MtkController {
 
+	private boolean useMtkProtocol;
+
 	/**
 	 * @param m
 	 */
-	public HoluxController(final GpsController c, final MtkModel m) {
+	public HoluxController(final GpsController c, final MtkModel m,
+			final boolean useMtkProt) {
 		super(c, m);
+		this.useMtkProtocol = useMtkProt;
 	}
 
 	/**
@@ -30,7 +34,11 @@ public class HoluxController extends MtkController {
 			sendCmd(HoluxConstants.PHLX_LOG_ERASE_REQUEST, false);
 			break;
 		default:
-			return super.cmd(cmd);
+			if (this.useMtkProtocol) {
+				return super.cmd(cmd);
+			} else {
+				return false;
+			}
 		}
 
 		return true;
@@ -55,7 +63,11 @@ public class HoluxController extends MtkController {
 			setLogOverwrite(param.getBoolean());
 			break;
 		default:
-			return super.cmd(cmd, param);
+			if (this.useMtkProtocol) {
+				return super.cmd(cmd, param);
+			} else {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -108,14 +120,20 @@ public class HoluxController extends MtkController {
 		case MtkModel.DATA_MEM_USED:
 			sendCmd(HoluxConstants.PHLX_Q_MEMORY_USED_PERCENT, false);
 			sendCmd(HoluxConstants.PHLX_Q_NUMBER_OF_TRACKS, false);
-			HoluxModel hm = (HoluxModel)this.getMtkModel();
-			if(hm.logNbrTracks!=0) {
-				sendCmd(HoluxConstants.PHLX_Q_TRACK_METADATA+",0,"+hm.logNbrTracks,false);
+			HoluxModel hm = (HoluxModel) this.getMtkModel();
+			if (hm.logNbrTracks != 0) {
+				sendCmd(HoluxConstants.PHLX_Q_TRACK_METADATA + ",0,"
+						+ hm.logNbrTracks, false);
 			}
 			break;
 		case MtkModel.DATA_LOG_STATUS:
 		default:
-			return super.reqData(dataType);
+			if (this.useMtkProtocol) {
+				return super.reqData(dataType);
+			} else {
+				return false;
+			}
+
 		}
 
 		return true;

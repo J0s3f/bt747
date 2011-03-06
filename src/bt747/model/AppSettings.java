@@ -15,6 +15,7 @@
 package bt747.model;
 
 import gps.BT747Constants;
+import gps.ProtocolConstants;
 import gps.convert.Conv;
 import gps.log.LogFileInfo;
 
@@ -757,7 +758,7 @@ public class AppSettings implements BT747Thread {
 			setBooleanOpt(AppSettings.IS_GPX_1_1, false);
 			/* fall through */
 		case 36:
-			setIntOpt(AppSettings.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_MTK);
+			setIntOpt(AppSettings.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_MTK);
 			/* fall through */
 		case 37:
 			// New field is coded on 4 byte (8 chars)

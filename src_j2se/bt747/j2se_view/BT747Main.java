@@ -16,6 +16,7 @@ package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
 import gps.BT747Constants;
+import gps.ProtocolConstants;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
@@ -510,11 +511,12 @@ public class BT747Main extends javax.swing.JFrame implements
 
 	private final void updateDownloadType() {
 		final int type = m.getIntOpt(Model.DEVICE_PROTOCOL);
-		miMTKProtocol.setSelected(type == BT747Constants.PROTOCOL_MTK);
+		miMTKProtocol.setSelected(type == ProtocolConstants.PROTOCOL_MTK);
 		miSirfIIIProtocol
-				.setSelected(type == BT747Constants.PROTOCOL_WONDE_PROUD);
-		miPHLXProtocol.setSelected(type == BT747Constants.PROTOCOL_PHLX);
-		miSkyTraqProtocol.setSelected(type == BT747Constants.PROTOCOL_SKYTRAQ);
+				.setSelected(type == ProtocolConstants.PROTOCOL_WONDEPROUD);
+		miPHLXProtocol.setSelected(type == ProtocolConstants.PROTOCOL_HOLUX_PHLX);
+		miSkyTraqProtocol.setSelected(type == ProtocolConstants.PROTOCOL_SKYTRAQ);
+		miPHLX260Protocol.setSelected(type == ProtocolConstants.PROTOCOL_HOLUX_PHLX260);
 	}
 
 	public void modelEvent(final ModelEvent e) {
@@ -710,834 +712,659 @@ public class BT747Main extends javax.swing.JFrame implements
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
-
-		jPanel1 = new javax.swing.JPanel();
-		pnBottomInformation = new javax.swing.JPanel();
-		DownloadProgressBar = new javax.swing.JProgressBar();
-		DownloadProgressLabel = new javax.swing.JLabel();
-		cbPortName = new javax.swing.JComboBox();
-		btConnect = new javax.swing.JButton();
-		cbSerialSpeed = new javax.swing.JComboBox();
-		lbSerialSpeed = new javax.swing.JLabel();
-		jPanel2 = new javax.swing.JPanel();
-		jToolBar1 = new javax.swing.JToolBar();
-		btToolLogOps = new javax.swing.JButton();
-		btToolFilesToTag = new javax.swing.JButton();
-		btToolMap = new javax.swing.JButton();
-		btToolTrack = new javax.swing.JButton();
-		btToolWaypoints = new javax.swing.JButton();
-		btToolOutputSettings = new javax.swing.JButton();
-		btToolFilter = new javax.swing.JButton();
-		btToolDeviceSettings = new javax.swing.JButton();
-		btToolAdvancedDevSettings = new javax.swing.JButton();
-		btToolLocServe = new javax.swing.JButton();
-		btToolAdvFileSettings = new javax.swing.JButton();
-		btToolInfo = new javax.swing.JButton();
-		tabbedPanelAll = new javax.swing.JTabbedPane();
-		InfoPanel = new javax.swing.JPanel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		infoTextArea = new javax.swing.JTextArea();
-		BT747MenuBar = new javax.swing.JMenuBar();
-		FileMenu = new javax.swing.JMenu();
-		miPopulateSerialPorts = new javax.swing.JMenuItem();
-		miFindSerialPort = new javax.swing.JMenuItem();
-		miMapCacheDir = new javax.swing.JMenuItem();
-		miClearCache = new javax.swing.JMenuItem();
-		jSep = new javax.swing.JSeparator();
-		miExit = new javax.swing.JMenuItem();
-		ViewMenu = new javax.swing.JMenu();
-		cbSpeedHeightGraph = new javax.swing.JMenuItem();
-		SettingsMenu = new javax.swing.JMenu();
-		btGPSDebug = new javax.swing.JRadioButtonMenuItem();
-		btGPSConnectDebug = new javax.swing.JRadioButtonMenuItem();
-		miMap = new javax.swing.JMenu();
-		miMapnik = new javax.swing.JRadioButtonMenuItem();
-		miOsmarender = new javax.swing.JRadioButtonMenuItem();
-		miCycleCloudmade = new javax.swing.JRadioButtonMenuItem();
-		miCycleThunderflame = new javax.swing.JRadioButtonMenuItem();
-		miOpvnMap = new javax.swing.JRadioButtonMenuItem();
-		miOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
-		miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
-		btAutocenterMap = new javax.swing.JCheckBoxMenuItem();
-		miDownloadDevice = new javax.swing.JMenu();
-		miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
-		miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
-		miPHLXProtocol = new javax.swing.JRadioButtonMenuItem();
-		miSkyTraqProtocol = new javax.swing.JRadioButtonMenuItem();
-		miUsePreciseGeoid = new javax.swing.JCheckBoxMenuItem();
-		InfoMenu = new javax.swing.JMenu();
-		mnDocumentationLink = new javax.swing.JMenuItem();
-		mnSiteLink = new javax.swing.JMenuItem();
-		Info = new javax.swing.JMenuItem();
-		AboutBT747 = new javax.swing.JMenuItem();
-
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		java.util.ResourceBundle bundle = java.util.ResourceBundle
-				.getBundle("bt747/j2se_view/Bundle"); // NOI18N
-		setTitle(bundle.getString("BT747Main.title")); // NOI18N
-		setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-		setName("BT747Frame"); // NOI18N
-
-		jPanel1.setDoubleBuffered(false);
-
-		DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults()
-				.getColor("nbProgressBar.Foreground"));
-		DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-		DownloadProgressBar.setToolTipText(bundle
-				.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
-		DownloadProgressBar.setFocusable(false);
-		DownloadProgressBar.setPreferredSize(new java.awt.Dimension(10, 16));
-
-		DownloadProgressLabel.setText(bundle
-				.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
-
-		cbPortName.setEditable(true);
-		cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-				"USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:",
-				"COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:",
-				"COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:",
-				"COM15:", "COM16:" }));
-		cbPortName.setToolTipText(bundle
-				.getString("BT747Main.cbPortName.toolTipText")); // NOI18N
-		cbPortName.setPreferredSize(new java.awt.Dimension(200, 22));
-		cbPortName.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				cbPortNameActionPerformed(evt);
-			}
-		});
-
-		btConnect.setText(bundle.getString("BT747Main.btConnect.text")); // NOI18N
-		btConnect.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btConnectActionPerformed(evt);
-			}
-		});
-
-		cbSerialSpeed.setEditable(true);
-		cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(
-				new String[] { "38400", "115200" }));
-		cbSerialSpeed.setToolTipText(bundle
-				.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
-		cbSerialSpeed.addFocusListener(new java.awt.event.FocusAdapter() {
-			public void focusLost(java.awt.event.FocusEvent evt) {
-				cbSerialSpeedFocusLost(evt);
-			}
-		});
-
-		lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
-
-		org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(
-				pnBottomInformation);
-		pnBottomInformation.setLayout(pnBottomInformationLayout);
-		pnBottomInformationLayout
-				.setHorizontalGroup(pnBottomInformationLayout
-						.createParallelGroup(
-								org.jdesktop.layout.GroupLayout.LEADING)
-						.add(
-								pnBottomInformationLayout
-										.createSequentialGroup()
-										.add(btConnect)
-										.addPreferredGap(
-												org.jdesktop.layout.LayoutStyle.RELATED)
-										.add(
-												cbPortName,
-												org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-												250,
-												org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												org.jdesktop.layout.LayoutStyle.UNRELATED)
-										.add(lbSerialSpeed)
-										.addPreferredGap(
-												org.jdesktop.layout.LayoutStyle.RELATED)
-										.add(
-												cbSerialSpeed,
-												org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-												org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-												org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												org.jdesktop.layout.LayoutStyle.UNRELATED)
-										.add(DownloadProgressLabel)
-										.addPreferredGap(
-												org.jdesktop.layout.LayoutStyle.RELATED)
-										.add(
-												DownloadProgressBar,
-												org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-												96, Short.MAX_VALUE)));
-		pnBottomInformationLayout
-				.setVerticalGroup(pnBottomInformationLayout
-						.createParallelGroup(
-								org.jdesktop.layout.GroupLayout.LEADING)
-						.add(
-								pnBottomInformationLayout
-										.createSequentialGroup()
-										.add(0, 0, 0)
-										.add(
-												pnBottomInformationLayout
-														.createParallelGroup(
-																org.jdesktop.layout.GroupLayout.LEADING)
-														.add(
-																DownloadProgressBar,
-																org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-																org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-																org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-														.add(
-																pnBottomInformationLayout
-																		.createParallelGroup(
-																				org.jdesktop.layout.GroupLayout.BASELINE)
-																		.add(
-																				btConnect)
-																		.add(
-																				cbPortName,
-																				org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-																				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-																				org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-																		.add(
-																				cbSerialSpeed,
-																				org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-																				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-																				org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-																		.add(
-																				lbSerialSpeed)
-																		.add(
-																				DownloadProgressLabel)))));
-
-		DownloadProgressBar.getAccessibleContext().setAccessibleName(
-				bundle.getString("DownloadProgessBar")); // NOI18N
-		progressBarUpdate();
-
-		jToolBar1.setFloatable(false);
-		jToolBar1.setOrientation(1);
-		jToolBar1.setRollover(true);
-
-		btToolLogOps.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/bt747/j2se_view/resources/icon_home.gif"))); // NOI18N
-		btToolLogOps.setText(bundle.getString("BT747Main.btToolLogOps.text")); // NOI18N
-		btToolLogOps.setToolTipText(bundle
-				.getString("BT747Main.btToolLogOps.toolTipText")); // NOI18N
-		btToolLogOps.setFocusable(false);
-		btToolLogOps
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolLogOps.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolLogOps.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolLogOps.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolLogOpsActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolLogOps);
-
-		btToolFilesToTag.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource("/bt747/j2se_view/resources/images.png"))); // NOI18N
-		btToolFilesToTag.setText(bundle
-				.getString("BT747Main.btToolFilesToTag.text")); // NOI18N
-		btToolFilesToTag.setToolTipText(bundle
-				.getString("BT747Main.btToolFilesToTag.toolTipText")); // NOI18N
-		btToolFilesToTag.setFocusable(false);
-		btToolFilesToTag
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolFilesToTag.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolFilesToTag
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolFilesToTag.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolFilesToTagActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolFilesToTag);
-
-		btToolMap.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/bt747/j2se_view/resources/world.png"))); // NOI18N
-		btToolMap.setText(bundle.getString("BT747Main.btToolMap.text")); // NOI18N
-		btToolMap.setToolTipText(bundle
-				.getString("BT747Main.btToolMap.toolTipText")); // NOI18N
-		btToolMap.setFocusable(false);
-		btToolMap.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolMap.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolMap.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolMap.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolMapActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolMap);
-
-		btToolTrack.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/bt747/j2se_view/resources/database_table.png"))); // NOI18N
-		btToolTrack.setText(bundle.getString("BT747Main.btToolTrack.text")); // NOI18N
-		btToolTrack.setToolTipText(bundle
-				.getString("BT747Main.btToolTrack.toolTipText")); // NOI18N
-		btToolTrack.setFocusable(false);
-		btToolTrack
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolTrack.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolTrack.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolTrack.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolTrackActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolTrack);
-
-		btToolWaypoints.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource("/bt747/j2se_view/resources/flag_blue.png"))); // NOI18N
-		btToolWaypoints.setText(bundle
-				.getString("BT747Main.btToolWaypoints.text")); // NOI18N
-		btToolWaypoints.setToolTipText(bundle
-				.getString("BT747Main.btToolWaypoints.toolTipText")); // NOI18N
-		btToolWaypoints.setFocusable(false);
-		btToolWaypoints
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolWaypoints.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolWaypoints
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolWaypoints.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolWaypointsActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolWaypoints);
-
-		btToolOutputSettings.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource(
-						"/bt747/j2se_view/resources/icon_outputsettungs.gif"))); // NOI18N
-		btToolOutputSettings.setText(bundle
-				.getString("BT747Main.btToolOutputSettings.text")); // NOI18N
-		btToolOutputSettings.setToolTipText(bundle
-				.getString("BT747Main.btToolOutputSettings.toolTipText")); // NOI18N
-		btToolOutputSettings.setFocusable(false);
-		btToolOutputSettings
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolOutputSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolOutputSettings
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolOutputSettings
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						btToolOutputSettingsActionPerformed(evt);
-					}
-				});
-		jToolBar1.add(btToolOutputSettings);
-
-		btToolFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/bt747/j2se_view/resources/hourglass.png"))); // NOI18N
-		btToolFilter.setText(bundle.getString("BT747Main.btToolFilter.text")); // NOI18N
-		btToolFilter.setToolTipText(bundle
-				.getString("BT747Main.btToolFilter.toolTipText")); // NOI18N
-		btToolFilter.setFocusable(false);
-		btToolFilter
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolFilter.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolFilter.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolFilter.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolFilterActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolFilter);
-
-		btToolDeviceSettings.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource(
-						"/bt747/j2se_view/resources/icon_devicesettungs.gif"))); // NOI18N
-		btToolDeviceSettings.setText(bundle
-				.getString("BT747Main.btToolDeviceSettings.text")); // NOI18N
-		btToolDeviceSettings.setToolTipText(bundle
-				.getString("BT747Main.btToolDeviceSettings.toolTipText")); // NOI18N
-		btToolDeviceSettings.setFocusable(false);
-		btToolDeviceSettings
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolDeviceSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolDeviceSettings
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolDeviceSettings
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						btToolDeviceSettingsActionPerformed(evt);
-					}
-				});
-		jToolBar1.add(btToolDeviceSettings);
-
-		btToolAdvancedDevSettings
-				.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-						"/bt747/j2se_view/resources/icon_addevicesettungs.gif"))); // NOI18N
-		btToolAdvancedDevSettings.setText(bundle
-				.getString("BT747Main.btToolAdvancedDevSettings.text")); // NOI18N
-		btToolAdvancedDevSettings.setToolTipText(bundle
-				.getString("BT747Main.btToolAdvancedDevSettings.toolTipText")); // NOI18N
-		btToolAdvancedDevSettings.setFocusable(false);
-		btToolAdvancedDevSettings
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolAdvancedDevSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolAdvancedDevSettings
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolAdvancedDevSettings
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						btToolAdvancedDevSettingsActionPerformed(evt);
-					}
-				});
-		jToolBar1.add(btToolAdvancedDevSettings);
-
-		btToolLocServe.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource("/bt747/j2se_view/resources/icon_locsrv.gif"))); // NOI18N
-		btToolLocServe.setText(bundle
-				.getString("BT747Main.btToolLocServe.text")); // NOI18N
-		btToolLocServe.setToolTipText(bundle
-				.getString("BT747Main.btToolLocServe.toolTipText")); // NOI18N
-		btToolLocServe.setFocusable(false);
-		btToolLocServe
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolLocServe.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolLocServe
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolLocServe.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolLocServeActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolLocServe);
-
-		btToolAdvFileSettings.setIcon(new javax.swing.ImageIcon(getClass()
-				.getResource("/bt747/j2se_view/resources/page_right.gif"))); // NOI18N
-		btToolAdvFileSettings.setText(bundle
-				.getString("BT747Main.btToolAdvFileSettings.text")); // NOI18N
-		btToolAdvFileSettings.setToolTipText(bundle
-				.getString("BT747Main.btToolAdvFileSettings.toolTipText")); // NOI18N
-		btToolAdvFileSettings.setFocusable(false);
-		btToolAdvFileSettings
-				.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolAdvFileSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolAdvFileSettings
-				.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-		btToolAdvFileSettings
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						btToolAdvFileSettingsActionPerformed(evt);
-					}
-				});
-		jToolBar1.add(btToolAdvFileSettings);
-
-		btToolInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/bt747/j2se_view/resources/information.png"))); // NOI18N
-		btToolInfo.setText(bundle.getString("BT747Main.btToolInfo.text")); // NOI18N
-		btToolInfo.setToolTipText(bundle
-				.getString("BT747Main.btToolInfo.toolTipText")); // NOI18N
-		btToolInfo.setFocusable(false);
-		btToolInfo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-		btToolInfo.setMargin(new java.awt.Insets(3, 0, 3, 0));
-		btToolInfo.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btToolInfoActionPerformed(evt);
-			}
-		});
-		jToolBar1.add(btToolInfo);
-
-		tabbedPanelAll
-				.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-		tabbedPanelAll
-				.addChangeListener(new javax.swing.event.ChangeListener() {
-					public void stateChanged(javax.swing.event.ChangeEvent evt) {
-						tabbedPanelAllStateChanged(evt);
-					}
-				});
-
-		InfoPanel.setPreferredSize(null);
-
-		jScrollPane1
-				.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		jScrollPane1.setOpaque(false);
-
-		infoTextArea.setColumns(20);
-		infoTextArea.setLineWrap(true);
-		infoTextArea.setRows(5);
-		infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
-		infoTextArea.setDragEnabled(true);
-		infoTextArea.setMinimumSize(null);
-		infoTextArea.setOpaque(false);
-		infoTextArea.setPreferredSize(null);
-		infoTextArea.setVerifyInputWhenFocusTarget(false);
-		jScrollPane1.setViewportView(infoTextArea);
-
-		org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(
-				InfoPanel);
-		InfoPanel.setLayout(InfoPanelLayout);
-		InfoPanelLayout.setHorizontalGroup(InfoPanelLayout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				InfoPanelLayout.createSequentialGroup().addContainerGap().add(
-						jScrollPane1,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 629,
-						Short.MAX_VALUE).addContainerGap()));
-		InfoPanelLayout.setVerticalGroup(InfoPanelLayout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				InfoPanelLayout.createSequentialGroup().addContainerGap().add(
-						jScrollPane1,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298,
-						Short.MAX_VALUE).addContainerGap()));
-
-		tabbedPanelAll.addTab(bundle
-				.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"),
-				new javax.swing.ImageIcon(getClass().getResource(
-						"/bt747/j2se_view/resources/information.png")),
-				InfoPanel); // NOI18N
-
-		org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(
-				jPanel2);
-		jPanel2.setLayout(jPanel2Layout);
-		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				jPanel2Layout.createSequentialGroup().add(jToolBar1,
-						org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-						org.jdesktop.layout.GroupLayout.PREFERRED_SIZE).add(0,
-						0, 0).add(tabbedPanelAll,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 654,
-						Short.MAX_VALUE)));
-		jPanel2Layout
-				.setVerticalGroup(jPanel2Layout
-						.createParallelGroup(
-								org.jdesktop.layout.GroupLayout.LEADING)
-						.add(
-								jPanel2Layout
-										.createSequentialGroup()
-										.add(0, 0, 0)
-										.add(
-												jPanel2Layout
-														.createParallelGroup(
-																org.jdesktop.layout.GroupLayout.LEADING)
-														.add(
-																jPanel2Layout
-																		.createSequentialGroup()
-																		.add(
-																				32,
-																				32,
-																				32)
-																		.add(
-																				jToolBar1,
-																				org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-																				303,
-																				Short.MAX_VALUE)
-																		.addContainerGap(
-																				15,
-																				Short.MAX_VALUE))
-														.add(
-																tabbedPanelAll,
-																org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-																350,
-																Short.MAX_VALUE))));
-
-		tabbedPanelAll.getAccessibleContext().setAccessibleName(
-				bundle.getString("Log_download_&_Convert")); // NOI18N
-
-		org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(
-				jPanel1);
-		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				pnBottomInformation,
-				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.add(
-						jPanel1Layout.createSequentialGroup().add(jPanel2,
-								org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-								org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE).add(0, 0, 0)));
-		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				org.jdesktop.layout.GroupLayout.TRAILING,
-				jPanel1Layout.createSequentialGroup().add(jPanel2,
-						org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-						Short.MAX_VALUE).addPreferredGap(
-						org.jdesktop.layout.LayoutStyle.RELATED).add(
-						pnBottomInformation,
-						org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-						org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)));
-
-		FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
-
-		miPopulateSerialPorts.setText(bundle
-				.getString("BT747Main.miPopulateSerialPorts.text")); // NOI18N
-		miPopulateSerialPorts.setToolTipText(bundle
-				.getString("BT747Main.miPopulateSerialPorts.toolTipText")); // NOI18N
-		miPopulateSerialPorts
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						miPopulateSerialPortsActionPerformed(evt);
-					}
-				});
-		FileMenu.add(miPopulateSerialPorts);
-
-		miFindSerialPort.setText(bundle
-				.getString("BT747Main.miFindSerialPort.text")); // NOI18N
-		miFindSerialPort.setToolTipText(bundle
-				.getString("BT747Main.miFindSerialPort.toolTipText")); // NOI18N
-		miFindSerialPort.setEnabled(false);
-		miFindSerialPort.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miFindSerialPortActionPerformed(evt);
-			}
-		});
-		FileMenu.add(miFindSerialPort);
-
-		miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
-		miMapCacheDir.setToolTipText(bundle
-				.getString("BT747Main.miMapCacheDir.toolTipText")); // NOI18N
-		miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miMapCacheDirActionPerformed(evt);
-			}
-		});
-		FileMenu.add(miMapCacheDir);
-
-		miClearCache.setText(bundle.getString("BT747Main.miClearCache.text")); // NOI18N
-		miClearCache.setToolTipText(bundle
-				.getString("BT747Main.miClearCache.toolTipText")); // NOI18N
-		miClearCache.setEnabled(false);
-		miClearCache.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miClearCacheActionPerformed(evt);
-			}
-		});
-		FileMenu.add(miClearCache);
-		FileMenu.add(jSep);
-
-		miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
-		miExit.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miExitActionPerformed(evt);
-			}
-		});
-		FileMenu.add(miExit);
-
-		BT747MenuBar.add(FileMenu);
-
-		ViewMenu.setText(bundle.getString("BT747Main.ViewMenu.text")); // NOI18N
-
-		cbSpeedHeightGraph.setText(bundle
-				.getString("BT747Main.cbSpeedHeightGraph.text")); // NOI18N
-		cbSpeedHeightGraph
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						cbSpeedHeightGraphActionPerformed(evt);
-					}
-				});
-		ViewMenu.add(cbSpeedHeightGraph);
-
-		BT747MenuBar.add(ViewMenu);
-
-		SettingsMenu.setText(bundle.getString("BT747Main.SettingsMenu.text")); // NOI18N
-
-		btGPSDebug.setText(bundle.getString("BT747Main.btGPSDebug.text")); // NOI18N
-		btGPSDebug.addChangeListener(new javax.swing.event.ChangeListener() {
-			public void stateChanged(javax.swing.event.ChangeEvent evt) {
-				btGPSDebugStateChanged(evt);
-			}
-		});
-		SettingsMenu.add(btGPSDebug);
-
-		btGPSConnectDebug.setText(bundle
-				.getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
-		btGPSConnectDebug
-				.addChangeListener(new javax.swing.event.ChangeListener() {
-					public void stateChanged(javax.swing.event.ChangeEvent evt) {
-						btGPSConnectDebugStateChanged(evt);
-					}
-				});
-		SettingsMenu.add(btGPSConnectDebug);
-
-		miMap.setText(bundle.getString("BT747Main.miMap.text")); // NOI18N
-
-		miMapnik.setText(bundle.getString("BT747Main.miMapnik.text")); // NOI18N
-		miMapnik.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miMapnikActionPerformed(evt);
-			}
-		});
-		miMap.add(miMapnik);
-
-		miOsmarender.setText(bundle.getString("BT747Main.miOsmarender.text")); // NOI18N
-		miOsmarender.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miOsmarenderActionPerformed(evt);
-			}
-		});
-		miMap.add(miOsmarender);
-
-		miCycleCloudmade.setText(bundle
-				.getString("BT747Main.miCycleCloudmade.text")); // NOI18N
-		miCycleCloudmade.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miCycleCloudmadeActionPerformed(evt);
-			}
-		});
-		miMap.add(miCycleCloudmade);
-
-		miCycleThunderflame.setSelected(true);
-		miCycleThunderflame.setText(bundle
-				.getString("BT747Main.miCycleThunderflame.text")); // NOI18N
-		miCycleThunderflame
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						miCycleThunderflameActionPerformed(evt);
-					}
-				});
-		miMap.add(miCycleThunderflame);
-
-		miOpvnMap.setText(bundle.getString("BT747Main.miOpvnMap.text")); // NOI18N
-		miOpvnMap.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miOpvnMapActionPerformed(evt);
-			}
-		});
-		miMap.add(miOpvnMap);
-
-		miOpenPisteMap.setText(bundle
-				.getString("BT747Main.miOpenPisteMap.text")); // NOI18N
-		miOpenPisteMap.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miOpenPisteMapActionPerformed(evt);
-			}
-		});
-		miMap.add(miOpenPisteMap);
-
-		miDigitalGlobe.setText(bundle
-				.getString("BT747Main.miDigitalGlobe.text")); // NOI18N
-		miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miDigitalGlobeActionPerformed(evt);
-			}
-		});
-		miMap.add(miDigitalGlobe);
-
-		SettingsMenu.add(miMap);
-
-		btAutocenterMap.setSelected(true);
-		btAutocenterMap.setText(bundle
-				.getString("BT747Main.btAutocenterMap.text")); // NOI18N
-		btAutocenterMap
-				.addChangeListener(new javax.swing.event.ChangeListener() {
-					public void stateChanged(javax.swing.event.ChangeEvent evt) {
-						btAutocenterMapStateChanged(evt);
-					}
-				});
-		SettingsMenu.add(btAutocenterMap);
-
-		miDownloadDevice.setText(bundle
-				.getString("BT747Main.miDownloadDevice.text")); // NOI18N
-		miDownloadDevice.setToolTipText(bundle
-				.getString("BT747Main.miDownloadDevice.toolTipText")); // NOI18N
-
-		miMTKProtocol.setText(bundle
-				.getString("BT747Main.btDownloadIBlue.text")); // NOI18N
-		miMTKProtocol.setToolTipText(bundle
-				.getString("BT747Main.btDownloadIBlue.toolTipText")); // NOI18N
-		miMTKProtocol.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miMTKProtocolActionPerformed(evt);
-			}
-		});
-		miDownloadDevice.add(miMTKProtocol);
-
-		miSirfIIIProtocol.setText(bundle
-				.getString("BT747Main.btDownloadFromNumerix.text")); // NOI18N
-		miSirfIIIProtocol.setToolTipText(bundle
-				.getString("BT747Main.btDownloadFromNumerix.toolTipText")); // NOI18N
-		miSirfIIIProtocol
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						miSirfIIIProtocolActionPerformed(evt);
-					}
-				});
-		miDownloadDevice.add(miSirfIIIProtocol);
-
-		miPHLXProtocol.setText(bundle
-				.getString("BT747Main.miPHLXProtocol.text")); // NOI18N
-		miPHLXProtocol.setToolTipText(bundle
-				.getString("BT747Main.miPHLXProtocol.toolTipText")); // NOI18N
-		miPHLXProtocol.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				miPHLXProtocolActionPerformed(evt);
-			}
-		});
-		miDownloadDevice.add(miPHLXProtocol);
-
-		miSkyTraqProtocol.setText(bundle
-				.getString("BT747Main.miSkyTraqProtocol.text")); // NOI18N
-		miSkyTraqProtocol.setToolTipText(bundle
-				.getString("BT747Main.miSkyTraqProtocol.toolTipText")); // NOI18N
-		miSkyTraqProtocol
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						miSkyTraqProtocolActionPerformed(evt);
-					}
-				});
-		miDownloadDevice.add(miSkyTraqProtocol);
-
-		SettingsMenu.add(miDownloadDevice);
-
-		miUsePreciseGeoid.setSelected(true);
-		miUsePreciseGeoid.setText(bundle
-				.getString("BT747Main.miUsePreciseGeoid.text")); // NOI18N
-		miUsePreciseGeoid
-				.addChangeListener(new javax.swing.event.ChangeListener() {
-					public void stateChanged(javax.swing.event.ChangeEvent evt) {
-						miUsePreciseGeoidStateChanged(evt);
-					}
-				});
-		SettingsMenu.add(miUsePreciseGeoid);
-
-		BT747MenuBar.add(SettingsMenu);
-
-		InfoMenu.setText(bundle.getString("BT747Main.InfoMenu.text")); // NOI18N
-
-		mnDocumentationLink.setText(bundle
-				.getString("BT747Main.mnDocumentationLink.text")); // NOI18N
-		mnDocumentationLink
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						mnDocumentationLinkActionPerformed(evt);
-					}
-				});
-		InfoMenu.add(mnDocumentationLink);
-
-		mnSiteLink.setText(bundle.getString("BT747Main.mnSiteLink.text")); // NOI18N
-		mnSiteLink.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				mnSiteLinkActionPerformed(evt);
-			}
-		});
-		InfoMenu.add(mnSiteLink);
-
-		Info.setText(bundle.getString("BT747Main.Info.text")); // NOI18N
-		InfoMenu.add(Info);
-
-		AboutBT747.setText(bundle.getString("BT747Main.AboutBT747.text")); // NOI18N
-		InfoMenu.add(AboutBT747);
-
-		BT747MenuBar.add(InfoMenu);
-
-		setJMenuBar(BT747MenuBar);
-
-		org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-				getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(
-				org.jdesktop.layout.GroupLayout.TRAILING,
-				layout.createSequentialGroup().add(0, 0, 0).add(jPanel1,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-						org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-						Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(
-				org.jdesktop.layout.GroupLayout.LEADING).add(jPanel1,
-				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-				org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-
-		getAccessibleContext().setAccessibleName(
-				"MTK Datalogger Control (BT747)");
-	}// </editor-fold>//GEN-END:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        pnBottomInformation = new javax.swing.JPanel();
+        DownloadProgressBar = new javax.swing.JProgressBar();
+        DownloadProgressLabel = new javax.swing.JLabel();
+        cbPortName = new javax.swing.JComboBox();
+        btConnect = new javax.swing.JButton();
+        cbSerialSpeed = new javax.swing.JComboBox();
+        lbSerialSpeed = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jToolBar1 = new javax.swing.JToolBar();
+        btToolLogOps = new javax.swing.JButton();
+        btToolFilesToTag = new javax.swing.JButton();
+        btToolMap = new javax.swing.JButton();
+        btToolTrack = new javax.swing.JButton();
+        btToolWaypoints = new javax.swing.JButton();
+        btToolOutputSettings = new javax.swing.JButton();
+        btToolFilter = new javax.swing.JButton();
+        btToolDeviceSettings = new javax.swing.JButton();
+        btToolAdvancedDevSettings = new javax.swing.JButton();
+        btToolLocServe = new javax.swing.JButton();
+        btToolAdvFileSettings = new javax.swing.JButton();
+        btToolInfo = new javax.swing.JButton();
+        tabbedPanelAll = new javax.swing.JTabbedPane();
+        InfoPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        infoTextArea = new javax.swing.JTextArea();
+        BT747MenuBar = new javax.swing.JMenuBar();
+        FileMenu = new javax.swing.JMenu();
+        miPopulateSerialPorts = new javax.swing.JMenuItem();
+        miFindSerialPort = new javax.swing.JMenuItem();
+        miMapCacheDir = new javax.swing.JMenuItem();
+        miClearCache = new javax.swing.JMenuItem();
+        jSep = new javax.swing.JSeparator();
+        miExit = new javax.swing.JMenuItem();
+        ViewMenu = new javax.swing.JMenu();
+        cbSpeedHeightGraph = new javax.swing.JMenuItem();
+        SettingsMenu = new javax.swing.JMenu();
+        btGPSDebug = new javax.swing.JRadioButtonMenuItem();
+        btGPSConnectDebug = new javax.swing.JRadioButtonMenuItem();
+        miMap = new javax.swing.JMenu();
+        miMapnik = new javax.swing.JRadioButtonMenuItem();
+        miOsmarender = new javax.swing.JRadioButtonMenuItem();
+        miCycleCloudmade = new javax.swing.JRadioButtonMenuItem();
+        miCycleThunderflame = new javax.swing.JRadioButtonMenuItem();
+        miOpvnMap = new javax.swing.JRadioButtonMenuItem();
+        miOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
+        miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
+        btAutocenterMap = new javax.swing.JCheckBoxMenuItem();
+        miDownloadDevice = new javax.swing.JMenu();
+        miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
+        miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
+        miPHLXProtocol = new javax.swing.JRadioButtonMenuItem();
+        miPHLX260Protocol = new javax.swing.JMenuItem();
+        miSkyTraqProtocol = new javax.swing.JRadioButtonMenuItem();
+        miUsePreciseGeoid = new javax.swing.JCheckBoxMenuItem();
+        InfoMenu = new javax.swing.JMenu();
+        mnDocumentationLink = new javax.swing.JMenuItem();
+        mnSiteLink = new javax.swing.JMenuItem();
+        Info = new javax.swing.JMenuItem();
+        AboutBT747 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        setTitle(bundle.getString("BT747Main.title")); // NOI18N
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setName("BT747Frame"); // NOI18N
+
+        jPanel1.setDoubleBuffered(false);
+
+        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
+        DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
+        DownloadProgressBar.setToolTipText(bundle.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
+        DownloadProgressBar.setFocusable(false);
+        DownloadProgressBar.setPreferredSize(new java.awt.Dimension(10, 16));
+
+        DownloadProgressLabel.setText(bundle.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
+
+        cbPortName.setEditable(true);
+        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:", "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
+        cbPortName.setToolTipText(bundle.getString("BT747Main.cbPortName.toolTipText")); // NOI18N
+        cbPortName.setPreferredSize(new java.awt.Dimension(200, 22));
+        cbPortName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPortNameActionPerformed(evt);
+            }
+        });
+
+        btConnect.setText(bundle.getString("BT747Main.btConnect.text")); // NOI18N
+        btConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConnectActionPerformed(evt);
+            }
+        });
+
+        cbSerialSpeed.setEditable(true);
+        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "115200" }));
+        cbSerialSpeed.setToolTipText(bundle.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
+        cbSerialSpeed.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbSerialSpeedFocusLost(evt);
+            }
+        });
+
+        lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(pnBottomInformation);
+        pnBottomInformation.setLayout(pnBottomInformationLayout);
+        pnBottomInformationLayout.setHorizontalGroup(
+            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBottomInformationLayout.createSequentialGroup()
+                .add(btConnect)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(lbSerialSpeed)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(DownloadProgressLabel)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+        );
+        pnBottomInformationLayout.setVerticalGroup(
+            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBottomInformationLayout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(btConnect)
+                        .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(lbSerialSpeed)
+                        .add(DownloadProgressLabel))))
+        );
+
+        DownloadProgressBar.getAccessibleContext().setAccessibleName(bundle.getString("DownloadProgessBar")); // NOI18N
+        progressBarUpdate();
+
+        jToolBar1.setFloatable(false);
+        jToolBar1.setOrientation(1);
+        jToolBar1.setRollover(true);
+
+        btToolLogOps.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/icon_home.gif"))); // NOI18N
+        btToolLogOps.setText(bundle.getString("BT747Main.btToolLogOps.text")); // NOI18N
+        btToolLogOps.setToolTipText(bundle.getString("BT747Main.btToolLogOps.toolTipText")); // NOI18N
+        btToolLogOps.setFocusable(false);
+        btToolLogOps.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolLogOps.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolLogOps.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolLogOps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolLogOpsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolLogOps);
+
+        btToolFilesToTag.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/images.png"))); // NOI18N
+        btToolFilesToTag.setText(bundle.getString("BT747Main.btToolFilesToTag.text")); // NOI18N
+        btToolFilesToTag.setToolTipText(bundle.getString("BT747Main.btToolFilesToTag.toolTipText")); // NOI18N
+        btToolFilesToTag.setFocusable(false);
+        btToolFilesToTag.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolFilesToTag.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolFilesToTag.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolFilesToTag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolFilesToTagActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolFilesToTag);
+
+        btToolMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/world.png"))); // NOI18N
+        btToolMap.setText(bundle.getString("BT747Main.btToolMap.text")); // NOI18N
+        btToolMap.setToolTipText(bundle.getString("BT747Main.btToolMap.toolTipText")); // NOI18N
+        btToolMap.setFocusable(false);
+        btToolMap.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolMap.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolMap.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolMapActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolMap);
+
+        btToolTrack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/database_table.png"))); // NOI18N
+        btToolTrack.setText(bundle.getString("BT747Main.btToolTrack.text")); // NOI18N
+        btToolTrack.setToolTipText(bundle.getString("BT747Main.btToolTrack.toolTipText")); // NOI18N
+        btToolTrack.setFocusable(false);
+        btToolTrack.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolTrack.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolTrack.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolTrack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolTrackActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolTrack);
+
+        btToolWaypoints.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/flag_blue.png"))); // NOI18N
+        btToolWaypoints.setText(bundle.getString("BT747Main.btToolWaypoints.text")); // NOI18N
+        btToolWaypoints.setToolTipText(bundle.getString("BT747Main.btToolWaypoints.toolTipText")); // NOI18N
+        btToolWaypoints.setFocusable(false);
+        btToolWaypoints.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolWaypoints.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolWaypoints.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolWaypoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolWaypointsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolWaypoints);
+
+        btToolOutputSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/icon_outputsettungs.gif"))); // NOI18N
+        btToolOutputSettings.setText(bundle.getString("BT747Main.btToolOutputSettings.text")); // NOI18N
+        btToolOutputSettings.setToolTipText(bundle.getString("BT747Main.btToolOutputSettings.toolTipText")); // NOI18N
+        btToolOutputSettings.setFocusable(false);
+        btToolOutputSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolOutputSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolOutputSettings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolOutputSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolOutputSettingsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolOutputSettings);
+
+        btToolFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/hourglass.png"))); // NOI18N
+        btToolFilter.setText(bundle.getString("BT747Main.btToolFilter.text")); // NOI18N
+        btToolFilter.setToolTipText(bundle.getString("BT747Main.btToolFilter.toolTipText")); // NOI18N
+        btToolFilter.setFocusable(false);
+        btToolFilter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolFilter.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolFilter.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolFilterActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolFilter);
+
+        btToolDeviceSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/icon_devicesettungs.gif"))); // NOI18N
+        btToolDeviceSettings.setText(bundle.getString("BT747Main.btToolDeviceSettings.text")); // NOI18N
+        btToolDeviceSettings.setToolTipText(bundle.getString("BT747Main.btToolDeviceSettings.toolTipText")); // NOI18N
+        btToolDeviceSettings.setFocusable(false);
+        btToolDeviceSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolDeviceSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolDeviceSettings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolDeviceSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolDeviceSettingsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolDeviceSettings);
+
+        btToolAdvancedDevSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/icon_addevicesettungs.gif"))); // NOI18N
+        btToolAdvancedDevSettings.setText(bundle.getString("BT747Main.btToolAdvancedDevSettings.text")); // NOI18N
+        btToolAdvancedDevSettings.setToolTipText(bundle.getString("BT747Main.btToolAdvancedDevSettings.toolTipText")); // NOI18N
+        btToolAdvancedDevSettings.setFocusable(false);
+        btToolAdvancedDevSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolAdvancedDevSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolAdvancedDevSettings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolAdvancedDevSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolAdvancedDevSettingsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolAdvancedDevSettings);
+
+        btToolLocServe.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/icon_locsrv.gif"))); // NOI18N
+        btToolLocServe.setText(bundle.getString("BT747Main.btToolLocServe.text")); // NOI18N
+        btToolLocServe.setToolTipText(bundle.getString("BT747Main.btToolLocServe.toolTipText")); // NOI18N
+        btToolLocServe.setFocusable(false);
+        btToolLocServe.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolLocServe.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolLocServe.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolLocServe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolLocServeActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolLocServe);
+
+        btToolAdvFileSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/page_right.gif"))); // NOI18N
+        btToolAdvFileSettings.setText(bundle.getString("BT747Main.btToolAdvFileSettings.text")); // NOI18N
+        btToolAdvFileSettings.setToolTipText(bundle.getString("BT747Main.btToolAdvFileSettings.toolTipText")); // NOI18N
+        btToolAdvFileSettings.setFocusable(false);
+        btToolAdvFileSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolAdvFileSettings.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolAdvFileSettings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btToolAdvFileSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolAdvFileSettingsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolAdvFileSettings);
+
+        btToolInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/information.png"))); // NOI18N
+        btToolInfo.setText(bundle.getString("BT747Main.btToolInfo.text")); // NOI18N
+        btToolInfo.setToolTipText(bundle.getString("BT747Main.btToolInfo.toolTipText")); // NOI18N
+        btToolInfo.setFocusable(false);
+        btToolInfo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btToolInfo.setMargin(new java.awt.Insets(3, 0, 3, 0));
+        btToolInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btToolInfoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btToolInfo);
+
+        tabbedPanelAll.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPanelAll.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPanelAllStateChanged(evt);
+            }
+        });
+
+        InfoPanel.setPreferredSize(null);
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setOpaque(false);
+
+        infoTextArea.setColumns(20);
+        infoTextArea.setLineWrap(true);
+        infoTextArea.setRows(5);
+        infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
+        infoTextArea.setDragEnabled(true);
+        infoTextArea.setMinimumSize(null);
+        infoTextArea.setOpaque(false);
+        infoTextArea.setPreferredSize(null);
+        infoTextArea.setVerifyInputWhenFocusTarget(false);
+        jScrollPane1.setViewportView(infoTextArea);
+
+        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
+        InfoPanel.setLayout(InfoPanelLayout);
+        InfoPanelLayout.setHorizontalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(InfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        InfoPanelLayout.setVerticalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(InfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/bt747/j2se_view/resources/information.png")), InfoPanel); // NOI18N
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(0, 0, 0)
+                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(32, 32, 32)
+                        .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 303, Short.MAX_VALUE)
+                        .addContainerGap(15, Short.MAX_VALUE))
+                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)))
+        );
+
+        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(0, 0, 0))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+
+        FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
+
+        miPopulateSerialPorts.setText(bundle.getString("BT747Main.miPopulateSerialPorts.text")); // NOI18N
+        miPopulateSerialPorts.setToolTipText(bundle.getString("BT747Main.miPopulateSerialPorts.toolTipText")); // NOI18N
+        miPopulateSerialPorts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPopulateSerialPortsActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miPopulateSerialPorts);
+
+        miFindSerialPort.setText(bundle.getString("BT747Main.miFindSerialPort.text")); // NOI18N
+        miFindSerialPort.setToolTipText(bundle.getString("BT747Main.miFindSerialPort.toolTipText")); // NOI18N
+        miFindSerialPort.setEnabled(false);
+        miFindSerialPort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miFindSerialPortActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miFindSerialPort);
+
+        miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
+        miMapCacheDir.setToolTipText(bundle.getString("BT747Main.miMapCacheDir.toolTipText")); // NOI18N
+        miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMapCacheDirActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miMapCacheDir);
+
+        miClearCache.setText(bundle.getString("BT747Main.miClearCache.text")); // NOI18N
+        miClearCache.setToolTipText(bundle.getString("BT747Main.miClearCache.toolTipText")); // NOI18N
+        miClearCache.setEnabled(false);
+        miClearCache.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miClearCacheActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miClearCache);
+        FileMenu.add(jSep);
+
+        miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
+        miExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miExitActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miExit);
+
+        BT747MenuBar.add(FileMenu);
+
+        ViewMenu.setText(bundle.getString("BT747Main.ViewMenu.text")); // NOI18N
+
+        cbSpeedHeightGraph.setText(bundle.getString("BT747Main.cbSpeedHeightGraph.text")); // NOI18N
+        cbSpeedHeightGraph.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSpeedHeightGraphActionPerformed(evt);
+            }
+        });
+        ViewMenu.add(cbSpeedHeightGraph);
+
+        BT747MenuBar.add(ViewMenu);
+
+        SettingsMenu.setText(bundle.getString("BT747Main.SettingsMenu.text")); // NOI18N
+
+        btGPSDebug.setText(bundle.getString("BT747Main.btGPSDebug.text")); // NOI18N
+        btGPSDebug.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btGPSDebugStateChanged(evt);
+            }
+        });
+        SettingsMenu.add(btGPSDebug);
+
+        btGPSConnectDebug.setText(bundle.getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
+        btGPSConnectDebug.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btGPSConnectDebugStateChanged(evt);
+            }
+        });
+        SettingsMenu.add(btGPSConnectDebug);
+
+        miMap.setText(bundle.getString("BT747Main.miMap.text")); // NOI18N
+
+        miMapnik.setText(bundle.getString("BT747Main.miMapnik.text")); // NOI18N
+        miMapnik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMapnikActionPerformed(evt);
+            }
+        });
+        miMap.add(miMapnik);
+
+        miOsmarender.setText(bundle.getString("BT747Main.miOsmarender.text")); // NOI18N
+        miOsmarender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOsmarenderActionPerformed(evt);
+            }
+        });
+        miMap.add(miOsmarender);
+
+        miCycleCloudmade.setText(bundle.getString("BT747Main.miCycleCloudmade.text")); // NOI18N
+        miCycleCloudmade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCycleCloudmadeActionPerformed(evt);
+            }
+        });
+        miMap.add(miCycleCloudmade);
+
+        miCycleThunderflame.setSelected(true);
+        miCycleThunderflame.setText(bundle.getString("BT747Main.miCycleThunderflame.text")); // NOI18N
+        miCycleThunderflame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCycleThunderflameActionPerformed(evt);
+            }
+        });
+        miMap.add(miCycleThunderflame);
+
+        miOpvnMap.setText(bundle.getString("BT747Main.miOpvnMap.text")); // NOI18N
+        miOpvnMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOpvnMapActionPerformed(evt);
+            }
+        });
+        miMap.add(miOpvnMap);
+
+        miOpenPisteMap.setText(bundle.getString("BT747Main.miOpenPisteMap.text")); // NOI18N
+        miOpenPisteMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOpenPisteMapActionPerformed(evt);
+            }
+        });
+        miMap.add(miOpenPisteMap);
+
+        miDigitalGlobe.setText(bundle.getString("BT747Main.miDigitalGlobe.text")); // NOI18N
+        miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miDigitalGlobeActionPerformed(evt);
+            }
+        });
+        miMap.add(miDigitalGlobe);
+
+        SettingsMenu.add(miMap);
+
+        btAutocenterMap.setSelected(true);
+        btAutocenterMap.setText(bundle.getString("BT747Main.btAutocenterMap.text")); // NOI18N
+        btAutocenterMap.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btAutocenterMapStateChanged(evt);
+            }
+        });
+        SettingsMenu.add(btAutocenterMap);
+
+        miDownloadDevice.setText(bundle.getString("BT747Main.miDownloadDevice.text")); // NOI18N
+        miDownloadDevice.setToolTipText(bundle.getString("BT747Main.miDownloadDevice.toolTipText")); // NOI18N
+
+        miMTKProtocol.setText(bundle.getString("BT747Main.btDownloadIBlue.text")); // NOI18N
+        miMTKProtocol.setToolTipText(bundle.getString("BT747Main.btDownloadIBlue.toolTipText")); // NOI18N
+        miMTKProtocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMTKProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miMTKProtocol);
+
+        miSirfIIIProtocol.setText(bundle.getString("BT747Main.btDownloadFromNumerix.text")); // NOI18N
+        miSirfIIIProtocol.setToolTipText(bundle.getString("BT747Main.btDownloadFromNumerix.toolTipText")); // NOI18N
+        miSirfIIIProtocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSirfIIIProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miSirfIIIProtocol);
+
+        miPHLXProtocol.setText(bundle.getString("BT747Main.miPHLXProtocol.text")); // NOI18N
+        miPHLXProtocol.setToolTipText(bundle.getString("BT747Main.miPHLXProtocol.toolTipText")); // NOI18N
+        miPHLXProtocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPHLXProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miPHLXProtocol);
+
+        miPHLX260Protocol.setText(bundle.getString("BT747Main.miPHLX260Protocol.text")); // NOI18N
+        miPHLX260Protocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPHLX260ProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miPHLX260Protocol);
+
+        miSkyTraqProtocol.setText(bundle.getString("BT747Main.miSkyTraqProtocol.text")); // NOI18N
+        miSkyTraqProtocol.setToolTipText(bundle.getString("BT747Main.miSkyTraqProtocol.toolTipText")); // NOI18N
+        miSkyTraqProtocol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSkyTraqProtocolActionPerformed(evt);
+            }
+        });
+        miDownloadDevice.add(miSkyTraqProtocol);
+
+        SettingsMenu.add(miDownloadDevice);
+
+        miUsePreciseGeoid.setSelected(true);
+        miUsePreciseGeoid.setText(bundle.getString("BT747Main.miUsePreciseGeoid.text")); // NOI18N
+        miUsePreciseGeoid.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                miUsePreciseGeoidStateChanged(evt);
+            }
+        });
+        SettingsMenu.add(miUsePreciseGeoid);
+
+        BT747MenuBar.add(SettingsMenu);
+
+        InfoMenu.setText(bundle.getString("BT747Main.InfoMenu.text")); // NOI18N
+
+        mnDocumentationLink.setText(bundle.getString("BT747Main.mnDocumentationLink.text")); // NOI18N
+        mnDocumentationLink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnDocumentationLinkActionPerformed(evt);
+            }
+        });
+        InfoMenu.add(mnDocumentationLink);
+
+        mnSiteLink.setText(bundle.getString("BT747Main.mnSiteLink.text")); // NOI18N
+        mnSiteLink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnSiteLinkActionPerformed(evt);
+            }
+        });
+        InfoMenu.add(mnSiteLink);
+
+        Info.setText(bundle.getString("BT747Main.Info.text")); // NOI18N
+        InfoMenu.add(Info);
+
+        AboutBT747.setText(bundle.getString("BT747Main.AboutBT747.text")); // NOI18N
+        InfoMenu.add(AboutBT747);
+
+        BT747MenuBar.add(InfoMenu);
+
+        setJMenuBar(BT747MenuBar);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
+    }// </editor-fold>//GEN-END:initComponents
+
+        private void miPHLX260ProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPHLX260ProtocolActionPerformed
+        	c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_HOLUX_PHLX260);
+        }//GEN-LAST:event_miPHLX260ProtocolActionPerformed
 
 	private void cbSerialSpeedFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbSerialSpeedFocusLost
 		// TODO add your handling code here:
@@ -1848,11 +1675,11 @@ public class BT747Main extends javax.swing.JFrame implements
 	}// GEN-LAST:event_btToolInfoActionPerformed
 
 	private void miMTKProtocolActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miMTKProtocolActionPerformed
-		c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_MTK);
+		c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_MTK);
 	}// GEN-LAST:event_miMTKProtocolActionPerformed
 
 	private void miSirfIIIProtocolActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miSirfIIIProtocolActionPerformed
-		c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_WONDE_PROUD);
+		c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_WONDEPROUD);
 	}// GEN-LAST:event_miSirfIIIProtocolActionPerformed
 
 	private void tabbedPanelAllStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_tabbedPanelAllStateChanged
@@ -1868,7 +1695,7 @@ public class BT747Main extends javax.swing.JFrame implements
 	}// GEN-LAST:event_miUsePreciseGeoidStateChanged
 
 	private void miPHLXProtocolActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miPHLXProtocolActionPerformed
-		c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_PHLX);
+		c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_HOLUX_PHLX);
 	}// GEN-LAST:event_miPHLXProtocolActionPerformed
 
 	private void btToolLocServeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btToolLocServeActionPerformed
@@ -1902,7 +1729,7 @@ public class BT747Main extends javax.swing.JFrame implements
 	}// GEN-LAST:event_miCycleThunderflameActionPerformed
 
 	private void miSkyTraqProtocolActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miSkyTraqProtocolActionPerformed
-		c.setIntOpt(Model.DEVICE_PROTOCOL, BT747Constants.PROTOCOL_SKYTRAQ);
+		c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_SKYTRAQ);
 	}// GEN-LAST:event_miSkyTraqProtocolActionPerformed
 
 	private void cbSpeedHeightGraphActionPerformed(
@@ -1939,66 +1766,67 @@ public class BT747Main extends javax.swing.JFrame implements
 	// main((String[])null);
 	// }
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JMenuItem AboutBT747;
-	private javax.swing.JMenuBar BT747MenuBar;
-	private javax.swing.JProgressBar DownloadProgressBar;
-	private javax.swing.JLabel DownloadProgressLabel;
-	private javax.swing.JMenu FileMenu;
-	private javax.swing.JMenuItem Info;
-	private javax.swing.JMenu InfoMenu;
-	private javax.swing.JPanel InfoPanel;
-	private javax.swing.JMenu SettingsMenu;
-	private javax.swing.JMenu ViewMenu;
-	private javax.swing.JCheckBoxMenuItem btAutocenterMap;
-	private javax.swing.JButton btConnect;
-	private javax.swing.JRadioButtonMenuItem btGPSConnectDebug;
-	private javax.swing.JRadioButtonMenuItem btGPSDebug;
-	private javax.swing.JButton btToolAdvFileSettings;
-	private javax.swing.JButton btToolAdvancedDevSettings;
-	private javax.swing.JButton btToolDeviceSettings;
-	private javax.swing.JButton btToolFilesToTag;
-	private javax.swing.JButton btToolFilter;
-	private javax.swing.JButton btToolInfo;
-	private javax.swing.JButton btToolLocServe;
-	private javax.swing.JButton btToolLogOps;
-	private javax.swing.JButton btToolMap;
-	private javax.swing.JButton btToolOutputSettings;
-	private javax.swing.JButton btToolTrack;
-	private javax.swing.JButton btToolWaypoints;
-	private javax.swing.JComboBox cbPortName;
-	private javax.swing.JComboBox cbSerialSpeed;
-	private javax.swing.JMenuItem cbSpeedHeightGraph;
-	private javax.swing.JTextArea infoTextArea;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel2;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JSeparator jSep;
-	private javax.swing.JToolBar jToolBar1;
-	private javax.swing.JLabel lbSerialSpeed;
-	private javax.swing.JMenuItem miClearCache;
-	private javax.swing.JRadioButtonMenuItem miCycleCloudmade;
-	private javax.swing.JRadioButtonMenuItem miCycleThunderflame;
-	private javax.swing.JRadioButtonMenuItem miDigitalGlobe;
-	private javax.swing.JMenu miDownloadDevice;
-	private javax.swing.JMenuItem miExit;
-	private javax.swing.JMenuItem miFindSerialPort;
-	private javax.swing.JRadioButtonMenuItem miMTKProtocol;
-	private javax.swing.JMenu miMap;
-	private javax.swing.JMenuItem miMapCacheDir;
-	private javax.swing.JRadioButtonMenuItem miMapnik;
-	private javax.swing.JRadioButtonMenuItem miOpenPisteMap;
-	private javax.swing.JRadioButtonMenuItem miOpvnMap;
-	private javax.swing.JRadioButtonMenuItem miOsmarender;
-	private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
-	private javax.swing.JMenuItem miPopulateSerialPorts;
-	private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;
-	private javax.swing.JRadioButtonMenuItem miSkyTraqProtocol;
-	private javax.swing.JCheckBoxMenuItem miUsePreciseGeoid;
-	private javax.swing.JMenuItem mnDocumentationLink;
-	private javax.swing.JMenuItem mnSiteLink;
-	private javax.swing.JPanel pnBottomInformation;
-	private javax.swing.JTabbedPane tabbedPanelAll;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem AboutBT747;
+    private javax.swing.JMenuBar BT747MenuBar;
+    private javax.swing.JProgressBar DownloadProgressBar;
+    private javax.swing.JLabel DownloadProgressLabel;
+    private javax.swing.JMenu FileMenu;
+    private javax.swing.JMenuItem Info;
+    private javax.swing.JMenu InfoMenu;
+    private javax.swing.JPanel InfoPanel;
+    private javax.swing.JMenu SettingsMenu;
+    private javax.swing.JMenu ViewMenu;
+    private javax.swing.JCheckBoxMenuItem btAutocenterMap;
+    private javax.swing.JButton btConnect;
+    private javax.swing.JRadioButtonMenuItem btGPSConnectDebug;
+    private javax.swing.JRadioButtonMenuItem btGPSDebug;
+    private javax.swing.JButton btToolAdvFileSettings;
+    private javax.swing.JButton btToolAdvancedDevSettings;
+    private javax.swing.JButton btToolDeviceSettings;
+    private javax.swing.JButton btToolFilesToTag;
+    private javax.swing.JButton btToolFilter;
+    private javax.swing.JButton btToolInfo;
+    private javax.swing.JButton btToolLocServe;
+    private javax.swing.JButton btToolLogOps;
+    private javax.swing.JButton btToolMap;
+    private javax.swing.JButton btToolOutputSettings;
+    private javax.swing.JButton btToolTrack;
+    private javax.swing.JButton btToolWaypoints;
+    private javax.swing.JComboBox cbPortName;
+    private javax.swing.JComboBox cbSerialSpeed;
+    private javax.swing.JMenuItem cbSpeedHeightGraph;
+    private javax.swing.JTextArea infoTextArea;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSep;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lbSerialSpeed;
+    private javax.swing.JMenuItem miClearCache;
+    private javax.swing.JRadioButtonMenuItem miCycleCloudmade;
+    private javax.swing.JRadioButtonMenuItem miCycleThunderflame;
+    private javax.swing.JRadioButtonMenuItem miDigitalGlobe;
+    private javax.swing.JMenu miDownloadDevice;
+    private javax.swing.JMenuItem miExit;
+    private javax.swing.JMenuItem miFindSerialPort;
+    private javax.swing.JRadioButtonMenuItem miMTKProtocol;
+    private javax.swing.JMenu miMap;
+    private javax.swing.JMenuItem miMapCacheDir;
+    private javax.swing.JRadioButtonMenuItem miMapnik;
+    private javax.swing.JRadioButtonMenuItem miOpenPisteMap;
+    private javax.swing.JRadioButtonMenuItem miOpvnMap;
+    private javax.swing.JRadioButtonMenuItem miOsmarender;
+    private javax.swing.JMenuItem miPHLX260Protocol;
+    private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
+    private javax.swing.JMenuItem miPopulateSerialPorts;
+    private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;
+    private javax.swing.JRadioButtonMenuItem miSkyTraqProtocol;
+    private javax.swing.JCheckBoxMenuItem miUsePreciseGeoid;
+    private javax.swing.JMenuItem mnDocumentationLink;
+    private javax.swing.JMenuItem mnSiteLink;
+    private javax.swing.JPanel pnBottomInformation;
+    private javax.swing.JTabbedPane tabbedPanelAll;
+    // End of variables declaration//GEN-END:variables
 
 }
