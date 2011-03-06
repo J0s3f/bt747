@@ -110,20 +110,28 @@ public class HoluxModel extends MtkModel {
         	this.deviceId = sNmea[1];
         	firmwareVersion = this.holuxFWVersion + " (" + this.deviceId + ")";
         	// TODO: postEvent
+        	postEvent(GpsEvent.UPDATE_MTK_VERSION);
+			setAvailable(MtkModel.DATA_LOG_VERSION);
+			postEvent(GpsEvent.UPDATE_LOG_VERSION);
+
         } else if(cmd.equals(HoluxConstants.PHLX_DT_FW_VERSION)) {
         	this.holuxFWVersion = sNmea[1].charAt(0)+"."+sNmea[1].substring(1);
         	firmwareVersion = this.holuxFWVersion + " (" + this.deviceId + ")";
         	// TODO: postEvent
+        	postEvent(GpsEvent.UPDATE_MTK_VERSION);
+			setAvailable(MtkModel.DATA_LOG_VERSION);
+			postEvent(GpsEvent.UPDATE_LOG_VERSION);
+
         } else if(cmd.equals(HoluxConstants.PHLX_DT_MEMUSED_PERCENT)) {
         	setLogMemUsed((getLogMemSize()*Integer.parseInt(sNmea[1]))/100);
         } else if(cmd.equals(HoluxConstants.PHLX_DT_OVERWRITE_MODE)) {
-			logFullOverwrite = (JavaLibBridge.toInt(sNmea[3]) == 1);
+			logFullOverwrite = (JavaLibBridge.toInt(sNmea[2]) == 1);
 			postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
         } else if(cmd.equals(HoluxConstants.PHLX_DT_SPORTS_MODE)) {
         	SportMode = Integer.parseInt(sNmea[2]);
         	// TODO: postEvent
         } else if(cmd.equals(HoluxConstants.PHLX_DT_NUMBER_OF_TRACKS)) {
-			logNbrLogPts = Conv.hex2Int(sNmea[3]);
+			logNbrLogPts = Conv.hex2Int(sNmea[1]);
         	setLogMemUsed(logNbrLogPts*32);
 			setAvailable(MtkModel.DATA_MEM_PTS_LOGGED);
 			postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
