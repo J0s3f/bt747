@@ -5,6 +5,7 @@ package gps.mvc;
 
 import gps.GpsEvent;
 import gps.HoluxConstants;
+import gps.convert.Conv;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
@@ -105,11 +106,36 @@ public class HoluxModel extends MtkModel {
             dataOK |= MtkModel.C_OK_DIST;
             setAvailable(MtkModel.DATA_LOG_DISTANCE_INTERVAL);
             postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_DEVICE_ID)) {
+        	this.deviceId = sNmea[1];
+        	firmwareVersion = this.holuxFWVersion + " (" + this.deviceId + ")";
+        	// TODO: postEvent
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_FW_VERSION)) {
+        	this.holuxFWVersion = sNmea[1].charAt(0)+"."+sNmea[1].substring(1);
+        	firmwareVersion = this.holuxFWVersion + " (" + this.deviceId + ")";
+        	// TODO: postEvent
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_MEMUSED_PERCENT)) {
+        	setLogMemUsed((getLogMemSize()*Integer.parseInt(sNmea[1]))/100);
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_OVERWRITE_MODE)) {
+			logFullOverwrite = (JavaLibBridge.toInt(sNmea[3]) == 1);
+			postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_SPORTS_MODE)) {
+        	SportMode = Integer.parseInt(sNmea[2]);
+        	// TODO: postEvent
+        } else if(cmd.equals(HoluxConstants.PHLX_DT_NUMBER_OF_TRACKS)) {
+			logNbrLogPts = Conv.hex2Int(sNmea[3]);
+        	setLogMemUsed(logNbrLogPts*32);
+			setAvailable(MtkModel.DATA_MEM_PTS_LOGGED);
+			postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
+			postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
         }
-
         return result;
     }
-
+    
+    private String deviceId = "???";
+    private String holuxFWVersion = "?.??";
+    private int SportMode = 0;
+    
     public boolean isTimeDistanceLogConditionExclusive() {
         return true;
     }

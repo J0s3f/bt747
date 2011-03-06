@@ -92,14 +92,14 @@ public class HoluxConstants {
      * Parameters: none
      * $PHLX831*36
      */  
-    public static final String PHLX_NAME_GET_REQUEST = "PHLX831";
+    public static final String PHLX_Q_NAME_REQUEST = "PHLX831";
 	
     /**
      * To GPS: Get logging criteria.
      * Parameters: none
      * $PHLX833*34
      */  
-    public static final String PHLX_LOG_GET_CRITERIA_REQUEST = "PHLX833";
+    public static final String PHLX_Q_LOG_CRITERIA_REQUEST = "PHLX833";
 
     /**
      * To GPS: Set logging criteria.
@@ -108,7 +108,7 @@ public class HoluxConstants {
      * - time [s] (1-120)
      * - distance [m] (1-1000)
      * 
-     * $PHLX834,0,23,50*2B // Set logging to every 23 seconds (what is 50 here?)
+     * $PHLX834,0,23,50*2B // Set logging to every 23 seconds, 50 meters
      */  
     public static final String PHLX_LOG_SET_CRITERIA = "PHLX834";
     
