@@ -77,7 +77,10 @@ public class GpsController implements BT747Thread, ProtocolConstants,
             mtkC = new MtkController(this, mtkM);
             break;
         case PROTOCOL_HOLUX_PHLX:
-            mtkC = new HoluxController(this, mtkM);
+            mtkC = new HoluxController(this, mtkM, true);
+            break;
+        case PROTOCOL_HOLUX_PHLX260:
+            mtkC = new HoluxController(this, mtkM, false);
             break;
         case PROTOCOL_WONDEPROUD:
             mtkC = new WPController(this, mtkM);

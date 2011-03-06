@@ -73,6 +73,7 @@ public class GpsModel implements ProtocolConstants {
                 mtkModel = new WPModel(this, handler);
                 break;
             case PROTOCOL_HOLUX_PHLX:
+            case PROTOCOL_HOLUX_PHLX260:
                 mtkModel = new HoluxModel(this, handler);
                 break;
             case PROTOCOL_SKYTRAQ:

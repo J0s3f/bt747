@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+import gps.ProtocolConstants;
 import gps.convert.ExternalUtils;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
@@ -1346,12 +1347,13 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private void btDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDownloadActionPerformed
         switch (m.getIntOpt(Model.DEVICE_PROTOCOL)) {
         default:
-        case BT747Constants.PROTOCOL_MTK: // MTK
-        case BT747Constants.PROTOCOL_PHLX:
+        case ProtocolConstants.PROTOCOL_MTK: // MTK
+        case ProtocolConstants.PROTOCOL_HOLUX_PHLX:
+        case ProtocolConstants.PROTOCOL_HOLUX_PHLX260:
             setDownloadMethod();
             c.startDefaultDownload();
             break;
-        case BT747Constants.PROTOCOL_WONDE_PROUD:
+        case ProtocolConstants.PROTOCOL_WONDEPROUD:
             c.startWPDownload();
         	break;
         }
