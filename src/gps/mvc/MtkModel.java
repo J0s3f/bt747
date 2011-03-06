@@ -65,7 +65,7 @@ public class MtkModel implements EventPoster {
 	private boolean loggerNeedsInit = false;
 	private boolean loggerIsDisabled = false;
 
-	private boolean logFullOverwrite = false; // When true, overwrite log
+	protected boolean logFullOverwrite = false; // When true, overwrite log
 	// when
 	// device is full
 

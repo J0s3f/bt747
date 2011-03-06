@@ -1,6 +1,16 @@
-/**
- * 
- */
+// ********************************************************************
+// *** BT747
+// *** (c) 2007, 2008, 2009, 2010, 2011 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.mvc;
 
 import gps.BT747Constants;
