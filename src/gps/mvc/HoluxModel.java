@@ -131,7 +131,10 @@ public class HoluxModel extends MtkModel {
         	SportMode = Integer.parseInt(sNmea[2]);
         	// TODO: postEvent
         } else if(cmd.equals(HoluxConstants.PHLX_DT_NUMBER_OF_TRACKS)) {
-			logNbrLogPts = Conv.hex2Int(sNmea[1]);
+			logNbrTracks = Integer.parseInt(sNmea[1]);
+        } else if (cmd.equals(HoluxConstants.PHLX_DT_LOG_DOWNLOAD_ANNOUNCE_TOTAL)) {
+        	logNbrLogPts = Integer.parseInt(sNmea[1]);
+        	int checksum = Conv.hex2Int(sNmea[2]);
         	setLogMemUsed(logNbrLogPts*32);
 			setAvailable(MtkModel.DATA_MEM_PTS_LOGGED);
 			postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
@@ -143,6 +146,7 @@ public class HoluxModel extends MtkModel {
     private String deviceId = "???";
     private String holuxFWVersion = "?.??";
     private int SportMode = 0;
+    protected int logNbrTracks =0;
     
     public boolean isTimeDistanceLogConditionExclusive() {
         return true;
