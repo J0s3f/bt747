@@ -108,6 +108,10 @@ public class HoluxController extends MtkController {
 		case MtkModel.DATA_MEM_USED:
 			sendCmd(HoluxConstants.PHLX_Q_MEMORY_USED_PERCENT, false);
 			sendCmd(HoluxConstants.PHLX_Q_NUMBER_OF_TRACKS, false);
+			HoluxModel hm = (HoluxModel)this.getMtkModel();
+			if(hm.logNbrTracks!=0) {
+				sendCmd(HoluxConstants.PHLX_Q_TRACK_METADATA+",0,"+hm.logNbrTracks,false);
+			}
 			break;
 		case MtkModel.DATA_LOG_STATUS:
 		default:

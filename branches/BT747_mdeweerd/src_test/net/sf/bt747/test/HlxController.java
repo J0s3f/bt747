@@ -74,8 +74,8 @@ public class HlxController {
 
 			z_Result = -1; // Suppose cmd not treated
 			switch (z_Cmd) {
-			case 701: // Number of position records.
-				response = "PHLX601,30"; // 30 is number of records.
+			case 701: // Number of tracks.
+				response = "PHLX601,30"; // 30 is number of tracks.
 				break;
 			case 709: // Memory used in percent query.
 				response = "PHLX873,2"; // 2 is the percentage
