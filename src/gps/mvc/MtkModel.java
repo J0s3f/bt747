@@ -596,7 +596,7 @@ public class MtkModel implements EventPoster {
 			if (Generic.isDebug()) {
 				StringBuffer s;
 				int length = sNmea.length;
-				if (sNmea[1].charAt(0) == '8') {
+				if (sNmea[1].length() > 0 && sNmea[1].charAt(0) == '8') {
 					length = 3;
 				}
 				s = new StringBuffer('<');
