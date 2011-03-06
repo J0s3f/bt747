@@ -561,6 +561,7 @@
 			            -keep public class gps.log.in.CommonIn { *; }		                
 			            -keep public class gps.log.out.AllWayPointStyles { public static final int *; }
                         -keep public class gps.BT747Constants { *; }
+            			-keep public class gps.ProtocolConstants { *; }
                         -keep public class gps.GpsEvent { *; }
 			            -keep public class gps.convert.GeoidIF { *; }
 	         -keep public class gps.log.out.GPSConversionParameters { public static final java.lang.String *;}
