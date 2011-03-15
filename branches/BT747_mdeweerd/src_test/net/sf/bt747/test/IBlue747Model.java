@@ -64,8 +64,8 @@ public class IBlue747Model {
 	public static DeviceModelType defaultModelType =
 	// DeviceModelType.IBLUE747PLUS;
 	// DeviceModelType.IBLUE747PLUS_TYPE2;
-	//DeviceModelType.TSI_887_Lite;
-	DeviceModelType.HOLUX_GR260;
+	DeviceModelType.TSI_887_Lite;
+	//DeviceModelType.HOLUX_GR260;
 
 	public GPSrxtx gpsRxTx = null;
 
@@ -996,6 +996,7 @@ public class IBlue747Model {
 			mtkData.modelRef = "TSI_887Lite";
 			mtkData.swVersion = "1.0";
 			mtkData.flashCode = 0x1C30161C;
+			logFile = "C:\\Users\\mdeweerd\\Downloads\\887Test.bin";
 			break;
 		case HOLUX_GR260:
 			mtkData.coreVersion = "";

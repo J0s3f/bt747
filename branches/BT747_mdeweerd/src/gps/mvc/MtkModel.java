@@ -559,24 +559,15 @@ public class MtkModel implements EventPoster {
 						// | (initialLogMode & 0xFF << 8)
 						// | (initialLogMode >> 8);
 						setAvailable(MtkModel.DATA_LAST_LOG_BLOCK);
+					} else {
+						mtkLogHandler.analyzeLogPart(Conv.hex2Int(sNmea[2]),
+								sNmea[3]);
 					}
 				} catch (final Exception e) {
-					// Do not care about exception
+					Generic.debug("analyzeLogNMEA", e);
 				}
 				// logFullOverwrite = (((logStatus &
 				// BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
-
-				try {
-					// waba.sys.debugMsg("Before
-					// AnalyzeLog:"+p_nmea[3].length());
-					mtkLogHandler.analyzeLogPart(Conv.hex2Int(sNmea[2]),
-							sNmea[3]);
-				} catch (final Exception e) {
-					Generic.debug("analyzeLogNMEA", e);
-
-					// During debug: array index out of bounds
-					// TODO: handle exception
-				}
 				break;
 			default:
 				// Nothing - unexpected

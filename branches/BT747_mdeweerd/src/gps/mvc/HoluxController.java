@@ -60,7 +60,11 @@ public class HoluxController extends MtkController {
 			setLogTimeInterval(param.getInt());
 			break;
 		case CMD_SET_LOG_OVERWRITE:
-			setLogOverwrite(param.getBoolean());
+			if (this.useMtkProtocol) {
+				return super.cmd(cmd, param);
+			} else {
+				setLogOverwrite(param.getBoolean());
+			}
 			break;
 		default:
 			if (this.useMtkProtocol) {
@@ -111,19 +115,31 @@ public class HoluxController extends MtkController {
 			sendCmd(HoluxConstants.PHLX_CMD_SPORTS_MODE + ",0", false);
 			break;
 		case MtkModel.DATA_LOG_VERSION:
-			sendCmd(HoluxConstants.PHLX_Q_FW_VERSION, false);
-			sendCmd(HoluxConstants.PHLX_Q_DEVICE_ID, false);
+			if (this.useMtkProtocol) {
+				return super.reqData(dataType);
+			} else {
+				sendCmd(HoluxConstants.PHLX_Q_FW_VERSION, false);
+				sendCmd(HoluxConstants.PHLX_Q_DEVICE_ID, false);
+			}
 			break;
 		case MtkModel.DATA_LOG_OVERWRITE_STATUS:
-			sendCmd(HoluxConstants.PHLX_CMD_OVERWRITE_MODE + ",0", false);
+			if (this.useMtkProtocol) {
+				return super.reqData(dataType);
+			} else {
+				sendCmd(HoluxConstants.PHLX_CMD_OVERWRITE_MODE + ",0", false);
+			}
 			break;
 		case MtkModel.DATA_MEM_USED:
-			sendCmd(HoluxConstants.PHLX_Q_MEMORY_USED_PERCENT, false);
-			sendCmd(HoluxConstants.PHLX_Q_NUMBER_OF_TRACKS, false);
-			HoluxModel hm = (HoluxModel) this.getMtkModel();
-			if (hm.logNbrTracks != 0) {
-				sendCmd(HoluxConstants.PHLX_Q_TRACK_METADATA + ",0,"
-						+ hm.logNbrTracks, false);
+			if (this.useMtkProtocol) {
+				return super.reqData(dataType);
+			} else {
+				sendCmd(HoluxConstants.PHLX_Q_MEMORY_USED_PERCENT, false);
+				sendCmd(HoluxConstants.PHLX_Q_NUMBER_OF_TRACKS, false);
+				HoluxModel hm = (HoluxModel) this.getMtkModel();
+				if (hm.logNbrTracks != 0) {
+					sendCmd(HoluxConstants.PHLX_Q_TRACK_METADATA + ",0,"
+							+ hm.logNbrTracks, false);
+				}
 			}
 			break;
 		case MtkModel.DATA_LOG_STATUS:
