@@ -307,7 +307,7 @@ public final class GPSrxtx {
 		}
 
 		protected final boolean isReadBufferEmpty() {
-			if (bytesRead != 0 && read_buf_p >= bytesRead) {
+			if (read_buf_p >= bytesRead) {
 				// Buffer is empty. Try to fill it (empty the input queue)
 				refillBuffer();
 				if (bytesRead > 100 || isReadAgain()) {
@@ -315,7 +315,7 @@ public final class GPSrxtx {
 					readAgain = false;
 				}
 			}
-			return bytesRead != 0 && read_buf_p >= bytesRead;
+			return read_buf_p >= bytesRead;
 		}
 
 		protected final char getReadBufferChar() {
