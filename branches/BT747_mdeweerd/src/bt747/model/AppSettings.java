@@ -1194,11 +1194,11 @@ public class AppSettings implements BT747Thread {
 							gkey = new String(b, 0, len);
 							int min;
 							min = gkey.indexOf(10);
-							if (min != 0) {
+							if (min > 0) {
 								gkey = gkey.substring(0, min);
 							}
 							min = gkey.indexOf(13);
-							if (min != 0) {
+							if (min > 0) {
 								gkey = gkey.substring(0, min);
 							}
 							notok = false;
