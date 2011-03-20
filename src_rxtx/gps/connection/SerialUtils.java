@@ -7,7 +7,7 @@ import org.snipecode.reg.RegUtil;
 public class SerialUtils {
 
 	private static final String[] knownPorts = { "\\device\\usbser",
-			"\\device\\slabser", "\\device\\profilicserial",
+			"\\device\\slabser", "\\device\\prolificserial",
 			"\\device\\silabser", "\\device\\BthModem" // This one is actually
 														// bluetooth modem.
 	};
