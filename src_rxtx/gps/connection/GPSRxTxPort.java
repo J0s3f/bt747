@@ -407,6 +407,10 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			portFound = isValidPort(portName);
 		}
 		if (!portFound) {
+			portName = "/dev/cu.usbmodem620";
+			portFound = isValidPort(portName);
+		}
+		if (!portFound) {
 			portName = null;
 		}
 		return portName;

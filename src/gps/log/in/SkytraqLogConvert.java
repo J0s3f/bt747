@@ -301,7 +301,7 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 					leapSeconds += 1;
 				}
 			} else {
-				leapSeconds = totalLeapSecond[index];
+				leapSeconds = totalLeapSecond[totalLeapSecond.length-1];
 			}
 		} else {
 			leapSeconds = 0;
