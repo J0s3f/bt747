@@ -391,7 +391,7 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     };
 
         public enum MapType {
-        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade
+        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade, OpenPisteMapNoContours
     };
 
     /** Set the current map based on the map index */
@@ -428,7 +428,10 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
             info = MapFactoryInfos.tfiOpnvStreetMap;
             break;
         case OpenPisteMap:
-            info = MapFactoryInfos.tfiOpenPisteMap;
+            info = MapFactoryInfos.tfiOpenPisteMapContours;
+            break;
+        case OpenPisteMapNoContours:
+            info = MapFactoryInfos.tfiOpenPisteMapNoContours;
             break;
         case DigitalGlobe:
             info = MapFactoryInfos.tfiDigitalGlobe;

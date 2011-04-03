@@ -114,9 +114,25 @@ public class MapFactoryInfos {
                     + y;
         }
     };
-    public final static MyTileFactoryInfo tfiOpenPisteMap = new MyTileFactoryInfo(
-            "openpiste", 2, 18, 19, 256, true, true,
+    public final static MyTileFactoryInfo tfiOpenPisteMapContours = new MyTileFactoryInfo(
+            "rste", 2, 18, 19, 256, true, true,
             "http://tiles.openpistemap.org/contours", "x", "y", "z",
+            "Open Piste Map", "http://openpistemap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+
+        public String getTileBaseKey(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            return "" + zoom + File.separatorChar + x + File.separatorChar
+                    + y;
+        }
+    };
+    public final static MyTileFactoryInfo tfiOpenPisteMapNoContours = new MyTileFactoryInfo(
+            "openpistenc", 2, 18, 19, 256, true, true,
+            "http://tiles.openpistemap.org/nocontours", "x", "y", "z",
             "Open Piste Map", "http://openpistemap.org") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
