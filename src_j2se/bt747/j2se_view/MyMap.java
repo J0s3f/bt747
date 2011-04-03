@@ -359,7 +359,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener, POIActio
         return hasPositions;
     }
 
-    enum MapType {
+    public enum MapType {
         OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade, OpenPisteMapNoContours
     };
 

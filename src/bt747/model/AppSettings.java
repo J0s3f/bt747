@@ -78,6 +78,7 @@ public class AppSettings implements BT747Thread {
 	private static final int BOOL = 2;
 	private static final int STRING = 3;
 	private static final int FLOAT = 4;
+	private static final int UINT = 5;
 
 	// Some virtual parameters
 	public static final int REPORTFILEBASEPATH = -1;
@@ -758,7 +759,8 @@ public class AppSettings implements BT747Thread {
 			setBooleanOpt(AppSettings.IS_GPX_1_1, false);
 			/* fall through */
 		case 36:
-			setIntOpt(AppSettings.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_MTK);
+			setIntOpt(AppSettings.DEVICE_PROTOCOL,
+					ProtocolConstants.PROTOCOL_MTK);
 			/* fall through */
 		case 37:
 			// New field is coded on 4 byte (8 chars)
@@ -910,14 +912,20 @@ public class AppSettings implements BT747Thread {
 		//
 		// }
 		if ((param < AppSettings.paramsList.length)
-				&& (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)) {
+				&& ((AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT) || (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.UINT))) {
 			switch (param) {
 			case CARD:
 				return getLocalCard();
 			default:
-				return getLocalIntOpt(
-						AppSettings.paramsList[param][AppSettings.START_IDX],
-						AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+				if (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.UINT) {
+					return getLocalUIntOpt(
+							AppSettings.paramsList[param][AppSettings.START_IDX],
+							AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+				} else {
+					return getLocalIntOpt(
+							AppSettings.paramsList[param][AppSettings.START_IDX],
+							AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
+				}
 			}
 		} else {
 			// TODO: throw something
@@ -943,7 +951,8 @@ public class AppSettings implements BT747Thread {
 		//
 		// }
 		if ((param < AppSettings.paramsList.length)
-				&& (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)) {
+				&& ((AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)
+			    || (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.UINT))) {
 			setLocalIntOpt(param, value,
 					AppSettings.paramsList[param][AppSettings.START_IDX],
 					AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
@@ -1308,6 +1317,16 @@ public class AppSettings implements BT747Thread {
 	private final int getLocalIntOpt(final int idx, final int size) {
 		final String str = getStringOpt(idx, size);
 		return Conv.hex2SignedInt(str);
+	}
+
+	private final void setLocalUIntOpt(final int param, final int src,
+			final int idx, final int size) {
+		setOpt(param, JavaLibBridge.unsigned2hex(src, size), idx, size);
+	}
+
+	private final int getLocalUIntOpt(final int idx, final int size) {
+		final String str = getStringOpt(idx, size);
+		return Conv.hex2Int(str);
 	}
 
 	private final void setLocalFloatOpt(final int eventType, final float value,
@@ -1954,7 +1973,7 @@ public class AppSettings implements BT747Thread {
 					AppSettings.C_MAPCACHEDIRECTORY_SIZE },
 			{ AppSettings.STRING, AppSettings.VERSION,
 					AppSettings.C_VERSION_IDX, AppSettings.C_VERSION_SIZE },
-			{ AppSettings.INT, AppSettings.MAPTYPE, AppSettings.C_MAPTYPE_IDX,
+			{ AppSettings.UINT, AppSettings.MAPTYPE, AppSettings.C_MAPTYPE_IDX,
 					AppSettings.C_MAPTYPE_SIZE },
 			{ AppSettings.STRING, AppSettings.GOOGLEMAPKEY, 0, 0 },
 			{ AppSettings.STRING, AppSettings.SETTING1_NMEA,

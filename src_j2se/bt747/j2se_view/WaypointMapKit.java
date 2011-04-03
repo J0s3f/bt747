@@ -390,16 +390,13 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
         }
     };
 
-        public enum MapType {
-        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade, OpenPisteMapNoContours
-    };
 
     /** Set the current map based on the map index */
     private void setMap(final int maptypeOrdinal) {
         try {
-            setMap(MapType.values()[maptypeOrdinal]);
+            setMap(MyMap.MapType.values()[maptypeOrdinal]);
         } catch (final Exception e) {
-            setMap(MapType.values()[0]);
+            setMap(MyMap.MapType.values()[0]);
         }
     }
 
@@ -407,7 +404,7 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     /**
      * Set the map type based on the MapType enum value.
      */
-    private void setMap(final MapType maptype) {
+    private void setMap(final MyMap.MapType maptype) {
         TileFactoryInfo info = null;
 
         switch (maptype) {

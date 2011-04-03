@@ -762,7 +762,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miCycleThunderflame = new javax.swing.JRadioButtonMenuItem();
         miOpvnMap = new javax.swing.JRadioButtonMenuItem();
         miOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
-        miOpenPisteMapNocontour = new javax.swing.JCheckBoxMenuItem();
+        miOpenPisteMapNocontour = new javax.swing.JRadioButtonMenuItem();
         miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
         btAutocenterMap = new javax.swing.JCheckBoxMenuItem();
         miDownloadDevice = new javax.swing.JMenu();
@@ -1378,7 +1378,7 @@ public class BT747Main extends javax.swing.JFrame implements
         }//GEN-LAST:event_miPHLX260ProtocolActionPerformed
 
         private void miOpenPisteMapNocontourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenPisteMapNocontourActionPerformed
-                c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMapNoContours.ordinal());
+            c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMapNoContours.ordinal());
         }//GEN-LAST:event_miOpenPisteMapNocontourActionPerformed
 
 	private void cbSerialSpeedFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbSerialSpeedFocusLost
@@ -1830,7 +1830,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JMenuItem miMapCacheDir;
     private javax.swing.JRadioButtonMenuItem miMapnik;
     private javax.swing.JRadioButtonMenuItem miOpenPisteMap;
-    private javax.swing.JCheckBoxMenuItem miOpenPisteMapNocontour;
+    private javax.swing.JRadioButtonMenuItem miOpenPisteMapNocontour;
     private javax.swing.JRadioButtonMenuItem miOpvnMap;
     private javax.swing.JRadioButtonMenuItem miOsmarender;
     private javax.swing.JMenuItem miPHLX260Protocol;
