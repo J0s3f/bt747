@@ -502,6 +502,7 @@ public class BT747Main extends javax.swing.JFrame implements
 			miOpvnMap.setSelected(mt == MapType.Opvn);
 			miOpenPisteMap.setSelected(mt == MapType.OpenPisteMap);
 			miDigitalGlobe.setSelected(mt == MapType.DigitalGlobe);
+			miOpenPisteMapNocontour.setSelected(mt == MapType.OpenPisteMapNoContours);
 
 		} catch (final Exception ex) {
 			// TODO: handle exception
@@ -761,6 +762,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miCycleThunderflame = new javax.swing.JRadioButtonMenuItem();
         miOpvnMap = new javax.swing.JRadioButtonMenuItem();
         miOpenPisteMap = new javax.swing.JRadioButtonMenuItem();
+        miOpenPisteMapNocontour = new javax.swing.JCheckBoxMenuItem();
         miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
         btAutocenterMap = new javax.swing.JCheckBoxMenuItem();
         miDownloadDevice = new javax.swing.JMenu();
@@ -1239,6 +1241,15 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miMap.add(miOpenPisteMap);
 
+        miOpenPisteMapNocontour.setSelected(true);
+        miOpenPisteMapNocontour.setText(bundle.getString("BT747Main.miOpenPisteMapNocontour.text")); // NOI18N
+        miOpenPisteMapNocontour.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOpenPisteMapNocontourActionPerformed(evt);
+            }
+        });
+        miMap.add(miOpenPisteMapNocontour);
+
         miDigitalGlobe.setText(bundle.getString("BT747Main.miDigitalGlobe.text")); // NOI18N
         miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1365,6 +1376,10 @@ public class BT747Main extends javax.swing.JFrame implements
         private void miPHLX260ProtocolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPHLX260ProtocolActionPerformed
         	c.setIntOpt(Model.DEVICE_PROTOCOL, ProtocolConstants.PROTOCOL_HOLUX_PHLX260);
         }//GEN-LAST:event_miPHLX260ProtocolActionPerformed
+
+        private void miOpenPisteMapNocontourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenPisteMapNocontourActionPerformed
+                c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMapNoContours.ordinal());
+        }//GEN-LAST:event_miOpenPisteMapNocontourActionPerformed
 
 	private void cbSerialSpeedFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbSerialSpeedFocusLost
 		// TODO add your handling code here:
@@ -1815,6 +1830,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JMenuItem miMapCacheDir;
     private javax.swing.JRadioButtonMenuItem miMapnik;
     private javax.swing.JRadioButtonMenuItem miOpenPisteMap;
+    private javax.swing.JCheckBoxMenuItem miOpenPisteMapNocontour;
     private javax.swing.JRadioButtonMenuItem miOpvnMap;
     private javax.swing.JRadioButtonMenuItem miOsmarender;
     private javax.swing.JMenuItem miPHLX260Protocol;

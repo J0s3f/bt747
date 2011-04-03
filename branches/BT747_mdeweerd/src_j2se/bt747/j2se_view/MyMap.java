@@ -360,7 +360,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener, POIActio
     }
 
     enum MapType {
-        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade
+        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade, OpenPisteMapNoContours
     };
 
     private void setMap(final int maptypeOrdinal) {
@@ -424,7 +424,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener, POIActio
             info = MapFactoryInfos.tfiOpnvStreetMap;
             break;
         case OpenPisteMap:
-            info = MapFactoryInfos.tfiOpenPisteMap;
+            info = MapFactoryInfos.tfiOpenPisteMapContours;
+            break;
+        case OpenPisteMapNoContours:
+            info = MapFactoryInfos.tfiOpenPisteMapNoContours;
             break;
         case DigitalGlobe:
             info = MapFactoryInfos.tfiDigitalGlobe;
