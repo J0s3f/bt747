@@ -65,7 +65,7 @@ public class JXMapKit extends JXPanel {
 
     public enum DefaultProviders {
 
-        SwingLabsBlueMarble, OpenStreetMaps, Custom
+        SwingLabsBlueMarble, OpenStreetMaps, OpenCyncleMap, Custom
     };
     private DefaultProviders defaultProvider = DefaultProviders.SwingLabsBlueMarble;
     private boolean addressLocationShown = true;
@@ -678,6 +678,26 @@ public class JXMapKit extends JXPanel {
             setZoom(11);
             setAddressLocation(new GeoPosition(51.5, 0));
         }
+        if (prov == DefaultProviders.OpenCyncleMap) {
+            final int max = 22;
+            TileFactoryInfo info = new TileFactoryInfo("osm", 1, max - 2, max,
+                    256, true, true, // tile size is 256 and x/y orientation is normal
+                    "http://c.tile.opencyclemap.org/cycle",//5/15/10.png",
+                    "x", "y", "z") {
+
+                @Override
+                public String getTileUrl(int x, int y, int zoom) {
+                    zoom = max - zoom;
+                    String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+                    return url;
+                }
+            };
+            TileFactory tf = new DefaultTileFactory(info);
+            setTileFactory(tf);
+            tf = null;
+            setZoom(11);
+            setAddressLocation(new GeoPosition(51.5, 0));
+        }
         firePropertyChange("defaultProvider", old, prov);
         repaint();
     }
@@ -738,7 +758,7 @@ public class JXMapKit extends JXPanel {
                     Logger l = LogManager.getLogManager().getLogger(iter.nextElement());
                     l.setLevel(Level.ALL);
                 }
-                kit.setTileFactory(tf);
+                //kit.setTileFactory(tf);
                 kit.setZoom(14);
                 kit.setAddressLocation(new GeoPosition(51.5, 0));
                 kit.setAddressLocationShown(false);
