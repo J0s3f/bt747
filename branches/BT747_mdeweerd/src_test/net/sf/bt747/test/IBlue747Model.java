@@ -62,9 +62,9 @@ public class IBlue747Model {
 	 * The default model type used.
 	 */
 	public static DeviceModelType defaultModelType =
-	// DeviceModelType.IBLUE747PLUS;
+	DeviceModelType.IBLUE747PLUS;
 	// DeviceModelType.IBLUE747PLUS_TYPE2;
-	DeviceModelType.TSI_887_Lite;
+	// DeviceModelType.TSI_887_Lite;
 	//DeviceModelType.HOLUX_GR260;
 
 	public GPSrxtx gpsRxTx = null;
@@ -935,6 +935,7 @@ public class IBlue747Model {
 			mtkData.swVersion = "1.0";
 			mtkData.logVersion = 139;
 			mtkData.flashCode = 0x1C20161C;
+			mtkData.flashCode = 0x1C30161C;
 			break;
 		case IBLUE747PLUS_TYPE2:
 			mtkData.coreVersion = "AXN_1.0-B_1.3_C01";

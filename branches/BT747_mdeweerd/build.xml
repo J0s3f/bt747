@@ -67,11 +67,11 @@
 	<property name="system.paths.sep" value=";" />
 
 	<property name="rxtxcomm.jar" value="${rxtxcomm.base.dir}/RXTXcomm.jar" />
-	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
+	<property name="swing-layout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
 	<property name="swingx.jar" value="${lib.dir}/swingx.jar" />
 	<property name="swingx-ws.jar" value="${lib.dir}/swingx-ws.jar" />
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
-	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
+	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-3.1.jar" />
 	<property name="sanselan.jar" value="${lib.dir}/sanselan-0.97-incubator.jar" />
 	<property name="jchart.jar" value="${lib.dir}/jchart2d-3.1.0.jar" />
 
@@ -304,7 +304,7 @@
 		<pathelement location="${swingx.jar}" />
 		<pathelement location="${swingx-ws.jar}" />
 		<pathelement location="${jopt-simple.jar}" />
-		<pathelement location="${swinglayout.jar}" />
+		<pathelement location="${swing-layout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 		<pathelement location="${sanselan.jar}" />
 		<pathelement location="${jchart.jar}" />
@@ -374,7 +374,7 @@
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${j2se.main}" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
-			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-2.4.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-2.4.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar" />
+			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-3.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-3.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
                  TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -420,7 +420,7 @@
 			<libraryjar file="${jcalendar.jar}" />
 			<libraryjar file="${swingx.jar}" />
 			<libraryjar file="${swingx-ws.jar}" />
-			<libraryjar file="${swinglayout.jar}" />
+			<libraryjar file="${swing-layout.jar}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
@@ -446,7 +446,7 @@
 	        	-injar ${jcalendar.jar}
 	        	-injar ${swingx.jar}
 	        	-injar ${swingx-ws.jar}
-	        	-injar ${swinglayout.jar}
+	        	-injar ${swing-layout.jar}
 	                     -optimizationpasses 1
 			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
 		    -keep public class org.snipecode.reg.RegUtil { *; }
@@ -502,7 +502,7 @@
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="BT747" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
-			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar swingx.jar swingx-ws.jar ../lib/swingx.jar ../lib/swingx-ws.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar" />
+			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar swingx.jar swingx-ws.jar ../lib/swingx.jar ../lib/swingx-ws.jar ../lib/RXTXcomm.jar ../${swing-layout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
 	             TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -541,7 +541,7 @@
 			<libraryjar file="${jcalendar.jar}" />
 			<libraryjar file="${swingx.jar}" />
 			<libraryjar file="${swingx-ws.jar}" />
-			<libraryjar file="${swinglayout.jar}" />
+			<libraryjar file="${swing-layout.jar}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" />
              	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
@@ -660,7 +660,7 @@
 					<pathelement path="${rxtxcomm.jar}" />
 					<pathelement path="${swingx.jar}" />
 					<pathelement path="${swingx-ws.jar}" />
-					<pathelement path="${swinglayout.jar}" />
+					<pathelement path="${swing-layout.jar}" />
 					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" />
@@ -975,7 +975,7 @@
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${current.main.class}" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
-			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar" />
+			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swing-layout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
              TheMainClass.class.getPackage().getImplementationVersion() ); -->

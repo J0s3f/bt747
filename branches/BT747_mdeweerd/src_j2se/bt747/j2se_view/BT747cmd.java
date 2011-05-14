@@ -683,7 +683,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
 		if (options.has(OPT_FILE_BASENAME)) {
 			// Basename of files.
-			final String fullname = options.argumentOf(OPT_FILE_BASENAME);
+			final String fullname = (String) options.valueOf(OPT_FILE_BASENAME);
 			String basename;
 			int splitIdx;
 			String path = "";
@@ -707,8 +707,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 
 		// Input is "/BT747/BT747_sample.bin"
 		if (options.has(OPT_BINARY_FILE)) {
-			c.setStringOpt(Model.LOGFILEPATH, options
-					.argumentOf(OPT_BINARY_FILE));
+			c.setStringOpt(Model.LOGFILEPATH, (String) options
+					.valueOf(OPT_BINARY_FILE));
 		}
 
 		if (options.has(OPT_SERIAL_SPEED)) {
@@ -887,7 +887,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 		}
 
 		if (options.has(OPT_DEVICETYPE)) {
-			final String arg = options.argumentOf(OPT_DEVICETYPE).toLowerCase();
+			final String arg = ((String) options.valueOf(OPT_DEVICETYPE))
+					.toLowerCase();
 			// AppController.GPS_TYPE_DEFAULT:
 			// AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
 			// AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
@@ -922,7 +923,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 		if (m.isConnected()) {
 			// Connection is made.
 			if (options.has(OPT_START)) {
-				final String arg = options.argumentOf(OPT_START).toLowerCase();
+				final String arg = ((String) options.valueOf(OPT_START))
+						.toLowerCase();
 				if (arg.equals(OPT_COLD)) {
 					c.gpsCmd(MtkController.CMD_COLDSTART);
 				} else if (arg.equals(OPT_WARM)) {
@@ -935,8 +937,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 			}
 
 			if (options.has(OPT_LOGGING_ON_OFF)) {
-				final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
-						.toLowerCase();
+				final String arg = ((String) options
+						.valueOf(OPT_LOGGING_ON_OFF)).toLowerCase();
 				if (arg.equals("on")) {
 					System.out.println(">> Switch recording to ON\n");
 					c.setLoggingActive(true);
@@ -1018,7 +1020,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
 			String agpsUrl = null;
 			if (options.has(OPT_AGPS_URL)) {
-				agpsUrl = options.argumentOf(OPT_AGPS_URL);
+				agpsUrl = (String) options.valueOf(OPT_AGPS_URL);
 			}
 
 			if (options.has(OPT_AGPS) || agpsUrl != null) {
@@ -1173,8 +1175,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 			}
 
 			if (options.has(OPT_OVERLAP_STOP_SETTING)) {
-				final String arg = options.argumentOf(OPT_OVERLAP_STOP_SETTING)
-						.toLowerCase();
+				final String arg = ((String) options
+						.valueOf(OPT_OVERLAP_STOP_SETTING)).toLowerCase();
 				if (arg.equals("overlap")) {
 					System.out
 							.println(">> Setting method OVERLAP on memory full\n");
@@ -1201,8 +1203,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 			if (options.has(OPT_DOWNLOAD)) {
 				c.setDownloadMethod(Model.DOWNLOAD_SMART);
 				if (options.has(OPT_DOWNLOAD_METHOD)) {
-					final String arg = options.argumentOf(OPT_DOWNLOAD_METHOD)
-							.toLowerCase();
+					final String arg = ((String) options.valueOf(
+							OPT_DOWNLOAD_METHOD)).toLowerCase();
 					if (arg.equals("full")) {
 						c.setDownloadMethod(Model.DOWNLOAD_FULL);
 					} else if (arg.equals("smart")) {
@@ -1262,7 +1264,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 		}
 
 		if (options.has(OPT_TARGET_TAGGED_FILENAME)) {
-			fpf.setDestTemplate(options.argumentOf(OPT_TARGET_TAGGED_FILENAME));
+			fpf.setDestTemplate((String) options
+					.valueOf(OPT_TARGET_TAGGED_FILENAME));
 			System.out.println("Output filename template is \""
 					+ fpf.getDestTemplate() + "\"");
 		}
