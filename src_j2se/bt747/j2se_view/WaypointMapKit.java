@@ -47,7 +47,7 @@ import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.hyperlink.LinkAction;
+import org.jdesktop.swingx.action.OpenBrowserAction;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.TileFactory;
@@ -361,7 +361,7 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     /** Action to act upon click on map information link.
      * Opens up the external browser.
      */
-    private static class MyLinkAction extends LinkAction<String> {
+    private static class MyLinkAction extends OpenBrowserAction {
         /**
          * 
          */

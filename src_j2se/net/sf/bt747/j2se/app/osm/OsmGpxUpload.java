@@ -7,6 +7,8 @@ package net.sf.bt747.j2se.app.osm;
  * 
  * Modifications for BT747 by Mario De Weerd
  * 
+ * (original file is/was at
+ *    http://trac.openstreetmap.org/browser/applications/utils/gps-tracks/jgpxupload/src/GpxUpload.java)
  */
 
 import java.io.BufferedInputStream;
