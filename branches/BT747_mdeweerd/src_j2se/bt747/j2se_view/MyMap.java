@@ -49,7 +49,6 @@ import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.hyperlink.LinkAction;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.TileFactory;
@@ -57,6 +56,7 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
+import org.jdesktop.swingx.action.OpenBrowserAction;
 
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.GPSPositionWaypoint;
@@ -371,8 +371,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener, POIActio
         }
     }
 
-    private static class MyLinkAction extends LinkAction<String> {
-
+    private static class MyLinkAction extends OpenBrowserAction {
         /**
          * 
          */
