@@ -123,17 +123,17 @@ public class HoluxModel extends MtkModel {
 			postEvent(GpsEvent.UPDATE_LOG_VERSION);
 
         } else if(cmd.equals(HoluxConstants.PHLX_DT_MEMUSED_PERCENT)) {
-        	setLogMemUsed((getLogMemSize()*Integer.parseInt(sNmea[1]))/100);
+        	setLogMemUsed((getLogMemSize()*JavaLibBridge.toInt(sNmea[1]))/100);
         } else if(cmd.equals(HoluxConstants.PHLX_DT_OVERWRITE_MODE)) {
 			logFullOverwrite = (JavaLibBridge.toInt(sNmea[2]) == 1);
 			postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
         } else if(cmd.equals(HoluxConstants.PHLX_DT_SPORTS_MODE)) {
-        	SportMode = Integer.parseInt(sNmea[2]);
+        	SportMode = JavaLibBridge.toInt(sNmea[2]);
         	// TODO: postEvent
         } else if(cmd.equals(HoluxConstants.PHLX_DT_NUMBER_OF_TRACKS)) {
-			logNbrTracks = Integer.parseInt(sNmea[1]);
+			logNbrTracks = JavaLibBridge.toInt(sNmea[1]);
         } else if (cmd.equals(HoluxConstants.PHLX_DT_LOG_DOWNLOAD_ANNOUNCE_TOTAL)) {
-        	logNbrLogPts = Integer.parseInt(sNmea[1]);
+        	logNbrLogPts = JavaLibBridge.toInt(sNmea[1]);
         	int checksum = Conv.hex2Int(sNmea[2]);
         	setLogMemUsed(logNbrLogPts*32);
 			setAvailable(MtkModel.DATA_MEM_PTS_LOGGED);
