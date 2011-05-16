@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import org.jdesktop.swingx.mapviewer.util.GeoUtil;
-import org.jdesktop.swingx.util.PaintUtils;
+import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
 /**
  * The <code>AbstractTileFactory</code> provides a basic implementation for
@@ -344,7 +344,7 @@ public abstract class AbstractTileFactory extends TileFactory {
                         bout.write(buf, 0, n);
                     }
                     byte[] bimg = bout.toByteArray();
-                    BufferedImage img = PaintUtils
+                    BufferedImage img = GraphicsUtilities
                             .loadCompatibleImage(new ByteArrayInputStream(
                                     bimg));
                     cache.put(getCacheTileKey(tile), bimg, img);
