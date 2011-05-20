@@ -1,0 +1,1 @@
+http://maps.google.com/maps/api/staticmap?sensor=false&size=400x400&path=weight:3|color:0x0000FF|enc:spuiHqknL

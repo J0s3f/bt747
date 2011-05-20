@@ -1,0 +1,24 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>console</headerType>
+  <jar>dist\BT747_j2se.jar</jar>
+  <outfile>D:\mdeweerd\workspace\BT747\BT747cmd.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://www.bt747.org</supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>D:\mdeweerd\workspace\BT747\icons\BT747.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <maxHeapSize>256</maxHeapSize>
+    <opt>-Djava.library.path=&quot;%EXEDIR%/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32&quot;</opt>
+  </jre>
+</launch4jConfig>
