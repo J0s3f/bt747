@@ -5,6 +5,8 @@
     <property file="${user.properties.file}"/>
     <import file="jdk.xml"/>
     <property name="skip.proguard" value="true"/>
+    <property name="java.debug" value="true"/>
+    <property name="java.optimize" value="false"/>
     <import file="../build.xml"/>
     <property file="local.properties"/>
     <property file="build.properties"/>
