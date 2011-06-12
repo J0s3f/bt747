@@ -113,6 +113,10 @@
                         </arity>
                     </context>
                 </action>
+                <action name="debug">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>debug-nb</target>
+                </action>
             </ide-actions>
             <export>
                 <type>folder</type>
@@ -163,6 +167,7 @@
                         <label>Build J2SE</label>
                         <target>dist.j2se</target>
                     </action>
+                    <ide-action name="debug"/>
                 </context-menu>
             </view>
             <subprojects/>
