@@ -4,16 +4,49 @@
     <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
     <property file="${user.properties.file}"/>
     <import file="jdk.xml"/>
+    <property name="skip.proguard" value="true"/>
+    <import file="../build.xml"/>
     <property file="local.properties"/>
     <property file="build.properties"/>
     <property file="default.properties"/>
-    <!-- TODO: edit the following target according to your needs -->
+
     <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
     <target depends="-jdk-init" name="compile-selected-files-in-src_j2se">
+        <!--
         <fail unless="files">Must set property 'files'</fail>
         <mkdir dir="build"/>
         <javac destdir="build" includes="${files}" source="1.5" srcdir="src_j2se">
             <classpath path="lib/win32comm.jar;lib/RXTXcomm.jar;lib/collections-superwaba.jar;lib/jcalendar-1.3.2.jar;lib/Waba_only.jar;lib/swing-layout-1.0.3.jar;lib/jopt-simple-2.4.1.jar;lib/swingx.jar;lib/swingx-ws.jar"/>
         </javac>
+        -->
+        <build.rxtx suffix="" build.j2se="yes" no.waba="yes" build.lib="no" />
+
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#debugj2se) -->
+    <target depends="-jdk-init,compile-selected-files-in-src_j2se" name="debug-nb">
+        <path id="cp">
+            <!--
+                <pathelement location="${dist}/lib${ant.project.name}.jar" />
+                -->
+		<pathelement location="build/rxtxbuild/${ant.project.name}_rxtx.jar" />
+		<pathelement location="${jcalendar.jar}" />
+		<pathelement location="${swingx.jar}" />
+		<pathelement location="${swingx-ws.jar}" />
+		<pathelement location="${jopt-simple.jar}" />
+		<pathelement location="${swing-layout.jar}" />
+		<pathelement location="${rxtxcomm.jar}" />
+		<pathelement location="${sanselan.jar}" />
+		<pathelement location="${jchart.jar}" />
+        </path>
+        <nbjpdastart addressproperty="jpda.address" name="BT747" transport="dt_socket">
+            <classpath refid="cp"/>
+        </nbjpdastart>
+        <!-- TODO configure the main class for your project here: -->
+        <java classname="bt747.j2se_view.BT747Main" fork="true">
+            <classpath refid="cp"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>
     </target>
 </project>
