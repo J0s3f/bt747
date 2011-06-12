@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v=VML>
+<head>
+<title>GPS-20100228</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Tracks - Generated with BT747 V2.X.1689 http://www.bt747.org - powered by Google Maps" />
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp" type="text/javascript">
+</script>
+<style type="text/css">
+ v\:* {
+  behavior:url(#default#VML);
+ }
+ html, body, #map
+  {
+   width: 100%;
+   height: 100%;
+  }
+ body {
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
+ }
+
+</style>
+</head>
+
+<body  onresize="setFooter()" onunload="GUnload()">
+<div id="map"> </div>
+<div id="footer">
+
+<form style="display:inline" action="javascript:gotoAddr()">
+<input type="submit" value="Go To" />
+<input type="submit" value="" style="display:none" />
+<input size="30" type="text" name="adr" id="adr" />
+</form>
+<input type="submit" value="Init" onclick="initial()"/><span id="latlon">Click on map to get position.  </span>Tracks: 
+<script type="text/javascript">
+if (GBrowserIsCompatible()) {
+ geocoder = new GClientGeocoder();
+ preva = "none";
+ function showaddr(latlng) {
+  if (latlng) {
+   geocoder.getLocations(latlng, function(adrs) {
+    if(adrs.Status.code == 200) {
+     adr=adrs.Placemark[0];
+     var txt=adr.address;
+     if(txt==preva) {
+      map.openInfoWindow(latlng, txt);
+     } else {
+      preva = txt;
+     }
+    }
+   });
+  }
+ }
+
+function latlonTxt(latlon) {
+ if(latlon) {
+     var s='<b>Last click: '+ latlon.toUrlValue()+' </b>';
+  showaddr(latlon);  document.getElementById("latlon").innerHTML = s;
+ }
+}
+function latlonFunc() {
+ return function(overlay,latlon) {latlonTxt(latlon);}
+}
+function gotoPt(pt) {
+ if(!pt){
+  document.getElementById("latlon").innerHTML="Location not found";
+ } else {
+  map.setCenter(pt);latlonTxt(pt);
+ }
+}
+
+function gotoAddr(){
+ var ad=document.getElementById("adr").value;
+ new GClientGeocoder().getLatLng(ad,gotoPt);
+}
+function makeOpenerCaller(i) { return function() { showMarkerInfo(i); };}
+function showMarkerInfo(i) {
+ markers[i].openInfoWindowHtml(infoHtmls[i]);
+}
+function getWindowHeight() {
+ var windowHeight=0;
+ if (typeof(window.innerHeight)=='number') {
+  windowHeight=window.innerHeight;
+ } else {
+  if (document.documentElement&&document.documentElement.clientHeight) {
+  windowHeight = document.documentElement.clientHeight;
+  } else {
+   if (document.body&&document.body.clientHeight) {
+    windowHeight=document.body.clientHeight;
+   }
+  }
+ }
+ return windowHeight;
+}
+function setFooter() {
+ if (document.getElementById) {
+  var windowHeight=getWindowHeight();
+  var footerElement=document.getElementById('footer');
+  var footerHeight=footerElement.offsetHeight;
+   document.getElementById('map').style.height=
+    (windowHeight-footerHeight)+'px';
+ }
+}
+function trackClick(trk,val) {
+ if (val == 1) {
+  map.addOverlay(trk);
+ } else {
+  map.removeOverlay(trk);
+ } }
+function makeLatLonInfo(h) {
+ return function(latlng) {
+  latlonTxt(latlng);
+  map.openInfoWindowHtml(latlng, h);
+ };
+} var clickStr; clickStr=""; function clickString() {
+  document.write(clickStr);
+ }
+ var map = new GMap2(document.getElementById("map"));
+ map.setCenter(new GLatLng(0,0));
+ var mgr = new GMarkerManager(map);
+ map.addMapType(G_PHYSICAL_MAP);
+  map.enableScrollWheelZoom();
+ map.addControl(new GLargeMapControl());
+ map.addControl(new GMapTypeControl());
+ map.addControl(new GScaleControl());
+ map.addControl(new GOverviewMapControl());
+var OSM = new GMapType(
+[ new GTileLayer(null,1,18,
+{ tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
+ isPng: true, opacity: 1.0 })],
+new GMercatorProjection(19),
+'OSM',
+{ errorMessage:"More OSM coming soon"}
+);
+var OSMcycle = new GMapType(
+[ new GTileLayer(null,1,15,
+{ tileUrlTemplate: 'http://www.thunderflames.org/tiles/cycle/{Z}/{X}/{Y}.png',
+ isPng: true, opacity: 1.0 })],
+new GMercatorProjection(19),
+'Cycle',
+{ errorMessage:"More OSM coming soon"}
+);
+var Osmarender = new GMapType(
+[ new GTileLayer(null,1,18,
+{ tileUrlTemplate: 'http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png',
+ isPng: true, opacity: 1.0 })],
+new GMercatorProjection(19),
+'Osmardr',
+{ errorMessage:"More OSM coming soon"}
+);
+map.addMapType(OSM);
+map.addMapType(OSMcycle);
+map.addMapType(Osmarender);
+var track0;
+map.addOverlay(track0=new GPolyline.fromEncoded({
+  color: "#0000FF",
+  weight: 4,
+  opacity: 0.8,
+  points: "ebxdH_~ebB",
+  levels: "P",
+  zoomFactor: 2,
+  numLevels: 18
+}));
+GEvent.addListener(track0,'click',makeLatLonInfo("<b>Track span</b><br/><br/><b>#1# </b>28-FEB-10 21:03:07"));
+var track1;
+map.addOverlay(track1=new GPolyline.fromEncoded({
+  color: "#0000FF",
+  weight: 4,
+  opacity: 0.8,
+  points: "ebxdH_~ebBA@B@I]?BDIFJ?CB@EHDD",
+  levels: "P???@B@?@@P",
+  zoomFactor: 2,
+  numLevels: 18
+}));
+GEvent.addListener(track1,'click',makeLatLonInfo("<b>Track span</b><br/><b>#1# </b>28-FEB-10 21:03:07<br/><b>#44# </b>28-FEB-10 21:03:49"));
+clickStr+= "28-FEB-10 21:03:07<input type=\"checkbox\"onClick=\"trackClick(track0,this.checked);trackClick(track1,this.checked);\" checked/>";
+clickString();
+GEvent.addListener(map,'click',latlonFunc());
+function initial() {map.setCenter(new GLatLng(48.13363265991211,16.25591468811035));map.setZoom(map.getBoundsZoomLevel(new GLatLngBounds(new GLatLng(48.13358688354492,16.255826950073242),new GLatLng(48.1336784362793,16.25600242614746))));
+};
+ setFooter();
+ initial();
+map.enableContinuousZoom();
+map.enableDoubleClickZoom();
+   }
+   else {
+     document.getElementById("quicklinks").innerHTML = "Your web browser is not compatible with this website."
+   }
+//]]>
+</script>
+ </div>
+</body>
+</html>

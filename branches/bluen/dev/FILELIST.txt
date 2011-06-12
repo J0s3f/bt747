@@ -1,0 +1,87 @@
+
+FILELIST
+
+bt747.jnc
+  File for use with Java Native Compiler.
+  Java Native Compiler can build an executable and binaries for windows without
+  needing a java distribution in the end.
+  
+change
+  Script used to change the order of some keywords in the source files.
+  
+README.txt
+  This file
+  
+
+debug.bat
+debugn.bat
+  Used the 'Omniscient Debugger' to help debug the application.
+  This was used a few times in the beginning.
+
+gcj_comp.bat
+  Script trying to compile the application using gcj
+  
+compile_with_swt.sh
+compile_swt.sh
+  Scripts 'trying' to compile with the swing awt to build a native
+  executable.
+  
+prof.bat
+  Script to profile the application.
+  
+run.bat
+  Script to run the application with debug.
+  
+build_small.xml
+  Reference file extracted from SuperwabaSDK - intention to use this to make
+  the standard build file more generic.
+  
+package.bat
+  File used to build actual packaging script in root directory.
+  
+*.launch
+  Files that you can import in eclipse as launch configurations.
+  
+BT747codestyle.xml
+  Codestyle for BT747 - you can import that in eclipse.  Apparently this is for cleanup.
+  
+BT747_EclipseFormattingProfile.xml
+  Another codestyle specification - also importable in eclipse.
+  I had to add this one because it is different from the previous one which is only for
+  cleanup.
+  
+==================
+LAUNCH definitions
+==================
+BT747_J2SE.launch
+  will launch the destkop.  The same with 1.6 should refer to Java 1.6
+  (for testing).
+  
+BT747 as JAVA.launch
+  runs the PDA Version (SuperWaba) in a Java VM (not a SuperWaba VM)
+  using the default serial connection setup.
+  
+BT747 as RXTX JAVA.launch
+  runs the PDA Version with a variation on the serial connection setup
+  (which is then the same as the Desktop version - not compatbile with a PDA).
+  
+BT747cmd.laucnh
+  runs BT747 as a command line - there are some specific options here that
+  I used to test.
+  
+IBlue747Model.launch
+  runs the model that I wrote of the device.  Using com0com I virtually
+  loopback serial ports on my PC and hook up BT747 to a virtual device !
+  
+SimpleExample.launch
+ launches an example where a download and some conversions are performed.
+ 
+TestDeviceUsingLib.launch
+TestDeviceUsingProject.launch
+  sends a series of commands to the device to check out which commands
+  are supported.  Lib will use libBT747.jar and the other setup the locally compiled classes (to check if the library is fine).
+
+TestModelConnect.launch
+  This will Launch BT747 and the Device Model and connect them through
+  internal piped streams.  The code for that is in the src_test directory.    
+  
