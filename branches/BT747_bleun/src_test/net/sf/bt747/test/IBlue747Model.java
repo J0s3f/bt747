@@ -37,6 +37,7 @@ import net.sf.bt747.test.models.mtk.commands.EpoReply;
 
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
+import net.sf.bt747.test.models.Hlx260Simulation;
 
 /**
  * Implement a model of the BT747 (to run on PC).
@@ -69,7 +70,7 @@ public class IBlue747Model {
 
 	public GPSrxtx gpsRxTx = null;
 
-	private HlxController hlxController = new HlxController(this);
+	private HlxController hlxController;
 	private BTCD110mController cd110Controller = new BTCD110mController(this);
 
 	private byte[] logData = null;
@@ -958,6 +959,7 @@ public class IBlue747Model {
 			mtkData.modelNumber = "0035";
 			mtkData.modelRef = "01029-00A";
 			mtkData.swVersion = "1.0";
+			hlxController = new HlxController(this);
 			break;
 		case PHOTOMATE887:
 			mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
@@ -1005,6 +1007,7 @@ public class IBlue747Model {
 			mtkData.swVersion = "1.03";
 			mtkData.modelRef = "GR260";
 			mtkData.flashCode = 0x00000000;
+			hlxController = new Hlx260Simulation(this);
 			break;
 		case QST1300:
 		default:

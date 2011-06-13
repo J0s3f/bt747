@@ -12,6 +12,7 @@ import java.io.PipedOutputStream;
 import bt747.j2se_view.BT747Main;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.JavaLibImplementation;
+import net.sf.bt747.test.IBlue747Model.DeviceModelType;
 
 /**
  * @author Mario
@@ -54,6 +55,11 @@ public class TestModelConnect {
     }
 
     public static void main(final String args[]) {
+		// todo:
+		// set device model from command line options or - even better -
+		// delay until connection is established from the UI (and the
+		// selected device type known)
+		IBlue747Model.defaultModelType = DeviceModelType.HOLUX_GR260;
         IBlue747Model.main(new String[0]);
         GPSrxtx.setDefaultGpsPortInstance(TestModelConnect.appPort);
         BT747Main.main(args);

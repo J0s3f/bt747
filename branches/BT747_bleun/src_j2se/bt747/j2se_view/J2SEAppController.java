@@ -99,9 +99,9 @@ public final class J2SEAppController extends J2SEController {
 
     private J2SEAppModel m;
 
-    /*
+	/*
      * (non-Javadoc)
-     * 
+     *
      * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
      */
     @Override
@@ -282,7 +282,7 @@ public final class J2SEAppController extends J2SEController {
     private int timeOffset;
 
     /**
-     * 
+     *
      */
     public void setLogConversionParameters() {
         int startTime;
@@ -298,7 +298,7 @@ public final class J2SEAppController extends J2SEController {
     // The next methods are to be moved to the application controller.
     /**
      * Convert the log given the provided parameters using other methods.
-     * 
+     *
      * @param logType
      *            Indicates the type of log that should be written. For
      *            example Model.CSV_LOGTYPE .
@@ -390,7 +390,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Convert the log into an array of trackpoints.
-     * 
+     *
      * @return Array of selected trackpoints.
      */
     public final TracksAndWayPoints convertLogToTrackAndWayPoints() {
@@ -411,7 +411,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * I18N. Internationalization - get the localized string.
-     * 
+     *
      * @param s
      *            String reference for localization.
      * @return Localized String.
@@ -466,7 +466,7 @@ public final class J2SEAppController extends J2SEController {
     /**
      * (User) request to change the log format. Warns about requirement to
      * erase the log too.
-     * 
+     *
      * @param logFormat
      *            The logFormat to set upon erase.
      */
@@ -495,7 +495,7 @@ public final class J2SEAppController extends J2SEController {
     /**
      * (User) request to change the log format. The log is not erased and may
      * be incompatible with other applications.
-     * 
+     *
      * @param logFormat
      *            The new log format to set.
      */
@@ -559,7 +559,7 @@ public final class J2SEAppController extends J2SEController {
      * which is different from the log memory. These settings are restored
      * after loss of power for example.
      * {@link Controller#setFlashUserOption(boolean, int, int, int, int, int, int, int, int, int, int)}
-     * 
+     *
      * @param lock
      *            When true, subsequent changes in these settings will be
      *            impossible.
@@ -617,7 +617,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Report an error.
-     * 
+     *
      * @param error
      *            The error number.
      * @param errorInfo
@@ -654,7 +654,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Attach a view to the controller.
-     * 
+     *
      * @param view
      *            The view that must be attached.
      */
@@ -666,7 +666,7 @@ public final class J2SEAppController extends J2SEController {
 
     /*
      * Overriding the operations to be performed after successfull connect.
-     * 
+     *
      * @see bt747.model.Controller#performOperationsAfterGPSConnect()
      */
     public final void performOperationsAfterGPSConnect() {
@@ -683,7 +683,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Initialise the application settings.
-     * 
+     *
      * Must be called before Model is instantiated. And preferably just after
      * {@link JavaLibBridge} setup because it kind of should be part of the
      * JavaLib implementation.
@@ -725,7 +725,7 @@ public final class J2SEAppController extends J2SEController {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see bt747.model.Controller#saveSettings() Application specific
      * implementation of saveSettings
      */
@@ -870,7 +870,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Show error message that file could not be opened.
-     * 
+     *
      * @param fileName
      *            The file that could not be opened.
      */
@@ -885,7 +885,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Request the user if it is ok to overwrite the existing data or not.
-     * 
+     *
      * @return true if data can be overwritten.
      */
     public final boolean getRequestToOverwriteFromDialog() {
@@ -926,7 +926,7 @@ public final class J2SEAppController extends J2SEController {
     /**
      * Try setting a look and feel for the system - catch the Exception when
      * not found.
-     * 
+     *
      * @return true if successfull
      */
     private final static boolean tryLookAndFeel(final String s) {
@@ -1041,7 +1041,7 @@ public final class J2SEAppController extends J2SEController {
 
     /**
      * Enable(Disable) a panel and its children.
-     * 
+     *
      * @param parent
      * @param en
      */
@@ -1064,7 +1064,7 @@ public final class J2SEAppController extends J2SEController {
     private boolean changeToMap = false;
 
     /**
-     * 
+     *
      */
     public void doLogConversion(final int selectedFormat) {
         new Thread("convert") {
