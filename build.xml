@@ -61,7 +61,7 @@
 	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
 	<property name="wabalang.jar" value="${lib.dir}/wabalang.jar" />
 	<property name="rxtxcomm.base.dir" value="${lib.dir}/rxtx-2.1-7-bins-r2" />
-	<property name="rxtxcomm.os.subdir" value="Windows/i368-mingw32" />
+	<property name="rxtxcomm.os.subdir" value="Linux/i686-unknown-linux-gnu" />
 	<property name="rxtxcomm.system.dir" value="${rxtxcomm.base.dir}/${rxtxcomm.os.subdir}" />
 	<!-- How to make a separation between full paths, not inside the path -->
 	<property name="system.paths.sep" value=";" />

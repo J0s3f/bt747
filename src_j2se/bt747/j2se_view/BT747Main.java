@@ -15,9 +15,7 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
-import gps.BT747Constants;
 import gps.ProtocolConstants;
-import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
 
@@ -39,7 +37,6 @@ import javax.swing.JScrollPane;
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
-import net.sf.bt747.j2se.app.trackgraph.GPSRecordArrayDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordListDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GraphUtils;
@@ -60,7 +57,7 @@ import bt747.sys.interfaces.BT747Int;
 
 /**
  * J2SE Implementation (GUI) of BT747.
- * 
+ *
  * @author Mario De Weerd
  */
 public class BT747Main extends javax.swing.JFrame implements
@@ -80,7 +77,7 @@ public class BT747Main extends javax.swing.JFrame implements
 	}
 
 	/**
-     * 
+     *
      */
 	private static final long serialVersionUID = 1L;
 	private J2SEAppModel m;
@@ -292,7 +289,7 @@ public class BT747Main extends javax.swing.JFrame implements
 		final DropListener dl = new DropListener() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see
 			 * net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
 			 */
@@ -379,7 +376,7 @@ public class BT747Main extends javax.swing.JFrame implements
 		AboutBT747.addActionListener(new java.awt.event.ActionListener() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see
 			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
 			 * ActionEvent)
@@ -391,7 +388,7 @@ public class BT747Main extends javax.swing.JFrame implements
 		Info.addActionListener(new java.awt.event.ActionListener() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see
 			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
 			 * ActionEvent)
@@ -431,7 +428,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * net.sf.bt747.j2se.system.J2SEMessageListener#postMessage(java.lang.String
 	 * )
@@ -448,7 +445,7 @@ public class BT747Main extends javax.swing.JFrame implements
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see java.lang.Runnable#run()
 			 */
 			public void run() {
@@ -769,7 +766,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miMTKProtocol = new javax.swing.JRadioButtonMenuItem();
         miSirfIIIProtocol = new javax.swing.JRadioButtonMenuItem();
         miPHLXProtocol = new javax.swing.JRadioButtonMenuItem();
-        miPHLX260Protocol = new javax.swing.JMenuItem();
+        miPHLX260Protocol = new javax.swing.JRadioButtonMenuItem();
         miSkyTraqProtocol = new javax.swing.JRadioButtonMenuItem();
         miUsePreciseGeoid = new javax.swing.JCheckBoxMenuItem();
         InfoMenu = new javax.swing.JMenu();
@@ -1530,10 +1527,9 @@ public class BT747Main extends javax.swing.JFrame implements
 		J2SEAppController.initAppSettings();
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
-			final J2SEAppModel m = new J2SEAppModel();
-			final J2SEAppController c = new J2SEAppController(m);
-
 			public final void run() {
+				final J2SEAppModel m = new J2SEAppModel();
+				final J2SEAppController c = new J2SEAppController(m);
 				final BT747Main app = new BT747Main(m, c);
 				try {
 					app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1752,7 +1748,7 @@ public class BT747Main extends javax.swing.JFrame implements
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see java.lang.Runnable#run()
 			 */
 			public void run() {
@@ -1833,7 +1829,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JRadioButtonMenuItem miOpenPisteMapNocontour;
     private javax.swing.JRadioButtonMenuItem miOpvnMap;
     private javax.swing.JRadioButtonMenuItem miOsmarender;
-    private javax.swing.JMenuItem miPHLX260Protocol;
+    private javax.swing.JRadioButtonMenuItem miPHLX260Protocol;
     private javax.swing.JRadioButtonMenuItem miPHLXProtocol;
     private javax.swing.JMenuItem miPopulateSerialPorts;
     private javax.swing.JRadioButtonMenuItem miSirfIIIProtocol;

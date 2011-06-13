@@ -47,6 +47,7 @@
         <!-- TODO configure the main class for your project here: -->
         <java classname="bt747.j2se_view.BT747Main" fork="true">
             <classpath refid="cp"/>
+            <jvmarg value="-Djava.library.path=${rxtxcomm.system.dir}" />
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
         </java>
