@@ -226,7 +226,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 	/** Filter parameter. */
 	private static final String OPT_MAX_PDOP = "max-pdop";
 
-	private static final String OPT_DATE_FORMAT = "yyyy/MM/dd";
+	private static final String OPT_DATE_FORMAT = "yyyy/MM/dd-hh:mm:ss";
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			OPT_DATE_FORMAT);
 
