@@ -590,7 +590,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 		if (Model.logFiles.size() != 0) {
 			for (int i = 0; i < Model.logFiles.size(); i++) {
 				LogFileInfo lfi = (LogFileInfo) Model.logFiles.elementAt(i);
-				System.out.println("Input file: " + lfi.getPath().getPath());
+				System.out.println("Input file: " + lfi.getBT747Path().getPath());
 			}
 		}
 

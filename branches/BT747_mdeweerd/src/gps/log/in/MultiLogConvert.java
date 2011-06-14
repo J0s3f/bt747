@@ -120,17 +120,18 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
 		 */
 		for (int fileIdx = 0; !stop && (fileIdx < logFiles.size()); fileIdx++) {
 			final LogFileInfo li = (LogFileInfo) (logFiles.elementAt(fileIdx));
-			final BT747Path fn = li.getPath();
-			if (converters.get(fn) == null) {
-				converters.put(fn, getConvertInstance(fn, gpsFile));
-				logFileInfoLookup.put(fn, li);
+			final BT747Path fn = li.getBT747Path();
+			if (converters.get(fn.getPath()) == null) {
+				converters.put(fn.getPath(), getConvertInstance(fn, gpsFile));
+				logFileInfoLookup.put(fn.getPath(), li);
 			}
 		}
 
-		if ((fileName != null) && (fileName.getPath().length() != 0)) {
-			if (converters.get(fileName) == null) {
-				converters.put(fileName, getConvertInstance(fileName, gpsFile));
-				logFileInfoLookup.put(fileName, new LogFileInfo(fileName));
+		if ((fileName != null) && (fileName.getPath().length() != 0)
+				&& (new bt747.sys.File(fileName).exists())) {
+			if (converters.get(fileName.getPath()) == null) {
+				converters.put(fileName.getPath(), getConvertInstance(fileName, gpsFile));
+				logFileInfoLookup.put(fileName.getPath(), new LogFileInfo(fileName));
 			}
 		}
 
@@ -146,7 +147,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
 				statsConv.setUserWayPointList(gf.getUserWayPointList());
 			}
 			while (!stop && iter.hasNext()) {
-				final Object key = iter.nextKey();
+				final String key = (String) iter.nextKey();
 				final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
 						.get(key);
 				final LogFileInfo loginfo = (LogFileInfo) logFileInfoLookup
@@ -154,7 +155,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
 				statsConv.initStats();
 				// TODO: manage cards on different volumes.
 				currentConverter = i;
-				i.parseFile(i.getFileObject((BT747Path) key), statsConv);
+				i.parseFile(i.getFileObject(loginfo.getBT747Path()), statsConv);
 				// Get date range.
 				currentConverter = null;
 				loginfo.setStartTime(statsConv.minTime);
@@ -173,7 +174,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
 		{
 			final BT747Hashtable iter = logFileInfoLookup.iterator();
 			while (iter.hasNext()) {
-				final Object key = iter.nextKey();
+				final String key = (String) iter.nextKey();
 				final LogFileInfo loginfo = (LogFileInfo) logFileInfoLookup
 						.get(key);
 				final int startTime = loginfo.getStartTime();
@@ -196,13 +197,14 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
 		if (error == BT747Constants.NO_ERROR) {
 			do {
 				for (int j = 0; !stop && (j < orderedLogs.size()); j++) {
-					final Object key = ((LogFileInfo) orderedLogs.elementAt(j))
-							.getPath();
+					final BT747Path path = ((LogFileInfo) orderedLogs.elementAt(j))
+					.getBT747Path();
+					final String key = path.getPath();
 					final GPSLogConvertInterface i = (GPSLogConvertInterface) converters
 							.get(key);
 					currentConverter = i;
 					// TODO: manage cards on different volumes.
-					error = i.parseFile(i.getFileObject((BT747Path) key),
+					error = i.parseFile(i.getFileObject(path),
 							gpsFile);
 					currentConverter = null;
 					// Get date range.

@@ -39,7 +39,7 @@ public class LogFileInfo {
         this.path = path;
     }
 
-    public final BT747Path getPath() {
+    public final BT747Path getBT747Path() {
         return path;
     }
 

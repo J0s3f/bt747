@@ -147,7 +147,7 @@ public class LogFileTableModel extends AbstractTableModel {
                 // label = "TAB_TITLE_Color";
                 return null;
             case DataTypes.LOG_FILENAME:
-                return logfileinfo.getPath();
+                return logfileinfo.getBT747Path();
             default:
                 return null;
             }

@@ -1168,7 +1168,7 @@ public class AppSettings implements BT747Thread {
 				break;
 			case 4:
 				path = ((LogFileInfo) (logFiles.elementAt(--fileIdx)))
-						.getPath();
+						.getBT747Path();
 				if (fileIdx > 0) {
 					i = 4; // Continue in this case of the switch.
 				}
