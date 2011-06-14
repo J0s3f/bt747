@@ -959,7 +959,6 @@ public class IBlue747Model {
 			mtkData.modelNumber = "0035";
 			mtkData.modelRef = "01029-00A";
 			mtkData.swVersion = "1.0";
-			hlxController = new HlxController(this);
 			break;
 		case PHOTOMATE887:
 			mtkData.coreVersion = "AXN_1.0-B_1.3_C01";
@@ -1031,6 +1030,9 @@ public class IBlue747Model {
 		case QST1000X:
 		case QST1300:
 
+		}
+		if (hlxController == null) {
+			hlxController = new HlxController(this);
 		}
 	}
 

@@ -16,6 +16,8 @@ public class HlxController {
 	 */
 	protected IBlue747Model mtkDeviceModel;
 
+	protected byte[] binaryResponse;
+
 	/**
 	 * Initiate the instance.
 	 *
@@ -34,7 +36,7 @@ public class HlxController {
 		public int sportsMode = 0;
 	}
 
-	private final HlxDataModel hlxData = new HlxDataModel();
+	protected final HlxDataModel hlxData = new HlxDataModel();
 
 	/**
 	 * Check if the controller responds to the NMEA command.
@@ -66,6 +68,7 @@ public class HlxController {
 			nmea.append(s);
 			nmea.append(',');
 		}
+		binaryResponse = null;
 
 		Generic.debug(nmea.toString());
 
@@ -77,6 +80,11 @@ public class HlxController {
 			mtkDeviceModel.sendPacket(response.toString());
 			if (z_Result == -1) {
 				z_Result = 0;
+			}
+		}
+		else if (z_Result > 0) {
+			if (binaryResponse != null) {
+
 			}
 		}
 

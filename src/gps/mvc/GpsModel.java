@@ -28,17 +28,17 @@ import bt747.sys.interfaces.BT747HashSet;
 
 /**
  * Refactoring ongoing (split in Model and Controller).
- * 
+ *
  * GPSstate maintains a higher level state of communication with the GPS
  * device. It currently contains very specific commands MTK loggers but that
  * could change in the future by extending GPSstate with such features in a
  * derived class.
- * 
+ *
  * Must still move stuff to MtkController, move to MtkModel mostly done.
- * 
+ *
  * @author Mario De Weerd
  * @see GPSrxtx
- * 
+ *
  */
 /* Final for the moment */
 public class GpsModel implements ProtocolConstants {
@@ -51,7 +51,7 @@ public class GpsModel implements ProtocolConstants {
 
     /**
      * Initialiser.
-     * 
+     *
      * Will also create the model(s) in the lower layers.
      */
     public GpsModel(final GPSrxtx gpsRxTx, final int protocol) {
@@ -73,8 +73,10 @@ public class GpsModel implements ProtocolConstants {
                 mtkModel = new WPModel(this, handler);
                 break;
             case PROTOCOL_HOLUX_PHLX:
-            case PROTOCOL_HOLUX_PHLX260:
                 mtkModel = new HoluxModel(this, handler);
+				break;
+			case PROTOCOL_HOLUX_PHLX260:
+                mtkModel = new Holux260Model(this, handler);
                 break;
             case PROTOCOL_SKYTRAQ:
                 mtkModel = new SkytraqModel(this, handler);
@@ -102,7 +104,7 @@ public class GpsModel implements ProtocolConstants {
 
     /*************************************************************************
      * Start
-     * 
+     *
      * @param gpsRxTx
      */
     public final void setGPSRxtx(final GPSrxtx gpsRxTx) {
@@ -141,7 +143,7 @@ public class GpsModel implements ProtocolConstants {
 
     /**
      * Analyze GPRMC data.
-     * 
+     *
      * @param sNmea
      * @param gps
      */
@@ -153,7 +155,7 @@ public class GpsModel implements ProtocolConstants {
 
     /**
      * Analyze GPGGA data.
-     * 
+     *
      * @param sNmea
      * @param gps
      */
@@ -222,7 +224,7 @@ public class GpsModel implements ProtocolConstants {
 
     /*************************************************************************
      * Getters and Setters
-     * 
+     *
      */
 
     /**
@@ -275,7 +277,7 @@ public class GpsModel implements ProtocolConstants {
     /**
      * Send an NMEA string to the link. The parameter should not include the
      * checksum - this is added by the method.
-     * 
+     *
      * @param s
      *            NMEA string to send.
      */
@@ -285,7 +287,7 @@ public class GpsModel implements ProtocolConstants {
 
     /**
      * Immediate string sending.
-     * 
+     *
      * @param s
      */
     protected final void doSendCmd(final GpsLinkExecCommand s) {
@@ -295,7 +297,7 @@ public class GpsModel implements ProtocolConstants {
     /**
      * Get the number of Cmds that are still waiting to be sent and/or waiting
      * for acknowledgement.
-     * 
+     *
      * @return Number of commands still waiting to be sent.
      */
     public final int getOutStandingCmdsCount() {
@@ -317,7 +319,7 @@ public class GpsModel implements ProtocolConstants {
     /**
      * Get the start address for the log download. To be used for the download
      * progress bar.
-     * 
+     *
      * @return the startAddr
      */
     public final int getStartAddr() {
@@ -327,7 +329,7 @@ public class GpsModel implements ProtocolConstants {
     /**
      * Get the end address for the log download. To be used for the download
      * progress bar.
-     * 
+     *
      * @return the endAddr
      */
     public final int getEndAddr() {
@@ -336,7 +338,7 @@ public class GpsModel implements ProtocolConstants {
 
     /**
      * Get 'download ongoing' status.
-     * 
+     *
      * @return true if the download is currently ongoing. This is usefull for
      *         the download progress bar.
      */
@@ -347,7 +349,7 @@ public class GpsModel implements ProtocolConstants {
     /**
      * Get the log address that we are now expecting to receive data for. This
      * is usefull for the download progress bar.
-     * 
+     *
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {

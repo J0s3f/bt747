@@ -6,6 +6,7 @@ package gps;
 /**
  * Constants for Holux (PHLX) devices. Includes:
  * - M-1000C
+ * - GR260
  * 
  * @author Robert Tomanek <bt747.free.fr@mail.robert.tomanek.org>
  * @author Mario De Weerd
@@ -14,7 +15,7 @@ package gps;
 public class HoluxConstants {
 	/**
 	 * Reply: Number of tracks in device?
-	 * $PHLX601,3*24  //Number of tracks response (3)
+	 * $PHLX601,3*24ï¿½ï¿½//Number of tracks response (3)
 	 */
 	public static final String PHLX_DT_NUMBER_OF_TRACKS = "PHLX601";
 	/**
@@ -24,13 +25,13 @@ public class HoluxConstants {
 	 */
 	public static final String PHLX_Q_NUMBER_OF_TRACKS = "PHLX701";
 	/**
-	 * Query: request 3 tracks’ metadata
-	 * $PHLX702,0,3*3A   
+	 * Query: request 3 tracksï¿½ metadata
+	 * $PHLX702,0,3*3Aï¿½ï¿½ 
 	 */
 	public static final String PHLX_Q_TRACK_METADATA = "PHLX702";
 	/**
 	 * Query: Get data blocks (in holux GPSSport 260, a block is 32 bytes)
-	 * $PHLX703,0,41*0D   // 41 blocks starting from 0
+	 * $PHLX703,0,41*0Dï¿½ï¿½ï¿½// 41 blocks starting from 0
 	 */
 	public static final String PHLX_ = "PHLX703";
 	// PHLX704?
@@ -46,7 +47,7 @@ public class HoluxConstants {
 
 	/**
 	 * Query: Get ID (device type)
-	 * $PHLX810*35   //ID request
+	 * $PHLX810*35ï¿½ï¿½ï¿½//ID request
 	 * Reply: $PHLX852,GR260*3E
 	 */
 	public static final String PHLX_Q_DEVICE_ID = "PHLX810";
@@ -108,7 +109,7 @@ public class HoluxConstants {
      * - time [s] (1-120)
      * - distance [m] (1-1000)
      * 
-     * $PHLX834,0,23,50*2B // Set logging to every 23 seconds, 50 meters
+     * $PHLX834,0,23,50*2Bï¿½// Set logging to every 23 seconds, 50 meters
      */  
     public static final String PHLX_LOG_SET_CRITERIA = "PHLX834";
     
@@ -139,16 +140,16 @@ public class HoluxConstants {
 
     /**
      * To GPS: Query/Set sports mode.
-	 * $PHLX841,0*2D  //sport mode 0=request
-	 * $PHLX841,1,GR260,1*3C //sport mode 1=set, GR260,1=jog
+	 * $PHLX841,0*2Dï¿½ï¿½//sport mode 0=request
+	 * $PHLX841,1,GR260,1*3Cï¿½//sport mode 1=set, GR260,1=jog
 	 * Reply: $PHLX871,GR260,0*23	//sport mode response,0=bike 1=run 2=hike 3=car 
      */
 	public static final String PHLX_CMD_SPORTS_MODE = "PHLX841";
 
 	/**
 	 * To GPS: Query/Set overwrite mode
-	 * 	$PHLX842,0*2E  //log write mode 0=request
-	 * 	$PHLX842,1,GR260,0*3E //write mode 1=set, GR260,0=overwrite
+	 * 	$PHLX842,0*2Eï¿½ï¿½//log write mode 0=request
+	 * 	$PHLX842,1,GR260,0*3Eï¿½//write mode 1=set, GR260,0=overwrite
 	 * 
 	 * Reply: $PHLX872,GR260,1*21	//log write mode response, 0=overwrite 1=stop
 	 */
@@ -240,25 +241,25 @@ public class HoluxConstants {
 
 	/**
 	 * From GPS: Used memory in % (reply to PHLX709)
-	 * 	$PHLX873,2*2E  //percent mem used response (2%)
+	 * 	$PHLX873,2*2Eï¿½ï¿½//percent mem used response (2%)
 	 */
 	public static final String PHLX_DT_MEMUSED_PERCENT = "PHLX873";
 	
 	/**
 	 * From GPS: Acks ?
-	 * 	$PHLX900,702,3*33  //ack
-	 * 	$PHLX900,703,3*32   //ack
-	 * 	$PHLX900,841,3*3B  //sport mode set ack
-	 * 	$PHLX900,842,3*38  //write mode set ack 
-	 * 	$PHLX900,901,3*3E   //ack
-	 * 	$PHLX900,902,3*3D   //ack
+	 * 	$PHLX900,702,3*33ï¿½ï¿½//ack
+	 * 	$PHLX900,703,3*32ï¿½ï¿½ï¿½//ack
+	 * 	$PHLX900,841,3*3Bï¿½ï¿½//sport mode set ack
+	 * 	$PHLX900,842,3*38ï¿½ï¿½//write mode set ackï¿½
+	 * 	$PHLX900,901,3*3Eï¿½ï¿½ï¿½//ack
+	 * 	$PHLX900,902,3*3Dï¿½ï¿½ï¿½//ack
 	 */
 	public static final String PHLX_ACK_GENERIC_ACK = "PHLX900";
 	
 	
 	/**
 	 * From GPS: Announce total data that will be sent:
-	 * $PHLX901,1312,500387F2*48 //sending 1312 bytes with checksum 500387F2?
+	 * $PHLX901,1312,500387F2*48ï¿½//sending 1312 bytes with checksum 500387F2?
 	 * Must confirm with:
 	 * $PHLX900,901,3*3E
 	 * 
@@ -267,7 +268,7 @@ public class HoluxConstants {
 
 	/**
 	 * From GPS: Announce chunk of data that will be sent:
-	 * $PHLX902,0,1312,500387F2*57 //firstchunk 1312 bytes with checksum 500387F2?
+	 * $PHLX902,0,1312,500387F2*57ï¿½//firstchunk 1312 bytes with checksum 500387F2?
 	 *                             // Starting at address 0
 	 * Must confirm with:
 	 * $PHLX900,902,3*3D
