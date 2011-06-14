@@ -25,7 +25,7 @@ public class TestBT747Cmd extends TestModelConnect {
 		IBlue747Model.main(new String[0]);
 		GPSrxtx.setDefaultGpsPortInstance(appPort);
 
-		String[] myargs = { "-E", "-start", "1971/06/01", "-end", "2010/06/30",
+		String[] myargs = { "-E", "-start", "1971/06/01-10:00:00", "-end", "2010/06/30-10:00:00",
 				"-agps-clear", "-agps-status", "-agps-url",
 				"file://" + getResourcePath(TEST_MTK14_FILE) };
 		BT747cmd.main(myargs);
