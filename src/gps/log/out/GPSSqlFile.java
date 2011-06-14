@@ -582,7 +582,7 @@ public final class GPSSqlFile extends GPSFile {
             recPost.append(" )");
 
             recPost.append(";\r\n");
-            rec.append(recPost);
+            rec.append(recPost.toString());
             recPost.setLength(0);
             writeTxt(rec.toString());
             rec.setLength(0);
