@@ -828,7 +828,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 		        endTime += timeOffset;
 		        c.setFilterEndTime((endTime));
 			} catch (java.text.ParseException e) {
-				System.out.println("Start date could not be parsed - ignoring start date.");
+				System.out.println("End date could not be parsed - ignoring start date.");
 			}
 		}
 
