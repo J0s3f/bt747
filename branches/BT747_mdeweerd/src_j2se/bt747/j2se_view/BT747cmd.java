@@ -824,7 +824,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 		                cal.get(Calendar.MONTH) + 1 - Calendar.JANUARY, cal
 		                        .get(Calendar.YEAR));
 		        int endTime = nd.dateToUTCepoch1970();
-		        endTime += (24 * 3600 - 1); // Round to midnight / End of day
+		        //endTime += (24 * 3600 - 1); // Round to midnight / End of day
 		        endTime += timeOffset;
 		        c.setFilterEndTime((endTime));
 			} catch (java.text.ParseException e) {
