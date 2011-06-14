@@ -32,9 +32,14 @@ import gps.mvc.MtkModel;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -51,6 +56,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Int;
@@ -220,6 +226,14 @@ public class BT747cmd implements bt747.model.ModelListener {
 	/** Filter parameter. */
 	private static final String OPT_MAX_PDOP = "max-pdop";
 
+	private static final String OPT_DATE_FORMAT = "yyyy/MM/dd";
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+			OPT_DATE_FORMAT);
+
+	/** Start date parameter. */
+	private static final String OPT_START_DATE = "start";
+	/** End date parameter. */
+	private static final String OPT_END_DATE = "end";
 	private int eraseTimeoutMs = 60000;
 
 	/**
@@ -590,7 +604,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 		if (Model.logFiles.size() != 0) {
 			for (int i = 0; i < Model.logFiles.size(); i++) {
 				LogFileInfo lfi = (LogFileInfo) Model.logFiles.elementAt(i);
-				System.out.println("Input file: " + lfi.getBT747Path().getPath());
+				System.out.println("Input file: "
+						+ lfi.getBT747Path().getPath());
 			}
 		}
 
@@ -753,6 +768,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 			c.setIntOpt(Model.FILETIMEOFFSET, offset * 3600);
 		}
 
+		int timeOffset = 0;
 		if (options.has(OPT_FILE_TIMEZONE)) {
 			final String tz = (String) options.valueOf(OPT_FILE_TIMEZONE);
 			int hour = 0;
@@ -770,8 +786,50 @@ public class BT747cmd implements bt747.model.ModelListener {
 				}
 
 			}
-			c.setIntOpt(Model.FILETIMEOFFSET, hour * 3600 + minute * 60
-					+ seconds);
+			timeOffset = hour * 3600 + minute * 60
+			+ seconds;
+			c.setIntOpt(Model.FILETIMEOFFSET, timeOffset);
+		}
+		
+		if (options.has(OPT_START_DATE)) {
+			try {
+				dateFormat.setLenient(true);
+				java.util.Date d = dateFormat.parse((String) options
+					.valueOf(OPT_START_DATE));
+				
+		        BT747Date nd;
+		        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")); // NO18N
+		        cal.setTime(d);
+		        nd = JavaLibBridge.getDateInstance(cal.get(Calendar.DAY_OF_MONTH),
+		                cal.get(Calendar.MONTH) + 1 - Calendar.JANUARY, cal
+		                        .get(Calendar.YEAR));
+		        int startTime = nd.dateToUTCepoch1970();
+		        startTime += timeOffset;
+		        c.setFilterStartTime((startTime));
+			} catch (java.text.ParseException e) {
+				System.out.println("Start date could not be parsed - ignoring start date.");
+			}
+		}
+
+		if (options.has(OPT_END_DATE)) {
+			try {
+				dateFormat.setLenient(true);
+				java.util.Date d = dateFormat.parse((String) options
+					.valueOf(OPT_END_DATE));
+				
+		        BT747Date nd;
+		        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")); // NO18N
+		        cal.setTime(d);
+		        nd = JavaLibBridge.getDateInstance(cal.get(Calendar.DAY_OF_MONTH),
+		                cal.get(Calendar.MONTH) + 1 - Calendar.JANUARY, cal
+		                        .get(Calendar.YEAR));
+		        int endTime = nd.dateToUTCepoch1970();
+		        endTime += (24 * 3600 - 1); // Round to midnight / End of day
+		        endTime += timeOffset;
+		        c.setFilterEndTime((endTime));
+			} catch (java.text.ParseException e) {
+				System.out.println("Start date could not be parsed - ignoring start date.");
+			}
 		}
 
 		if (options.has(OPT_MIN_SPEED)) {
@@ -1203,8 +1261,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 			if (options.has(OPT_DOWNLOAD)) {
 				c.setDownloadMethod(Model.DOWNLOAD_SMART);
 				if (options.has(OPT_DOWNLOAD_METHOD)) {
-					final String arg = ((String) options.valueOf(
-							OPT_DOWNLOAD_METHOD)).toLowerCase();
+					final String arg = ((String) options
+							.valueOf(OPT_DOWNLOAD_METHOD)).toLowerCase();
 					if (arg.equals("full")) {
 						c.setDownloadMethod(Model.DOWNLOAD_FULL);
 					} else if (arg.equals("smart")) {
@@ -1629,7 +1687,16 @@ public class BT747cmd implements bt747.model.ModelListener {
 				accepts(OPT_START,
 						"Perform HOT, WARM or COLD start.  FACTORY will set GPS to factory values.")
 						.withRequiredArg().describedAs("METHOD");
-
+				accepts(
+						OPT_START_DATE,
+						"Start date and time according to format'"
+								+ OPT_DATE_FORMAT + "'").withRequiredArg()
+						.describedAs("DATETIME").ofType(String.class);
+				accepts(
+						OPT_END_DATE,
+						"Enddate and time according to format'"
+								+ OPT_DATE_FORMAT + "'").withRequiredArg()
+						.describedAs("DATETIME").ofType(String.class);
 			}
 		};
 

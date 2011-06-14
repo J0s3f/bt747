@@ -15,18 +15,19 @@ import bt747.j2se_view.BT747cmd;
  */
 public class TestBT747Cmd extends TestModelConnect {
 
-    public static final String TEST_MTK14_FILE = "files/MTK14.EPO";
+	public static final String TEST_MTK14_FILE = "files/MTK14.EPO";
 
-    public static String getResourcePath(String rsc) {
-        return TestBT747CmdErase.class.getResource(rsc).getPath(); // getClass().getResource("test1.csv")
-    }
+	public static String getResourcePath(String rsc) {
+		return TestBT747CmdErase.class.getResource(rsc).getPath(); // getClass().getResource("test1.csv")
+	}
 
-    public static void main(String[] args) {
-        IBlue747Model.main(new String[0]);
-        GPSrxtx.setDefaultGpsPortInstance(appPort);
+	public static void main(String[] args) {
+		IBlue747Model.main(new String[0]);
+		GPSrxtx.setDefaultGpsPortInstance(appPort);
 
-        String[] myargs = { "-E", "-agps-clear",  "-agps-status", "-agps-url",
-                "file://" + getResourcePath(TEST_MTK14_FILE) };
-        BT747cmd.main(myargs);
-    }
+		String[] myargs = { "-E", "-start", "1971/06/01", "-end", "2010/06/30",
+				"-agps-clear", "-agps-status", "-agps-url",
+				"file://" + getResourcePath(TEST_MTK14_FILE) };
+		BT747cmd.main(myargs);
+	}
 }
