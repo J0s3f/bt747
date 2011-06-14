@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gps.mvc;
 
@@ -12,7 +12,7 @@ import bt747.sys.JavaLibBridge;
 
 /**
  * Model for Holux devices (PHLX command set) like the M-1000C.
- * 
+ *
  * @author Robert Tomanek <bt747.free.fr@mail.robert.tomanek.org>
  */
 public class HoluxModel extends MtkModel {
@@ -47,7 +47,7 @@ public class HoluxModel extends MtkModel {
 
     /**
      * Analyzes a PHLX command sent by the GPS device (i.e. a response)
-     * 
+     *
      * @param sNmea
      *            array of strings (command string split on commas)
      * @return good question
@@ -142,12 +142,12 @@ public class HoluxModel extends MtkModel {
         }
         return result;
     }
-    
-    private String deviceId = "???";
+
+	private String deviceId = "???";
     private String holuxFWVersion = "?.??";
     private int SportMode = 0;
     protected int logNbrTracks =0;
-    
+
     public boolean isTimeDistanceLogConditionExclusive() {
         return true;
     }

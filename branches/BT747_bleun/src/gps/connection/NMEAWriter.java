@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gps.connection;
 
@@ -10,14 +10,14 @@ import bt747.sys.JavaLibBridge;
 
 /**
  * @author Mario
- * 
+ *
  */
 public final class NMEAWriter {
     private static final char[] EOL_BYTES = { '\015', '\012' };
 
     /**
      * Adds $ to start of string and checksum (including star) before writing.
-     * 
+     *
      * @param context
      * @param packetNoCheckSum
      */
@@ -52,8 +52,12 @@ public final class NMEAWriter {
             Generic.debug("Not connected: skipped " + packetNoCheckSum);
         }
     }
-    
-    public final static void sendPacket(final GpsLinkHandler context,
+
+	public static void sendBinaryData(final GPSrxtx context, byte[] data) {
+		context.write(data);
+	}
+
+	public final static void sendPacket(final GpsLinkHandler context,
             final String packetNoCheckSum) {
         sendPacket(context.getGPSRxtx(), packetNoCheckSum);
     }
