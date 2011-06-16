@@ -41,7 +41,7 @@ import net.sf.bt747.test.models.Hlx260Simulation;
 
 /**
  * Implement a model of the BT747 (to run on PC).
- * 
+ *
  * @author Mario De Weerd
  */
 public class IBlue747Model {
@@ -75,7 +75,7 @@ public class IBlue747Model {
 
 	private byte[] logData = null;
     private static final String DEFAULT_LOG_FILE = "files/iBlue747_allfields.bin";
-    
+
 	private static String logFile = getResourcePath(DEFAULT_LOG_FILE);
 
 
@@ -99,7 +99,7 @@ public class IBlue747Model {
 	}
 
 	/**
-     * 
+     *
      */
 	public IBlue747Model() {
 
@@ -110,13 +110,13 @@ public class IBlue747Model {
 
 	/**
 	 * Main entry code of class.
-	 * 
+	 *
 	 * Should be called after instantiation.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws FileNotFoundException
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public void onStart() throws FileNotFoundException, IOException {
 		if (IBlue747Model.modelPort != null) {
@@ -177,6 +177,10 @@ public class IBlue747Model {
 		gpsTm.scheduleAtFixedRate(gpsTimerTask, 1000, 1000);
 	}
 
+	public void setSendGpsPosition(final boolean sendPosition) {
+		gpsTimerTask.sendPosition = sendPosition;
+	}
+
 	private GpsTimerTask gpsTimerTask = new GpsTimerTask();
 
 	private class GpsTimerTask extends TimerTask {
@@ -188,12 +192,8 @@ public class IBlue747Model {
 			this.gpsRxTx = gpsRxTx;
 		}
 
-		public void setSendGpsPosition(final boolean sendPosition) {
-			this.sendPosition = sendPosition;
-		}
-
 		/**
-         * 
+         *
          */
 		public GpsTimerTask() {
 			r.setLatitude(51.0);
@@ -228,7 +228,7 @@ public class IBlue747Model {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
@@ -261,9 +261,9 @@ public class IBlue747Model {
 
 	/**
 	 * Possible communication modes the device is in.
-	 * 
+	 *
 	 * @author Mario
-	 * 
+	 *
 	 */
 	public static enum DeviceMode {
 		DEVICE_MODE_NMEA, DEVICE_MODE_MTKBIN, DEVICE_MODE_WP, DEVICE_MODE_SIRFIII
@@ -272,7 +272,7 @@ public class IBlue747Model {
 	/**
 	 * Set the communication mode of the device. The device can communicate in
 	 * NMEA mode or MTKBIN mode.
-	 * 
+	 *
 	 * @param mode
 	 */
 	public final void setDeviceMode(final DeviceMode mode) {
@@ -300,7 +300,7 @@ public class IBlue747Model {
 	/**
 	 * Analyzes data receive on the serial link. The data is already in a
 	 * specific format.
-	 * 
+	 *
 	 * @param response
 	 */
 	private final void analyseResponse(final Object response) {
@@ -317,7 +317,7 @@ public class IBlue747Model {
 
 	/**
 	 * Analyze and respond to binary MTK data.
-	 * 
+	 *
 	 * @param msg
 	 */
 	private final void analyseMtkBinData(final MtkBinTransportMessageModel msg) {
@@ -440,7 +440,7 @@ public class IBlue747Model {
 
 	/**
 	 * Respond to log specific functionality (PMTK182).
-	 * 
+	 *
 	 * @param p_nmea
 	 * @return 0 if all went ok.
 	 */
@@ -1043,7 +1043,7 @@ public class IBlue747Model {
 
 	/**
 	 * This class's main in case it is run independently.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(final String args[]) {

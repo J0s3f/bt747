@@ -15,10 +15,10 @@ import java.util.List;
 public class Holux260Model extends HoluxModel {
 	public static final int TRACK_INFO_SIZE = 64;
 
-	private static final int POS_NAME =  0;
-	private static final int POS_DATE = POS_NAME + 16;
+	private static final int POS_NAME = 4;
+	private static final int POS_DATE = 16;
 	private static final int POS_DURA = POS_DATE + 4;
-	private static final int POS_DIST = POS_DURA + 2;
+	private static final int POS_DIST = POS_DURA + 4;
 	private static final int POS_MAXS = 36;
 	private static final int POS_AVGS = POS_MAXS + 2;
 
@@ -63,37 +63,54 @@ public class Holux260Model extends HoluxModel {
 
 	/**
 	 * Track info records are stored in 64 bytes with the following format:
-	 * Offset	Content
-	 *	0		NNNNNNNNNNNNNNNN
-	 * 16		TTTTDDLLLLuuuuuu
-	 * 32		uuuuXXAACCuuuuuu
-	 * 48		uuuuuuuuuuuuuuuu
+	 * Offset Content
+	 * 00 uuUuNNNNNNNNNNNu
+	 * 16 TTTTDDDDLLLLSSSS
+	 * 32 ZZZZXXAAIIuuuuuu
+	 * 48 uuuuuuuuuuuuuuuu
 	 *
-	 * N		Name
-	 * T		32 Bit start date (seconds since 1981-01-01, 00:00:00)
-	 * D		16 Bit duration (s)
-	 * L		32 Bit track length (m)
-	 * X		16 Bit max speed (km/h * 10)
-	 * A		16 Bit avg speed (km/h * 10)
-	 * C		16 Bit energy demand (calorie)
+	 * Starts with FF00 00FF/03FF.
+	 * The 03 or 00 could indicate the 'upload' status (03 if already
+	 * transfered).
+	 *
+	 * U  1 Byte	Upload status (0: new, 3: already transfered)
+	 * N 11 Char	Name, terminated with 0x00, plain ASCII
+	 * T 32 Bit		start date (seconds since 1981-01-01, 00:00:00), LSb first
+	 * D 32 Bit		Duration (s) LSb first
+     * S 32 Bit		OFFSET in LOG  (bytes or position index)
+     * Z 32 Bit		Size in LOG   [S+Z = the S value in the next block]
+	 * L 32 Bit		Track length (m)
+	 * X 16 Bit		Max. speed (km/h * 10)
+	 * A 16 Bit		Avg. speed (km/h * 10)
+	 * I 16 Bit		Intensity (calorie)
 	 *
 	 * u		unknown
-	 *
-	 * fixme:
-	 * Start date and duration, both 32 bit values, seem to have different
-	 * byte order!?
 	 */
 	public static List<HoluxTrackInfo> getTrackInfo(byte[] data) {
 		List<HoluxTrackInfo> trackInfoList = new ArrayList(data.length / TRACK_INFO_SIZE);
+		StringBuilder sb = new StringBuilder(12);
 
 		int pos = 0;
 		while (pos + TRACK_INFO_SIZE <= data.length) {
 			HoluxTrackInfo info = new HoluxTrackInfo();
+
+			sb.setLength(0);
+			for (int index = POS_NAME; index < 11; index++) {
+				int ch = data[pos + index] & 0xff;
+
+				if (ch == 0 || ch == 0xff) {
+					break;
+				}
+				sb.append((char)ch);
+			}
+			if (sb.length() > 0) {
+				info.setTrackName(sb.toString());
+			}
 			info.setStartDate(getCalendar(get32BitIntLH(data, pos + POS_DATE)).getTime());
-			info.setDuration(get16BitInt(data, pos + POS_DURA));
-			info.setDistance(get32BitIntHL(data, pos + POS_DIST));
-			info.setMaxSpeed(getScaled(get16BitInt(data, pos + POS_MAXS), 10));
-			info.setAvgSpeed(getScaled(get16BitInt(data, pos + POS_AVGS), 10));
+			info.setDuration(get32BitIntLH(data, pos + POS_DURA));
+			info.setDistance(get32BitIntLH(data, pos + POS_DIST));
+			info.setMaxSpeed(getScaled(get16BitIntLH(data, pos + POS_MAXS), 10));
+			info.setAvgSpeed(getScaled(get16BitIntLH(data, pos + POS_AVGS), 10));
 
 			pos += TRACK_INFO_SIZE;
 			trackInfoList.add(info);
@@ -106,20 +123,13 @@ public class Holux260Model extends HoluxModel {
 	}
 
 	private static int get32BitIntLH(byte[] data, int pos) {
-		int l = get16BitInt(data, pos);
-		int h = get16BitInt(data, pos + 2);
+		int l = get16BitIntLH(data, pos);
+		int h = get16BitIntLH(data, pos + 2);
 
 		return (h << 16) + l;
 	}
 
-	private static int get32BitIntHL(byte[] data, int pos) {
-		int h = get16BitInt(data, pos);
-		int l = get16BitInt(data, pos + 2);
-
-		return (h << 16) + l;
-	}
-
-	private static int get16BitInt(byte[] data, int pos) {
+	private static int get16BitIntLH(byte[] data, int pos) {
 		int l = data[pos + 0] & 0xff;
 		int h = data[pos + 1] & 0xff;
 
@@ -201,7 +211,7 @@ public class Holux260Model extends HoluxModel {
 				cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH) + 1,
 				cal.get(Calendar.DAY_OF_MONTH),
-				cal.get(Calendar.HOUR),
+				cal.get(Calendar.HOUR_OF_DAY),
 				cal.get(Calendar.MINUTE));
 		}
 

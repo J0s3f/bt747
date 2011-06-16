@@ -28,8 +28,9 @@ public class Hlx260Simulation extends HlxController {
 	public Hlx260Simulation(final IBlue747Model mtkDeviceModel) {
 		super(mtkDeviceModel);
 
-		hlxData.holuxDeviceName = "GPSport260";
+		mtkDeviceModel.setSendGpsPosition(false);
 		mtkDeviceModel.mtkData.swVersion = "201";
+		hlxData.holuxDeviceName = "GPSport260";
 	}
 
 	@Override
@@ -202,11 +203,12 @@ public class Hlx260Simulation extends HlxController {
 
 		int track = 1;
 		for (HoluxTrackInfo info : Holux260Model.getTrackInfo(data)) {
-			System.out.println(String.format("%02d) %s, %8s, %s",
+			System.out.println(String.format("%02d) %s, %8s, %s (%s)",
 				track++,
 				format(info.getStartDate()),
 				info.getHumanReadableDistance(),
-				info.getHumanReadableDuration()));
+				info.getHumanReadableDuration(),
+				info.getName()));
 		}
 	}
 }
