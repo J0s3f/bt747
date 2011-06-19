@@ -908,10 +908,10 @@ public final class J2SEAppController extends J2SEController {
             "com.sun.java.swing.plaf.gtk.GTKLookAndFeel", // NOI18N
             "com.sun.java.swing.plaf.motif.MotifLookAndFeel", // NOI18N
             "javax.swing.plaf.metal.MetalLookAndFeel", // NOI18N
-            "javax.swing.plaf.mac.MacLookAndFeel", // NOI18N
             "com.apple.mrj.swing.MacLookAndFeel", // NOI18N
-            "apple.laf.AquaLookAndFeel" // NOI18N
-    }; // NOI18N
+            "apple.laf.AquaLookAndFeel", // NOI18N
+            "javax.swing.plaf.mac.MacLookAndFeel", // NOI18N
+            }; // NOI18N
     /** Index for Mac look and feel */
     private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
     /**
