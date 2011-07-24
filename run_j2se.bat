@@ -35,6 +35,8 @@ REM set CLASSPATH=%RXTXPATH%\RXTXcomm-debug.jar;%CLASSPATH%
 REM Change javaw to java in next line to see startup and debug messages
 if x"%*"==x"debug" goto debug:
 if NOT x"%*"==x"" goto cmdline:
+echo %CLASSPATH%
+echo java %MEM_HEAP_OPTION% %DEBUG_OPTION% bt747.j2se_view.BT747Main %*
 START javaw %MEM_HEAP_OPTION% %DEBUG_OPTION% bt747.j2se_view.BT747Main %*
 goto end:
 :cmdline
