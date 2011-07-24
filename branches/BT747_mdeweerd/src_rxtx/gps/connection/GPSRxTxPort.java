@@ -291,6 +291,9 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			"/dev/tty.BlumaxBT-GPS-SPPSlave" // Port for Blumax device
 	};
 
+	private static final String[] possibleUsbPorts = { "/dev/cu.usbmodemfd110",
+			"/dev/tty.usbmodemfd110", };
+
 	/**
 	 * Set a bluetooth connection.
 	 */
@@ -317,7 +320,9 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	 *            list of prefixes for ports that will be appended with an
 	 *            index.
 	 * @param maxIdx
-	 *            maximum index for ports.
+	 *            maximum appended index for ports.
+	 *            By setting this index to '-1' and 'extra' to "" only the basename
+	 *            in the prefixes list is checked.
 	 * @return port if a valid port was found and set, otherwise null
 	 */
 	private final synchronized String getPortFromPrefixes(
@@ -409,6 +414,10 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem620";
 			portFound = isValidPort(portName);
+		}
+		if (!portFound) {
+			portName = getPortFromPrefixes(possibleUsbPorts, -1, "");
+			portFound = portName != null;
 		}
 		if (!portFound) {
 			portName = null;
