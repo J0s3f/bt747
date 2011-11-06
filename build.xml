@@ -182,6 +182,7 @@
 		<copy file="dev/pkgbuild.tmpl" tofile="${dist}/bt747_dev/PKGBUILD" />
 		<checksum file="pack/BT747_${build_version}.${build.current.revision}_full.zip" property="zip.md5" />
 		<copy file="dev/bt747.desktop" tofile="${dist}/bt747_dev/bt747.desktop" />
+		<checksum file="pack/BT747_${build_version}.${build.current.revision}_full.zip" property="zip.md5" />
 		<copy file="dev/bt747.install" tofile="${dist}/bt747_dev/bt747.install" />
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%VERSION%" replace='${build_version}.${build.current.revision}' flags="g" />
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%MD5SUM%" replace='${zip.md5}' />
