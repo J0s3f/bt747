@@ -17,7 +17,6 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Download/swingx-ws-2008_11_30-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jdic.jar" sourcepath="C:/Download/jdic-0.9.5-src.zip"/>
 	<classpathentry kind="lib" path="lib/sanselan-0.97-incubator.jar" sourcepath="lib/sanselan-0.97-incubator-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jchart2d-3.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v056.jar"/>
