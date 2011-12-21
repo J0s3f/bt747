@@ -63,4 +63,6 @@ CLASSPATH="${RXTXJAR}:$CLASSPATH"
 MEM_HEAP_OPTION=-Xmx192m
 #CLASSPATH="${RXTXPATH}/RXTXcomm-debug.jar:$CLASSPATH"
 #DEBUG_OPTION='-Dgnu.io.log.mode=FILE_MODE'
-"$JAVA" $MEM_HEAP_OPTION $DEBUG_OPTION -Djava.library.path="${RXTXLIBPATH}" bt747.j2se_view.BT747Main $* &
+#Next line will disable BT747 setting 'java.net.useSystemProxies' to true.
+#NOPROXY_OPTION='-Dbt747.disableForceSystemProxies'
+"$JAVA" $MEM_HEAP_OPTION $DEBUG_OPTION $NOPROXY_OPTION -Djava.library.path="${RXTXLIBPATH}" bt747.j2se_view.BT747Main $* &
