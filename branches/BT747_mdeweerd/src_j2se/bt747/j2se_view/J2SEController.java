@@ -87,8 +87,9 @@ public class J2SEController extends Controller {
         // Currently usingn the simple hint:
         boolean enable=model.getBooleanOpt(Model.IS_ENABLE_PROXY);
         try {
-        	System.getProperty("bt747.disableForceSystemProxies");
+        	if(System.getProperty("bt747.disableForceSystemProxies")!=null) {
                 enable = false;
+        	}
         } catch( IllegalArgumentException e) {
         }
       	System.setProperty("java.net.useSystemProxies", enable? "true":"false");
