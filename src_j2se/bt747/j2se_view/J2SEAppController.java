@@ -257,6 +257,7 @@ public final class J2SEAppController extends J2SEController {
      *            The model to associate with this controller.
      */
     public J2SEAppController(final J2SEAppModel model) {
+    	J2SEController.setSystemProxies(model);
         m = model;
         c = this; // Temporary solution until application controller methods
 
