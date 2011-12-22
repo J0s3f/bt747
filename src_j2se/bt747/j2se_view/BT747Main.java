@@ -1533,6 +1533,10 @@ public class BT747Main extends javax.swing.JFrame implements
 			final J2SEAppModel m = new J2SEAppModel();
 			final J2SEAppController c = new J2SEAppController(m);
 
+			{
+				J2SEController.setSystemProxies(m);
+			}
+			
 			public final void run() {
 				final BT747Main app = new BT747Main(m, c);
 				try {
