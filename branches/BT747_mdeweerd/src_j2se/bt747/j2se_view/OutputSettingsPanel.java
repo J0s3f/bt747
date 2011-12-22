@@ -153,6 +153,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         updateHeightDigitsCombo();
         cbAddWayPointComment.setSelected((m.getBooleanOpt(Model.IS_WRITE_WAYPOINT_COMMENT)));
         cbLogConditions.setSelected(m.getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
+        cbEnableProxy.setSelected(m.getBooleanOpt(Model.IS_ENABLE_PROXY));
     }
 
     private void adjustHeightCombo() {
@@ -306,6 +307,8 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         lbLatLonDigits = new javax.swing.JLabel();
         cbHeightDigits = new javax.swing.JComboBox();
         lbHeightDigits = new javax.swing.JLabel();
+        pnAppSettings = new javax.swing.JPanel();
+        cbEnableProxy = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnGUISettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnGUISettings.border.title"))); // NOI18N
@@ -521,7 +524,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                     .add(txtHeight))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbRecordNumberInfoInLog)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 11, Short.MAX_VALUE)
                 .add(cbImperialUnits))
         );
 
@@ -994,7 +997,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         pnMissingPanel.setLayout(pnMissingPanelLayout);
         pnMissingPanelLayout.setHorizontalGroup(
             pnMissingPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 125, Short.MAX_VALUE)
+            .add(0, 149, Short.MAX_VALUE)
             .add(pnMissingPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(pnMissingPanelLayout.createSequentialGroup()
                     .add(0, 0, Short.MAX_VALUE)
@@ -1003,7 +1006,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         );
         pnMissingPanelLayout.setVerticalGroup(
             pnMissingPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 29, Short.MAX_VALUE)
+            .add(0, 31, Short.MAX_VALUE)
             .add(pnMissingPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(pnMissingPanelLayout.createSequentialGroup()
                     .add(0, 3, Short.MAX_VALUE)
@@ -1115,21 +1118,56 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 .add(0, 0, 0))
         );
 
+        pnAppSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OutputSettingsPanel.pnAppSettings.border.title"))); // NOI18N
+
+        cbEnableProxy.setText(bundle.getString("OutputSettingsPanel.cbEnableProxy.text")); // NOI18N
+        cbEnableProxy.setToolTipText(bundle.getString("OutputSettingsPanel.cbEnableProxy.toolTipText")); // NOI18N
+        cbEnableProxy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbEnableProxyActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnAppSettingsLayout = new org.jdesktop.layout.GroupLayout(pnAppSettings);
+        pnAppSettings.setLayout(pnAppSettingsLayout);
+        pnAppSettingsLayout.setHorizontalGroup(
+            pnAppSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnAppSettingsLayout.createSequentialGroup()
+                .add(cbEnableProxy)
+                .addContainerGap(138, Short.MAX_VALUE))
+        );
+        pnAppSettingsLayout.setVerticalGroup(
+            pnAppSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnAppSettingsLayout.createSequentialGroup()
+                .add(cbEnableProxy)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        cbEnableProxy.getAccessibleContext().setAccessibleName(bundle.getString("OutputSettingsPanel.jCheckBox1.AccessibleContext.accessibleName")); // NOI18N
+        cbEnableProxy.getAccessibleContext().setAccessibleDescription(bundle.getString("OutputSettingsPanel.jCheckBox1.AccessibleContext.accessibleDescription")); // NOI18N
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(pnAppSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(layout.createSequentialGroup()
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnAppSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
+
+        pnAppSettings.getAccessibleContext().setAccessibleName(bundle.getString("OutputSettingsPanel.pnAppSettings.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbLanguageChooserItemStateChanged(
@@ -1541,12 +1579,21 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         }
     }//GEN-LAST:event_cbLogConditionsStateChanged
 
+    private void cbEnableProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEnableProxyActionPerformed
+        boolean orgValue = m.getBooleanOpt(Model.IS_ENABLE_PROXY);
+        boolean newValue = cbEnableProxy.isSelected();
+        if (orgValue != newValue) {
+            c.setBooleanOpt(Model.IS_ENABLE_PROXY, newValue);
+        }
+    }//GEN-LAST:event_cbEnableProxyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
     private javax.swing.JCheckBox cbAddWayPointComment;
     private javax.swing.JCheckBox cbCreatMissingFields;
     private javax.swing.JComboBox cbDistanceCalculation;
+    private javax.swing.JCheckBox cbEnableProxy;
     private javax.swing.JCheckBox cbFileAzimuth;
     private javax.swing.JCheckBox cbFileDAGE;
     private javax.swing.JCheckBox cbFileDSTA;
@@ -1594,6 +1641,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     private javax.swing.JLabel lbMinPause;
     private javax.swing.JLabel lbNewTrackAfter;
     private javax.swing.JLabel lbNewTrackAfterDistance;
+    private javax.swing.JPanel pnAppSettings;
     private javax.swing.JPanel pnDigits;
     private javax.swing.JPanel pnFileOutputFieldInner;
     private javax.swing.JPanel pnFileOutputFields;

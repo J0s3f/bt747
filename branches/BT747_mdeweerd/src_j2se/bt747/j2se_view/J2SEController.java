@@ -82,11 +82,13 @@ public class J2SEController extends Controller {
         // http://www.java-tips.org/java.net/how-to-detect-proxy-settings-for-internet-connection.html
 
         // Currently usingn the simple hint:
+        boolean enable=this.m.getBooleanOpt(Model.IS_ENABLE_PROXY);
         try {
         	System.getProperty("bt747.disableForceSystemProxies");
+                enable = false;
         } catch( IllegalArgumentException e) {
-        	System.setProperty("java.net.useSystemProxies", "true");
         }
+      	System.setProperty("java.net.useSystemProxies", enable? "true":"false");
     }
 
     /**
