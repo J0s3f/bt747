@@ -47,6 +47,9 @@ public class J2SEController extends Controller {
      */
     public J2SEController() {
         super();
+    }
+    
+    private void setSystemProxies() {
 
         // Some information gathered regarding proxies.
         // In JDK 5 apparently you can set the java.net.useSystemProxies to
@@ -97,6 +100,7 @@ public class J2SEController extends Controller {
     public void setModel(final Model m) {
         super.setModel(m);
         this.m = m;
+        setSystemProxies();
         updateUseGeoid();
     }
 
