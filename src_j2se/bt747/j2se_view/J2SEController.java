@@ -39,7 +39,7 @@ public class J2SEController extends Controller {
      */
     public J2SEController(final Model model) {
         super(model);
-        m = model;
+        setModel(m);
     }
 
     /**
