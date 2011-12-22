@@ -63,6 +63,7 @@ import bt747.sys.interfaces.BT747Vector;
 // The model will notify changes.
 public class AppSettings implements BT747Thread {
 
+	public static boolean DefaultEnableProxy = true;
 	/**
 	 * Google map file name (basename).
 	 */
@@ -853,8 +854,7 @@ public class AppSettings implements BT747Thread {
 			/* fall through */
 
 		case 57:
-			setBooleanOpt(IS_ENABLE_PROXY, !(java.lang.System
-					.getProperty("os.name").startsWith("Linux")));
+			setBooleanOpt(IS_ENABLE_PROXY, DefaultEnableProxy);
 			setStringOpt(AppSettings.VERSION, "0.58");
 
 			/* fall through */
