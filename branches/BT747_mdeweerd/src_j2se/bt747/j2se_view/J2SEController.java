@@ -49,7 +49,7 @@ public class J2SEController extends Controller {
         super();
     }
     
-    private void setSystemProxies() {
+    public final static void setSystemProxies(final Model model) {
 
         // Some information gathered regarding proxies.
         // In JDK 5 apparently you can set the java.net.useSystemProxies to
@@ -85,7 +85,7 @@ public class J2SEController extends Controller {
         // http://www.java-tips.org/java.net/how-to-detect-proxy-settings-for-internet-connection.html
 
         // Currently usingn the simple hint:
-        boolean enable=this.m.getBooleanOpt(Model.IS_ENABLE_PROXY);
+        boolean enable=model.getBooleanOpt(Model.IS_ENABLE_PROXY);
         try {
         	System.getProperty("bt747.disableForceSystemProxies");
                 enable = false;
@@ -100,7 +100,7 @@ public class J2SEController extends Controller {
     public void setModel(final Model m) {
         super.setModel(m);
         this.m = m;
-        setSystemProxies();
+        setSystemProxies(m);
         updateUseGeoid();
     }
 
