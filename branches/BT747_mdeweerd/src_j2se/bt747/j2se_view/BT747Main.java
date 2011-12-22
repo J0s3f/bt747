@@ -77,6 +77,8 @@ public class BT747Main extends javax.swing.JFrame implements
 		if (!GPSrxtx.hasDefaultPortInstance()) {
 			GPSrxtx.setDefaultGpsPortInstance(new gps.connection.GPSRxTxPort());
 		}
+		AppSettings.DefaultEnableProxy = !(java.lang.System
+				.getProperty("os.name").startsWith("Linux"));
 	}
 
 	/**
