@@ -2172,7 +2172,7 @@ public class AppSettings implements BT747Thread {
 			{ AppSettings.INT, AppSettings.SPEED_DISPLAY_OPTION,
 					AppSettings.SPEED_DISPLAY_OPTION_IDX,
 					AppSettings.SPEED_DISPLAY_OPTION_SIZE },
-			{ AppSettings.INT, AppSettings.IS_ENABLE_PROXY,
+			{ AppSettings.BOOL, AppSettings.IS_ENABLE_PROXY,
 					AppSettings.IS_ENABLE_PROXY_IDX,
 					AppSettings.IS_ENABLE_PROXY_SIZE },
 	// End of list
