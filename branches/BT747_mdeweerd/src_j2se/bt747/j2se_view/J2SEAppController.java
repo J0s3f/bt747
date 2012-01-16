@@ -396,7 +396,7 @@ public final class J2SEAppController extends J2SEController {
 		// gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION,
 		// osmDialog.getDescription());
 		if (doConvertLog(intermediateLogType, gpsFile,
-		        getOutFileExt(intermediateLogType)) != 0) {
+		        "_tmp"+getOutFileExt(intermediateLogType)) != 0) {
 		    reportError(c.getLastError(), c.getLastErrorInfo());
 		}
 	}
