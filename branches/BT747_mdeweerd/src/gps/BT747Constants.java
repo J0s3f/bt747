@@ -1061,11 +1061,14 @@ public final class BT747Constants { // dev as in device
 			{ Model.MULTI_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
 			{ Model.POSTGIS_LOGTYPE, BT747Constants.HEIGHT_MSL },
 			{ Model.SQL_LOGTYPE, BT747Constants.HEIGHT_MSL },
-			{ Model.SONYTRACKERRESULT_LOGTYPE, BT747Constants.HEIGHT_MSL }, };
+			{ Model.SONYTRACKERRESULT_LOGTYPE, BT747Constants.HEIGHT_MSL },
+			{ Model.WPT_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+			{ Model.EXTERNAL_GPS2KML_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+			};
 	/**
 	 * The reference for the height in the given format
 	 */
-	private final static int[] heightReferenceList = new int[20];
+	private final static int[] heightReferenceList = new int[22];
 
 	public final static int getHeightReference(final int type) {
 		if ((type >= 0) && (type < BT747Constants.heightReferenceList.length)) {

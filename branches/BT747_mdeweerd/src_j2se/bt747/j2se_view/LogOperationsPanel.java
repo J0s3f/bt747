@@ -102,7 +102,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                 getString("NMEA_Description"), getString("OZI_Description"),
                 getString("Compe_Description"), getString("SQL_Description"),
                 getString("GoogleStaticURL_Description"),
-                getString("POSTGIS_Description"), }));
+                getString("POSTGIS_Description"),
+                getString("C_GPS2KML_Description"),
+                }));
         cbDownloadMethod.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { getString("DOWNLOAD_INCREMENTAL"),
                         getString("DOWNLOAD_FULL"),
@@ -1204,6 +1206,8 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             selectedFormat = Model.SQL_LOGTYPE;
         } else if (selected.equals(getString("GoogleStaticURL_Description"))) {
             selectedFormat = Model.GOOGLE_MAP_STATIC_URL_LOGTYPE;
+        } else if (selected.equals(getString("C_GPS2KML_Description"))) {
+            selectedFormat = Model.EXTERNAL_GPS2KML_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
         }
