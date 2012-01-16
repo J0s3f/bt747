@@ -320,6 +320,7 @@ public class Controller implements ModelListener {
 	public final GPSFile getOutFileHandler(final int logType) {
 		GPSFile gpsFile = null;
 		switch (logType) {
+		case Model.EXTERNAL_GPS2KML_LOGTYPE:
 		case Model.CSV_LOGTYPE:
 			gpsFile = new GPSCSVFile();
 			break;
@@ -480,6 +481,7 @@ public class Controller implements ModelListener {
 		String ext; // For debug
 		switch (logType) {
 		case Model.CSV_LOGTYPE:
+		case Model.EXTERNAL_GPS2KML_LOGTYPE:
 			ext = ".csv";
 			break;
 		case Model.TRK_LOGTYPE:
@@ -693,6 +695,14 @@ public class Controller implements ModelListener {
 							| (1 << BT747Constants.FMT_MILLISECOND_IDX)
 							| (1 << BT747Constants.FMT_HEIGHT_IDX)));
 
+		} else if (logOutType == Model.EXTERNAL_GPS2KML_LOGTYPE) {
+			gpsFile.getParamObject().setBoolParam(
+					GPSConversionParameters.TRK_COMMENT, false);
+			gpsFile.getParamObject().setBoolParam(
+					GPSConversionParameters.WAY_COMMENT, false);
+			gpsFile.setIncludeTrkName(false);
+			gpsFile.setOutputFields(GPSRecord
+					.getLogFormatRecord(0xFFFFFFFF));
 		}
 
 		if (Generic.isDebug()) {

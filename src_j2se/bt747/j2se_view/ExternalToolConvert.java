@@ -83,7 +83,7 @@ public final class ExternalToolConvert extends GpsFileProxyTemplate {
                     BT747Hashtable ht = JavaLibBridge.getHashtableInstance(5);
                     ht.put("f", fileName);
                     Generic.debug(new String(et.execTool(ht)));
-                    (new J2SERAFile(fileName)).delete();
+                    //(new J2SERAFile(fileName)).delete();
                 } catch (Exception e) {
                     // TODO: improve upload error message handling.
                     Generic.exception("External tool error for "

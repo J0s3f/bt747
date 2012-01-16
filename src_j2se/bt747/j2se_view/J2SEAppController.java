@@ -350,35 +350,10 @@ public final class J2SEAppController extends J2SEController {
             }
             break;
         case Model.EXTERNAL_LOGTYPE:
-            ExternalConversionDialog extDialog = new ExternalConversionDialog(
-                    rootFrame, true);
-            extDialog.setExternalProgram(m
-                    .getStringOpt(AppSettings.EXTCOMMAND));
-            extDialog.setIntermediateFormatType(m
-                    .getIntOpt(AppSettings.EXTTYPE));
-            extDialog.setVisible(true);
-            if (extDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
-                int intermediateLogType = extDialog
-                        .getIntermediateFormatType();
-                String command = extDialog.getExternalProgram();
-                c.setStringOpt(AppSettings.EXTCOMMAND, command);
-                c.setIntOpt(AppSettings.EXTTYPE, intermediateLogType);
-
-                final GPSFile tmpFile = getOutFileHandler(intermediateLogType);
-
-                ExternalToolConvert gpsFile = new ExternalToolConvert(tmpFile);
-                gpsFile.getParamObject().setParam(
-                        GPSConversionParameters.EXT_COMMAND, command);
-                // osmDialog.getVisibility());
-                // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS,
-                // osmDialog.getTags());
-                // gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION,
-                // osmDialog.getDescription());
-                if (doConvertLog(intermediateLogType, gpsFile,
-                        getOutFileExt(intermediateLogType)) != 0) {
-                    reportError(c.getLastError(), c.getLastErrorInfo());
-                }
-            }
+            doPresetExternalTool();
+            break;
+        case Model.EXTERNAL_GPS2KML_LOGTYPE:
+            doExternalTool(Model.EXTERNAL_GPS2KML_LOGTYPE, J2SEAppController.getString("EXT_GPS2KML_COMMAND"));
             break;
         default:
             if (doConvertLog(logType) != 0) {
@@ -388,6 +363,43 @@ public final class J2SEAppController extends J2SEController {
         }
         m.getPositionData().userWaypointsUpdated();
     }
+
+    
+	private void doPresetExternalTool() {
+		ExternalConversionDialog extDialog = new ExternalConversionDialog(
+		        rootFrame, true);
+		extDialog.setExternalProgram(m
+		        .getStringOpt(AppSettings.EXTCOMMAND));
+		extDialog.setIntermediateFormatType(m
+		        .getIntOpt(AppSettings.EXTTYPE));
+		extDialog.setVisible(true);
+		if (extDialog.getReturnStatus() == OsmUploadDialog.RET_OK) {
+		    int intermediateLogType = extDialog
+		            .getIntermediateFormatType();
+		    String command = extDialog.getExternalProgram();
+		    c.setStringOpt(AppSettings.EXTCOMMAND, command);
+		    c.setIntOpt(AppSettings.EXTTYPE, intermediateLogType);
+
+		    doExternalTool(intermediateLogType, command);
+		}
+	}
+
+	private void doExternalTool(int intermediateLogType, String command) {
+		final GPSFile tmpFile = getOutFileHandler(intermediateLogType);
+
+		ExternalToolConvert gpsFile = new ExternalToolConvert(tmpFile);
+		gpsFile.getParamObject().setParam(
+		        GPSConversionParameters.EXT_COMMAND, command);
+		// osmDialog.getVisibility());
+		// gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_TAGS,
+		// osmDialog.getTags());
+		// gpsFile.getParamObject().setParam(GPSConversionParameters.OSM_DESCRIPTION,
+		// osmDialog.getDescription());
+		if (doConvertLog(intermediateLogType, gpsFile,
+		        getOutFileExt(intermediateLogType)) != 0) {
+		    reportError(c.getLastError(), c.getLastErrorInfo());
+		}
+	}
 
     /**
      * Convert the log into an array of trackpoints.

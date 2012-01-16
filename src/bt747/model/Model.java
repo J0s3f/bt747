@@ -156,6 +156,10 @@ public class Model extends AppSettings implements GPSListener, EventPoster {
      */
     public static final int WPT_LOGTYPE = 21;  
     /**
+     * Compe GPS log type (Writes PLT and WPT files).
+     */
+    public static final int EXTERNAL_GPS2KML_LOGTYPE = 22;  
+    /**
      * The number of seconds in a day.
      */
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;
