@@ -977,7 +977,8 @@ public abstract class GPSFile implements GPSFileInterface {
     protected void writeTxt(final String s) {
         try {
             if (outFile != null) {
-                outFile.writeBytes(s.getBytes(), 0, s.length());
+            	byte[] b = JavaLibBridge.getUTF8Bytes(s);
+                outFile.writeBytes(b, 0, b.length);
             } else {
                 Generic.debug(Txt.WRITING_CLOSED, null);
             }

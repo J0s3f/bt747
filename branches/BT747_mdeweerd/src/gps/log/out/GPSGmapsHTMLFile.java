@@ -78,7 +78,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 + "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n"
                 + "<head>\r\n"
                 + "<title>KML to Google Maps converter using PHP </title>\r\n"
-                + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n"
+                + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\" />\r\n"
                 + "<meta name=\"description\" content=\"test - powered by Google Maps\" />\r\n"
                 + "\r\n"
                 + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp\" type=\"text/javascript\">\r\n"

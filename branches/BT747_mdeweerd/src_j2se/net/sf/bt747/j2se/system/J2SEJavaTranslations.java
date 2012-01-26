@@ -13,9 +13,11 @@
 // ********************************************************************
 package net.sf.bt747.j2se.system;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747HashSet;
@@ -264,4 +266,14 @@ public final class J2SEJavaTranslations implements JavaLibImplementation {
         out = NRCDecoder.decode(s);
         return out;
     }
+
+	@Override
+	public byte[] getUTF8Bytes(String s) {
+		try {
+			return s.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			Generic.debug("Issue converting string to UTF8",e);
+		}
+		return new byte[0];
+	}
 }
