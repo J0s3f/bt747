@@ -263,4 +263,8 @@ public final class WabaJavaTranslations implements JavaLibImplementation {
     public final String convertHTMLtoUTF8(final String s) {
         return s;
     }
+
+	public byte[] getUTF8Bytes(String s) {
+		return s.getBytes();
+	}
 }

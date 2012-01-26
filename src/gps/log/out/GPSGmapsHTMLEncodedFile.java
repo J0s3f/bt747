@@ -128,7 +128,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         l_header
                 .append("</title>\n"
                         + "<meta http-equiv=\"Content-Type\" "
-                        + "content=\"text/html; charset=utf-8\" />\n"
+                        + "content=\"text/html; charset=utf8\" />\n"
                         + "<meta name=\"description\" "
                         + "content=\"Tracks - Generated with BT747 V"
                         + Version.VERSION_NUMBER

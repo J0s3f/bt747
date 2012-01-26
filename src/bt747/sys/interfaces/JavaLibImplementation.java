@@ -204,4 +204,8 @@ public interface JavaLibImplementation {
      */
     String convertHTMLtoUTF8(final String s);
 
+    /**
+     * getBytes from string as UTF8 encoded byte[] array.
+     */
+    byte[] getUTF8Bytes(final String s);
 }

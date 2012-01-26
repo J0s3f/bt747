@@ -293,4 +293,8 @@ public final class JavaLibBridge {
     public static final String convertHTMLtoUTF8(final String s) {
         return JavaLibBridge.imp.convertHTMLtoUTF8(s);
     }
+    
+    public static final byte[] getUTF8Bytes(final String s) {
+    	return JavaLibBridge.imp.getUTF8Bytes(s);
+    }
 }
