@@ -52,6 +52,14 @@ public final class GPSCSVFile extends GPSFile {
     private int posDigits;
     private int heightDigits;
     
+    /**
+     * Data added at the start of each line.
+     */
+    private String dataPrefix;
+    /**
+     * Snippet added at the start of the header.
+     */
+    private String headerPrefix;
 
     /*
      * (non-Javadoc)
@@ -97,6 +105,18 @@ public final class GPSCSVFile extends GPSFile {
         } else {
             heightDigits = 3;
         }
+        
+        if(getParamObject().hasParam(GPSConversionParameters.CSV_HEADER_PREFIX)) {
+        	headerPrefix = getParamObject().getStringParam(GPSConversionParameters.CSV_HEADER_PREFIX);
+        } else {
+        	headerPrefix = "";
+        }
+        if(getParamObject().hasParam(GPSConversionParameters.CSV_DATA_PREFIX)) {
+        	dataPrefix = getParamObject().getStringParam(GPSConversionParameters.CSV_DATA_PREFIX);
+        } else {
+        	dataPrefix = "";
+        }
+
     }
     
     public final boolean needPassToFindFieldsActivatedInLog() {
@@ -105,6 +125,7 @@ public final class GPSCSVFile extends GPSFile {
 
     protected final void writeFileHeader(final String Name) {
         rec.setLength(0);
+        rec.append(this.headerPrefix);
         // INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         rec.append("INDEX");
         if ((selectedFileFields.hasRcr())) {
@@ -235,6 +256,7 @@ public final class GPSCSVFile extends GPSFile {
 
         if (cachedRecordIsNeeded(r)) {
             rec.setLength(0);
+            rec.append(this.dataPrefix);
             if (r.hasRecCount()) {
                 rec.append(r.getRecCount());
             }
