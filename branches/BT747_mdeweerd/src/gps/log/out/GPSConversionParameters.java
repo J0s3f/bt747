@@ -116,6 +116,16 @@ public final class GPSConversionParameters {
 	public final static String HEIGHT_DIGITS = "height-digits";
 
 	/**
+	 * Number of digits to use for height fields.
+	 */
+	public final static String CSV_HEADER_PREFIX = "data-csv-prefix";
+
+	/**
+	 * Number of digits to use for height fields.
+	 */
+	public final static String CSV_DATA_PREFIX = "header-csv-prefix";
+
+	/**
 	 * Number of digits to use for position fields (lat/lon).
 	 */
 	public final static String POSITION_DIGITS = "pos-digits";
