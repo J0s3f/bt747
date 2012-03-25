@@ -46,7 +46,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
 	private int initialBlock = 0;
 
-	private int badrecordCount = 0;
+	private int badRecordReportCount = 0;
 	private int invalidCount = 0;
 
 	private int errorReportLimit = 30;
@@ -84,17 +84,17 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
 	private void isBadRecord(final int recCount, final int offset) {
 		if (!lastRecordIsBad) {
-			if (badrecordCount <= errorReportLimit) {
+			if (badRecordReportCount <= errorReportLimit) {
 				Generic.debug("Bad record(s) @" + recCount + "("
 						+ JavaLibBridge.unsigned2hex(offset, 8) + ")", null);
-				if (badrecordCount == errorReportLimit) {
+				if (badRecordReportCount == errorReportLimit) {
 					Generic
 							.debug("Error limit reached.  Not reporting further error.");
 				}
 			}
+			badRecordReportCount++;
 			lastRecordIsBad = true;
 		}
-		badrecordCount++;
 	}
 
 	private void isGoodRecord(final int offset) {
@@ -142,7 +142,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 			wrapOK = true;
 		}
 		nextPointIsWayPt = false;
-		badrecordCount = 0;
+		badRecordReportCount = 0;
 		lastRecordIsBad = false;
 		try {
 			fileSize = mFile.getSize();
@@ -834,7 +834,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 						| (0xFF & bytes[recIdx++]) << 24;
 				r.longitude = JavaLibBridge.toFloatBitwise(longitude);// *1.0;
 			}
-			if ((r.longitude > 180.00) || (r.latitude < -180.00)) {
+			if ((r.longitude > 180.00) || (r.longitude < -180.00)) {
 				invalidReason += "Invalid longitude:" + r.longitude + ";";
 				valid = false;
 			}
