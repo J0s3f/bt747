@@ -292,7 +292,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	};
 
 	private static final String[] possibleUsbPorts = { "/dev/cu.usbmodemfd110",
-			"/dev/tty.usbmodemfd110", };
+			"/dev/tty.usbmodemfd110", "/dev/tty.usbmodemfd510",};
 
 	/**
 	 * Set a bluetooth connection.
