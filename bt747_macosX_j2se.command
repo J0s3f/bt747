@@ -20,7 +20,11 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 os_version=$(sw_vers  -productVersion)
 minor=$(echo $os_version | sed -e 's/^[^.]*\.//' -e 's/\..*//')
 major_minor=$(( ${os_version/.*/} * 100 + ${minor} ))
-if (( $major_minor >= 1006 )) ; then
+if (( $major_minor >= 1007 )) ; then
+ # USE THE NEWER RXTX CODE (BETA)
+ RXTX_PATH="${ROOT_DIR}/lib/rxtx-2.2pre2-bins"
+ RXTX_BIN_PATH="${RXTX_PATH}/Mac_OS_X/mac-iharder"
+elif (( $major_minor >= 1006 )) ; then
  # USE THE NEWER RXTX CODE (BETA)
  RXTX_PATH="${ROOT_DIR}/lib/rxtx-2.2pre2-bins"
  RXTX_BIN_PATH="${RXTX_PATH}/Mac_OS_X/mac-10.5"
