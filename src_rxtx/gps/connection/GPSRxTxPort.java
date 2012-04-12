@@ -288,11 +288,12 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			"/dev/cu.QstarzGPS-SPPslave", // Port for some Qstartz devices
 			"/dev/tty.QstarzGPS-SPPslave", // Port for some Qstartz devices
 			"/dev/tty.Qstarz1000XT-SPPslave", // Port for some Qstartz devices
-			"/dev/tty.BlumaxBT-GPS-SPPSlave" // Port for Blumax device
+			"/dev/tty.BlumaxBT-GPS-SPPSlave", // Port for Blumax device
 	};
 
 	private static final String[] possibleUsbPorts = { "/dev/cu.usbmodemfd110",
-			"/dev/tty.usbmodemfd110", "/dev/tty.usbmodemfd510",};
+			"/dev/tty.usbmodemfd110", "/dev/tty.usbmodemfd510","/dev/tty.usbserial",
+	};
 
 	/**
 	 * Set a bluetooth connection.
