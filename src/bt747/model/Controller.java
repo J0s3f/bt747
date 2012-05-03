@@ -170,10 +170,11 @@ public class Controller implements ModelListener {
 		case ModelEvent.SETTING_CHANGE: {
 			final int setting = JavaLibBridge.toInt((String) e.getArg());
 			switch (setting) {
-			case Model.DEVICE_PROTOCOL:
-				m.setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
+				case Model.DEVICE_PROTOCOL:
+					m.setProtocol(m.getIntOpt(Model.DEVICE_PROTOCOL));
+				}
 			}
-		}
+			break;
 		case ModelEvent.DATA_UPDATE:
 			if (this.isStartLogDownloadNeeded) {
 				switch (((BT747Int) e.getArg()).getValue()) {
