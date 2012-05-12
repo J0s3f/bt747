@@ -7,7 +7,7 @@ pkgdesc="datalogger device control for mtk-chipset based loggers"
 arch=('i686' 'x86_64')
 url="http://www.bt747.org/"
 license=("GPL-3")
-depends=('java-runtime')
+depends=('java-runtime xorg-fonts-type1')
 install=bt747.install
 options=('!strip')
 source=("http://downloads.sourceforge.net/project/bt747/Development/BT747_%VERSION%_full.zip" "http://soft.bt747.org/icon/BT747_icon48x48x8.gif" "bt747.desktop")
@@ -17,12 +17,18 @@ md5sums=('%MD5SUM%'
 build() {
 echo
 }
+_installdir="${pkgdir}/usr/share/java/bt747"
+_bindir="${pkgdir}/usr/bin"
 
 package() {
-mkdir -p $pkgdir/usr/{share/java/bt747,bin}
-/bin/sed -i '/ROOT_DIR=/s%.*%ROOT_DIR=/usr/share/java/bt747%' run_j2se.sh
+mkdir -p ${_bindir}
+mkdir -p ${_installdir}
+/bin/sed -i '/ROOT_DIR=/s%.*%ROOT_DIR='${_installdir}'%' run_j2se.sh
 chmod 644 lib/*.jar dist/*.jar
 /bin/tar cf - --exclude=*.exe --exclude=*.bat --exclude=src* * | ( cd ../pkg/usr/share/java/bt747/; tar xfp - )
-ln -s /usr/share/java/bt747/run_j2se.sh ${pkgdir}/usr/bin/bt747
+ln -s ${_installdir}/run_j2se.sh ${_bindir}/usr/bin/bt747
+
+install -d -m 0755 "${pkgdir}/usr/"{share/applications,share/pixmaps}
 install -D -m644 $srcdir/bt747.desktop $pkgdir/usr/share/applications/bt747.desktop
+install -D -m644 $srcdir/BT747_icon48x48x8.gif "${pkgdir}/usr/share/pixmaps/bt747.png"
 }
