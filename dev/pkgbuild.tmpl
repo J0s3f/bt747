@@ -26,7 +26,7 @@ mkdir -p ${_installdir}
 /bin/sed -i '/ROOT_DIR=/s%.*%ROOT_DIR='${_installdir}'%' run_j2se.sh
 chmod 644 lib/*.jar dist/*.jar
 /bin/tar cf - --exclude=*.exe --exclude=*.bat --exclude=src* * | ( cd ../pkg/usr/share/java/bt747/; tar xfp - )
-ln -s ${_installdir}/run_j2se.sh ${_bindir}/usr/bin/bt747
+ln -s ${_installdir}/run_j2se.sh ${_bindir}/bt747
 
 install -d -m 0755 "${pkgdir}/usr/"{share/applications,share/pixmaps}
 install -D -m644 $srcdir/bt747.desktop $pkgdir/usr/share/applications/bt747.desktop
