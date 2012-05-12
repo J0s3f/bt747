@@ -174,11 +174,17 @@
 	<!-- ======================================== -->
 	<!-- package - create distribution zip        -->
 	<!-- ======================================== -->
-	<target name="package" if="do.package">
+	<target name="package" depends="package.zip,package.aur" if="do.package">
+	</target>
+
+	<target name="package.zip" if="do.package">
 		<!--
 		-->
 		<exec command="package.bat" failifexecutionfails="false" />
 		<mkdir dir="${dist}/bt747_dev" />
+	</target>
+	
+	<target name="package.aur" if="do.package">
 		<copy file="dev/pkgbuild.tmpl" tofile="${dist}/bt747_dev/PKGBUILD" />
 		<checksum file="pack/BT747_${build_version}.${build.current.revision}_full.zip" property="zip.md5" />
 		<copy file="dev/bt747.desktop" tofile="${dist}/bt747_dev/bt747.desktop" />
@@ -186,6 +192,7 @@
 		<copy file="dev/bt747.install" tofile="${dist}/bt747_dev/bt747.install" />
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%VERSION%" replace='${build_version}.${build.current.revision}' flags="g" />
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%MD5SUM%" replace='${zip.md5}' />
+
 		<tar destfile="pack/bt747_dev.tar.gz" compression="gzip" basedir="${dist}" includes="bt747_dev/**" />
 		<exec executable="perl" failifexecutionfails="false">
 			<arg value="-f" />

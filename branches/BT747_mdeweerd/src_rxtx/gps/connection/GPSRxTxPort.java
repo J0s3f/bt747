@@ -131,6 +131,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	 * 
 	 * @return status result of the opening of the serial port.
 	 */
+	@SuppressWarnings("unchecked")
 	public final synchronized int openPort() {
 		int result = -1;
 		String portStr;
@@ -161,6 +162,8 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 				Generic.debug("Info: trying to open '" + portStr + "'", null);
 			}
 			CommPortIdentifier portIdentifier;
+			
+			Enumeration<gnu.io.CommPortIdentifier> p = gnu.io.CommPortIdentifier.getPortIdentifiers();
 			portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
 
 			final CommPort commPort = portIdentifier
