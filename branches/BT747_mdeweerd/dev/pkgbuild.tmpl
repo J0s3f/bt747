@@ -7,7 +7,7 @@ pkgdesc="datalogger device control for mtk-chipset based loggers"
 arch=('i686' 'x86_64')
 url="http://www.bt747.org/"
 license=("GPL-3")
-depends=('java-runtime xorg-fonts-type1')
+depends=('java-runtime' 'xorg-fonts-type1')
 install=bt747.install
 options=('!strip')
 source=("http://downloads.sourceforge.net/project/bt747/Development/BT747_%VERSION%_full.zip" "http://soft.bt747.org/icon/BT747_icon48x48x8.gif" "bt747.desktop")
@@ -29,6 +29,6 @@ chmod 644 lib/*.jar dist/*.jar
 ln -s ${_installdir}/run_j2se.sh ${_bindir}/bt747
 
 install -d -m 0755 "${pkgdir}/usr/"{share/applications,share/pixmaps}
-install -D -m644 $srcdir/bt747.desktop $pkgdir/usr/share/applications/bt747.desktop
+install -D -m644 $srcdir/bt747.desktop ${pkgdir}/usr/share/applications/bt747.desktop
 install -D -m644 $srcdir/BT747_icon48x48x8.gif "${pkgdir}/usr/share/pixmaps/bt747.png"
 }
