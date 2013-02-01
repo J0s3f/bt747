@@ -51,4 +51,5 @@ for /f "useback tokens=*" %%a in ('%CLASSPATH%') do set CLASSPATH=%%~a
 java %MEM_HEAP_OPTION% %DEBUG_OPTION% -verbose bt747.j2se_view.BT747Main
 pause
 :end
+pause
 endlocal

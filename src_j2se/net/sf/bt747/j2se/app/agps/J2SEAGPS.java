@@ -67,5 +67,74 @@ public class J2SEAGPS {
         }
         return result;
     }
+    
+    
+    
+    public static final byte[] getAgpsUsingSimpleFtp(final String url) throws java.io.IOException , BT747Exception{
+        if (url.startsWith("ftp://")) {
+        	byte[] agpsData;
+            final int colonIdx = url.indexOf(':', 6);
+            final int atIdx = url.indexOf('@');
+            // final int slashIdx = url.indexOf('/', 6);
 
+            String hostUrl;
+            String user = "anonymous";
+            String pass = "anonymous";
+            if (atIdx < 0 || (colonIdx > 0 && colonIdx > atIdx)) {
+                hostUrl = url.substring(6);
+            } else {
+                if (colonIdx > 0 && colonIdx < atIdx) {
+                    // Username and password.
+                    user = url.substring(6, colonIdx);
+                    pass = url.substring(colonIdx + 1, atIdx);
+                } else {
+                    // Only username
+                    user = url.substring(6, atIdx);
+                    pass = "";
+                }
+                hostUrl = url.substring(atIdx + 1);
+            }
+            final int hostSlash = hostUrl.indexOf('/');
+            if (hostSlash > 0) {
+                final String hostname = hostUrl.substring(0,
+                        hostSlash);
+                final String path = hostUrl
+                        .substring(hostSlash + 1);
+                final int pathSlash = path.indexOf('/');
+                String dir;
+                String name;
+                if (pathSlash > 0) {
+                    dir = path.substring(0, pathSlash);
+                    name = path.substring(pathSlash + 1);
+                } else {
+                    dir = "";
+                    name = path;
+                }
+                /*
+                if (Log.isDebugEnabled()) {
+                    Log.debug("<User>"
+                            + user // + "<Pass>" + pass
+                            + "<Site>" + hostname + "<Dir>" + dir
+                            + "<name>" + name);
+                }
+                */
+                final net.sf.bt747.j2se.app.ftp.SimpleFTP ftp = new net.sf.bt747.j2se.app.ftp.SimpleFTP();
+                ftp.connect(hostname, 21, user, pass);
+                if (dir.length() > 0) {
+                    ftp.connect(dir);
+                }
+                final ByteArrayOutputStream os = new ByteArrayOutputStream(
+                        120 * 1024);
+                ftp.bin();
+                ftp.retr(os, name);
+                ftp.disconnect();
+                agpsData = os.toByteArray();
+                os.close();
+                return agpsData;
+            }
+        } else {
+        	return J2SEAGPS.getBytesFromUrl(url);
+        }
+        return null;
+    }
 }
