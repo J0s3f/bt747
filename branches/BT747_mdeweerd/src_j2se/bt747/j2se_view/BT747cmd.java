@@ -234,6 +234,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 	private static final String OPT_START_DATE = "start";
 	/** End date parameter. */
 	private static final String OPT_END_DATE = "end";
+	
+	private static final String OPT_ADD_MISSING = "add-missing";
+	
 	private int eraseTimeoutMs = 60000;
 
 	/**
@@ -830,6 +833,10 @@ public class BT747cmd implements bt747.model.ModelListener {
 			} catch (java.text.ParseException e) {
 				System.out.println("End date could not be parsed - ignoring start date.");
 			}
+		}
+		
+		if (options.has(OPT_ADD_MISSING)) {
+			c.setBooleanOpt(AppSettings.CREATE_MISSING_FIELDS, true);
 		}
 
 		if (options.has(OPT_MIN_SPEED)) {
@@ -1697,6 +1704,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 						"Enddate and time according to format'"
 								+ OPT_DATE_FORMAT + "'").withRequiredArg()
 						.describedAs("DATETIME").ofType(String.class);
+				accepts(OPT_ADD_MISSING,
+						"Add missing but requested fields to output");
 			}
 		};
 

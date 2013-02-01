@@ -74,6 +74,8 @@
 	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-3.1.jar" />
 	<property name="sanselan.jar" value="${lib.dir}/sanselan-0.97-incubator.jar" />
 	<property name="jchart.jar" value="${lib.dir}/jchart2d-3.1.0.jar" />
+	<property name="mail.jar" value="${lib.dir}/mail.jar" />
+	<property name="mailapi.jar" value="${lib.dir}/mailapi.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
@@ -316,6 +318,8 @@
 		<pathelement location="${rxtxcomm.jar}" />
 		<pathelement location="${sanselan.jar}" />
 		<pathelement location="${jchart.jar}" />
+		<pathelement location="${mail.jar}" />
+		<pathelement location="${mailapi.jar}" />
 	</path>
 
 
