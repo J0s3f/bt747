@@ -62,6 +62,7 @@ import bt747.sys.interfaces.BT747Vector;
 // m.getStringOpt(param), ...
 // The model will notify changes.
 public class AppSettings implements BT747Thread {
+	public static String CONFIG_FILE_NAME = ""; // Location of configuration file, if any.
 
 	public static boolean DefaultEnableProxy = true;
 	/**
@@ -1160,7 +1161,7 @@ public class AppSettings implements BT747Thread {
 		while (notok && (i >= 0)) {
 			switch (i--) {
 			case 0:
-				path = CONFIG_FILE_NAME;
+				path = new BT747Path(CONFIG_FILE_NAME);
 				break;
 			case 1:
 				BT747Path tmp = getPath(AppSettings.OUTPUTDIRPATH);
