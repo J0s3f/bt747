@@ -16,6 +16,7 @@ import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 import bt747.Version;
 import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.ImageData;
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -28,6 +29,19 @@ import bt747.sys.interfaces.BT747Path;
  * 
  */
 public class J2SEController extends Controller {
+    protected final static String platform = java.lang.System
+            .getProperty("os.name");
+
+    static {
+    	AppSettings.CONFIG_FILE_NAME = 
+        ((java.lang.System.getProperty("user.home").length() != 0) ? java.lang.System
+                .getProperty("user.home")
+                : (
+
+                (platform.startsWith("Win32")
+                        || platform.startsWith("Windows"))  ? java.lang.System.getenv("USERPROFILE"):""))
+                        + bt747.sys.File.separatorStr;
+    }
 
     /**
      * Reference to the model.

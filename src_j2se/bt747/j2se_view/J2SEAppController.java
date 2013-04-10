@@ -72,8 +72,6 @@ import bt747.sys.interfaces.BT747Vector;
 
 public final class J2SEAppController extends J2SEController {
 
-    private final static String platform = java.lang.System
-            .getProperty("os.name");
     private final static String SETTINGS_NAME = "BT747SettingsJ2SE.pdb";
     private final static String CONFIG_FILE_NAME = java.lang.System
             .getProperty(
@@ -88,7 +86,7 @@ public final class J2SEAppController extends J2SEController {
                                     || platform.startsWith("Windows") || platform
                                     .startsWith("Mac")) ? SETTINGS_NAME
                                     : "/My Documents/BT747/" + SETTINGS_NAME)));
-
+    
     private static Image appIcon;
     private static final String iconPath = "icons/bt747_16x16.gif";
 
