@@ -341,7 +341,7 @@
 		<delete dir="${j2sebuild.dir}" />
 		<mkdir dir="${j2sebuild.dir}" />
 
-		<javac verbose="no" srcdir="${src_j2se.dir}" destdir="${j2sebuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="j2seclasspath" encoding="iso-8859-15" target="1.5">
+		<javac verbose="no" srcdir="${src_j2se.dir}" destdir="${j2sebuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="j2seclasspath" encoding="iso-8859-15" target="1.5" source="1.5">
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
 			<include name="de/k621/avr/gps/converter/NMEAConverter.java" />
