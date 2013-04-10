@@ -1160,8 +1160,8 @@ public class AppSettings implements BT747Thread {
 		while (notok && (i >= 0)) {
 			switch (i--) {
 			case 0:
-				// path = CONFIG_FILE_NAME;
-				// break;
+				path = CONFIG_FILE_NAME;
+				break;
 			case 1:
 				BT747Path tmp = getPath(AppSettings.OUTPUTDIRPATH);
 				path = tmp.proto(tmp.getPath() + "/");
