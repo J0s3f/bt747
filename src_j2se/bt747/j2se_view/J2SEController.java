@@ -40,7 +40,7 @@ public class J2SEController extends Controller {
 
                 (platform.startsWith("Win32")
                         || platform.startsWith("Windows"))  ? java.lang.System.getenv("USERPROFILE"):""))
-                        + bt747.sys.File.separatorStr;
+                        + java.lang.System.getProperty("file.separator");
     }
 
     /**
