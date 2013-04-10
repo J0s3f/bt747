@@ -227,6 +227,7 @@ sub confirm
     {
       return 1
     }
+die "did not get anwser to question";
   }
 }
 
