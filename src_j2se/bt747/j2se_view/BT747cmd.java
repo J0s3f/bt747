@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
