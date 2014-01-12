@@ -37,12 +37,9 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
      */
     private int nxtPacketIdx;
 
-    /** Next index to increment percent. */
-    private int nextPacketPercentIdx;
     private int nextPacketPercentOffset;
     private int percentBytes = (32 * 60 * 4 * 14) / 100; // Max 14d data
 
-    private final static int PERCENT_STEP = 10;
     private final EventPoster poster;
 
     public AgpsUploadHandler(final EventPoster poster) {
@@ -184,7 +181,6 @@ public class AgpsUploadHandler implements DeviceOperationHandlerIF {
         timesOutAt = 0;
         errorCnt = 0;
         percent = 0;
-        nextPacketPercentIdx = PERCENT_STEP;
         nextPacketPercentOffset = percentBytes;
         cmd = null;
     }

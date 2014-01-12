@@ -5,8 +5,14 @@ package net.sf.bt747.j2se.app.agps;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+
+import org.jibble.simpleftp.SimpleFTP;
 
 import bt747.sys.I18N;
 import bt747.sys.interfaces.BT747Exception;
@@ -20,7 +26,7 @@ public class J2SEAGPS {
     // ftp://tsi0001:xxxxxx@www.transystem.com.tw/
     // Files: MTK14.EPO and MTK7d.EPO
 
-    private final static String TRANS_FTP_SITE = "http://bt747.free.fr/";
+    private final static String TRANS_FTP_SITE = "http://www.bt747.org/";
     private final static String TRANS_AGPS_14d = TRANS_FTP_SITE + "MTK14.EPO";
     private final static String TRANS_AGPS_7d = TRANS_FTP_SITE + "MTK7d.EPO";
 
@@ -44,23 +50,87 @@ public class J2SEAGPS {
         byte[] result = null;
         try {
             final URL url = new URL(urlString);
-            final URLConnection urlc = url.openConnection();
-            urlc.setConnectTimeout(timeout);
-            urlc.setReadTimeout(timeout);
-            final InputStream ins = urlc.getInputStream(); // To download
-            // OutputStream os = urlc.getOutputStream(); // To upload
-            final ByteArrayOutputStream bout = new ByteArrayOutputStream(
-                    120 * 1024);
-            final byte[] buf = new byte[1024];
-            while (true) {
-                final int n = ins.read(buf);
-                if (n == -1) {
-                    break;
-                }
-                bout.write(buf, 0, n);
+            
+            if(url.getProtocol().equalsIgnoreCase("ftp")) {
+                bt747.sys.Generic.debug("Trying to get AGPS using 'SimpleFTP'");
+	            String user = "anonymous";
+	            String pass = "anonymous";
+	            if(url.getUserInfo()!=null) {
+	            	final String ui =url.getUserInfo();
+                    final int colonIdx = ui.indexOf(':', 0);
+                    if (colonIdx > 0) {
+                        // Username and password.
+                        user = ui.substring(0, colonIdx);
+                        pass = ui.substring(colonIdx + 1);
+                    } else {
+                        // Only username
+                        user = ui;
+                        pass = "";
+                    }
+	            }
+	            final String host = url.getHost();
+	            final String dir = url.getPath();
+	            int port = url.getPort();
+	            if(port==-1) port=21;
+            	final org.jibble.simpleftp.SimpleFTP con=new org.jibble.simpleftp.SimpleFTP();
+	            final ByteArrayOutputStream bout = new ByteArrayOutputStream(
+	                    120 * 1024);
+	            con.connect(host,port,user,pass);
+	            /* Should change directory, but file is generally in root. - Change the open source if you want more.
+	            if(!dir.isEmpty()) {
+	            	con.cwd(dir);
+	            }
+	            */
+	            con.bin();
+	            con.retr(bout, dir);
+	            con.disconnect();
+            	result=bout.toByteArray();
+            	bout.close();
             }
-            result = bout.toByteArray();
-            bout.close();
+        } catch(Exception e) {
+        }
+        try {
+            if(result==null) {
+                bt747.sys.Generic.debug("Trying to get AGPS using standard library");
+                final URL url = new URL(urlString);
+                System.setProperty("java.net.useSystemProxies", "true");
+                System.setProperty("java.net.preferIPv4Stack", "true");
+                
+                bt747.sys.Generic.debug("Information - listing proxies");
+                List<Proxy> pl = ProxySelector.getDefault().select(new URI(urlString));
+                for (Proxy p : pl)
+                    System.out.println(p);
+                Proxy p = null;
+                if (pl.size() > 0) //uses first one
+                    p = pl.get(0);
+                if(p.address()!=null) {
+                	bt747.sys.Generic.debug(p.address().toString());
+                }
+                bt747.sys.Generic.debug("Done");
+
+	            final URLConnection urlc = url.openConnection();
+	            /*
+					if(urlc instanceof FtpURLConnection) {
+						FtpURLConnection ftpc=(FtpURLConnection)urlc;
+					}
+	           */
+	            urlc.setConnectTimeout(timeout);
+	            urlc.setReadTimeout(timeout);
+	            final InputStream ins = urlc.getInputStream(); // To download
+	            // OutputStream os = urlc.getOutputStream(); // To upload
+	            final ByteArrayOutputStream bout = new ByteArrayOutputStream(
+	                    120 * 1024);
+	            final byte[] buf = new byte[1024];
+	            while (true) {
+	                final int n = ins.read(buf);
+	                if (n == -1) {
+	                    break;
+	                }
+	                bout.write(buf, 0, n);
+	            }
+	            result = bout.toByteArray();
+	            bout.close();
+            }
         } catch (final Exception e) {
             throw new BT747Exception(I18N
                     .i18n("Problem downloading AGPS data."), e);
@@ -118,7 +188,7 @@ public class J2SEAGPS {
                             + "<name>" + name);
                 }
                 */
-                final net.sf.bt747.j2se.app.ftp.SimpleFTP ftp = new net.sf.bt747.j2se.app.ftp.SimpleFTP();
+                final SimpleFTP ftp = new SimpleFTP();
                 ftp.connect(hostname, 21, user, pass);
                 if (dir.length() > 0) {
                     ftp.connect(dir);

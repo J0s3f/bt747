@@ -372,7 +372,7 @@
 		<delete dir="${wababuild.dir}" />
 		<mkdir dir="${wababuild.dir}" />
 
-		<javac verbose="no" srcdir="${src_waba.dir}" destdir="${wababuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="wabaclasspath" encoding="iso-8859-15" target="1.5">
+		<javac verbose="no" srcdir="${src_waba.dir}" destdir="${wababuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="wabaclasspath" encoding="iso-8859-15" target="1.5" source="1.5">
 			<include name="BT747.java" />
 			<compilerarg line="-Xlint:unchecked" />
 		</javac>
@@ -897,7 +897,7 @@
 				<include name="${src_j2se.dir}/**/resources/*" if="is.lib" />
 			</fileset>
 		</delete>
-		<javac verbose="no" srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="${build.classpath}" encoding="iso-8859-15" target="1.5">
+		<javac verbose="no" srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="${build.classpath}" encoding="iso-8859-15" target="1.5" source="1.5">
 			<include name="**/*.java" />
 		</javac>
 		<copy todir="${rxtxbuild.dir}">
