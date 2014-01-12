@@ -253,14 +253,14 @@ public class J2SEController extends Controller {
                 // bt747.sys.Generic.debug("Getting data from <" + urlTxt +
                 // ">");
                 try {
-                    //final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlT);
-                    final byte[] agpsData = J2SEAGPS.getAgpsUsingSimpleFtp(urlT);
+                    final byte[] agpsData = J2SEAGPS.getBytesFromUrl(urlT);
+                    //final byte[] agpsData = J2SEAGPS.getAgpsUsingSimpleFtp(urlT);
                     // bt747.sys.Generic.debug("Finished getting data from <"
                     // + urlTxt + ">");
                     setAgpsData(agpsData);
                     bt747.sys.Generic.debug("MTK7d.EPO data fetched.");
-                } catch (final IOException b) {
-                    m.postEvent(new ModelEvent(ModelEvent.EXCEPTION, b));
+                //} catch (final IOException b) {
+                //    m.postEvent(new ModelEvent(ModelEvent.EXCEPTION, b));
                 } catch (final BT747Exception b) {
                     m.postEvent(new ModelEvent(ModelEvent.EXCEPTION, b));
                 }
