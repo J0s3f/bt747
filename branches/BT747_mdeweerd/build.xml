@@ -267,6 +267,7 @@
           -optimizationpasses 1
           -injar ${swcollections.jar}(!META-INF/**)
           -printmapping ${dist}/${ant.project.name}${suffix}.map
+	    -keep public class org.jibble.simpleftp.SimpleFTP  { *; }
           -keep public class BT747
           -keep public class bt747.j2se_view.BT747
 	      -keep public class sun.audio.AudioStream
@@ -576,7 +577,8 @@
             			-keep public class gps.ProtocolConstants { *; }
                         -keep public class gps.GpsEvent { *; }
 			            -keep public class gps.convert.GeoidIF { *; }
-	         -keep public class gps.log.out.GPSConversionParameters { public static final java.lang.String *;}
+		    -keep public class org.jibble.simpleftp.SimpleFTP { *; }
+	        -keep public class gps.log.out.GPSConversionParameters { public static final java.lang.String *;}
 			-keep public class gps.convert.Conv { public *** setGeoidIF(...); }
 			-keep public class gps.convert.ExternalUtils { public *** setGeoidIF(...); }
 			-keep public class gps.convert.Geoid { }
@@ -730,6 +732,7 @@
                 -keep public class * extends waba.ui.MainWindow
  		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort
+			    -keep public class org.jibble.simpleftp.SimpleFTP { *; }
 			<keep name="gps.connection.GPSRxTxPort" />
 
     	        -keep public class * {
