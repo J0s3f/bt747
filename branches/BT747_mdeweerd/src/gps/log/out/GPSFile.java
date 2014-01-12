@@ -1074,10 +1074,6 @@ public abstract class GPSFile implements GPSFileInterface {
         this.recordNbrInLogs = recordNbrInLogs;
     }
 
-    private final boolean isAddLogConditionInfo() {
-        return addLogConditionInfo;
-    }
-
     protected String errorInfo;
 
     public final String getErrorInfo() {

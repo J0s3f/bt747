@@ -251,10 +251,6 @@ public class BT747cmd implements bt747.model.ModelListener {
 		}
 	}
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = 1L;
 	private Model m;
 	private J2SEController c;
 

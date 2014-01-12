@@ -36,6 +36,7 @@ import gps.log.out.GPSFileConfInterface;
 import gps.log.out.GPSFileInterface;
 import gps.log.out.GPSGPXFile;
 import gps.log.out.GPSGmapsHTMLEncodedFile;
+import gps.log.out.GPSGmapsV3HTMLFile;
 import gps.log.out.GPSGoogleStaticMapUrl;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
@@ -50,7 +51,6 @@ import gps.mvc.MtkController;
 import gps.mvc.MtkModel;
 import gps.mvc.commands.GpsLinkExecCommand;
 import net.sf.bt747.loc.LocationSender;
-
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Exception;
@@ -345,7 +345,8 @@ public class Controller implements ModelListener {
 			gpsFile = new GPSNMEAFile();
 			break;
 		case Model.GMAP_LOGTYPE:
-			gpsFile = new GPSGmapsHTMLEncodedFile();
+			//gpsFile = new GPSGmapsHTMLEncodedFile();
+			gpsFile = new GPSGmapsV3HTMLFile();
 			break;
 		case Model.ARRAY_LOGTYPE:
 			gpsFile = new GPSArray();
