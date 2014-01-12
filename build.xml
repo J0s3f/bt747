@@ -182,7 +182,7 @@
 	<target name="package.zip" if="do.package">
 		<!--
 		-->
-		<exec command="package.bat" failifexecutionfails="false" />
+		<exec executable="package.bat" failifexecutionfails="false" />
 		<mkdir dir="${dist}/bt747_dev" />
 	</target>
 	
@@ -388,6 +388,7 @@
 			<attribute name="Main-Class" value="${j2se.main}" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
 			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/swingx-ws.jar ../lib/swingx-ws.jar ../lib/swingx.jar ../lib/jcalendar-1.3.2.jar ../lib/jopt-simple-3.1.jar ../lib/sanselan-0.97-incubator.jar ../lib/jchart2d-3.0.1.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx-ws.jar lib/swingx.jar lib/jcalendar-1.3.2.jar lib/jopt-simple-3.1.jar lib/sanselan-0.97-incubator.jar lib/jchart2d-3.0.1.jar" />
+			<attribute name="Permissions" value="all-permissions" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
                  TheMainClass.class.getPackage().getImplementationVersion() ); -->
