@@ -49,44 +49,7 @@ public class J2SEAGPS {
             throws BT747Exception {
         byte[] result = null;
         try {
-            final URL url = new URL(urlString);
-            
-            if(url.getProtocol().equalsIgnoreCase("ftp")) {
-                bt747.sys.Generic.debug("Trying to get AGPS using 'SimpleFTP'");
-	            String user = "anonymous";
-	            String pass = "anonymous";
-	            if(url.getUserInfo()!=null) {
-	            	final String ui =url.getUserInfo();
-                    final int colonIdx = ui.indexOf(':', 0);
-                    if (colonIdx > 0) {
-                        // Username and password.
-                        user = ui.substring(0, colonIdx);
-                        pass = ui.substring(colonIdx + 1);
-                    } else {
-                        // Only username
-                        user = ui;
-                        pass = "";
-                    }
-	            }
-	            final String host = url.getHost();
-	            final String dir = url.getPath();
-	            int port = url.getPort();
-	            if(port==-1) port=21;
-            	final org.jibble.simpleftp.SimpleFTP con=new org.jibble.simpleftp.SimpleFTP();
-	            final ByteArrayOutputStream bout = new ByteArrayOutputStream(
-	                    120 * 1024);
-	            con.connect(host,port,user,pass);
-	            /* Should change directory, but file is generally in root. - Change the open source if you want more.
-	            if(!dir.isEmpty()) {
-	            	con.cwd(dir);
-	            }
-	            */
-	            con.bin();
-	            con.retr(bout, dir);
-	            con.disconnect();
-            	result=bout.toByteArray();
-            	bout.close();
-            }
+        	return J2SEAGPS.getAgpsUsingSimpleFtp(urlString);
         } catch(Exception e) {
         }
         try {
@@ -171,6 +134,7 @@ public class J2SEAGPS {
                 final String path = hostUrl
                         .substring(hostSlash + 1);
                 final int pathSlash = path.indexOf('/');
+                SimpleFTP ftp;
                 String dir;
                 String name;
                 if (pathSlash > 0) {
@@ -188,7 +152,7 @@ public class J2SEAGPS {
                             + "<name>" + name);
                 }
                 */
-                final SimpleFTP ftp = new SimpleFTP();
+                ftp = new SimpleFTP();
                 ftp.connect(hostname, 21, user, pass);
                 if (dir.length() > 0) {
                     ftp.connect(dir);
