@@ -517,6 +517,7 @@
 			<attribute name="Main-Class" value="BT747" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
 			<attribute name="Class-Path" value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar swingx.jar swingx-ws.jar ../lib/swingx.jar ../lib/swingx-ws.jar ../lib/RXTXcomm.jar ../${swing-layout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swingx-ws.jar lib/swingx.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar" />
+			<attribute name="Permissions" value="all-permissions" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
 	             TheMainClass.class.getPackage().getImplementationVersion() ); -->
@@ -992,6 +993,7 @@
 			<attribute name="Main-Class" value="${current.main.class}" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
 			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swing-layout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar" />
+			<attribute name="Permissions" value="all-permissions" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
              TheMainClass.class.getPackage().getImplementationVersion() ); -->
