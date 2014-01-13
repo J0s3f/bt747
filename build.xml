@@ -1355,7 +1355,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="dist" depends="dist.j2se,dist.pda,dist.rxtx">
+	<target name="dist" depends="dist.j2se,dist.rxtx"> <!-- No longer building dist.pda -->
 
 	</target>
 
