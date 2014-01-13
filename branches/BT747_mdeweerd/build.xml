@@ -196,7 +196,7 @@
 		<replaceregexp file="${dist}/bt747_dev/PKGBUILD" match="%MD5SUM%" replace='${zip.md5}' />
 
 		<tar destfile="pack/bt747_dev.tar.gz" compression="gzip" basedir="${dist}" includes="bt747_dev/**" />
-		<exec executable="perl" failifexecutionfails="false">
+		<exec executable="${perl}" failifexecutionfails="false">
 			<arg value="-f" />
 			<arg value="dev/aurploader" />
 			<arg value="-login" />
