@@ -207,6 +207,18 @@
 		</exec>
 	</target>
 
+	<!--  Exports the signing key -->
+    <target name="keyexport">
+   		<exec executable="keytool" failifexecutionfails="true">
+			<arg value="-f" />
+			<arg value="dev/aurploader" />
+			<arg value="-login" />
+			<arg value="../aurplogin" />
+			<arg value="-r" />
+			<arg value="-a" />
+			<arg value="pack/bt747_dev.tar.gz" />
+		</exec>
+    </target>
 	<target name="upload-jnlp" if="do.upload">
 		<signjar jar="dist/BT747.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 		<signjar jar="dist/BT747_rxtx.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
