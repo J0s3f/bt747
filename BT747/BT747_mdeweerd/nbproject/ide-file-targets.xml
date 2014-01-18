@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="BT747-IDE">
+    <property file="nbproject/nbjdk.properties"/>
+    <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
+    <property file="${user.properties.file}"/>
+    <import file="jdk.xml"/>
+    <property name="skip.proguard" value="true"/>
+    <property name="java.debug" value="true"/>
+    <property name="java.optimize" value="false"/>
+    <import file="../build.xml"/>
+    <property file="local.properties"/>
+    <property file="build.properties"/>
+    <property file="default.properties"/>
+
+    <path id="cp">
+    <!--
+        <pathelement location="${dist}/lib${ant.project.name}.jar" />
+        -->
+        <pathelement location="build/rxtxbuild/${ant.project.name}_rxtx.jar" />
+        <pathelement location="build/rxtxbuild/" />
+        <pathelement location="${jcalendar.jar}" />
+        <pathelement location="${swingx.jar}" />
+        <pathelement location="${swingx-ws.jar}" />
+        <pathelement location="${jopt-simple.jar}" />
+        <pathelement location="${swing-layout.jar}" />
+        <pathelement location="${rxtxcomm.jar}" />
+        <pathelement location="${sanselan.jar}" />
+        <pathelement location="${jchart.jar}" />
+    </path>
+
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
+    <target depends="-jdk-init" name="compile-selected-files-in-src_j2se">
+        <!--
+        <fail unless="files">Must set property 'files'</fail>
+
+        -->
+        <build.rxtx suffix="" build.j2se="yes" no.waba="yes" build.lib="no" />
+        <mkdir dir="build/rxtxbuild"/>
+        <copy todir="build/rxtxbuild"><fileset dir="src_test" includes="net/sf/bt747/test/files/*" /></copy>
+        <javac destdir="build/rxtxbuild" source="1.5" srcdir="src_test">
+            <include name="**/net/sf/bt747/test/*.java"/>
+            <exclude name="**/net/sf/bt747/test/TestUtils.java"/>
+            <classpath refid="cp"/>
+        </javac>
+    </target>
+    
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#debugj2se) -->
+    <target depends="-jdk-init,compile-selected-files-in-src_j2se" name="debug-nb">
+        <nbjpdastart addressproperty="jpda.address" name="BT747" transport="dt_socket">
+            <classpath refid="cp"/>
+        </nbjpdastart>
+        <!-- 
+        <java classname="bt747.j2se_view.BT747Main" fork="true">
+        TODO configure the main class for your project here: -->
+        <java classname="net.sf.bt747.test.TestModelConnect" fork="true">
+            <classpath refid="cp"/>
+            <jvmarg value="-Djava.library.path=${rxtxcomm.system.dir}" />
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>
+    </target>
+</project>

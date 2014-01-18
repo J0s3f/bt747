@@ -1,0 +1,2 @@
+rm *JPG.html
+exiftool -htmldump -w %f_%e.html *JPG
