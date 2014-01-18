@@ -1,0 +1,44 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest-Main-Attributes: fY2ptQpb9W+bW9rGTtNUbVLYxag=
+Created-By: 1.6.0_01 (Sun Microsystems Inc.)
+SHA1-Digest-Manifest: zHN/43ygHIxLooA3CQ3BtFP6JKw=
+
+Name: libr217linia64ser.so
+SHA1-Digest: XRIF06cortvXBFhu+kxsQ+72p3c=
+
+Name: libr22p2lini686ser.so
+SHA1-Digest: EItyx7d2saFdhqQHURhBjK0vDaw=
+
+Name: libr217sunos32ser.so
+SHA1-Digest: 3g1RUoyn6PvHW2PmbmJXgk1NB54=
+
+Name: libr22p2x86_64ser.so
+SHA1-Digest: GZTdX6pWgSvDL9Ld6JX5B+WXp4w=
+
+Name: r217winm32ser.dll
+SHA1-Digest: Qj0FcqhwbOA/ZZhgnu7NhnxNiOY=
+
+Name: r22p2win32ser.dll
+SHA1-Digest: g85K4RiclXQqx+VUglo8OJ1goQA=
+
+Name: r22p2win64ser.dll
+SHA1-Digest: jVJfjEW6qpwMDuOr/ttXMFutueY=
+
+Name: libr217linx86_64ser.so
+SHA1-Digest: wegnF7/8QbDTL0FDCbkhKJyfs8s=
+
+Name: libr217sunos64ser.so
+SHA1-Digest: K//uXRG8q5QPYIPlDahGIHzHwB0=
+
+Name: libr217lini686ser.so
+SHA1-Digest: IUpvi3AtE/z/1j9tMC0Ntpz8EwM=
+
+Name: libr217linarmser.so
+SHA1-Digest: WjmRcL3RhEPfOetWCpMEHHs4bk8=
+
+Name: libr217macser.jnilib
+SHA1-Digest: P+jHOLSAG+p9q6RJqw+gRP3PQx8=
+
+Name: libr22p2mac10.5ser.jnilib
+SHA1-Digest: sQYHTUgp5w1e1nBu3c8oiNqIRCM=
+

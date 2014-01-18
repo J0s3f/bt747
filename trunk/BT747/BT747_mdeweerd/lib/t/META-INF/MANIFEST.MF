@@ -1,0 +1,42 @@
+Manifest-Version: 1.0
+Created-By: 1.6.0_01 (Sun Microsystems Inc.)
+
+Name: libr217linia64ser.so
+SHA1-Digest: QNw3xUtSY3RlXCkLdpqDx3lf/+M=
+
+Name: libr22p2lini686ser.so
+SHA1-Digest: 8vjWh8IWIcqYPiEO1LvtbH16wxs=
+
+Name: libr217sunos32ser.so
+SHA1-Digest: RH6MJc5jSyIlPixqFQX6YGV49a4=
+
+Name: libr22p2x86_64ser.so
+SHA1-Digest: 4GV/hRLhoVp0WmR8DfmG4MRMrYg=
+
+Name: r217winm32ser.dll
+SHA1-Digest: NQ6DnkWgdcIDCn5A1QePW55UL6o=
+
+Name: r22p2win32ser.dll
+SHA1-Digest: /lEghVqTovV9Z9m2G5mjsXR88dA=
+
+Name: r22p2win64ser.dll
+SHA1-Digest: 2J1GGflIxUXlDddBcG2qCuGPuKI=
+
+Name: libr217linx86_64ser.so
+SHA1-Digest: 5guLodPb/+DrDuJb1JWGqQkvqsE=
+
+Name: libr217sunos64ser.so
+SHA1-Digest: hoYhv+9ER7C8UWgtQ0QoW+rAjnQ=
+
+Name: libr217lini686ser.so
+SHA1-Digest: rmxDfIbg3VxG5xNUbK6zwzBM05k=
+
+Name: libr217linarmser.so
+SHA1-Digest: xCA/0mHhz//0nsMbJDIJwB6ahX0=
+
+Name: libr217macser.jnilib
+SHA1-Digest: uQCCWLHFaEQjv6YOqdCn/jcVbuM=
+
+Name: libr22p2mac10.5ser.jnilib
+SHA1-Digest: w2gTXMr9xT2OwRSeR046Kniwito=
+
