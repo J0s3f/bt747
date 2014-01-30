@@ -176,7 +176,7 @@
 	<!-- ======================================== -->
 	<!-- package - create distribution zip        -->
 	<!-- ======================================== -->
-	<target name="package" depends="package.zip,package.aur" if="do.package">
+	<target name="package" depends="package.zip" if="do.package"> <!-- ,package.aur - not doing aur for the moment - upload method changed -->
 	</target>
 
 	<target name="package.zip" if="do.package">
