@@ -105,6 +105,7 @@ public class J2SEAGPS {
     
     public static final byte[] getAgpsUsingSimpleFtp(final String url) throws java.io.IOException , BT747Exception{
         if (url.startsWith("ftp://")) {
+            bt747.sys.Generic.debug("Trying to get AGPS using Simple Ftp");
         	byte[] agpsData;
             final int colonIdx = url.indexOf(':', 6);
             final int atIdx = url.indexOf('@');
@@ -166,9 +167,9 @@ public class J2SEAGPS {
                 os.close();
                 return agpsData;
             }
-        } else {
+        } /*else {
         	return J2SEAGPS.getBytesFromUrl(url);
-        }
+        }*/
         return null;
     }
 }

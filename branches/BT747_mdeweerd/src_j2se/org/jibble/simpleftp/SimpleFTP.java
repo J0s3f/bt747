@@ -70,13 +70,16 @@ public class SimpleFTP {
         writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         
         String response = readLine();
-        if (!response.startsWith("220 ")) {
+        if (!response.startsWith("220 ")&&!response.startsWith("220-")) {
             throw new IOException("SimpleFTP received an unknown response when connecting to the FTP server: " + response);
         }
         
         sendLine("USER " + user);
         
         response = readLine();
+        while(response.startsWith("220 ")||response.startsWith("220-")) {
+        	response = readLine();
+        }
         if (!response.startsWith("331 ")) {
             throw new IOException("SimpleFTP received an unknown response after sending the user: " + response);
         }
