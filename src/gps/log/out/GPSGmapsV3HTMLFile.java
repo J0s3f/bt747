@@ -296,9 +296,9 @@ public final class GPSGmapsV3HTMLFile extends GPSFile {
 	            + "}\n" // Function
 	            + "function trackClick(trk,val) {\n"
 	            + " if (val == 1) {\n"
-	            + "  map.addOverlay(trk);\n"
+	            + "  trk.setMap(map);\n"
 	            + " } else {\n"
-	            + "  map.removeOverlay(trk);\n"
+	            + "  trk.setMap(null);\n"
 	            + " } }\n"
 	            + "function makeLatLonInfo(h) {\n"
 	            + " return function(latlng) {\n"
