@@ -286,6 +286,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			"/dev/tty.HOLUX_M-241-SPPSlave", // Port for Holux M-241
 			"/dev/tty.HoluxM-1000C-SPPslave", // Port for Holux M1000C
 			"/dev/tty.HOLUX_M-1200E-SPPslave", // Port for
+			"/dev/cu.MIPPERGPS-SPPslave", // Port for mipper device. 
 			"/dev/tty.iBT-GPS-SPPSlave", // Port for
 			"/dev/tty.iBT-GPS-SPPslave", // Port for
 			"/dev/cu.QstarzGPS-SPPslave", // Port for some Qstartz devices
