@@ -22,7 +22,7 @@ fi
 MYROOTPATH=. 
   
 RXTXLIBPATH=/usr/share/java
-export CLASSPATH=lib/jchart2d-2.1.0:lib/jopt-simple-2.4.1.jar:/lib/jcalendar-1.3.2.jar:lib/swing-layout-1.0.3.jar:lib/swingx.jar:lib/swingx-ws.jar:dist/BT747.jar:dist/BT747_j2se.jar:rxtx-2.1-7-bins-r2/RXTXcomm.jar
+export CLASSPATH=lib/jchart2d-2.1.0:lib/jopt-simple-3.1.jar:/lib/jcalendar-1.3.2.jar:lib/swing-layout-1.0.3.jar:lib/swingx.jar:lib/swingx-ws.jar:dist/BT747.jar:dist/BT747_j2se.jar:rxtx-2.1-7-bins-r2/RXTXcomm.jar
 
 # MEM HEAP OPTION IS NEEDED WHEN LOADING PICTURES - THIS INCREASES AVAILABLE MEMORY 
 MEM_HEAP_OPTION=-Xmx192m

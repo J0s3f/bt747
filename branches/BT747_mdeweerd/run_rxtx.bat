@@ -8,7 +8,7 @@ set           MYDIST=%MYROOTPATH%\dist
 set            MYLIB=%MYROOTPATH%\lib
 set         RXTXPATH=%MYLIB%\rxtx-2.1-7-bins-r2
 set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
-set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
+set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%SystemRoot%\SysWOW64;%PATH%
 set        CLASSPATH=%RXTXPATH%\RXTXcomm.jar;%MYLIB%\waba_only.jar;%MYDIST%\BT747_rxtx.jar;%CLASSPATH%
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
