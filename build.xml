@@ -181,7 +181,7 @@
 	<target name="package" depends="package.zip" if="do.package"> <!-- ,package.aur - not doing aur for the moment - upload method changed -->
 	</target>
 
-	<target name="package.zip" if="do.package">
+	<target name="package.zip" if="do.package" depends="package.mac">
 		<!--
 		-->
 		<exec executable="package.bat" failifexecutionfails="false" />
@@ -189,15 +189,37 @@
 	</target>
 	
 	<target name="package.mac">
-		<copy todir="${build.dir}/BT747.app/Contents/MacOS/">
+		<delete dir="${build.dir}/BT747.app" />
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/dist/" includeemptydirs="false">
 			<fileset dir="${dist}">
 			</fileset>
 		</copy>
-		<copy todir="${build.dir}/BT747.app/Contents/MacOS/">
-			<fileset dir="${lib.dir}">
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/lib/" flatten="true">
+			<resources>
+				<file file="${swcollections.jar}"/>
+				<file file="${rxtxcomm.jar}"/>
+				<file file="${waba.jar}"/>
+				<file file="${jcalendar.jar}"/>
+				<file file="${jchart.jar}"/>
+				<file file="${swingx.jar}"/>
+				<file file="${swing-layout.jar}"/>
+				<file file="${swingx-ws.jar}"/>
+				<file file="${jopt-simple.jar}"/>
+				<file file="${sanselan.jar}"/>
+				<file file="${jchart.jar}"/>
+			</resources>
+		</copy>
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/lib/rxtx-2.1-7-bins-r2/">
+			<fileset dir="${lib.dir}/rxtx-2.1-7-bins-r2">
+				<include name="**/Mac_OS_X/**"/>
 			</fileset>
 		</copy>
-		<copy tofile="${build.dir}/BT747.app/Contents/MacOS/BT747/bt747_macosX_j2se.command" file="${macos.sh}"/>
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/lib/rxtx-2.2pre2-bins/">
+			<fileset dir="${lib.dir}/rxtx-2.2pre2-bins">
+				<include name="**/Mac_OS_X/**"/>
+			</fileset>
+		</copy>
+		<copy tofile="${build.dir}/BT747.app/Contents/MacOS/BT747" file="${macos.sh}"/>
 		<copy tofile="${build.dir}/BT747.app/Contents/Resources/BT747.icns" file="${icon.dir}/BT747.icns"/>
 		<chmod perm="766" file="${build.dir}/BT747.app/Contents/MacOS/BT747/bt747_macosX_j2se.command"></chmod>
 
@@ -209,6 +231,16 @@
 				</dict>
 			</plist>
 		</echoxml>
+		<tar longfile="gnu" destfile="pack/BT747_osx_${build_version}.${build.current.revision}.tgz" compression="gzip"
+		>
+			  <tarfileset dir="${build.dir}" filemode="755">
+			    <include name="BT747.app/Contents/MacOS/BT747"/>
+			  </tarfileset>
+			  <tarfileset dir="${build.dir}">
+			    <include name="BT747.app/**"/>
+			    <exclude name="BT747.app/Contents/MacOS/BT747"/>
+			  </tarfileset>
+		</tar>
 		<!--
 		# create icon 
 		cp BT747.icns BT747.app/Contents/Resources
