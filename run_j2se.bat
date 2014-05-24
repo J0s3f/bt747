@@ -15,10 +15,10 @@ for /f "useback tokens=*" %%a in ('%RXTXPATH%') do set RXTXPATH=%%~a
 set MYSYSTEMRXTXBINS="%RXTXPATH%\Windows\i368-mingw32"
 for /f "useback tokens=*" %%a in ('%MYSYSTEMRXTXBINS%') do set MYSYSTEMRXTXBINS=%%~a
 
-set             PATH="%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%"
+set             PATH="%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%SystemRoot%\SysWOW64;%PATH%"
 for /f "useback tokens=*" %%a in ('%PATH%') do set PATH=%%~a
 
-set        CLASSPATH="%MYDIST%\BT747_j2se.jar;%MYLIB%\swingx-ws.jar;%MYLIB%\swingx.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-2.4.1.jar;%MYLIB%\jchart2d-3.1.0.jar;%CLASSPATH%"
+set        CLASSPATH="%MYDIST%\BT747_j2se.jar;%MYLIB%\swingx-ws.jar;%MYLIB%\swingx.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-3.1.jar;%MYLIB%\jchart2d-3.1.0.jar;%CLASSPATH%"
 for /f "useback tokens=*" %%a in ('%CLASSPATH%') do set CLASSPATH=%%~a
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747

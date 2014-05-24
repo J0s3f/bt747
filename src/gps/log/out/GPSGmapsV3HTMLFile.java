@@ -458,35 +458,38 @@ public final class GPSGmapsV3HTMLFile extends GPSFile {
         if (isWayType) {
             if (waypoints.size() != 0) {
                 rec.setLength(0);
-                rec.append("var baseIcon = new GIcon(G_DEFAULT_ICON);\n"
-                        + "baseIcon.iconSize = new GSize(32, 32);\n");
+                rec.append("var baseIcon = new google.maps.Marker();"
+                		// + "baseIcon.iconSize = new GSize(32, 32);\n"
+                        );
                 final BT747Hashtable iter = icons.iterator();
                 while (iter.hasNext()) {
                     final Object key = iter.nextKey();
                     rec.append("var ICON");
                     rec.append((String) key);
-                    rec.append("=new GIcon(baseIcon);");
-                    rec.append("ICON");
-                    rec.append((String) key);
-                    rec.append(".image='");
+                    rec.append("={");
+                    rec.append("image:'");
                     rec.append((String) iter.get(key));
-                    rec.append("';\n");
+                    rec.append("'");
+                    rec.append("};");
                 }
 
                 rec.append("var markers;markers=[");
                 for (int i = 0; i < waypoints.size(); i++) {
-                    rec.append("\n new GMarker(new google.maps.LatLng(");
+                	rec.append("\nnew google.maps.Marker({");
+                    if (((String) iconList.elementAt(i)).length() != 0) {
+                        rec.append("icon:'");
+                        rec.append(iconList.elementAt(i));
+                        rec.append("',");
+                    }
+                    rec.append("new google.maps.LatLng(");
                     rec.append(JavaLibBridge.toString(waypoints.get(i)
                             .getLatDouble(), 5));
                     rec.append(',');
                     rec.append(JavaLibBridge.toString(waypoints.get(i)
                             .getLonDouble(), 5));
                     rec.append(')');
-                    if (((String) iconList.elementAt(i)).length() != 0) {
-                        rec.append(',');
-                        rec.append(iconList.elementAt(i));
-                    }
-                    rec.append("),"); // Last char must be ',' to erase it
+                    
+                	rec.append("}),"); // Last char must be ',' to erase it
                     // below
 
                 }

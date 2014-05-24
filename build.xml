@@ -55,6 +55,8 @@
 	<property name="keytool.passwd" value="secret" />
 	<property name="keytool.keystore" value="cfg/jws/myKeystore" />
 
+	<property name="macos.sh" value="bt747_macosX_j2se.command" />
+	
 	<property name="superwaba.jar" value="${lib.dir}/Waba_only.jar" />
 	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar" />
 
@@ -184,6 +186,38 @@
 		-->
 		<exec executable="package.bat" failifexecutionfails="false" />
 		<mkdir dir="${dist}/bt747_dev" />
+	</target>
+	
+	<target name="package.mac">
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/">
+			<fileset dir="${dist}">
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/BT747.app/Contents/MacOS/">
+			<fileset dir="${lib.dir}">
+			</fileset>
+		</copy>
+		<copy tofile="${build.dir}/BT747.app/Contents/MacOS/BT747/bt747_macosX_j2se.command" file="${macos.sh}"/>
+		<copy tofile="${build.dir}/BT747.app/Contents/Resources/BT747.icns" file="${icon.dir}/BT747.icns"/>
+		<chmod perm="766" file="${build.dir}/BT747.app/Contents/MacOS/BT747/bt747_macosX_j2se.command"></chmod>
+
+		<echoxml file="${build.dir}/BT747.app/Contents/Info.plist">
+			<plist version="1.0">
+				<dict>
+					<key>CFBundleIconFile</key>
+					<string>BT747.icns</string>
+				</dict>
+			</plist>
+		</echoxml>
+		<!--
+		# create icon 
+		cp BT747.icns BT747.app/Contents/Resources
+		# clean what is unuseful
+		for keyword in Linux linux win32 Windows solaris Solaris INSTALL
+		do
+		  find BT747.app -name "*${keyword}*" -exec rm -rf {} \;
+		done
+	-->
 	</target>
 	
 	<target name="package.aur" if="do.package">
