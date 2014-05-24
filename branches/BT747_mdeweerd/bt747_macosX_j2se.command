@@ -42,5 +42,5 @@ which javaw >/dev/null 2>&1 && JAVA=javaw
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"
-#$JAVA ${MEM_OPTION}  -Djava.library.path="${RXTX_BIN_PATH}" bt747.j2se_view.BT747Main
-$JAVA  ${MEM_OPTION} -Djava.library.path="${RXTX_BIN_PATH}" bt747.j2se_view.BT747Main $*
+$JAVA ${MEM_OPTION}  -Djava.library.path="${RXTX_BIN_PATH}" bt747.j2se_view.BT747Main
+#$JAVA  ${MEM_OPTION} -Djava.library.path="${RXTX_BIN_PATH}" bt747.j2se_view.BT747Main $*
