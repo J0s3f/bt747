@@ -227,7 +227,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 				System.out.println("Error: Only serial ports are handled.");
 			}
 		} catch (final NoSuchPortException e) {
-			Generic.debug("", e);
+			Generic.debug("No Such Port", e);
 			Generic.debug("\nListing known ports:");
 			try {
 				final Enumeration<?> list = CommPortIdentifier
@@ -267,7 +267,9 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			// } catch (final UnsupportedCommOperationException e) {
 			// Generic.debug("", e);
 		} catch (final IOException e) {
-			Generic.debug("", e);
+			Generic.debug("Error: IO", e);
+		} catch (final Throwable e) {
+			Generic.debug("Unexpected error",e);
 		}
 
 		return result;
