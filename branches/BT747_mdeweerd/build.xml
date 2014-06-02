@@ -241,15 +241,6 @@
 			    <exclude name="BT747.app/Contents/MacOS/BT747"/>
 			  </tarfileset>
 		</tar>
-		<!--
-		# create icon 
-		cp BT747.icns BT747.app/Contents/Resources
-		# clean what is unuseful
-		for keyword in Linux linux win32 Windows solaris Solaris INSTALL
-		do
-		  find BT747.app -name "*${keyword}*" -exec rm -rf {} \;
-		done
-	-->
 	</target>
 	
 	<target name="package.aur" if="do.package">
