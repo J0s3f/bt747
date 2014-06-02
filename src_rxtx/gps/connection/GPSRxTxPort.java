@@ -203,6 +203,22 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 								+ parity, e);
 					}
 				}
+				if(Generic.isDebug()) {
+					String uartType="N/A";
+					try {
+						uartType=serialPort.getUARTType();
+					} catch (Throwable e) {
+						
+					}
+					Generic.debug("Information about the opened port:"
+							+ " Name:"+serialPort.getName()
+							+ " Baud:"+serialPort.getBaudRate()
+							+ " StopBits:" +serialPort.getStopBits()
+							+ " DataBits:"+serialPort.getDataBits()
+							+ " Uart type:"+uartType
+							+ " Internal:" + serialPort.toString()
+							);
+				}
 				result = 0;
 			} else {
 				sp = null;
