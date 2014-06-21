@@ -228,6 +228,10 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                         }
                     } // line found
                 } while (continueInBuffer);
+                if(offsetInBuffer==0) {
+                	Generic.debug(nextAddrToRead-sizeToRead +"skipping invalid NMEA data",null);
+                	offsetInBuffer=sizeToRead-512;
+                }
                 nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
             if ((curLogFormat != 0)) {
