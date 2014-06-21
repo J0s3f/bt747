@@ -272,6 +272,9 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			Generic.debug("Unexpected error",e);
 		}
 
+		if(Generic.isDebug()) {
+			Generic.debug("Port open result (0=open):"+result);
+		}
 		return result;
 	}
 
