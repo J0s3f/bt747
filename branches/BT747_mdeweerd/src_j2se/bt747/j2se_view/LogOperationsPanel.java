@@ -87,7 +87,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }
 
     private final static String HOLUX_M241 = "Holux M-241/M1000C";
-    private final static String HOLUX_GR245 = "Holux GR-245";
+    private final static String HOLUX_GR245 = "Holux GPSport 245/RCV3000";
     private final static String SKYTRAQ = "Skytraq";
     
     private void updateGuiData() {
