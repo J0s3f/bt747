@@ -251,6 +251,10 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 	15, /* 2008 */
 	15, /* 2009 Jan. */
 	16, /* 2010 */
+	16, /* 2011 */
+	16, /* 2012 Juil. */
+	17, /* 2013 */
+	17, /* 2014 */
 	};
 	/* First year = 1980 */
 	final static private int[] leapMonth = { 1, /* 1980 Jan. */
@@ -284,6 +288,10 @@ public final class SkytraqLogConvert extends GPSLogConvertInterface {
 	100, /* 2008 */
 	1, /* 2009 Jan. */
 	100, /* 2010 */
+	100, /* 2011 */
+	7, /* 2012 Juil. */
+	100, /* 2013 */
+	100, /* 2014 */
 	/*
 	 * Last in table must not be a leap second year for algorithm to work, if
 	 * not, add one year.
