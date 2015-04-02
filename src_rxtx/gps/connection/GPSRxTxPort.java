@@ -310,6 +310,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			"/dev/cu.MIPPERGPS-SPPslave", // Port for mipper device. 
 			"/dev/tty.iBT-GPS-SPPSlave", // Port for
 			"/dev/tty.iBT-GPS-SPPslave", // Port for
+			"/dev/cu.iBT-GPS-SPPslave", // Port for
 			"/dev/cu.QstarzGPS-SPPslave", // Port for some Qstartz devices
 			"/dev/tty.QstarzGPS-SPPslave", // Port for some Qstartz devices
 			"/dev/tty.Qstarz1000XT-SPPslave", // Port for some Qstartz devices
