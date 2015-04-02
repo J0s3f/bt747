@@ -150,7 +150,7 @@ public class J2SEController extends Controller {
      * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
      */
     @Override
-    public void modelEvent(ModelEvent e) {
+    public void modelEvent(final ModelEvent e) {
         super.modelEvent(e);
         final int type = e.getType();
         switch (type) {

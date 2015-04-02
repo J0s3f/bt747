@@ -103,8 +103,7 @@ public final class J2SEAppController extends J2SEController {
      * @see bt747.model.Controller#modelEvent(bt747.model.ModelEvent)
      */
     @Override
-    public void modelEvent(ModelEvent e) {
-        // TODO Auto-generated method stub
+    public void modelEvent(final ModelEvent e) {
         super.modelEvent(e);
         switch (e.getType()) {
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
@@ -117,7 +116,12 @@ public final class J2SEAppController extends J2SEController {
             resetValuesAfterConnect();
             break;
         case ModelEvent.EXCEPTION:
-            notifyBT747Exception((BT747Exception) e.getArg());
+        	if(!(e.getArg() instanceof BT747Exception)) {
+        		// Exception should be wrapped, but praticl case shows exception on this rule.
+        		notifyBT747Exception(new BT747Exception("Unwrapped Exception", (Exception)e.getArg()));
+        	} else { 
+        		notifyBT747Exception((BT747Exception) e.getArg());
+        	}
             break;
         case ModelEvent.SETTING_CHANGE:
             switch (Integer.parseInt((String) e.getArg())) {

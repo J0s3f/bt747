@@ -50,7 +50,8 @@ public class J2SEAGPS {
         byte[] result = null;
         try {
         	return J2SEAGPS.getAgpsUsingSimpleFtp(urlString);
-        } catch(Exception e) {
+        } catch(final Exception e) {
+        	// First method to get data from FTP did not work.
         }
         try {
             if(result==null) {
