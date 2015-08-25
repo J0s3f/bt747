@@ -280,8 +280,8 @@
 		</exec>
     </target>
 	<target name="upload-jnlp" if="do.upload">
-		<signjar jar="dist/BT747.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
-		<signjar jar="dist/BT747_rxtx.jar" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
+		<signjar jar="dist/BT747.jar" tsaurl="http://timestamp.digicert.com" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
+		<signjar jar="dist/BT747_rxtx.jar" tsaurl="http://timestamp.digicert.com" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 		<!--
         <scp file="BT747.jar"
             todir="shell.sourceforge.net:bt747/htdocs/"/>
@@ -1505,7 +1505,7 @@
 
 	<target name="jws.pack.lib">
 		<copy todir="${build.dir}/sign" file="${lib.dir}/${lib.name}" overwrite="yes" />
-		<signjar jar="${build.dir}/sign/${lib.name}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
+		<signjar jar="${build.dir}/sign/${lib.name}" tsaurl="http://timestamp.digicert.com" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 		<copy todir="${dist}/src/app">
 			<fileset dir="${build.dir}/sign" includes="${lib.name}" />
 			<mapper type="glob" from="*.jar" to="*__V${lib.version}.jar" />
@@ -1614,6 +1614,7 @@
 	<!--
     <target name="sign.jars" depends="init">
       <signjar keystore="${keystore}"
+      		   tsaurl="http://timestamp.digicert.com" 
                alias="${keystore.alias}"
                storepass="${keystore.password}" >
         
@@ -1817,7 +1818,7 @@
 
 	<target name="sign" if="keytool.sign">
 		<!-- Sign only if keytool.sign is set, this indicates parameters are set -->
-		<signjar jar="${jar.tosign}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
+		<signjar jar="${jar.tosign}" tsaurl="http://timestamp.digicert.com" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 	</target>
 
 
