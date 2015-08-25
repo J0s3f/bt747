@@ -42,6 +42,9 @@
 
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
+	
+	<property name="build.compiler" value="javac1.7"/>
+
 
 	<available file="${proguardLib}" property="proguardLib.ok" />
 	<condition property="skip.proguard">
