@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Vector;
 
 import bt747.Version;
 import bt747.sys.Generic;
@@ -385,9 +387,17 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 	}
 
 	/**
+	 * Get a USB portconnection.
+	 */
+	public final String getUsbPort() {
+		final String[] ports=getUsbPorts(false); // Get just one port.
+		return ports.length==0?null:ports[0];
+	}
+	/**
 	 * Set an USB connection.
 	 */
-	public final synchronized String getUsbPort() {
+	public final synchronized String[] getUsbPorts(final boolean getAllPorts) {
+		final Vector<String> usbports=new Vector<String>();
 		// POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.SLAB_USBtoUART"
 		// POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.HOLUX_M-241-SPPSlave-1"
 		// POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.HOLUX_M-241-SPPSlave-0"
@@ -401,56 +411,94 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			if (ports != null && ports.length > 0) {
 				for (int i = 0; i < ports.length; i++) {
 					portName = ports[i];
-					portFound = true;
+					usbports.add(portName);
+					portFound = !getAllPorts;
 				}
 			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.serial-0001";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.SLAB_USBtoUART";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.iBTAGPS-SPPslave";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 
 		if (!portFound && os_name.toLowerCase().startsWith("lin")) {
 			portName = getPortFromPrefixes(linUsbPortPrefixes,
 					MAX_USBPORT_SEARCH_IDX, null);
 			portFound = portName != null;
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem1b10";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem1d10";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem3d10";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem3a20";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = "/dev/cu.usbmodem620";
 			portFound = isValidPort(portName);
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
 		if (!portFound) {
 			portName = getPortFromPrefixes(possibleUsbPorts, -1, "");
 			portFound = portName != null;
+			if(portFound) {
+				usbports.add(portName);
+				portFound = !getAllPorts;
+			}
 		}
-		if (!portFound) {
-			portName = null;
-		}
-		return portName;
+		return usbports.toArray(new String[usbports.size()]);
 	}
 
 	public final synchronized void setFreeTextPort(final String s) {
