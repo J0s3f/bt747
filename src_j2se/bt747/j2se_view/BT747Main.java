@@ -38,6 +38,7 @@ import javax.swing.JScrollPane;
 
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
+import net.sf.bt747.j2se.app.map.MapType;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordArrayDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordDataProvider;
@@ -47,9 +48,7 @@ import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.app.utils.Utils;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
-
 import bt747.Version;
-import bt747.j2se_view.MyMap.MapType;
 import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -665,14 +664,14 @@ public class BT747Main extends javax.swing.JFrame implements
 	private PositionTablePanel trackPanel = null;
 	private PositionTablePanel waypointPanel = null;
 
-	private void addMapMenuItem(final String desc, final MyMap.MapType mapType) {
+	private void addMapMenuItem(final String desc, final MapType mapType) {
 		final Frame f = this;
 		miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
 		miDigitalGlobe.setText(desc); // NOI18N
 		miDigitalGlobe.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				c.setIntOpt(Model.MAPTYPE, mapType.ordinal());
-				if (mapType == MyMap.MapType.UserType) {
+				if (mapType == MapType.UserType) {
 					MapConfigurationDialog mcd = new MapConfigurationDialog(f,
 							true);
 					mcd.setLocationByPlatform(true);
@@ -1380,7 +1379,7 @@ public class BT747Main extends javax.swing.JFrame implements
         }//GEN-LAST:event_miPHLX260ProtocolActionPerformed
 
         private void miOpenPisteMapNocontourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenPisteMapNocontourActionPerformed
-            c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMapNoContours.ordinal());
+            c.setIntOpt(Model.MAPTYPE, MapType.OpenPisteMapNoContours.ordinal());
         }//GEN-LAST:event_miOpenPisteMapNocontourActionPerformed
 
 	private void cbSerialSpeedFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbSerialSpeedFocusLost
@@ -1568,21 +1567,21 @@ public class BT747Main extends javax.swing.JFrame implements
 	}// GEN-LAST:event_miFindSerialPortsActionPerformed
 
 	private void miMapnikActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miMapnikActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenStreetMap.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.OpenStreetMap.ordinal());
 	}// GEN-LAST:event_miMapnikActionPerformed
 
 	private void miOsmarenderActionPerformed(
 			final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miOsmarenderActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OsmaRender.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.OsmaRender.ordinal());
 	}// GEN-LAST:event_miOsmarenderActionPerformed
 
 	private void miCycleCloudmadeActionPerformed(
 			final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miCycleCloudmadeActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.CycleCloudmade.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.CycleCloudmade.ordinal());
 	}// GEN-LAST:event_miCycleCloudmadeActionPerformed
 
 	private void miOpvnMapActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miOpvnMapActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Opvn.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.Opvn.ordinal());
 	}// GEN-LAST:event_miOpvnMapActionPerformed
 
 	private void mnSiteLinkActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnSiteLinkActionPerformed
@@ -1729,11 +1728,11 @@ public class BT747Main extends javax.swing.JFrame implements
 	}// GEN-LAST:event_btToolLocServeActionPerformed
 
 	private void miOpenPisteMapActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miOpenPisteMapActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenPisteMap.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.OpenPisteMap.ordinal());
 	}// GEN-LAST:event_miOpenPisteMapActionPerformed
 
 	private void miDigitalGlobeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miDigitalGlobeActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.DigitalGlobe.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.DigitalGlobe.ordinal());
 	}// GEN-LAST:event_miDigitalGlobeActionPerformed
 
 	private void miFindSerialPortActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miFindSerialPortActionPerformed
@@ -1746,7 +1745,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
 	private void miCycleThunderflameActionPerformed(
 			java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miCycleThunderflameActionPerformed
-		c.setIntOpt(Model.MAPTYPE, MyMap.MapType.CycleThunderFlames.ordinal());
+		c.setIntOpt(Model.MAPTYPE, MapType.CycleThunderFlames.ordinal());
 	}// GEN-LAST:event_miCycleThunderflameActionPerformed
 
 	private void miSkyTraqProtocolActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miSkyTraqProtocolActionPerformed

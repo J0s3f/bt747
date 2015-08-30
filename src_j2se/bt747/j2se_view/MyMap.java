@@ -45,6 +45,7 @@ import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapFactoryInfos;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
+import net.sf.bt747.j2se.app.map.MapType;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 
@@ -358,10 +359,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener, POIActio
         }
         return hasPositions;
     }
-
-    public enum MapType {
-        OpenStreetMap, OsmaRender, CycleThunderFlames, Opvn, OpenPisteMap, DigitalGlobe, UserType, CycleCloudmade, OpenPisteMapNoContours
-    };
 
     private void setMap(final int maptypeOrdinal) {
         try {

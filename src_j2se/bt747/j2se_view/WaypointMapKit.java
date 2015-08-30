@@ -43,6 +43,7 @@ import javax.swing.JLabel;
 import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapFactoryInfos;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
+import net.sf.bt747.j2se.app.map.MapType;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 
@@ -63,6 +64,7 @@ import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Generic;
+
 import javax.swing.event.EventListenerList;
 
 /**
@@ -394,9 +396,9 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     /** Set the current map based on the map index */
     private void setMap(final int maptypeOrdinal) {
         try {
-            setMap(MyMap.MapType.values()[maptypeOrdinal]);
+            setMap(MapType.values()[maptypeOrdinal]);
         } catch (final Exception e) {
-            setMap(MyMap.MapType.values()[0]);
+            setMap(MapType.values()[0]);
         }
     }
 
@@ -404,39 +406,8 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     /**
      * Set the map type based on the MapType enum value.
      */
-    private void setMap(final MyMap.MapType maptype) {
-        TileFactoryInfo info = null;
-
-        switch (maptype) {
-        // Not used because that would likely be a license violation.
-        // case GoogleMaps:
-        // info = MapFactoryInfos.tfiGOOGLEMAPS;
-        // break;
-        case OsmaRender:
-            info = MapFactoryInfos.tfiOSM_OSMARENDER;
-            break;
-        case CycleThunderFlames:
-            info = MapFactoryInfos.tfiOSM_OSM_CYCLE_THUNDER;
-            break;
-        case CycleCloudmade:
-            info = MapFactoryInfos.tfiOSM_OSM_CYCLE_CLOUDMADE;
-            break;
-        case Opvn:
-            info = MapFactoryInfos.tfiOpnvStreetMap;
-            break;
-        case OpenPisteMap:
-            info = MapFactoryInfos.tfiOpenPisteMapContours;
-            break;
-        case OpenPisteMapNoContours:
-            info = MapFactoryInfos.tfiOpenPisteMapNoContours;
-            break;
-        case DigitalGlobe:
-            info = MapFactoryInfos.tfiDigitalGlobe;
-            break;
-        case OpenStreetMap:
-        default:
-            info = MapFactoryInfos.tfiOpenStreetMap;
-        }
+    private void setMap(final MapType maptype) {
+        final TileFactoryInfo info = MapFactoryInfos.getMapFactoryInfo(maptype);
         // Get the current boundaries of the map.
         final Rectangle r = map.getMainMap().getViewportBounds();
         // Set containing position that must be in the new map.

@@ -338,11 +338,15 @@
 			<outjar path="${proguard.infile}" />
           -optimizationpasses 1
           -injar ${swcollections.jar}(!META-INF/**)
+          -optimizations "!class/unboxing/enum"
           -printmapping ${dist}/${ant.project.name}${suffix}.map
 	    -keep public class org.jibble.simpleftp.SimpleFTP  { *; }
           -keep public class BT747
           -keep public class bt747.j2se_view.BT747
 	      -keep public class sun.audio.AudioStream
+	      -keep public class GPSRxTxPort {
+	      		public final String getUsbPorts();
+	      }
 		  -keep public class org.snipecode.reg.RegUtil { *; }
 			-keep public class gps.log.out.GPSConversionParameters { public final static java.lang.String *;}
           -keep public class * extends waba.ui.MainWindow
@@ -414,7 +418,7 @@
 		<delete dir="${j2sebuild.dir}" />
 		<mkdir dir="${j2sebuild.dir}" />
 
-		<javac verbose="no" srcdir="${src_j2se.dir}" destdir="${j2sebuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="j2seclasspath" encoding="iso-8859-15" target="1.5" source="1.5">
+		<javac verbose="no" srcdir="${src_j2se.dir}" destdir="${j2sebuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="j2seclasspath" encoding="iso-8859-15" target="1.7" source="1.7">
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
 			<include name="de/k621/avr/gps/converter/NMEAConverter.java" />
@@ -508,9 +512,11 @@
 			<libraryjar file="${swingx-ws.jar}" />
 			<libraryjar file="${swing-layout.jar}" />
 			<libraryjar file="${rxtxcomm.jar}" />
+			<libraryjar file="${sanselan.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
+                     -optimizations "!class/unboxing/enum"
                      -optimizationpasses 2
                      -keepclasseswithmembers public class * {
                           public static void main(java.lang.String[]); }
@@ -526,14 +532,15 @@
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${jopt-simple.jar}" />
+			<libraryjar file="${swingx.jar}" />
+			<libraryjar file="${swingx-ws.jar}" />
+			<libraryjar file="${swing-layout.jar}" />
 			<outjar path="${dist}/${ant.project.name}_jnc.jar" />
 	        	-injar ${dist}/${ant.project.name}_j2se.jar
 	            -injar ${dist}/lib${ant.project.name}.jar
 	        	-injar ${jcalendar.jar}
-	        	-injar ${swingx.jar}
-	        	-injar ${swingx-ws.jar}
-	        	-injar ${swing-layout.jar}
 	                     -optimizationpasses 1
+            -optimizations "!class/unboxing/enum"                     
 			-keep public class com.sun.java.swing.plaf.windows.WindowsLookAndFeel
 		    -keep public class org.snipecode.reg.RegUtil { *; }
 			-keep public class **swing.plaf**
@@ -557,6 +564,7 @@
               -injar ${wababuild.dir}/${ant.project.name}_waba_unopt.jar
               -injar ${swcollections.jar}(!META-INF/**)
               -optimizationpasses 3
+              -optimizations "!class/unboxing/enum"          
               -printmapping ${dist}/${ant.project.name}_waba.map
               -keep public class BT747
               -keep public class sun.audio.AudioStream
@@ -564,7 +572,7 @@
               -keep public class * extends waba.ui.MainWindow
               -keep public class * implements bt747.lang.TxtInterface
               -keep public class * extends gps.connection.GPSPort
-              -keep public class * {
+              -keep public class * {             
                 public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
         	    public static boolean hasDefaultPortInstance();
               }
@@ -694,7 +702,7 @@
                         -keep public class * {
 	                       public static void setDefaultGpsPortInstance(gps.connection.GPSPort);
 			               public static boolean hasDefaultPortInstance();
-	                    }
+		                }
                         -keep public class gps.connection.GPSPort  { *; }
                </proguard>
 
@@ -803,6 +811,8 @@
 			<libraryjar file="${superwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
+		         -optimizations "!class/unboxing/enum"
+			
                 -keep public class * extends waba.ui.MainWindow
  		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort
@@ -974,7 +984,7 @@
 				<include name="${src_j2se.dir}/**/resources/*" if="is.lib" />
 			</fileset>
 		</delete>
-		<javac verbose="no" srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="${build.classpath}" encoding="iso-8859-15" target="1.5" source="1.5">
+		<javac verbose="no" srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" optimize="${java.optimize}" debug="${java.debug}" classpathref="${build.classpath}" encoding="iso-8859-15" target="1.7" source="1.7">
 			<include name="**/*.java" />
 		</javac>
 		<copy todir="${rxtxbuild.dir}">
