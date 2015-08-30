@@ -5,6 +5,7 @@ package net.sf.bt747.j2se.app.map;
 
 import java.io.File;
 
+import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.wms.WMSService;
 
 /**
@@ -130,7 +131,7 @@ public class MapFactoryInfos {
     public final static MyTileFactoryInfo tfiOpnvStreetMap = new MyTileFactoryInfo(
             "opnv", 1, 18, 19, 256, true, true,
             "http://tile.xn--pnvkarte-m4a.de/tilegen", "x", "y", "z",
-            "öpnv karte - public transport", "http://tile.\\u00D6pnvkarte.de") {
+            "ï¿½pnv karte - public transport", "http://tile.\\u00D6pnvkarte.de") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
             String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
@@ -446,4 +447,37 @@ public class MapFactoryInfos {
     // "&STYLES=&SRS=IGNF:GEOPORTALANF" +
     // "&BBOX=-6639616,1777664,-6637568,1779712" +
     // "&WIDTH=256&HEIGHT=256&TILED=true";
+    
+    public static TileFactoryInfo getMapFactoryInfo(final MapType mapType) {
+		TileFactoryInfo info=MapFactoryInfos.tfiOpenStreetMap;
+        // Not used because that would likely be a license violation.
+        // case GoogleMaps:
+        // info = MapFactoryInfos.tfiGOOGLEMAPS;
+        // break;
+        if(mapType==MapType.OsmaRender)
+            info = MapFactoryInfos.tfiOSM_OSMARENDER;
+            
+        if(mapType==MapType.CycleThunderFlames)
+            info = MapFactoryInfos.tfiOSM_OSM_CYCLE_THUNDER;
+            
+        if(mapType==MapType.CycleCloudmade)
+            info = MapFactoryInfos.tfiOSM_OSM_CYCLE_CLOUDMADE;
+            
+        if(mapType==MapType.Opvn)
+            info = MapFactoryInfos.tfiOpnvStreetMap;
+            
+        if(mapType==MapType.OpenPisteMap)
+            info = MapFactoryInfos.tfiOpenPisteMapContours;
+            
+        if(mapType==MapType.OpenPisteMapNoContours)
+            info = MapFactoryInfos.tfiOpenPisteMapNoContours;
+            
+        if(mapType==MapType.DigitalGlobe)
+            info = MapFactoryInfos.tfiDigitalGlobe;
+            
+        if(mapType==MapType.OpenStreetMap)
+            info = MapFactoryInfos.tfiOpenStreetMap;
+		return info;
+	}
+
 }
