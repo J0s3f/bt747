@@ -70,6 +70,10 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 		portPrefix = java.lang.System.getProperty("bt747_prefix", portPrefix);
 	}
 
+	@Override
+	public GPSPort clone() {
+		return new GPSRxTxPort();
+	}
 	/**
 	 * Indicates if the device is connected or not.
 	 * 

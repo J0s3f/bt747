@@ -35,6 +35,11 @@ public final class GPSWabaSocketPort extends GPSPort {
                                                         // "btspp://000B0D87E7CA";
 
     private boolean portIsOK = false;
+    
+    @Override
+    public GPSPort clone() {
+    	return new GPSWabaSocketPort();
+    }
 
     /**
      * Indicates if the device is connected or not.

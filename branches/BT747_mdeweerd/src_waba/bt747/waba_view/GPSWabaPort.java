@@ -35,6 +35,11 @@ public final class GPSWabaPort extends GPSPort {
 
     private boolean portIsOK = false;
 
+    
+    @Override
+    public GPSPort clone() {
+    	return new GPSWabaPort();
+    }
     /**
      * Indicates if the device is connected or not.
      * 

@@ -35,7 +35,7 @@ public final class GPSrxtx {
      * 
      */
 	public GPSrxtx() {
-		this(defaultGpsPort);
+		this(defaultGpsPort.clone());
 	}
 
 	public GPSrxtx(final GPSPort port) {
