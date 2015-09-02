@@ -59,6 +59,8 @@ public abstract class GPSPort {
 	public GPSPort() {
 	}
 
+	/** Returns new instance of same class. */
+	public abstract GPSPort clone ();
 	/**
 	 * Indicates if the device is connected or not.
 	 * 

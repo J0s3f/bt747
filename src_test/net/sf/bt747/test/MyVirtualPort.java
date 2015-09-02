@@ -23,6 +23,11 @@ public class MyVirtualPort extends GPSPort {
         this.is = is;
         this.os = os;
     }
+    
+    @Override
+    public GPSPort clone() {
+    	return new MyVirtualPort(is, os);
+    }
 
     /*
      * (non-Javadoc)
