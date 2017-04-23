@@ -134,6 +134,7 @@ public class OsmGpxUpload {
         final byte[] buffer = new byte[BUFFER_SIZE];
         // int fileLen = (int)gpxFile.length();
         int read;
+        @SuppressWarnings("unused")
         int sumread = 0;
         InputStream in = new BufferedInputStream(new FileInputStream(gpxFile));
         Generic.debug("Transferring data to server");

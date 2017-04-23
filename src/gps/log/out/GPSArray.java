@@ -112,7 +112,8 @@ public final class GPSArray extends GPSFile {
          */
         final boolean isTrackneededRecord = ptFilters[GPSFilter.TRKPT]
                 .doFilter(s);
-        boolean isNeedTrackSplit = needsToSplitTrack;
+        @SuppressWarnings("unused")
+		boolean isNeedTrackSplit = needsToSplitTrack;
 
         if (!isTrackneededRecord) {
             isNeedTrackSplit |= !ignoreBadPoints;

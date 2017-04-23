@@ -42,6 +42,7 @@ public class SkytraqInputConversionTest extends TestConvertInBase {
         result = doConvert(getResourcePath(TEST_SKYTRAQ_RAW_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
+        @SuppressWarnings("unused")
         GPSRecord[] wayPoints = result.getWayPoints();
         GPSRecord trkPt1;
 //        for(GPSRecord i: trackPoints) {

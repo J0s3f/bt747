@@ -19,8 +19,6 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-import sun.security.jca.GetInstance;
-import waba.sys.Time;
 import bt747.sys.interfaces.BT747RAFile;
 
 /**

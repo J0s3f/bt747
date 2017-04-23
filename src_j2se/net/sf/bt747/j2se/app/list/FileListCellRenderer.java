@@ -9,21 +9,17 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.MediaTracker;
-import java.io.FileInputStream;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
-import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.FileWaypoint;
 import bt747.j2se_view.model.MapWaypoint;
 
@@ -33,7 +29,6 @@ import bt747.j2se_view.model.MapWaypoint;
  *         TODO MUST BE COMPLETELY REWRITTEN TO HANDLE NON-IMAGE FILES.
  * 
  */
-@SuppressWarnings("serial")
 public final class FileListCellRenderer implements WaypointListCellComponent {
 
     private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();

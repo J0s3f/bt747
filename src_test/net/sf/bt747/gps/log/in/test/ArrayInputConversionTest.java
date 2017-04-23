@@ -38,6 +38,7 @@ public class ArrayInputConversionTest extends TestConvertInBase {
     	        result = doConvert(getResourcePath(TEST_IBLUE747_ALLFIELDS_FILE)); 
 
     	        GPSRecord[] trackPoints = result.getTrackPoints();
+    	        @SuppressWarnings("unused")
     	        GPSRecord[] wayPoints = result.getWayPoints();
     	        GPSRecord trkPt1;
     	        trkPt1 = trackPoints[1];

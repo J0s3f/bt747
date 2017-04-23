@@ -85,7 +85,8 @@ public class GPSRecord {
     private static final double HAS_LAT_LON = 0;
 
     private static final int NO_RECCOUNT = -1;
-    private static final int HAS_RECCOUNT = 0;
+    @SuppressWarnings("unused")
+	private static final int HAS_RECCOUNT = 0;
 
     private static final int NO_VALID = -1;
     private static final int HAS_VALID = 0;
@@ -100,7 +101,8 @@ public class GPSRecord {
     private static final float HAS_HEADING = 0;
 
     private static final float NO_GEIOD = -100000;
-    private static final float HAS_GEOID = 0;
+    @SuppressWarnings("unused")
+	private static final float HAS_GEOID = 0;
 
     private static final int NO_LOGCONSTRAINT = 0;
     // private static final int LOG_CONSTRAINT = 0;

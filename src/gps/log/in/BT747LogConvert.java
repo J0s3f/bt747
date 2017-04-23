@@ -75,6 +75,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 	 */
 	private static final int BUF_SIZE = 0x800;
 
+	@SuppressWarnings("unused")
 	private static final int minValidUtcTime = JavaLibBridge.getDateInstance(1,
 			1, 1995).dateToUTCepoch1970();
 
@@ -287,6 +288,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 				) {
 					int nbrBytes;
 					nbrBytes = getSpecialRecord(bytes, offsetInBuffer, gpsFile);
+					@SuppressWarnings("unused")
 					int fileOffset = nextAddrToRead - sizeToRead
 							+ offsetInBuffer;
 					if ((recCount == 0)

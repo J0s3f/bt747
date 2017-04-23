@@ -36,6 +36,7 @@ import bt747.sys.interfaces.BT747Time;
  */
 public final class SkytraqLogConvert extends GPSLogConvertInterface {
 	private static final int X_FF = 0xFF;
+	@SuppressWarnings("unused")
 	private int recordSize = 16;
 	private static final int logFormat = (1 << BT747Constants.FMT_UTC_IDX)
 			| (1 << BT747Constants.FMT_LATITUDE_IDX)

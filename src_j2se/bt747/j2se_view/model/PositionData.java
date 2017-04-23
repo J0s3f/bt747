@@ -195,7 +195,6 @@ public class PositionData extends AbstractBean {
         firePropertyChange(WPDISPLAYCHANGE, null, Boolean.TRUE);
     }
 
-    @SuppressWarnings("serial")
     public class UserWayPointListModel extends AbstractListModel implements
             PropertyChangeListener {
 

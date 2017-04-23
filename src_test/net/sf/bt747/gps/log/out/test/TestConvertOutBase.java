@@ -13,7 +13,6 @@ import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import gps.log.out.GPSKMLFile;
 
-import bt747.model.AppSettings;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747Path;
@@ -151,6 +150,7 @@ public class TestConvertOutBase extends junit.framework.TestCase {
     }
 
     public void doConversionTest(GPSFile gpsFile) throws Exception {
+        @SuppressWarnings("unused")
         int error = -1;
         try {
             error = lc.toGPSFile(logSource, gpsFile);

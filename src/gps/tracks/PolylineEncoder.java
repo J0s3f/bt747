@@ -437,6 +437,7 @@ public final class PolylineEncoder {
 
 		int plat = 0;
 		int plng = 0;
+	    @SuppressWarnings("unused")
 		int counter = 0;
 
 		final int listSize = track.size();

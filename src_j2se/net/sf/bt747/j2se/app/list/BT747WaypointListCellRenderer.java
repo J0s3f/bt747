@@ -9,7 +9,6 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import bt747.j2se_view.model.MapWaypoint;
 import bt747.sys.Generic;
@@ -18,7 +17,6 @@ import bt747.sys.Generic;
  * @author Mario
  * 
  */
-@SuppressWarnings("serial")
 public class BT747WaypointListCellRenderer implements
         javax.swing.ListCellRenderer {
 

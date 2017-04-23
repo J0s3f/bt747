@@ -15,7 +15,6 @@
 package gps.log.out;
 
 import gps.convert.Conv;
-import bt747.model.AppSettings;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Path;

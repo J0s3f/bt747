@@ -30,7 +30,6 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;

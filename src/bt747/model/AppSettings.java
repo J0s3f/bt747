@@ -1326,6 +1326,7 @@ public class AppSettings implements BT747Thread {
 		return Conv.hex2SignedInt(str);
 	}
 
+	@SuppressWarnings("unused")
 	private final void setLocalUIntOpt(final int param, final int src,
 			final int idx, final int size) {
 		setOpt(param, JavaLibBridge.unsigned2hex(src, size), idx, size);

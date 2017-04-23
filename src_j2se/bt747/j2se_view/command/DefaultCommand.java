@@ -1,6 +1,5 @@
 package bt747.j2se_view.command;
 
-import sun.security.jca.GetInstance;
 import bt747.j2se_view.J2SEController;
 
 public class DefaultCommand extends AbstractCommand {

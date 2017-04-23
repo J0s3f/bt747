@@ -210,7 +210,8 @@ public final class WPLogConvert extends GPSLogConvertInterface {
                             int minutes;
                             int seconds;
                             int speed;
-                            int tag;
+                            @SuppressWarnings("unused")
+							int tag;
                             int altitude;
                             
                             int rawTime;

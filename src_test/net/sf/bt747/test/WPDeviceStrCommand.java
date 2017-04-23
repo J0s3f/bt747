@@ -13,6 +13,7 @@ import gps.mvc.commands.GpsLinkExecCommand;
 public class WPDeviceStrCommand implements GpsLinkExecCommand {
 
     private final String cmd;
+    @SuppressWarnings("unused")
     private final int bufSize;
 
     public WPDeviceStrCommand(final String cmd) {

@@ -22,6 +22,7 @@ public class OlympusMakerNotesDecorator extends ExifAttribute {
     private final static int OLYMPUS_CAMERASETTINGS2 = 0x2020;
 
     private final static int CAMERASETTINGS2_PREVIEWIMAGESTART = 0x0101;
+    @SuppressWarnings("unused")
     private final static int CAMERASETTINGS2_PREVIEWIMAGELENGTH = 0x0102;
 
     // IfdBlock Corresponding to makerNotes
@@ -46,6 +47,7 @@ public class OlympusMakerNotesDecorator extends ExifAttribute {
                     makerNote.getValueIdx() - header.length,
                     bigEndian);
             if (cameraSettings2.hasTag(CAMERASETTINGS2_PREVIEWIMAGESTART)) {
+                @SuppressWarnings("unused")
                 ExifAttribute previewStart = cameraSettings2
                         .get(CAMERASETTINGS2_PREVIEWIMAGESTART);
                 //Generic.debug(previewStart.toString());

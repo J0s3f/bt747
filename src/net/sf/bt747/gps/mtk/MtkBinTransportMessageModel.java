@@ -3,7 +3,6 @@
  */
 package net.sf.bt747.gps.mtk;
 
-import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
 /**

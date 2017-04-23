@@ -3,7 +3,6 @@
  */
 package net.sf.bt747.test;
 
-import gps.HoluxConstants;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 
@@ -86,6 +85,8 @@ public class HlxController {
 				case HOLUXM1000C:
 					response = "PHLX852," + getDeviceID();
 					break;
+				default:
+					break;
 				}
 				break;
 			case 826: // Activates usb symbol
@@ -154,6 +155,8 @@ public class HlxController {
 			return "M1000C";
 		case HOLUX_GR260:
 			return "GR260";
+		default:
+			break;
 		}
 		return "UNKNOWN";
 	}

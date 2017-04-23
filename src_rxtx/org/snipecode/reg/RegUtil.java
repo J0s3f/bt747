@@ -141,6 +141,7 @@ public class RegUtil
 	private static final Preferences userRoot = Preferences.userRoot();
 	private static final Preferences systemRoot = Preferences.systemRoot();
 	private static Class userClass = null;
+    @SuppressWarnings("unused")
 	private static Class systemClass = null;
 	private static Method windowsRegOpenKey = null;
 	private static Method windowsRegCloseKey = null;
@@ -347,7 +348,7 @@ public class RegUtil
 	 * Java wrapper for Windows registry API RegCreateKeyEx()
 	 * 
 	 * @param hKey
-	 *            The Native Hanle to the Key
+	 *            The Native Handle to the Key
 	 * @param subKey
 	 *            The Sub key
 	 * @return Int[3] etval[NATIVE_HANDLE] will be the Native Handle of the

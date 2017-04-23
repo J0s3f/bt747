@@ -134,6 +134,7 @@ public class HoluxModel extends MtkModel {
 			logNbrTracks = JavaLibBridge.toInt(sNmea[1]);
         } else if (cmd.equals(HoluxConstants.PHLX_DT_LOG_DOWNLOAD_ANNOUNCE_TOTAL)) {
         	logNbrLogPts = JavaLibBridge.toInt(sNmea[1]);
+            @SuppressWarnings("unused")
         	int checksum = Conv.hex2Int(sNmea[2]);
         	setLogMemUsed(logNbrLogPts*32);
 			setAvailable(MtkModel.DATA_MEM_PTS_LOGGED);
@@ -145,6 +146,7 @@ public class HoluxModel extends MtkModel {
     
     private String deviceId = "???";
     private String holuxFWVersion = "?.??";
+    @SuppressWarnings("unused")
     private int SportMode = 0;
     protected int logNbrTracks =0;
     

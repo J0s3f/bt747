@@ -437,6 +437,7 @@ public class ExifApp1 {
 		}
 	}
 
+    @SuppressWarnings("unused")
 	private final void initIfd1Block() {
 		if (Ifd1 == null) {
 			Ifd1 = new ExifIfdBlock();

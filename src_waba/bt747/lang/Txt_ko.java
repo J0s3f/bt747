@@ -65,6 +65,7 @@ public final class Txt_ko implements TxtInterface {
         "SuperWaba\uC5D0 \uAD00\uD558\uC5EC";
     private static final String ABOUT_SUPERWABA_TXT=
         "SuperWaba Virtual Machine ";
+    @SuppressWarnings("unused")
     private static final String ABOUT_SUPERWABA_TXT_CONTINUE=
           "|Copyright (c)2000-2007"
         + "|Guilherme Campos Hazan"

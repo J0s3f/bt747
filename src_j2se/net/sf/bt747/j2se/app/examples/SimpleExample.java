@@ -61,6 +61,7 @@ public class SimpleExample implements bt747.model.ModelListener {
     /**
      * 
      */
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
     private Model m;
     private Controller c;
@@ -122,7 +123,7 @@ public class SimpleExample implements bt747.model.ModelListener {
         // We are connected, start a download
         // Disable incremental download (The possible overwrite request is
         // automatically authorised).
-        c.setIncremental(true);
+        c.setDownloadMethod(Model.DOWNLOAD_SMART);
         System.out.println("Incremental setting done");
         System.out.flush();
         // If the amount of data in the device is unknown, the download will
@@ -244,7 +245,7 @@ public class SimpleExample implements bt747.model.ModelListener {
                 // // getOutputFilePath();
                 // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
                 // // getWorkDirPath();
-            } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+            } else if (type == ModelEvent.DOWNLOAD_METHOD_CHANGE) {
                 // getIncremental();
             } else if (type ==  ModelEvent.SETTING_CHANGE) {
                 final int arg = Integer.valueOf((String) e.getArg());

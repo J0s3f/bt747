@@ -187,6 +187,7 @@ public class IBlue747Model {
 			this.gpsRxTx = gpsRxTx;
 		}
 
+		@SuppressWarnings("unused")
 		public void setSendGpsPosition(final boolean sendPosition) {
 			this.sendPosition = sendPosition;
 		}
@@ -221,6 +222,7 @@ public class IBlue747Model {
 
 		volatile int pauseTime = 0;
 
+	    @SuppressWarnings("unused")
 		public void pause(int timems) {
 			pauseTime = timems;
 		}
@@ -422,6 +424,8 @@ public class IBlue747Model {
 		case DEVICE_MODE_MTKBIN:
 
 		case DEVICE_MODE_WP:
+		default:
+			break;
 		}
 	}
 
@@ -815,6 +819,8 @@ public class IBlue747Model {
 					switch (mtkData.modelType) {
 					case TSI_887_Lite:
 						acknowledge = null;
+					default:
+						break;
 					}
 					break;
 				case BT747Constants.PMTK_Q_VERSION: // 604
@@ -1027,6 +1033,8 @@ public class IBlue747Model {
 		case QST1000:
 		case QST1000X:
 		case QST1300:
+		default:
+			break;
 
 		}
 	}

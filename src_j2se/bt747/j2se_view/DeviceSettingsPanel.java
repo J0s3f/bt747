@@ -1178,6 +1178,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     }
     private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHotStartActionPerformed
         try {
+            @SuppressWarnings("unused")
             final MtkModel mtk = m.mtkModel();
             boolean isTimeAndDistanceExclusive = isTimeAndDistanceExclusive();
 

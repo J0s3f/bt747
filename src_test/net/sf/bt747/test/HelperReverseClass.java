@@ -1,7 +1,5 @@
 package net.sf.bt747.test;
 
-import net.sf.bt747.j2se.system.*;
-
 public class HelperReverseClass {
 
 	private static final String ZEROSTRING = "0000000000000000";

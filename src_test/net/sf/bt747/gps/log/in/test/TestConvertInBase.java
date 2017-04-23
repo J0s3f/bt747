@@ -13,9 +13,7 @@ import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import gps.log.out.GPSKMLFile;
-import gps.log.out.GPSPostGISFile;
 
-import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;

@@ -138,7 +138,8 @@ public final class GPSSqlFile extends GPSFile {
     private String satSeperator = ";";
 
     private String tableName = "defaulttable";
-    private String dbName = "defaultdb";
+    @SuppressWarnings("unused")
+	private String dbName = "defaultdb";
 
     /*
      * (non-Javadoc)

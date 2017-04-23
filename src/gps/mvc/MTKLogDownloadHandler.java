@@ -18,7 +18,6 @@ import gps.BT747Constants;
 import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.in.WindowedFile;
-import gps.mvc.commands.GpsLinkExecCommand;
 import gps.mvc.commands.GpsLinkNmeaCommand;
 
 import bt747.sys.File;

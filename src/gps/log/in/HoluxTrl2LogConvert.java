@@ -46,7 +46,8 @@ public final class HoluxTrl2LogConvert extends GPSLogConvertInterface {
     .getDateInstance(1, 1, 1990).dateToUTCepoch1970();
 
 
-    public final int parseFile(final Object file,
+    @SuppressWarnings("unused")
+	public final int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
             final BT747RAFile inFile = (BT747RAFile) file;
@@ -99,7 +100,7 @@ public final class HoluxTrl2LogConvert extends GPSLogConvertInterface {
                 while (sizeToRead > (offsetInBuffer + recordSize)) {
                     // As long as record may fit in data still to read.
                     int indexInBuffer = offsetInBuffer;
-                    int checkSum = 0;
+					int checkSum = 0;
 
                     while ((indexInBuffer < (recordSize + offsetInBuffer))
                             && (indexInBuffer < (sizeToRead - 1))) {
