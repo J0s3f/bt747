@@ -9,7 +9,6 @@ import gps.WondeproudConstants;
 import gps.mvc.commands.wp.WPEnterModeCommand;
 import gps.mvc.commands.wp.WPExitModeCommand;
 import gps.mvc.commands.wp.WPIntCommand;
-import gps.mvc.commands.wp.WPStrCommand;
 
 /**
  * Controller for Wonde Proud devices like the BT-BT110m

@@ -932,6 +932,7 @@ public final class J2SEAppController extends J2SEController {
     /**
      * Selected Look And Feel
      */
+    @SuppressWarnings("unused")
     private static String lookAndFeel = ""; // NOI18N
     /**
      * Message build up during Look And Feel search.

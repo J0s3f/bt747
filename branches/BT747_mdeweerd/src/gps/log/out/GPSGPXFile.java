@@ -18,6 +18,7 @@
 // later by using XML validation.
 package gps.log.out;
 
+import gps.convert.ExternalUtils;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -232,6 +233,7 @@ public class GPSGPXFile extends GPSFile {
 
 	private boolean isNeedTrackSegment = false;
 
+	@SuppressWarnings("unused")
 	public final void writeRecord(final GPSRecord r) {
 		super.writeRecord(r);
 
@@ -429,7 +431,18 @@ public class GPSGPXFile extends GPSFile {
 
 			// <magvar> degreesType </magvar> [0..1] ?
 			// <geoidheight> xsd:decimal </geoidheight> [0..1] ?
-
+			if(selectedFileFields.hasGeoid()||selectedFileFields.hasHeight()) {
+				rec.append("<geoidheight>");
+				float separation;
+                if (r.hasGeoid()) {
+                    separation = r.getGeoid();
+                } else {
+                    separation = ((long) (10 * ExternalUtils.wgs84Separation(r
+                            .getLatitude(), r.getLongitude()))) / 10.f;
+                }
+				rec.append(JavaLibBridge.toString(separation,heightDigits));
+				rec.append("</geoidheight>");
+			}
 			// <name> xsd:string </name> [0..1] ?
 			if (isWayType || isIncludeTrkName) {
 				rec.append("<name>");

@@ -8,12 +8,10 @@ import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
 import gps.log.out.GPSFile;
 
-import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
-import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;

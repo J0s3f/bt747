@@ -24,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
-import net.sf.bt747.j2se.app.exif.ExifConstants;
-import net.sf.bt747.j2se.app.exif.ExifJPG;
 
 import bt747.Version;
 import bt747.j2se_view.model.FileWaypoint;
@@ -61,6 +59,7 @@ public class ExiftoolData extends FileWaypoint {
         return getImageInfo();
     }
 
+    @SuppressWarnings("unused")
     private double getLatOrLon(final ExifAttribute atr) {
         double xtitude = -99999;
         if (atr.getCount() == 3) {
@@ -365,6 +364,7 @@ public class ExiftoolData extends FileWaypoint {
      * @param width
      *            the width to set
      */
+    @SuppressWarnings("unused")
     private void setWidth(final int width) {
         this.width = width;
     }
@@ -380,6 +380,7 @@ public class ExiftoolData extends FileWaypoint {
      * @param height
      *            the height to set
      */
+    @SuppressWarnings("unused")
     private void setHeight(final int height) {
         this.height = height;
     }

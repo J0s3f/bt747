@@ -134,6 +134,7 @@ public class GPSKMLFile extends GPSFile {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private final void addLookAt(final StringBuffer s, final int startTime,
 			final int endTime) {
 		final BT747Time time = JavaLibBridge.getTimeInstance();

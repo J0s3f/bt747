@@ -54,6 +54,7 @@ public final class Txt_de implements TxtInterface {
 
 	private static final String ABOUT_SUPERWABA_TITLE = "Über SuperWaba";
 	private static final String ABOUT_SUPERWABA_TXT = "SuperWaba Virtual Machine ";
+    @SuppressWarnings("unused")
 	private static final String ABOUT_SUPERWABA_TXT_CONTINUE = "|Copyright (c)2000-2007"
 			+ "|Guilherme Campos Hazan"
 			+ "|www.superwaba.com|"

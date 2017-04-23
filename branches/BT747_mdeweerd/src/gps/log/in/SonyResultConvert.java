@@ -67,6 +67,7 @@ public final class SonyResultConvert extends GPSLogConvertInterface {
 			int nextAddrToRead;
 			int recCount;
 			int fileSize;
+			@SuppressWarnings("unused")
 			GPSRecord previousR = new GPSRecord();
 
 			if (!passToFindFieldsActivatedInLog) {

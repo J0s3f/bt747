@@ -27,6 +27,7 @@ public class J2SEAGPS {
     // Files: MTK14.EPO and MTK7d.EPO
 
     private final static String TRANS_FTP_SITE = "http://www.bt747.org/";
+    @SuppressWarnings("unused")
     private final static String TRANS_AGPS_14d = TRANS_FTP_SITE + "MTK14.EPO";
     private final static String TRANS_AGPS_7d = TRANS_FTP_SITE + "MTK7d.EPO";
 

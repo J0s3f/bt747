@@ -43,8 +43,10 @@ public class RXTXLibPathSetting {
 	private static final int OS_MAC = 3;
 	private static final int OS_SOLARIS = 4;
 
+    @SuppressWarnings("unused")
 	private static final String fs = File.separator; // System.getProperty("file.separator");
 	private static final String WIN_PATH = "win";
+    @SuppressWarnings("unused")
 	private static final String WIN32SUBPATH = "32";
 	private static final String WIN32SUBPATH2 = "m32";
 	private static final String WIN64SUBPATH = "64";
@@ -55,12 +57,17 @@ public class RXTXLibPathSetting {
 	private static final String LINUX_I686_SUBPATH = "i686";
 	private static final String LINUX_IA64_SUBPATH = "ia64";
 	private static final String LINUX_X86_64_SUBPATH = "x86_64";
+    @SuppressWarnings("unused")
 	private static final String LINUX_I686_PC_SUBPATH = "i686pc";
 	private static final String LINUXSOBASENAME = "ser";
 
+    @SuppressWarnings("unused")
 	private static final String SOL_PATH = "sunos";
-	private static final String SOL32SUBPATH = "32";
+    @SuppressWarnings("unused")
+    private static final String SOL32SUBPATH = "32";
+    @SuppressWarnings("unused")
 	private static final String SOL64SUBPATH = "64";
+    @SuppressWarnings("unused")
 	private static final String SOLSOBASENAME = "ser";
 
 	private static final String MAC_PATH = "mac";
@@ -73,6 +80,7 @@ public class RXTXLibPathSetting {
 		final String OsName = System.getProperty("os.name");
 		final String OsArch = System.getProperty("os.arch");
 		final String OsVersion = System.getProperty("os.version");
+	    @SuppressWarnings("unused")
 		final String JavaVersion = System.getProperty("java.version");
 		final String dataModel = System.getProperty("sun.arch.data.model");
 

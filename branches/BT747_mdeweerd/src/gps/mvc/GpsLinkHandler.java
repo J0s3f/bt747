@@ -14,12 +14,9 @@
 // *** *********************************************************** ***
 package gps.mvc;
 
-import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.connection.NMEADecoderState;
-import gps.connection.NMEAWriter;
 import gps.mvc.commands.CmdVisitor;
-import gps.mvc.commands.GpsLinkNmeaCommand;
 import gps.mvc.commands.GpsLinkExecCommand;
 
 import bt747.sys.Generic;

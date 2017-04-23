@@ -44,6 +44,7 @@ public final class J2SETime implements BT747Time {
     /**
      * 
      */
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = -4377529854748199705L;
 
     public final int getHour() {

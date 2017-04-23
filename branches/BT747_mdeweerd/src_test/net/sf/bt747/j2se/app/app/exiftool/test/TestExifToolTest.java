@@ -9,19 +9,13 @@ import net.sf.bt747.j2se.app.exiftool.ExifTool;
 import net.sf.bt747.j2se.app.exiftool.ExiftoolData;
 import net.sf.bt747.test.TestUtils;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
-import org.junit.Test;
+import org.junit.*;
 
 import bt747.j2se_view.model.ImageData;
 import bt747.sys.File;
 import bt747.sys.interfaces.BT747Path;
 
 import junit.framework.TestCase;
-import junit.framework.Assert.*;
 
 /**
  * @author Mario

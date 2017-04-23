@@ -404,7 +404,8 @@ public final class GPSGmapsV3HTMLFile extends GPSFile {
         }
     }
 
-    protected final void endTrack(final String hexColor) {
+    @SuppressWarnings("unused")
+	protected final void endTrack(final String hexColor) {
         final PolylineEncoder a = new PolylineEncoder();
         BT747Hashtable res;
         if (false) {

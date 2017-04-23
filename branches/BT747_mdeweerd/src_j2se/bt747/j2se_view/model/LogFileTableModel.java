@@ -11,7 +11,6 @@ import gps.log.out.CommonOut;
 
 import javax.swing.table.AbstractTableModel;
 
-import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.interfaces.BT747Path;
 import bt747.sys.interfaces.BT747Vector;

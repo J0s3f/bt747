@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Vector;
 
 import bt747.Version;
@@ -169,6 +168,7 @@ public final class GPSRxTxPort extends gps.connection.GPSPort {
 			}
 			CommPortIdentifier portIdentifier;
 			
+		    @SuppressWarnings("unused")
 			Enumeration<gnu.io.CommPortIdentifier> p = gnu.io.CommPortIdentifier.getPortIdentifiers();
 			portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
 

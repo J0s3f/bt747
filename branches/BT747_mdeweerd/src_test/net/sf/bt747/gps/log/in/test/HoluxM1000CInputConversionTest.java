@@ -31,6 +31,7 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         result = doConvert(getResourcePath(TEST_M1000_ALT_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
+        @SuppressWarnings("unused")
         GPSRecord[] wayPoints = result.getWayPoints();
         GPSRecord trkPt1;
         trkPt1 = trackPoints[5];
@@ -49,6 +50,7 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         result = doConvert(getResourcePath(TEST_M1000_SPD_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
+        @SuppressWarnings("unused")
         GPSRecord[] wayPoints = result.getWayPoints();
         GPSRecord trkPt1;
         trkPt1 = trackPoints[8];
@@ -68,6 +70,7 @@ public class HoluxM1000CInputConversionTest extends TestConvertInBase {
         result = doConvert(getResourcePath(TEST_M1000_SPDALT_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
+        @SuppressWarnings("unused")
         GPSRecord[] wayPoints = result.getWayPoints();
         GPSRecord trkPt1;
         trkPt1 = trackPoints[7];

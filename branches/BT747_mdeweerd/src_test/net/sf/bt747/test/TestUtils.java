@@ -8,7 +8,7 @@ import java.io.File;
 import net.sf.bt747.j2se.app.exiftool.ExifTool;
 
 import gps.log.GPSRecord;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.JavaLibImplementation;

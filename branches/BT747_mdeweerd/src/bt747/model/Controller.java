@@ -35,7 +35,6 @@ import gps.log.out.GPSFile;
 import gps.log.out.GPSFileConfInterface;
 import gps.log.out.GPSFileInterface;
 import gps.log.out.GPSGPXFile;
-import gps.log.out.GPSGmapsHTMLEncodedFile;
 import gps.log.out.GPSGmapsV3HTMLFile;
 import gps.log.out.GPSGoogleStaticMapUrl;
 import gps.log.out.GPSKMLFile;
@@ -57,7 +56,6 @@ import bt747.sys.interfaces.BT747Exception;
 import bt747.sys.interfaces.BT747FileName;
 import bt747.sys.interfaces.BT747Int;
 import bt747.sys.interfaces.BT747Path;
-import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd
@@ -81,6 +79,7 @@ public class Controller implements ModelListener {
 	/**
 	 * The number of seconds in a day.
 	 */
+    @SuppressWarnings("unused")
 	private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 	/**
 	 * The number of seconds in an hour.
@@ -1038,6 +1037,7 @@ public class Controller implements ModelListener {
 		if (m.isConnected()) {
 			m.gpsRxTx().closePort();
 		}
+	    @SuppressWarnings("unused")
 		boolean b = m.isConnected(); // Workaround for status update issue
 	}
 

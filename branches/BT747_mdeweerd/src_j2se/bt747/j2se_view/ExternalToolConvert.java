@@ -17,9 +17,7 @@ package bt747.j2se_view;
 import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import net.sf.bt747.j2se.app.utils.ExternalTool;
-import net.sf.bt747.j2se.system.J2SERAFile;
 
-import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.JavaLibBridge;
 import bt747.sys.interfaces.BT747HashSet;
@@ -54,6 +52,7 @@ public final class ExternalToolConvert extends GpsFileProxyTemplate {
 //                oneFilePerDay);
 //    }
 
+    @SuppressWarnings("unused")
     private final BT747Hashtable filenames = JavaLibBridge
             .getHashtableInstance(10);
 

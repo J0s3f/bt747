@@ -23,6 +23,7 @@ public class AgpsModel {
     private static class AgpsStream implements BT747InputStream {
 
         private final BT747Hashtable table;
+        @SuppressWarnings("unused")
         private final int currentPos;
         private final int bytesToGo;
 
@@ -43,6 +44,7 @@ public class AgpsModel {
             // Determine size of selected data.
             // Get references to data
             final BT747Hashtable iter = table.iterator();
+            @SuppressWarnings("unused")
             int size = 0;
             while (iter.hasNext()) {
                 final AgpsPeriodModel p = (AgpsPeriodModel) iter.get(iter
@@ -56,6 +58,7 @@ public class AgpsModel {
 
             // put data in buffer.
             result = new byte[sizeOfDataAfter(table, startTime)];
+            @SuppressWarnings("unused")
             int idx = 0;
             // idx = p.fillBuffer(result, idx, startIdx, endIdx);
             return result;

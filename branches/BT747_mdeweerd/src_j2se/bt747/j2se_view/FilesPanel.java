@@ -23,7 +23,6 @@ import bt747.j2se_view.model.MapWaypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.j2se_view.popupmenu.LogFilePopupMenu;
 import bt747.j2se_view.popupmenu.POIActionHandler;
-import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -91,6 +90,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener, POI
 
         public void propertyChange(PropertyChangeEvent evt) {
             try {
+                @SuppressWarnings("unused")
                 final MapWaypoint w = (MapWaypoint) evt.getNewValue();
                 map.setZoom(5);
             } catch (Exception e) {

@@ -33,7 +33,10 @@ public class GraphDisplayDemo extends TestConvertInBase {
         result = doConvert(getResourcePath(TEST_IBLUE747_ALLFIELDS_FILE));
 
         GPSRecord[] trackPoints = result.getTrackPoints();
-        GPSRecord[] wayPoints = result.getWayPoints();
+        //assertEquals(trackPoints.length, 1);
+        @SuppressWarnings("unused")
+		GPSRecord[] wayPoints = result.getWayPoints();
+        //assertEquals(wayPoints.length, 1);
 
         return new GPSRecordArrayDataProvider(trackPoints);
     }

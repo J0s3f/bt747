@@ -5,11 +5,8 @@ package bt747.j2se_view.model;
 
 import java.awt.FontMetrics;
 
-import javax.swing.JTable;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.model.PositionData.UserWayPointListModel;

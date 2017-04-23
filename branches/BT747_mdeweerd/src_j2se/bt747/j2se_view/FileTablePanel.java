@@ -302,7 +302,9 @@ public class FileTablePanel extends javax.swing.JPanel implements
                     .getSelectionModel()
                     && table.getColumnSelectionAllowed()) {
                 // Row selection changed
+                @SuppressWarnings("unused")
                 int first = e.getFirstIndex();
+                @SuppressWarnings("unused")
                 int last = e.getLastIndex();                
             }
             

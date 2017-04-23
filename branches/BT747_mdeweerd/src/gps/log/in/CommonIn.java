@@ -369,8 +369,10 @@ public final class CommonIn {
         // TODO: Not finished.
         final int logFormat = 0;
         if (sNmea[0].equals("GPGSV") && (sNmea.length >= 19)) {
-            int GSVindex = 0;
-            int GSVtotal = 0;
+            @SuppressWarnings("unused")
+			int GSVindex = 0;
+            @SuppressWarnings("unused")
+			int GSVtotal = 0;
             try {
                 if (sNmea[1].length() != 0) {
                     GSVtotal = JavaLibBridge.toInt(sNmea[1]);

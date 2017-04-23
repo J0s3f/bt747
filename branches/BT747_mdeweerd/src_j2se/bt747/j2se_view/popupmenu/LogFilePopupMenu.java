@@ -15,7 +15,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
 import bt747.j2se_view.J2SEAppController;
-import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.LogFileTableModel;
 
 /**
@@ -29,6 +28,7 @@ public class LogFilePopupMenu {
      * 
      */
 
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
     private JPanel pn;

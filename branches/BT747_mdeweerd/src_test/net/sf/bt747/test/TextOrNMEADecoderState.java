@@ -38,8 +38,10 @@ public final class TextOrNMEADecoderState implements DecoderStateInterface {
 
     private int cmd_buf_p = 0;
 
+    @SuppressWarnings("unused")
     private int checksum = 0;
 
+    @SuppressWarnings("unused")
     private int read_checksum;
 
     private static boolean ignoreNMEA = false;
@@ -47,6 +49,7 @@ public final class TextOrNMEADecoderState implements DecoderStateInterface {
     /**
      * @return Returns the ignoreNMEA.
      */
+    @SuppressWarnings("unused")
     private static final boolean isIgnoreNMEA() {
         return ignoreNMEA;
     }

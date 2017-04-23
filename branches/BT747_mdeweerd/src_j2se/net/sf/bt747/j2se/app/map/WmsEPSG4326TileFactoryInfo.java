@@ -65,9 +65,13 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
     private String srs = "EPSG:4326";
     private String format = "image/png";
     private String styles = "";
-    private double bbxmin = -180.;
+    @SuppressWarnings("unused")
+	private double bbxmin = -180.;
+    @SuppressWarnings("unused")
     private double bbxmax = 180.;
+    @SuppressWarnings("unused")
     private double bbymin = -80.;
+    @SuppressWarnings("unused")
     private double bbymax = 80.;
 
     // &SRS=EPSG:4326&BBOX=2.31726828957381,48.9179588116455,2.31842233403588,48.9192730492482&WIDTH=353&HEIGHT=402

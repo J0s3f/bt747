@@ -58,13 +58,16 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
     private static final double DEG2RAD = 0.0174532922519943;
 
     // var PI=3.14159267;
-    private static final double dd2MercMetersLng(final double p_lng) {
+    @SuppressWarnings("unused")
+	private static final double dd2MercMetersLng(final double p_lng) {
         return MAGIC_NUMBER * (p_lng * DEG2RAD);
     }
 
     // Clipping at 85.05112878
+    @SuppressWarnings("unused")
     private static final double CLIP_LIMIT = 85.05112878;
 
+    @SuppressWarnings("unused")
     private static final double dd2MercMetersLat(double p_lat) {
         if (p_lat >= 85) {
             p_lat = 85;
@@ -82,9 +85,13 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
     private String srs = "EPSG:4326";
     private String format = "image/png";
     private String styles = "";
+    @SuppressWarnings("unused")
     private double bbxmin = -180.;
+    @SuppressWarnings("unused")
     private double bbxmax = 180.;
+    @SuppressWarnings("unused")
     private double bbymin = -80.;
+    @SuppressWarnings("unused")
     private double bbymax = 80.;
 
     // &SRS=EPSG:4326&BBOX=2.31726828957381,48.9179588116455,2.31842233403588,48.9192730492482&WIDTH=353&HEIGHT=402

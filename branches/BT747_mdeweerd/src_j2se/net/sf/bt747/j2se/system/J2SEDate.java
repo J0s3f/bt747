@@ -44,6 +44,7 @@ public final class J2SEDate implements BT747Date {
     /**
      * Calendar cal = Calendar.getInstance();
      */
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = -8694258139978808370L;
 
     /**

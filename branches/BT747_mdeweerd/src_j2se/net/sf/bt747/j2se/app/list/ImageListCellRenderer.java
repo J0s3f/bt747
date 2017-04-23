@@ -19,7 +19,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import bt747.j2se_view.model.FileWaypoint;
 import bt747.j2se_view.model.ImageData;
 import bt747.j2se_view.model.MapWaypoint;
 
@@ -27,7 +26,6 @@ import bt747.j2se_view.model.MapWaypoint;
  * @author Mario
  * 
  */
-@SuppressWarnings("serial")
 public final class ImageListCellRenderer implements WaypointListCellComponent {
 
     private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();

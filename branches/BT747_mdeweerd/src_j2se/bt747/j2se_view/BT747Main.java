@@ -15,9 +15,7 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
-import gps.BT747Constants;
 import gps.ProtocolConstants;
-import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.mvc.MtkModel;
 
@@ -40,7 +38,6 @@ import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.map.MapType;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
-import net.sf.bt747.j2se.app.trackgraph.GPSRecordArrayDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GPSRecordListDataProvider;
 import net.sf.bt747.j2se.app.trackgraph.GraphUtils;
@@ -664,6 +661,7 @@ public class BT747Main extends javax.swing.JFrame implements
 	private PositionTablePanel trackPanel = null;
 	private PositionTablePanel waypointPanel = null;
 
+    @SuppressWarnings("unused")
 	private void addMapMenuItem(final String desc, final MapType mapType) {
 		final Frame f = this;
 		miDigitalGlobe = new javax.swing.JRadioButtonMenuItem();
@@ -681,7 +679,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
 					mcd.setValues("osm", 1, 18, 19, true, true,
 							"http://tile.openstreetmap.org/$z/$x/$y");
-					MyTileFactoryInfo tfiUser = new MyTileFactoryInfo(mcd
+			    	MyTileFactoryInfo tfiUser = new MyTileFactoryInfo(mcd
 							.getShortName(), mcd.getMinZoomLevel(), mcd
 							.getMaxZoomLevel(), mcd.getTotalZoomLevel(), 256,
 							mcd.getXLeftToRight(), mcd.getYTopToBottom(),

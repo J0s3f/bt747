@@ -34,7 +34,6 @@ import gps.mvc.commands.mtk.MtkBinCommand;
 import gps.mvc.commands.mtk.SetMtkBinModeCommand;
 import gps.mvc.commands.mtk.SetNmeaModeCommand;
 import net.sf.bt747.gps.mtk.MtkBinTransportMessageModel;
-import net.sf.bt747.gps.mtk.agps.AgpsUploadHandler;
 import net.sf.bt747.j2se.app.agps.J2SEAGPS;
 
 import bt747.model.AppSettings;
@@ -69,6 +68,7 @@ public class TestDevice implements bt747.model.ModelListener {
     /**
      * 
      */
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
     private Model m;
     private Controller c;
@@ -147,6 +147,7 @@ public class TestDevice implements bt747.model.ModelListener {
         //J2SEAGPS agpsFetcher = new J2SEAGPS();
         //agpsFetcher.getBytesFromUrl("ftp://tsi0001:passwd@www.transystem.com.tw/MTK7d.EPO")
         try {
+        @SuppressWarnings("unused")
         byte[] agpsData = J2SEAGPS.getBytesFromUrl("http://bt747.free.fr/MTK7d.EPO");
         
 
@@ -348,6 +349,7 @@ public class TestDevice implements bt747.model.ModelListener {
     private void handleDownloadEnded() {
     }
 
+    @SuppressWarnings("unused")
     private void reportError(final int error, final String errorInfo) {
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
@@ -379,7 +381,7 @@ public class TestDevice implements bt747.model.ModelListener {
             // // getOutputFilePath();
             // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
             // // getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+        } else if (type == ModelEvent.DOWNLOAD_METHOD_CHANGE) {
             // getIncremental();
         } else if (type ==  ModelEvent.SETTING_CHANGE) {
             final int arg = Integer.valueOf((String) e.getArg());

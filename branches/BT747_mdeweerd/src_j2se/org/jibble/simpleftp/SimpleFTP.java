@@ -191,7 +191,8 @@ public class SimpleFTP {
                 .getInputStream());
         final byte[] buffer = new byte[4096];
         int bytesRead = 0;
-        int total = 0;
+        @SuppressWarnings("unused")
+		int total = 0;
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
             total += bytesRead;

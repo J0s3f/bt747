@@ -294,6 +294,7 @@ public final class MyThumbNail {
 
 	private static int hasSanselanState = 0;
 
+    @SuppressWarnings("unused")
 	private static boolean hasSanselan() {
 		if (hasSanselanState == 0) {
 			try {

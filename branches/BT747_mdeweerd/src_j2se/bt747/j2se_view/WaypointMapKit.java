@@ -88,6 +88,7 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
     private J2SEAppModel m;
 
 
+    @SuppressWarnings("unused")
     private EventListenerList listeners = new EventListenerList();
 
     public void init(final J2SEAppController pC) {
@@ -746,6 +747,7 @@ public class WaypointMapKit extends javax.swing.JPanel implements ModelListener 
         /**
          * 
          */
+        @SuppressWarnings("unused")
         private void selectedWaypoint(final MapWaypoint w) {
             if (w != currentWaypoint) {
                 clearWaypointSelection();

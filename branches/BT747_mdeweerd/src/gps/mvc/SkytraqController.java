@@ -3,7 +3,6 @@
  */
 package gps.mvc;
 
-import gps.HoluxConstants;
 
 /**
  * Controller for Skytraq Devices.

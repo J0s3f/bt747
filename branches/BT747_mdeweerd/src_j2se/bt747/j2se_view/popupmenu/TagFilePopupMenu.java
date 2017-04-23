@@ -31,6 +31,7 @@ public class TagFilePopupMenu {
 	 * 
 	 */
 
+    @SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	private JComponent pn;
@@ -116,7 +117,7 @@ public class TagFilePopupMenu {
 				&& list.getModel() instanceof UserWayPointListModel) {
 			final UserWayPointListModel wptList = (UserWayPointListModel) list
 					.getModel();
-			wptList.remove(list.getSelectedValues());
+			wptList.remove(list.getSelectedValuesList().toArray());
 		}
 		// table.removeRowSelectionInterval(, index1)
 		// JOptionPane.showMessageDialog(pn, "Delete Column here.");

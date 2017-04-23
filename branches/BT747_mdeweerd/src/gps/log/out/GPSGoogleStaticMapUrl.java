@@ -49,6 +49,7 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
 	private final Track track = new Track();
 	private final Track waypoints = new Track();
 
+	@SuppressWarnings("unused")
 	private int trackIndex = 0; // Index for tracks
 
 	/**
@@ -119,6 +120,7 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
 	private int ySize = 400;
 	private int maxLen = 2000;
 
+	@SuppressWarnings("unused")
 	protected final void endTrack(final String hexColor) {
 		final PolylineEncoder a = new PolylineEncoder();
 		BT747Hashtable res;
@@ -223,10 +225,12 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
 	/**
 	 * UTC time of previous record.
 	 */
+	@SuppressWarnings("unused")
 	private int previousTime = 0;
 	/**
 	 * Record number of previous record
 	 */
+	@SuppressWarnings("unused")
 	private int previousRec = 0;
 
 	/*
@@ -341,6 +345,7 @@ public final class GPSGoogleStaticMapUrl extends GPSFile {
 				waypoints.addTrackpoint(new Trackpoint(r.getLatitude(), r
 						.getLongitude()));
 				final String rcrStr = CommonOut.getRCRstr(r);
+				@SuppressWarnings("unused")
 				String icon = "";
 				if (icons.get(rcrStr) == null) {
 					WayPointStyle style;

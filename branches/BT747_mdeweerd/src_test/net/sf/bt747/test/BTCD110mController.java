@@ -38,6 +38,7 @@ public class BTCD110mController implements WondeproudConstants {
     public static class HlxDataModel {
     }
 
+    @SuppressWarnings("unused")
     private final HlxDataModel hlxData = new HlxDataModel();
 
     /**
@@ -96,6 +97,7 @@ public class BTCD110mController implements WondeproudConstants {
         }
     }
 
+    @SuppressWarnings("unused")
     private final String LOG_FILE_NAME = getResourcePath(TEST_BTCD110m_FILE);
 
     private final byte[] Initial = { 0x57, 0x6F, 0x6E, 0x64, 0x65, 0x50,
@@ -197,7 +199,8 @@ public class BTCD110mController implements WondeproudConstants {
 
     private boolean sendInitial = false;
 
-    private void sleep() {
+    @SuppressWarnings("unused")
+	private void sleep() {
         try {
             Thread.sleep(160);
         } catch (Exception e) {

@@ -43,10 +43,12 @@ public final class GPSPostGISFile extends GPSFile {
     /**
      * Separator in the satellite field - for future parameterization.
      */
-    private String satSeperator = ";";
+    @SuppressWarnings("unused")
+	private String satSeperator = ";";
 
     private String tableName = "defaultpostgistable";
-    private String dbName = "defaultdb";
+    @SuppressWarnings("unused")
+	private String dbName = "defaultdb";
 
     private char separatorChar = ' ';
 
