@@ -149,7 +149,7 @@ public final class CommonIn {
     public static final int analyzeGPRMC(final String[] sNmea,
             final GPSRecord gpsRec) {
         int logFormat = 0;
-        if (sNmea[0].equals("GPRMC") && (sNmea.length >= 10)) {
+        if ((sNmea[0].equals("GPRMC")||sNmea[0].equals("GNRMC")) && (sNmea.length >= 10)) {
             // UTC time
             try {
                 if (sNmea[1].length() != 0) {
@@ -236,7 +236,7 @@ public final class CommonIn {
     public static final int analyzeGPGGA(final String[] sNmea,
             final GPSRecord gpsRec) {
         int logFormat = 0;
-        if (sNmea[0].equals("GPGGA") && (sNmea.length >= 12)) {
+        if ((sNmea[0].equals("GPGGA")||sNmea[0].equals("GNGGA")) && (sNmea.length >= 12)) {
             try {
                 if (sNmea[1].length() != 0) {
                     if (CommonIn.setTime(gpsRec, sNmea[1])) {
@@ -368,7 +368,7 @@ public final class CommonIn {
 
         // TODO: Not finished.
         final int logFormat = 0;
-        if (sNmea[0].equals("GPGSV") && (sNmea.length >= 19)) {
+        if ((sNmea[0].equals("GPGSV")||sNmea[0].equals("GNGSV"))  && (sNmea.length >= 19)) {
             @SuppressWarnings("unused")
 			int GSVindex = 0;
             @SuppressWarnings("unused")
