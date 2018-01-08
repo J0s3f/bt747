@@ -1,7 +1,7 @@
 SETLOCAL
 SET PATH=%PATH%;C:\CYGWIN64\BIN
 SET BASH=C:\CYGWIN64\BIN\bash
-SET DT=2.1.11
+SET DT=2.X.12
 SET PACK_DIR=pack
 
 REM recode ibmpc..lat1 winfile.txt   # dos2unix
