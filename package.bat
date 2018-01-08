@@ -1,5 +1,6 @@
 SETLOCAL
-PATH=%PATH%;C:\CYGWIN64\BIN
+SET PATH=%PATH%;C:\CYGWIN64\BIN
+SET BASH=C:\CYGWIN64\BIN\bash
 SET DT=2.1.11
 SET PACK_DIR=pack
 
@@ -74,5 +75,5 @@ REM twice to cope with certain communication errors.
 bash -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
 
 cd src_j2se/bt747/j2se_view
-bash -c "./all_missing.sh"
+%BASH% -c "./all_missing.sh"
 ENDLOCAL
