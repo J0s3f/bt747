@@ -3,6 +3,7 @@ SET PATH=%PATH%;C:\CYGWIN64\BIN
 SET BASH=C:\CYGWIN64\BIN\bash
 SET DT=2.X.2025
 SET PACK_DIR=pack
+SET LC_ALL=C
 
 REM recode ibmpc..lat1 winfile.txt   # dos2unix
 REM recode lat1..ibmpc unixfile.txt  # unix2dosr
