@@ -63,16 +63,16 @@ CALL ..\uploadBT747.bat dist\BT747_j2se.jar Latest/BT747_j2se.jar
 
 bash -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
-bash -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
 
 COPY %PACK_DIR%/BT747_%DT%_full.zip %PACK_DIR%/BT747_Latest_Full.zip
-bash -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
-bash -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
 
 bash -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
-bash -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
 
 cd src_j2se/bt747/j2se_view
 %BASH% -c "./all_missing.sh"
