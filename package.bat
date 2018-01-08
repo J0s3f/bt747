@@ -1,7 +1,7 @@
 SETLOCAL
 SET PATH=%PATH%;C:\CYGWIN64\BIN
 SET BASH=C:\CYGWIN64\BIN\bash
-SET DT=2.X.12
+SET DT=2.X.2025
 SET PACK_DIR=pack
 
 REM recode ibmpc..lat1 winfile.txt   # dos2unix
@@ -61,16 +61,16 @@ zip -q -9 -r %PACK_DIR%/BT747_%DT%_full.zip %FILES% %RXTXFILES% -x \*/.svn/\* sr
 CALL ..\uploadBT747.bat dist\libBT747.jar Latest/libBT747.jar
 CALL ..\uploadBT747.bat dist\BT747_j2se.jar Latest/BT747_j2se.jar
 
-bash -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
 %BASH% -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
 
-COPY %PACK_DIR%/BT747_%DT%_full.zip %PACK_DIR%/BT747_Latest_Full.zip
+COPY %PACK_DIR%\BT747_%DT%_full.zip %PACK_DIR%\BT747_Latest_Full.zip
 %BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
 %BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
 
-bash -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
+%BASH% -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
 REM twice to cope with certain communication errors.
 %BASH% -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
 
