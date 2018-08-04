@@ -45,7 +45,7 @@ import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 import net.sf.bt747.j2se.app.utils.Utils;
 import net.sf.bt747.j2se.system.J2SEJavaTranslations;
-
+import bt747.Version;
 import bt747.j2se_view.helpers.TaggedFilePathFactory;
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
