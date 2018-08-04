@@ -49,6 +49,7 @@ public final class Version {
 
     /**
      * URL for base address of AGPS data. Replaced during build process.
+     * http://epodownload.mediatek.com/EPO.DAT is not a good source.
      */
-    public static final String AURL = "http://epodownload.mediatek.com/EPO.DAT";
+    public static final String AURL = "http://bt747.org/MTK14.EPO";
 }
