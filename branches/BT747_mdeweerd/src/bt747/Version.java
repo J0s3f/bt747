@@ -48,8 +48,7 @@ public final class Version {
     public static final String VERSION_NUMBER = "2.dev";
 
     /**
-     * URL for base address of AGPS data. Must be replaced by the actual one.
-     * Done during build process.
+     * URL for base address of AGPS data. Replaced during build process.
      */
-    public static final String AURL = "http://bt747.free.fr/";
+    public static final String AURL = "http://epodownload.mediatek.com/EPO.DAT";
 }
