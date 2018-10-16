@@ -29,7 +29,7 @@ mkdir %PACK_DIR%
 REM No more uploading RXTX - only a few download that file.
 REM zip -9 -r BT747_%DT%_%APP_LANG%_norxtx.zip %FILES% -xi src/CVS/\* \*/.svn/\* \*/CVS/\* %EXCLUDEFILES%
 zip -9 -r %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip %FILES% %RXTXFILES% -xi \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
-#curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:m.deweerd@ieee.org -T %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_full.zip
+#curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_full.zip
 rsync -y -v --rsh="ssh -l mdeweerd" %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip shell.sourceforge.net@files/Development/BT747_%DT%_%APP_LANG%_full.zip
-REM curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:m.deweerd@ieee.org -T BT747_%DT%_%APP_LANG%_norxtx.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_norxtx.zip
+REM curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T BT747_%DT%_%APP_LANG%_norxtx.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_norxtx.zip
 ENDLOCAL

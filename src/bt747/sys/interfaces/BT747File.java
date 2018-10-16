@@ -1,7 +1,7 @@
 // ********************************************************************
 // *** BT 747 ***
 // *** (c)2007-2009 Mario De Weerd ***
-// *** m.deweerd@ieee.org ***
+// *** seesite@bt747.org ***
 // *** ********************************************************** ***
 // *** Software is provided "AS IS," without a warranty of any ***
 // *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***

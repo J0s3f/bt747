@@ -53,7 +53,7 @@ public final class Txt_es implements TxtInterface {
         + "|http://www.superwaba.org"
         + "|" +Version.BUILD_STR
         + "|creado por Mario De Weerd"
-        + "|m.deweerd@ieee.org"
+        + "|seesite@bt747.org"
         + "|Esta aplicación permite controlar"
         + "|dispositivos BT747."
         + "|Permite el control por bluetooth"

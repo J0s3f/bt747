@@ -56,7 +56,7 @@ public class Txt_zh implements TxtInterface {
     + "|http://www.superwaba.org "
     + "|" +Version.BUILD_STR
     + "|\u5199\u7531Mario De Weerd"
-    + "|m.deweerd@ieee.org "
+    + "|seesite@bt747.org "
     + "|"
     + "|\u8FD9\u79CD\u5E94\u7528\u5141\u8BB8\u63A7\u5236"
     + "|BT747\u8BBE\u5907\u3002"

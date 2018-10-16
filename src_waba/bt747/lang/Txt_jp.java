@@ -55,7 +55,7 @@ public final class Txt_jp implements TxtInterface {
         + "|http://www.superwaba.org"
         + "|" +Version.BUILD_STR
         + "|Written by Mario De Weerd"
-        + "|m.deweerd@ieee.org"
+        + "|seesite@bt747.org"
         + "|"
         + "|Japanese Translation done by Shingo Kato"
         + "|iwashifish@gmail.com"
