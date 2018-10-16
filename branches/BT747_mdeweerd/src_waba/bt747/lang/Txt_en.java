@@ -2,7 +2,7 @@
 // *** BT 747 ***
 // *** April 14, 2007 ***
 // *** (c)2007 Mario De Weerd ***
-// *** m.deweerd@ieee.org ***
+// *** seesite@bt747.org ***
 // *** ********************************************************** ***
 // *** Software is provided "AS IS," without a warranty of any ***
 // *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
@@ -59,7 +59,7 @@ public final class Txt_en implements TxtInterface {
             + Version.VERSION_NUMBER;
     private static final String ABOUT_TXT = "Created with SuperWaba"
             + "|http://www.superwaba.org" + "|" + Version.BUILD_STR
-            + "|Written by Mario De Weerd" + "|m.deweerd@ieee.org" + "|"
+            + "|Written by Mario De Weerd" + "|seesite@bt747.org" + "|"
             + "|This application allows control of" + "|the BT747 device."
             + "|Full control using bluetooth is enabled"
             + "|by applying a hardware hack.  "

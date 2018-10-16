@@ -44,7 +44,7 @@ public final class Txt_de implements TxtInterface {
 			+ Version.VERSION_NUMBER;
 	private static final String ABOUT_TXT = "Erstellt mit SuperWaba"
 			+ "|http://www.superwaba.org" + "|" + Version.BUILD_STR
-			+ "|von Mario De Weerd" + "|m.deweerd@ieee.org"
+			+ "|von Mario De Weerd" + "|seesite@bt747.org"
 			+ "|Diese Anw. erlaubt die Kontrolle"
 			+ "|über den iBlue 747 Empfänger."
 			+ "|Volle Kontr. per Bluetooth kann per"

@@ -46,7 +46,7 @@ public final class Txt_nl implements TxtInterface {
             + Version.VERSION_NUMBER;
     private static final String ABOUT_TXT = "Gemaakt met SuperWaba"
             + "|http://www.superwaba.org" + "|" + Version.BUILD_STR
-            + "|Geschreven door Mario De Weerd" + "|m.deweerd@ieee.org" + "|"
+            + "|Geschreven door Mario De Weerd" + "|seesite@bt747.org" + "|"
             + "|Dit programma geeft u beheer over " + "|het BT747 apparaat."
             + "|Volledig beheer via bluetooth wordt bereikt"
             + "|door een hardware hack.  "

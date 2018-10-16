@@ -54,7 +54,7 @@ public final class Txt_fr implements TxtInterface {
         + "|http://www.superwaba.org"
         + "|" +Version.BUILD_STR
         + "|Ecrit par Mario De Weerd"
-        + "|m.deweerd@ieee.org"
+        + "|seesite@bt747.org"
         + "|Cette application permets le contrôle"
         + "|de différents types de logger GPS à"
         + "|base de chipset MTK. La modification"

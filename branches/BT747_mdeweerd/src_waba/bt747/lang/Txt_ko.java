@@ -53,7 +53,7 @@ public final class Txt_ko implements TxtInterface {
         + "|http://www.superwaba.org"
         + "|" +Version.BUILD_STR
         + "|Mario De Weerd\uAC00 \uC791\uC131\uD588\uC2B5\uB2C8\uB2E4."
-        + "|m.deweerd@ieee.org"
+        + "|seesite@bt747.org"
         + "|"
         + "|\uC774 \uD504\uB85C\uADF8\uB7A8\uC740 BT747 \uAE30\uAE30\uB97C \uC870\uC808\uD569\uB2C8\uB2E4."
         + "|\uD558\uB4DC\uC6E8\uC5B4\uB97C \uD574\uD0B9\uD558\uC5EC \uBE14\uB8E8\uD22C\uC2A4\uB97C \uD1B5\uD55C"
