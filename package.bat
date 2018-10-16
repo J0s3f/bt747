@@ -1,80 +1,35 @@
 SETLOCAL
-SET PATH=%PATH%;C:\CYGWIN64\BIN
-SET BASH=C:\CYGWIN64\BIN\bash
-SET DT=2.X.2029
+SET DT=2.X.2033
+SET APP_LANG=en
 SET PACK_DIR=pack
-SET LC_ALL=C
+dos2unix *.sh
+dos2unix *.command
 
-REM recode ibmpc..lat1 winfile.txt   # dos2unix
-REM recode lat1..ibmpc unixfile.txt  # unix2dosr
+SET FILES=
 
-REM dos2unix *.sh
-REM dos2unix *.command
-REM unix2dos *.bat
+if %APP_LANG%==zh SET FILES=%FILES% UFFChi_H.pdb UFFChi_L.pdb
+if %APP_LANG%==zh SET APP_LANG=zh_beta
 
-recode ibmpc..lat1 *.sh *.command
-recode lat1..ibmpc *.bat
+if %APP_LANG%==jp SET FILES=%FILES% UFFJap_H.pdb UFFJap_L.pdb
+if %APP_LANG%==jp SET APP_LANG=jp_beta
 
-SET DISTFILES=
-SET SRCFILES=
-SET COMMONFILES=
-SET DISTFILES=
-SET PDAFILES=
+if %APP_LANG%==ko SET FILES=%FILES% UFFKor_H.pdb UFFKor_L.pdb
+if %APP_LANG%==ko SET APP_LANG=ko_beta
 
-SET PDAFILES=%PDAFILES% UFFChi_H.pdb UFFChi_L.pdb
-SET PDAFILES=%PDAFILES% UFFJap_H.pdb UFFJap_L.pdb
-SET PDAFILES=%PDAFILES% UFFKor_H.pdb UFFKor_L.pdb
-
-SET SRCFILES=%SRCFILES% src*  build.xml .project .classpath default.properties nbproject pom.xml 
-SET COMMONFILES=%COMMONFILES% ChangeLog.txt COPYING  README.txt  
-SET DISTFILES=%DISTFILES% dist
-SET COMMONFILES=%COMMONFILES% bt747_macosX_j2se.command bt747_macosX.command bt747_maemo.sh
-SET SRCFILES=%SRCFILES% BT747_l.jnlp BT747_lwin.jnlp
-SET COMMONFILES=%COMMONFILES% run_ex.bat run_rxtx.bat run_rxtx.sh run_both.bat run_j2se.bat run_j2se64.bat run_j2se.sh BT747cmd.bat
-SET RXTXFILES=lib/rxtx-2.1-7-bins-r2 lib/rxtx-2.2pre2-bins
-SET COMMONFILES=%COMMONFILES% lib/collections-superwaba.jar
-SET COMMONFILES=%COMMONFILES% lib/RXTXcomm.jar
-SET COMMONFILES=%COMMONFILES% lib/Waba_only.jar
-SET COMMONFILES=%COMMONFILES% lib/jcalendar-1.3.2.jar
-SET COMMONFILES=%COMMONFILES% lib/swing-layout-1.0.3.jar
-SET COMMONFILES=%COMMONFILES% lib/swingx-ws.jar lib/swingx.jar
-SET COMMONFILES=%COMMONFILES% lib/jopt-simple*.jar
-SET COMMONFILES=%COMMONFILES% lib/sanselan*or.jar
-SET COMMONFILES=%COMMONFILES% lib/jchart*.jar
-SET COMMONFILES=%COMMONFILES% lib/win32comm.jar lib/win32/javax.comm.properties
-SET COMMONFILES=%COMMONFILES% lib/win32com.dll  lib/comm.jar
-SET COMMONFILES=%COMMONFILES% 5SW.pdb
-SET COMMONFILES=%COMMONFILES% BT747.exe BT747cmd.exe BT747_64b.exe BT747cmd_64b.exe bt747.cer bt747new.cer INSTALLKEY.bat
-SET SRCFILES=%SRCFILES% dev/*
+SET FILES=%FILES% ChangeLog.txt src* dist COPYING  README.txt  build.xml .project .classpath default.properties nbproject 
+SET FILES=%FILES% 5SW.pdb
+SET FILES=%FILES% run_ex.bat run_rxtx.bat run_rxtx.sh run_both.bat run_j2se.bat
+SET FILES=%FILES% bt747_macosX.command BT747_l.jnlp BT747_lwin.jnlp
+SET FILES=%FILES% lib/Waba_only.jar lib/win32comm.jar lib/win32/javax.comm.properties lib/win32com.dll  lib/comm.jar lib/RXTXcomm.jar lib/swing-layout-1.0.3.jar
+SET RXTXFILES=%FILES% lib/rxtx-2.1-7-bins-r2
 SET EXCLUDEFILES=nbproject/private/\* \*/src/gps/parser/\*
-SET EXCLUDEFILES=%EXCLUDEFILES% dev/bt747 
 
-IF EXIST %PACK_DIR%\BT747_%DT%_*.zip del %PACK_DIR%\BT747_%DT%_*.zip
-IF NOT EXIST %PACK_DIR% mkdir %PACK_DIR%
-
-SET FILES=%DISTFILES% %COMMONFILES% %PDAFILES%
-
-SET FILES=%COMMONFILES% %SRCFILES% %COMMONFILES% %PDAFILES%
-SET FILES=%DISTFILES% %SRCFILES% %COMMONFILES% %DISTFILES% %PDAFILES%
-chmod 755 *.command *.sh *.bat *.BAT *.EXE *.exe
-zip -q -9 -r %PACK_DIR%/BT747_%DT%_full.zip %FILES% %RXTXFILES% -x \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
-
-CALL ..\uploadBT747.bat dist\libBT747.jar Latest/libBT747.jar
-CALL ..\uploadBT747.bat dist\BT747_j2se.jar Latest/BT747_j2se.jar
-
-%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
-REM twice to cope with certain communication errors.
-%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_%DT%_full.zip /home/frs/project/bt747/Development"
-
-COPY %PACK_DIR%\BT747_%DT%_full.zip %PACK_DIR%\BT747_Latest_Full.zip
-%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
-REM twice to cope with certain communication errors.
-%BASH% -c "../myrsync.sh %PACK_DIR%/BT747_Latest_Full.zip /home/frs/project/bt747/Development"
-
-%BASH% -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
-REM twice to cope with certain communication errors.
-%BASH% -c "../myrsync.sh %PACK_DIR%/bt747_osx_%DT%.tgz /home/frs/project/bt747/Development"
-
-cd src_j2se/bt747/j2se_view
-%BASH% -c "./all_missing.sh"
+del %PACK_DIR%\BT747_%DT%_%APP_LANG%_*.zip
+mkdir %PACK_DIR%
+REM No more uploading RXTX - only a few download that file.
+REM zip -9 -r BT747_%DT%_%APP_LANG%_norxtx.zip %FILES% -xi src/CVS/\* \*/.svn/\* \*/CVS/\* %EXCLUDEFILES%
+zip -9 -r %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip %FILES% %RXTXFILES% -xi \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
+#curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_full.zip
+rsync -y -v --rsh="ssh -l mdeweerd" %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip shell.sourceforge.net@files/Development/BT747_%DT%_%APP_LANG%_full.zip
+REM curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T BT747_%DT%_%APP_LANG%_norxtx.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_norxtx.zip
 ENDLOCAL
