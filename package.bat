@@ -1,7 +1,8 @@
 SETLOCAL
-SET DT=2.X.2033
+SET DT=2.X.2034M
 SET APP_LANG=en
 SET PACK_DIR=pack
+SET PATH=%PATH%;C:\\CYGWIN64\BIN;C:\\CYGWIN\BIN
 dos2unix *.sh
 dos2unix *.command
 
@@ -30,6 +31,6 @@ REM No more uploading RXTX - only a few download that file.
 REM zip -9 -r BT747_%DT%_%APP_LANG%_norxtx.zip %FILES% -xi src/CVS/\* \*/.svn/\* \*/CVS/\* %EXCLUDEFILES%
 zip -9 -r %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip %FILES% %RXTXFILES% -xi \*/.svn/\* src/CVS/\* \*/CVS/\* nbproject/private %EXCLUDEFILES%
 #curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_full.zip
-rsync -y -v --rsh="ssh -l mdeweerd" %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip shell.sourceforge.net@files/Development/BT747_%DT%_%APP_LANG%_full.zip
+rsync -y -v --rsh="ssh -l mdeweerd" %PACK_DIR%/BT747_%DT%_%APP_LANG%_full.zip web.sourceforge.net@files/Development/BT747_%DT%_%APP_LANG%_full.zip
 REM curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:EMAILACCOUNT -T BT747_%DT%_%APP_LANG%_norxtx.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%_%APP_LANG%_norxtx.zip
 ENDLOCAL
