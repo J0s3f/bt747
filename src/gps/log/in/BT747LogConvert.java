@@ -785,6 +785,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 			if ((r.utc & 0x80000000) != 0) {
 				invalidReason += "Invalid time:" + r.utc + ";";
 				valid = false;
+			} else if(r.utc<1230768000) {
+				// Correction for week overflow bug.
+				r.utc+=1024*7*24*3600;
 			}
 		} else {
 			// r.utc = 1000; // Value after earliest date
