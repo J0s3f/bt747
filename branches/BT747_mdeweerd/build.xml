@@ -34,6 +34,9 @@
    set up.
  -->
 <project name="BT747" basedir="." default="all">
+	<!-- get environment variables for use in this ant script -->
+	<property environment="env"/>
+	
 	<!-- Local properties (not in version control/local override) -->
 	<property file="local.properties" />
 
@@ -286,9 +289,10 @@
         <scp file="BT747.jar"
             todir="shell.sourceforge.net:bt747/htdocs/"/>
             -->
+	    <property environment="env"/>
 
 		<exec executable="upload.bat" failifexecutionfails="false">
-		    <env key="PATH" value="${env.PATH}${extraWinPath}"/>
+			<!--<env key="PATH" value="${env.PATH}${extraWinPath}"/>!-->
 		</exec>
 	</target>
 
