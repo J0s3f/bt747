@@ -709,7 +709,7 @@ public abstract class GPSFile implements GPSFileInterface {
 
             if (r.hasUtc()) {
                 if ((r.getUtc() < 24 * 3600) // No date provided by log.
-                        || (t.getYear() > 2000)) {
+                        || (t.getYear() > 1980)) {
                     extraExt = "-" + t.getYear()
                             + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
                             + (t.getDay() < 10 ? "0" : "") + t.getDay();
