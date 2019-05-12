@@ -287,7 +287,9 @@
             todir="shell.sourceforge.net:bt747/htdocs/"/>
             -->
 
-		<exec executable="upload.bat" failifexecutionfails="false" />
+		<exec executable="upload.bat" failifexecutionfails="false">
+		    <env key="PATH" value="${env.PATH}${extraWinPath}"/>
+		</exec>
 	</target>
 
 	<!-- ======================================== -->
